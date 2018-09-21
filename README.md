@@ -8,8 +8,6 @@ Citrix Ingress Controller is a daemon that monitors ingress resources and config
 ## Deployment 
 Use the YAML in this section to deploy Citrix Ingress Controller in the Kubernetes Cluster. Follow the readme in the ['deployment'](./deployment) folder. 
 
-## Documentation
-Detailed documentation can be found at [Doc](./docs/deploy-cic.md).
 
 ## Questions
 For questions and support please use `https://discussions.citrix.com/forum/1657-netscaler-cpx/` forum. 
