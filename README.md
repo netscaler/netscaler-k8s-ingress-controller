@@ -2,14 +2,11 @@
 
 Citrix Ingress Controller helps expose Kubernetes Ingress resource on NetScaler (VPX/MPX/CPX) 
 
-CIC is a daemon that monitors ingress resources and configures the NetScaler automatically. It run as a pod in Kubernetes.
+Citrix Ingress Controller is a daemon that monitors ingress resources and configures the NetScaler automatically. It run as a pod in Kubernetes.
 
 
 ## Deployment 
 Use the YAML in this section to deploy Citrix Ingress Controller in the Kubernetes Cluster. Follow the readme in the ['deployment'](./deployment) folder. 
-
-## Example
-An example for quick hands on with CIC can be found at [Example](./example). 
 
 ## Documentation
 Detailed documentation can be found at [Doc](./docs/deploy-cic.md).
@@ -18,11 +15,11 @@ Detailed documentation can be found at [Doc](./docs/deploy-cic.md).
 For questions and support please use `https://discussions.citrix.com/forum/1657-netscaler-cpx/` forum. 
 
 ## Version
-CIC version can be found by using "version" command from the CIC shell.
+Citrix Ingress Controller version can be found by using "version" command from the Citrix Ingress Controller shell.
 ```
-  root@ubuntu194:~# kubectl exec -it cic-k8s-ingress-controller  bash
+  root@ubuntu194:~# kubectl exec -it citrix-k8s-ingress-controller  bash
 
-  root@cic-k8s-ingress-controller:/# version
+  root@citrix-k8s-ingress-controller:/# version
   1.0.0
 ```
 
@@ -34,11 +31,11 @@ Use the forum mentioned below
 Describe the Issue in Details 
 Collects the logs via following command
 ```
-  kubectl logs cic-k8s-ingress-controller > log_file
+  kubectl logs citrix-k8s-ingress-controller > log_file
 ```
-Get version of CIC
+Get version of Citrix Ingress Controller
 ```
-  root@cic-k8s-ingress-controller:/# version
+  root@citrix-k8s-ingress-controller:/# version
   1.0.0
 ```
 
