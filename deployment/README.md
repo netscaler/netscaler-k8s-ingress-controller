@@ -8,26 +8,28 @@ Citrix Ingress Controller available in two different  format.
 ```
 	1) Citrix Ingress Controller:
 		This is just a micor service which monitors the Kubernetes and can configure the north South Netsclaer 
-	2) CPX-Ing:
+		coresponding yaml: citrix-k8s-ingress-controller.yaml
+	2) CPX with inbuilt Ingress Controller:
 		CPX with a builtin Citrix Ingress Controller which configures the CPX itself. CPX acts as a N-S loadbalancer which sits in kubernetes itself. 
+		coresponding yaml: citrix-k8s-cpx-ingress.yml
 ```
 
 ```
-   Citrix Ingress Controller will do **"clear config -f basic"** on the NetScaler. Please refer [here](https://support.citrix.com/article/CTX112695/#basic) for more details.
+   Citrix Ingress Controller will do "clear config -f basic" on the NetScaler. Please refer [here](https://support.citrix.com/article/CTX112695/#basic) for more details.
    Fix  will be avilable soon.
 ```
 
 # **Install Citrix Ingress Controller on Kubernetes:**
- 1. Download or copy the YML file "cic-k8s-ingress-controller.yaml" from the deployment Directory.
+ 1. Download or copy the YML file "citrix-k8s-ingress-controller.yaml" from the deployment Directory.
                         
     This yaml has four section, in which first three is for cluster role creation and service account creation and the 
-    next one is for cic pod creation. 
+    next one is for citrix ingress controller pod creation. 
     * Cluster roles
     * Cluster role bindings
     * Service account
     * Citrix Ingress Controller pod creation
    
-    First three are required for cic to monitor k8s events. No changes required.
+    First three are required for citrix ingress controller to monitor k8s events. No changes required.
     Next section defines environment variables required for Citrix Ingress Controller to configure the NetScaler.
 
  2. Update the following env variables, for Citrix Ingress Controller bringup.
@@ -65,7 +67,7 @@ Citrix Ingress Controller available in two different  format.
 
        * kubernetes\_url
 
-         This is an optional field for Citrix Ingress Controller to register for events. If user did not specify it explictly, cic use internal KubeAPIServer IP. 
+         This is an optional field for Citrix Ingress Controller to register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP. 
    
        * LOGLEVEL
 
@@ -101,13 +103,17 @@ Citrix Ingress Controller available in two different  format.
 
    Create Citrix Ingress Controller  on kubernetes by using 'kubectl create' command
         
-           kubectl create -f cic-k8s-ingress-controller.yaml
+           kubectl create -f citrix-k8s-ingress-controller.yaml
 
    This pulls the latest image and brings up the Citrix Ingress Controller.
                 
    Official Citrix Ingress Controller docker images is <span style="color:red"> `gcr.io/citrix-k8s-ingress-controller/citrix-ingress-controller:latest` </span> 
-# **Install CPX-Ing on Kubernetes:**
-
+# **Install CPX with inbuilt Ingress Controller on Kubernetes:**
+   This is end user license agreement which has to be YES for CPX to up and run.
+   This pulls image from `us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest` which has both cpx and citrix ingress controller in built and start configuring itself.
+   ```
+           kubectl create -f citrix-k8s-cpx-ingress.yml
+   ```
 # **Annotations**
 
 
