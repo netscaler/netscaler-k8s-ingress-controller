@@ -74,7 +74,7 @@ spec:
       serviceAccountName: cic-k8-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "gcr.io/citrix-k8s-ingress-controller/citrix-ingress-controller:latest"
+        image: "us.gcr.io/citrix-217108/citrix-k8s-ingress-controller:latest"
         env:
         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
         - name: "NS_IP"
