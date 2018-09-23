@@ -23,9 +23,7 @@ Describe the Issue in Details, Collects the logs and  Use the forum mentioned be
 ```
    https://discussions.citrix.com/forum/1657-netscaler-cpx/
   
-   Command to get the logs.
-
-   kubectl logs citrix-k8s-ingress-controller > log_file
+   Get Logs: kubectl logs citrix-k8s-ingress-controller > log_file
 ```
 
 ## **Code of Conduct**
