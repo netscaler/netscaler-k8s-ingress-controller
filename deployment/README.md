@@ -1,15 +1,10 @@
 # **Citrix Ingress Controller for kubernetes:**
-                        
-Citrix Ingress Controller helps expose Kubernetes Ingress resource on NetScaler (VPX/MPX/CPX) 
-
-Citrix Ingress Controller is a daemon that monitors ingress resources and configures the NetScaler automatically. It run as a pod in Kubernetes.
-
 Citrix Ingress Controller available in two different  format.
 ```
-	1) Citrix Ingress Controller:
+	**Citrix Ingress Controller:**
 		This is a daemon that monitors the Kubernetes and configure NetScaler VPX and MPX. 
 		YAML to be used: citrix-k8s-ingress-controller.yaml
-	2) CPX with inbuilt Ingress Controller:
+	**CPX with inbuilt Ingress Controller:**
 		CPX with a builtin Citrix Ingress Controller configures the CPX itself. CPX runs as pod and does N-S load balancing. 
 		YAML to be used: citrix-k8s-cpx-ingress.yml
 ```
