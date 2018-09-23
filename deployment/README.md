@@ -127,8 +127,10 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
   Ensure that Ingress MPX/VPX has a SNIP present in the host-network (i.e. network over which K8S nodes communicate with each other. Usually eth0 IP is from this network).
   For each K8S node, add a static route like below
        
-  E.g. Say Node1 has IP = 10.102.53.101 and podCIDR: 10.244.1.0/24, then
-       add route 10.244.1.0 255.255.255.0 10.102.53.101
+  E.g. 
+        Node1 IP = 10.102.53.101 
+        podCIDR  = 10.244.1.0/24
+        add route 10.244.1.0 255.255.255.0 10.102.53.101
 
 # **Install CPX with inbuilt Ingress Controller on Kubernetes:**
    This is end user license agreement which has to be YES for CPX to up and run.
