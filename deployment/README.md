@@ -151,6 +151,3 @@ List of annotations supported by Citrix Ingress Controller:
 
 
                         
-# **Documentation:**
-        
-Detailed Documentation can be found in [docs](https://github.com/janraj/citrix-k8s-ingress-controller/tree/master/docs) directory.
