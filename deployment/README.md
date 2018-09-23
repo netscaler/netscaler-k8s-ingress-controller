@@ -30,8 +30,8 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
  2. Update the following env variables, for Citrix Ingress Controller bringup.
 
     1. "Mandatory" Arguments:
-
-       * NS\_IP
+       <details>
+       <summary>* NS\_IP</summary><>
 
          This is must for Citrix Ingress Controller to configure the NetScaler appliance. Provide,
          ```
@@ -40,7 +40,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
             CLIP for Cluster
          
          ```
-
+       </details>
        * NS\_USER and NS\_PASSWORD
 
          This is for authenticating with NetScaler if it has non default username and password. We can directly pass username/password or use Kubernetes secrets.
