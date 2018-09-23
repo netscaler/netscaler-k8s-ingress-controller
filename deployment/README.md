@@ -31,7 +31,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
     1. "Mandatory" Arguments:
        <details>
-       <summary>NS_IP</summary><>
+       <summary>NS_IP</summary>
 
          This is must for Citrix Ingress Controller to configure the NetScaler appliance. Provide,
          ```
@@ -42,7 +42,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
          ```
        </details>
        <details>
-       <summary>NS_USER and NS_PASSWORD</summary><>
+       <summary>NS_USER and NS_PASSWORD</summary>
 
          This is for authenticating with NetScaler if it has non default username and password. We can directly pass username/password or use Kubernetes secrets.
          Given Yaml uses k8s secrets. Following steps helps to create secrets to be used in yaml.
