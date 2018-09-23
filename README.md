@@ -13,33 +13,19 @@ An Ingress Controller is a daemon, deployed as a Kubernetes Pod, that watches th
 Use the YAML in this section to deploy Citrix Ingress Controller in the Kubernetes Cluster. Follow the readme in the ['deployment'](./deployment) folder. 
 
 ## **Example**
-An example for quick hands on with Citrix Ingress Controller  can be found at [example](./example). 
+An example for quick hands on with Citrix Ingress Controller  can be found [here](./example). 
 
 ## **Questions**
 For questions and support please use https://discussions.citrix.com/forum/1657-netscaler-cpx/ forum. 
 
-## **Version**
-Citrix Ingress Controller version can be found by using "version" command from the Citrix Ingress Controller shell.
-```
-  root@ubuntu194:~# kubectl exec -it citrix-k8s-ingress-controller  bash
-
-  root@citrix-k8s-ingress-controller:/# version
-  1.0.0
-```
 ## **Issues**
-Use the forum mentioned below
+Describe the Issue in Details, Collects the logs and  Use the forum mentioned below
 ```
    https://discussions.citrix.com/forum/1657-netscaler-cpx/
-```
-Describe the Issue in Details 
-Collects the logs via following command
-```
-  kubectl logs citrix-k8s-ingress-controller > log_file
-```
-Get version of Citrix Ingress Controller
-```
-  root@citrix-k8s-ingress-controller:/# version
-  1.0.0
+  
+   Command to get the logs.
+
+   kubectl logs citrix-k8s-ingress-controller > log_file
 ```
 
 ## **Code of Conduct**
