@@ -6,10 +6,10 @@ Citrix Ingress Controller is a daemon that monitors ingress resources and config
 
 
 ## Deployment 
-Use the YAML in this section to deploy Citrix Ingress Controller in the Kubernetes Cluster. Follow the readme in the ['deployment'](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/deployment) folder. 
+Use the YAML in this section to deploy Citrix Ingress Controller in the Kubernetes Cluster. Follow the readme in the ['deployment'](./deployment) folder. 
 
 ## Example
-An example for quick hands on with Citrix Ingress Controller  can be found at [EXAMPLE](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/example). 
+An example for quick hands on with Citrix Ingress Controller  can be found at [example](./example). 
 
 ## Questions
 For questions and support please use https://discussions.citrix.com/forum/1657-netscaler-cpx/ forum. 
@@ -42,4 +42,4 @@ Get version of Citrix Ingress Controller
 This project adheres to the [Kubernetes Community Code of Conduct](https://github.com/kubernetes/community/blob/master/code-of-conduct.md). By participating in this project you agree to abide by its terms.
 
 ## License
-[Apache License 2.0](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/license/LICENSE)
+[Apache License 2.0](./LICENSE)
