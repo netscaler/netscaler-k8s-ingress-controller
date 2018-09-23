@@ -42,4 +42,4 @@ Get version of Citrix Ingress Controller
 This project adheres to the [Kubernetes Community Code of Conduct](https://github.com/kubernetes/community/blob/master/code-of-conduct.md). By participating in this project you agree to abide by its terms.
 
 ## License
-[Apache License 2.0](./LICENSE)
+[Apache License 2.0](./license/LICENSE)
