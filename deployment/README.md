@@ -31,7 +31,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
     1. "Mandatory" Arguments:
        <details>
-       <summary>* NS\_IP</summary><>
+       <summary>NS_IP</summary><>
 
          This is must for Citrix Ingress Controller to configure the NetScaler appliance. Provide,
          ```
@@ -41,7 +41,8 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
          
          ```
        </details>
-       * NS\_USER and NS\_PASSWORD
+       <details>
+       <summary>NS_USER and NS_PASSWORD</summary><>
 
          This is for authenticating with NetScaler if it has non default username and password. We can directly pass username/password or use Kubernetes secrets.
          Given Yaml uses k8s secrets. Following steps helps to create secrets to be used in yaml.
@@ -53,17 +54,23 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
          >**Note:** If you are using different secret name rather than nslogin, you have to update the "name" field in the yaml. 
 
-       * EULA
+       </details>
+       <details>
+       <summary>EULA</summary>
 
          This is end user license agreement which has to be YES for Citrix Ingress Controller to up and run.
                 
+       </details>
     2. "Optional" Arguments:
 
-       * kubernetes\_url
+       <details>
+       <summary>kubernetes_url</summary>
 
          This is an optional field for Citrix Ingress Controller to register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP. 
    
-       * LOGLEVEL
+       </details>
+       <details>
+       <summary>LOGLEVEL</summary>
 
          This is used for controlling the logs generated from Citrix Ingress Controller. Following options are available. By default log level is DEBUG. 
          * CRITICAL 
@@ -71,14 +78,17 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
          * WARNING
          * INFO
          * DEBUG
+       </details>
+       <details>
 
-       * NS\_PROTOCOL and NS\_PORT
+       <summary>NS_PROTOCOL and NS_PORT</summary>
                                 
          These enviornment variables defines protocol and port used by Citrix Ingress Controller  to communicate with NetScaler.
 
          By default NS_PROTOCOL is https and NS_PORT is 443. Other option is to use HTTP and port 80. 
-
-       * Ingress Class
+       </details>
+       <details>
+       <summary>Ingress Class</summary>
 
          Ingress class is used when multiple Ingress Loadbalancers are used to load balance different ingress resources. 
 
