@@ -30,7 +30,7 @@
    ```
     kubectl create -f guestbook-ingress.yml
    ```
-####### **Test The application**
+######  **Test The application**
     Create a "www.guestbook.com" domain name and update it with Virtual IP mentioned in the ingress resource. Access "www.guestbook.com" from url which opens guestbook application. 
        
 
@@ -42,7 +42,7 @@
     kubectl create -f guestbook-ingress.yml
    ```
 
-####### **Test The application**
+######  **Test The application**
    Create a "www.guestbook.com" domain name and update with service IP. Access "www.guestbook.com" from url which opens guestbook application. 
    
    Minikube users can use following command to get the service IP.
