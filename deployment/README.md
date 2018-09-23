@@ -114,24 +114,23 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
    Official Citrix Ingress Controller docker images is <span style="color:red"> `gcr.io/citrix-k8s-ingress-controller/citrix-ingress-controller:latest` </span> 
 
 4. Configure routes for POD reachability
-```
-  Obtain podCIDR using below options:
-  # kubectl get nodes -o yaml | grep podCIDR
+   ```
+   Obtain podCIDR using below options:
+   # kubectl get nodes -o yaml | grep podCIDR
      podCIDR: 10.244.0.0/24
      podCIDR: 10.244.1.0/24
      podCIDR: 10.244.2.0/24
 
-  Add Route to Netscaler
-  # add route <podCIDR_network> <podCIDR_netmask> <node_HostIP>
-```     
-  Ensure that Ingress MPX/VPX has a SNIP present in the host-network (i.e. network over which K8S nodes communicate with each other. Usually eth0 IP is from this network).
- 
-```       
-  Example: 
-  Node1 IP = 10.102.53.101 
-  podCIDR  = 10.244.1.0/24
-  add route 10.244.1.0 255.255.255.0 10.102.53.101
-```
+   Add Route to Netscaler
+   # add route <podCIDR_network> <podCIDR_netmask> <node_HostIP>
+   ```     
+   Ensure that Ingress MPX/VPX has a SNIP present in the host-network (i.e. network over which K8S nodes communicate with each other. Usually eth0 IP is from this network).
+   ```       
+     Example: 
+     Node1 IP = 10.102.53.101 
+     podCIDR  = 10.244.1.0/24
+     add route 10.244.1.0 255.255.255.0 10.102.53.101
+   ```
 # **Install CPX with inbuilt Ingress Controller on Kubernetes:**
    This is end user license agreement which has to be YES for CPX to up and run.
    This pulls image from `us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest` which has both cpx and citrix ingress controller in built and start configuring itself.
