@@ -1,0 +1,72 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cpx-ingress-k8-role
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
+    verbs: ["*"]
+
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cpx-ingress-k8-role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cpx-ingress-k8-role
+subjects:
+- kind: ServiceAccount
+  name: cpx-ingress-k8-role
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cpx-ingress-k8-role
+  namespace: default
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: cpx-ingress
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: cpx-ingress
+      labels:
+        app: cpx-ingress
+    spec:
+      serviceAccountName: cpx-ingress-k8-role
+      containers:
+      - name: cpx-ingress
+        image: "us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest"
+        securityContext:
+           privileged: true
+        env:
+         - name: "EULA"
+           value: "yes"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpx-service
+  labels:
+    app: cpx-service
+spec:
+  type: NodePort
+  ports:
+  - port: 9080
+    protocol: TCP
+    name: http
+  - port: 9443
+    protocol: TCP
+    name: https
+  selector:
+    app: cpx-ingress
