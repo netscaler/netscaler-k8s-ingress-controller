@@ -1,3 +1,6 @@
+# =====================================================
+# CLUSTER ROLES
+# =====================================================
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -10,6 +13,10 @@ rules:
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
+
+# =====================================================
+# ROLEBINDINGS
+# =====================================================
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -24,12 +31,20 @@ subjects:
   name: cpx-ingress-k8-role
   namespace: default
 apiVersion: rbac.authorization.k8s.io/v1
+
+# =====================================================
+# SERVICEACCOUNTS
+# =====================================================
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cpx-ingress-k8-role
   namespace: default
+
+# ====================================================
+# CPX-INGRESS
+# ====================================================
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -52,6 +67,9 @@ spec:
         env:
          - name: "EULA"
            value: "yes"
+# ====================================================
+# CPX-SERVICE
+# ====================================================
 ---
 apiVersion: v1
 kind: Service
