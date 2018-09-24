@@ -7,7 +7,7 @@ Learn more about using Ingress on [k8s.io](https://kubernetes.io/docs/concepts/s
 
 Configuring a  ADC is harder in kubernetes environment where microservices will be coming up and going down.
 The Ingress resource simplifies the configuration, and an Ingress controller is meant to handle it.
-An Ingress Controller is a daemon, deployed as a Kubernetes Pod, that watches the apiserver's /ingresses endpoint for updates to the Ingress resource. Its job is to satisfy requests for Ingresses  and configure the Ingress ADC accordingly.
+An Ingress Controller is a daemon, deployed as a Kubernetes Pod, that watches the apiserver's for ingresses  updates and configures the Ingress ADC accordingly.
 
 # **Examples**
 
