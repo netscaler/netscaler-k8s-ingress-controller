@@ -68,10 +68,10 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 9080
+  - port: 80
     protocol: TCP
     name: http
-  - port: 9443
+  - port: 443
     protocol: TCP
     name: https
   selector:
