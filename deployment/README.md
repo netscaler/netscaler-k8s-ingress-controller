@@ -111,7 +111,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
    This pulls the latest image and brings up the Citrix Ingress Controller.
                 
-   Official Citrix Ingress Controller docker images is <span style="color:red"> `gcr.io/citrix-k8s-ingress-controller/citrix-ingress-controller:latest` </span> 
+   Official Citrix Ingress Controller docker images is <span style="color:red"> `us.gcr.io/citrix-217108/citrix-k8s-ingress-controller:latest` </span> 
 
 4. Configure routes for POD reachability
    ```

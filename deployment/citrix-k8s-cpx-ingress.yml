@@ -1,7 +1,7 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: cpx-ingress-k8-role
+  name: cpx-ingress-k8s-role
 rules:
   - apiGroups: [""]
     resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
@@ -14,21 +14,21 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: cpx-ingress-k8-role
+  name: cpx-ingress-k8s-role
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cpx-ingress-k8-role
+  name: cpx-ingress-k8s-role
 subjects:
 - kind: ServiceAccount
-  name: cpx-ingress-k8-role
+  name: cpx-ingress-k8s-role
   namespace: default
 apiVersion: rbac.authorization.k8s.io/v1
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cpx-ingress-k8-role
+  name: cpx-ingress-k8s-role
   namespace: default
 ---
 apiVersion: v1
@@ -43,7 +43,7 @@ spec:
       labels:
         app: cpx-ingress
     spec:
-      serviceAccountName: cpx-ingress-k8-role
+      serviceAccountName: cpx-ingress-k8s-role
       containers:
       - name: cpx-ingress
         image: "us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest"
@@ -52,6 +52,12 @@ spec:
         env:
          - name: "EULA"
            value: "yes"
+         - name: "NS_PROTOCOL"
+           value: "HTTP"
+         # Set port for Nitro
+         - name: "NS_PORT"
+           value: "9080"
+        imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
