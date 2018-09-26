@@ -29,8 +29,10 @@
     kubectl create -f guestbook-ingress.yml
    ```
 ##  **Test the application**
-   Create a `www.guestbook.com` domain name and update with NodePort IP of cpx-service(CPX)/Vserver IP(VPX/MPX). and access `www.guestbook.com` from browser which opens guestbook application. 
-   
+   For CPX create a host entry for dns resolution`www.guestbook.com X.X.X.X(IP of k8s master node)` in hostfile.Get NodePort information for cpx-service(http)[kubectl describe service cpx-service].Access `http://www.guestbook.com:NodePort` from browser which opens guestbook application. 
+
+For VPX create a host entry for dns resolution`www.guestbook.com X.X.X.X(frontend-ip in ingress.citrix.com/frontend-ip)` in hostfile..Access `http://www.guestbook.com` from browser which opens guestbook application. 
+
    Minikube users can use following command to get the service IP.
    ```
     minikube service cpx-service --url 
