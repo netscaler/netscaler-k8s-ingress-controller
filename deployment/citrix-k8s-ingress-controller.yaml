@@ -62,4 +62,7 @@ spec:
          # Set log level
          - name: "EULA"
            value: "yes"
+        args:
+          - --ingress-classes
+            citrix
         imagePullPolicy: Always
