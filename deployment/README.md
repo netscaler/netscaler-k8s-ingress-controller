@@ -9,11 +9,6 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
 **YAML to be used:** ***citrix-k8s-cpx-ingress.yaml***
 
-```
-   Citrix Ingress Controller will do "clear config -f basic" on the NetScaler. Please refer [here](https://support.citrix.com/article/CTX112695/#basic) for more details.
-   Fix  will be avilable soon.
-```
-
 # **Install Citrix Ingress Controller on Kubernetes:**
  1. Download or copy the YML file "citrix-k8s-ingress-controller.yaml" from the deployment Directory.
                         
