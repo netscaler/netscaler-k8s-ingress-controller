@@ -1,0 +1,77 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8-role
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
+    verbs: ["*"]
+
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8-role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cic-k8-role
+subjects:
+- kind: ServiceAccount
+  name: cic-k8-role
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cic-k8-role
+  namespace: default
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-k8s-ingress-controller
+  labels:
+    app: cic-k8s-ingress-controller
+spec: 
+      serviceAccountName: cic-k8-role
+      containers:
+      - name: cic-k8s-ingress-controller
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }} 
+        args: 
+        - --ingress-class
+            Citrix
+        env:
+        - name: "NS_IP"
+          value: "{{ .Values.nsIP }}"
+        - name: "NS_USER"
+          valueFrom:
+           secretKeyRef:
+            name: {{ .Values.loginFileName }}
+            key: username
+        - name: "NS_PASSWORD"
+          valueFrom:
+           secretKeyRef:
+            name: {{ .Values.loginFileName }} 
+            key: password
+        - name: "EULA"
+          value: "{{ .Values.license.accept }}"
+        - name: "LOGLEVEL"
+          value: "{{ .Values.logLevel}}"
+        - name: "NS_PROTOCOL"
+          value: "{{ .Values.nsProtocol }}"
+        - name: "NS_PORT"
+          value: "{{ .Values.nsPort}}"
+{{- if .Values.kubernetesURL }}
+        - name: "kubernetes_url"
+          value: "{{ .Values.kubernetesURL }}"
+{{- end}}
+
