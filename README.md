@@ -13,7 +13,8 @@ Deploymwnt of Citrix ingress controller can be done either directly using [yamls
 
 # **Examples**
 
-Loadbalance simple, multi-tier web application using Citrix Ingress Contoller [Quick Deploy](./example). 
+Loadbalance simple, multi-tier web application using Citrix Ingress Contoller [Quick Deploy](./example).
+For deploying it using helm chart please follow (this)[https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples]. 
 
 # **Questions**
 For questions and support please use https://discussions.citrix.com/forum/1657-netscaler-cpx/ forum. 
