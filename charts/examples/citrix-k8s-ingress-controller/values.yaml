@@ -1,0 +1,17 @@
+# Default values for citrix-k8-ingress-controller.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: us.gcr.io/citrix-217108/citrix-k8s-ingress-controller 
+  tag: latest
+  pullPolicy: Always 
+loginFileName: nslogin1 #default secret file for NetScaler login
+nsIP: x.x.x.x # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+nsPort: 443 # Set port for NetScaler NITRO 
+nsProtocol: HTTPS #set protocol for NetScaler NITRO
+logLevel: DEBUG 
+kubernetesURL:
+license:
+   accept: no #Should be 'yes' to run Citrix Ingress Controller
+nsVIP: x.x.x.x #VIP IP

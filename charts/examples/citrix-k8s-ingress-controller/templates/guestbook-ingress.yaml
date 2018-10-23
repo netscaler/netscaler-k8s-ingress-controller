@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: guestbook-ingress
+  annotations:
+   kubernetes.io/ingress.class: "Citrix"
+{{- if .Values.nsVIP }}   
+   ingress.citrix.com/frontend-ip: "{{ .Values.nsVIP }}" 
+{{- end }}
+spec:
+  tls:
+  -secretName: 
+  rules:
+  - host:  www.guestbook.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: 80
+
