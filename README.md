@@ -9,7 +9,7 @@ Configuring a  ADC is harder in kubernetes environment where microservices will 
 The Ingress resource simplifies the configuration, and an Ingress controller is meant to handle it.
 An Ingress Controller is a daemon, deployed as a Kubernetes Pod, that watches the apiserver for ingresses  updates and configures the Ingress ADC accordingly.
 
-Deploymwnt of Citrix ingress controller can be done either directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
+Deployment of Citrix ingress controller can be done either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
 
 # **Examples**
 
