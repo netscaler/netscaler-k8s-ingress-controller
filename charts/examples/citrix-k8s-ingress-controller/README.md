@@ -19,6 +19,10 @@ To install the chart with the release name ``` my-release:```
 
 ```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>```
 
+If you want to run exporter along with CIC.
+
+```helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,exporter.require=1.0```
+
 The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
  
 ## Uninstalling the Chart
@@ -45,6 +49,11 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```logLevel```|Optional: This is used for controlling the logs generated from Citrix Ingress Controller. options available are CRITICAL ERROR WARNING INFO DEBUG |```DEBUG```|
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
 |```nsVIP```| VIP IP |```nil``` 
+|```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
+|```exporter.image.repository```|Exporter image repository|```us.gcr.io/citrix-217108/netscaler-metrics-exporter```|
+|```exporter.image.tag```|Exporter image tag|```v1.0.0 ```|
+|```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
+|```exporter.ports.containerPort```|Exporter Container Port|```8888```|
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples/citrix-k8s-ingress-controller/values.yaml)
 
 ## Route Addition in MPX/VPX
@@ -80,7 +89,7 @@ The created filename can be passed to values.yaml.
 ## RBAC
 By default the chart will install the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and rolebindings.
 
-
+## Exporter
+[Exporter](https://github.com/citrix/netscaler-metrics-exporter) is running along with the CIC and pulling metrics from the VPX/MPX. It exposes the metrics using Kubernetes NodePort.
 
 ## For More Info: https://github.com/citrix/citrix-k8s-ingress-controller
-

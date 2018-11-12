@@ -19,9 +19,11 @@ This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubern
 
 To install the chart with the release name ``` my-release```:
 
-```
-helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes
-```
+```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes```
+
+To run the exporter as sidecar with CPX
+
+```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,exporter.require=1.0```
 
 The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
 
@@ -50,5 +52,7 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 ## RBAC
 By default the chart will install the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and rolebindings.
 
+## Exporter
+[Exporter](https://github.com/citrix/netscaler-metrics-exporter) is running as sidecar with the CPX and pulling metrics from the CPX. It exposes the metrics using Kubernetes NodePort.
 
 ## For More Info: https://github.com/citrix/citrix-k8s-ingress-controller

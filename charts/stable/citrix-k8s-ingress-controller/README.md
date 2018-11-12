@@ -17,9 +17,11 @@ This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kuberne
 
 To install the chart with the release name ``` my-release:```
 
-```
-helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes
-```
+```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes```
+
+If you want to run exporter along with CIC.
+
+```helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,exporter.require=1.0```
 
 The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration lists the parameters that can be configured during installation.
  
@@ -85,6 +87,8 @@ The created filename can be passed to values.yaml.
 ## RBAC
 By default the chart will install the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and rolebindings.
 
+## Exporter
+[Exporter](https://github.com/citrix/netscaler-metrics-exporter) is running along with the CIC and pulling metrics from the VPX/MPX. It exposes the metrics using Kubernetes NodePort.
 
 ## For More Info: https://github.com/citrix/citrix-k8s-ingress-controller
 

@@ -74,4 +74,27 @@ spec:
         - name: "kubernetes_url"
           value: "{{ .Values.kubernetesURL }}"
 {{- end}}
+{{- if .Values.exporter.require }}
+      - name: exp
+        image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+        args:
+           - "--target-nsip={{ .Values.nsIP }}"
+           - "--port={{ .Values.exporter.ports.containerPort }}"
+        imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: exp
+   labels:
+     app: exp
+spec:
+   type: ClusterIP
+   ports:
+   - port: {{ .Values.exporter.ports.containerPort }}
+     targetPort: {{ .Values.exporter.ports.containerPort }}
+     name: exp
+   selector:
+     app: cic-k8s-ingress-controller
+{{- end }}
 
