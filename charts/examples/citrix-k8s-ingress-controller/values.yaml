@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: us.gcr.io/citrix-217108/citrix-k8s-ingress-controller 
+  repository: quay.io/citrix/citrix-k8s-ingress-controller 
   tag: latest
   pullPolicy: Always 
 loginFileName: nslogin1 #default secret file for NetScaler login
@@ -17,7 +17,7 @@ nsVIP: x.x.x.x #VIP IP
 exporter:
   require: 0
   image:
-       repository: us.gcr.io/citrix-217108/netscaler-metrics-exporter
+       repository: quay.io/citrix/netscaler-metrics-exporter
        tag: v1.0.0
        pullPolicy: Always
   ports:

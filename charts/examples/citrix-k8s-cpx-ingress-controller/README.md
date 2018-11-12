@@ -42,7 +42,7 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 | ``` image.tag``` | Image Tag| ```latest``` |
 |```  image.pullPolicy```| Image Pull Policy  | ```Always``` |
 |```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
-|```exporter.image.repository```|Exporter image repository|```us.gcr.io/citrix-217108/netscaler-metrics-exporter ```|
+|```exporter.image.repository```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
 |```exporter.image.tag```|Exporter image tag|```v1.0.0 ```|
 |```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|

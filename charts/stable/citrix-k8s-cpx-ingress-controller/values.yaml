@@ -10,7 +10,7 @@ license:
 exporter:
   require: 0
   image:
-       repository: us.gcr.io/citrix-217108/netscaler-metrics-exporter
+       repository: quay.io/citrix/netscaler-metrics-exporter
        tag: v1.0.0
        pullPolicy: Always
   ports:
