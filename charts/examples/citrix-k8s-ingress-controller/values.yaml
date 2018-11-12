@@ -11,7 +11,15 @@ nsIP: x.x.x.x # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enab
 nsPort: 443 # Set port for NetScaler NITRO 
 nsProtocol: HTTPS #set protocol for NetScaler NITRO
 logLevel: DEBUG 
-kubernetesURL:
 license:
    accept: no #Should be 'yes' to run Citrix Ingress Controller
 nsVIP: x.x.x.x #VIP IP
+exporter:
+  require: 0
+  image:
+       repository: us.gcr.io/citrix-217108/netscaler-metrics-exporter
+       tag: v1.0.0
+       pullPolicy: Always
+  ports:
+       containerPort: 8888
+kubernetesURL:

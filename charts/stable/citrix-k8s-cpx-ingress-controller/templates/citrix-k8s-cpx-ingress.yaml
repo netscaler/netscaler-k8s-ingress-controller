@@ -60,6 +60,14 @@ spec:
            value: "HTTP"
          - name: "NS_PORT"
            value: "9080"
+{{- if .Values.exporter.require }}
+      - name: exp
+        image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+        args:
+          - "--target-nsip=192.0.0.2"
+          - "--port={{ .Values.exporter.ports.containerPort }}"
+        imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -76,5 +84,10 @@ spec:
   - port: 443 
     protocol: TCP
     name: https
+{{- if .Values.exporter.require }}
+  - port: {{ .Values.exporter.ports.containerPort }}
+    targetPort: {{ .Values.exporter.ports.containerPort }}
+    name: exp-port
+{{- end }}
   selector:
     app: cpx-ingress
