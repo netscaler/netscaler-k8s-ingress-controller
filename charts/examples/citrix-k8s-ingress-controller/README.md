@@ -39,7 +39,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 | Parameter |    Description | Default |
 | --------- |  ---------------- | ------- |
 |```license.accept```|Set to accept to accept the terms of the Citrix license|```no```|
-| ``` image.repository ``` | Image Repository|```us.gcr.io/citrix-k8s-ingress-controller/citrix-ingress-controller```|
+| ``` image.repository ``` | Image Repository|```quay.io/citrix/citrix-k8s-ingress-controller```|
 | ``` image.tag```  | Image Tag    |```latest```|
 |```  image.pullPolicy```| Image Pull Policy  |```Always```|
 |```loginFileName```| Secret keys for login into NetScaler VPX or MPX Refer Secret Keys|```nslogin1```|
@@ -50,7 +50,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
 |```nsVIP```| VIP IP |```nil``` 
 |```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
-|```exporter.image.repository```|Exporter image repository|```us.gcr.io/citrix-217108/netscaler-metrics-exporter```|
+|```exporter.image.repository```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
 |```exporter.image.tag```|Exporter image tag|```v1.0.0 ```|
 |```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
