@@ -13,7 +13,7 @@
 ## **Choose the  deployment**
 
 #### **1. Bring up Citrix Ingress Controller for VPX, MPX**
-   Deploy Citrix ingress controller follow [Deployment](../../deployment).
+   Deploy Citrix ingress controller follow [Deployment](../../deployment/baremetal).
 
    Update `guestbook-ingress.yml` with a valid virtual IP. Annotation for frontend ip is `ingress.citrix.com/frontend-ip`.
 
@@ -23,7 +23,7 @@
 
 #### **2. Bring up CPX with builtin Controller**
 
-   Deploy CPX with citrix ingress controller follow [Deployment](../../deployment).
+   Deploy CPX with citrix ingress controller follow [Deployment](../../deployment/baremetal).
    Create an ingress resource by following command.
    ```
     kubectl create -f guestbook-ingress.yml
