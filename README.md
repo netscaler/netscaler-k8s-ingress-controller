@@ -14,6 +14,8 @@ The Citrix Ingress Controller can be deployed either by directly using [yamls](h
 Deploy the Guestbook application and use the [Citrix CPX](https://www.citrix.com/products/citrix-adc/cpx-express.html) to provide the Ingress
 * [Quick Deploy using yaml](./example).
 * [Quick Deploy using Helm](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples).
+* [Deployment in Google Cloud](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/deployment/gcp)
+* [Deployment in Azure Cloud](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/deployment/azure)
 
 # **Questions**
 For questions and support the following channels are available:
