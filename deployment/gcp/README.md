@@ -30,7 +30,6 @@ We have the below deployment solutions for deploying CPX as an ingress device in
 - [Standalone CPX deployment](#standalone-cpx-deployment)
 - [High availability CPX deployment](#high-availability-cpx-deployment)
 - [CPX per node deployment](#cpx-per-node-deployment)
-- [Two tier deployment with VPX load-balancing CPX ingress](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/deployment/gcp/two-tier-vpx/README.md)
 
 
 
