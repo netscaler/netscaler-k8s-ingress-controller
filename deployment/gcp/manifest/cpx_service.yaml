@@ -1,0 +1,25 @@
+# If using this on GKE
+# Make sure you have cluster-admin role for your account
+# kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<username of your google account>
+#
+
+#Expose the CPX as a Load-balancer service
+kind: Service
+apiVersion: v1
+metadata:
+  name: cpx-ingress
+  labels:
+    name: cpx-ingress
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    name: cpx-ingress
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+---
