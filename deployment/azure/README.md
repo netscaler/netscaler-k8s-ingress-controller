@@ -1,6 +1,6 @@
-# Citrix CPX as an Ingress in Azure Kubernetes Engine
+# Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
 
-This guide explains the deployment of Citrix CPX as an ingress in Azure Kubernetes Engine (AKS) in basic networking mode (kubenet).
+This guide explains the deployment of Citrix ADC CPX as an ingress in Azure Kubernetes Engine (AKS) in basic networking mode (kubenet).
 
 
 #### Prerequisites
@@ -12,33 +12,33 @@ Make sure you have a Kubernetes cluster up and running.
 **Make sure the AKS is configured
 in Basic Networking mode (kubenet) only and not in Advanced Networking mode (Azure CNI)**
 
-Please refer [Guide to create an AKS cluster](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/browse/deployment/azure/create-aks/README.md) for any help in creating a Kubernetes cluster in AKS.
+Please refer [Guide to create an AKS cluster](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md) for any help in creating a Kubernetes cluster in AKS.
 
 ### Steps to deploy Citrix CPX as an Ingress:
 
 - **Create a sample application and expose it as service.** In our example, let's use an apache web-server.
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/apache.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/apache.yaml
 ```
 
 - **Create a Citrix CPX**
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/standalone_cpx.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/standalone_cpx.yaml
 ```
  
 - **Create an ingress object**
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/cpx_ingress.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/standalone_cpx.yaml
 ```
 
 - **Expose the Citrix CPX as a service of type Load-balancer.** This would create an Azure LB with an External IP for receiving traffic.
 This is supported in kubernetes since v1.10.0.
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/cpx_service.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/cpx_service.yaml
 ```
 
 After executing the above command, wait for the load-balancer to create an external IP.
@@ -63,7 +63,7 @@ cpx-ingress   LoadBalancer   10.0.37.255    <EXTERNAL-IP CREATED>   80:32258/TCP
 kubernetes    ClusterIP      10.0.0.1       <none>           443/TCP                      22h
 ```
 
-The health check for the cloud load-balancer is obtained from the **readinessProbe** configured in the [Citrix CPX deployment yaml file](https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/cpx_service.yaml).
+The health check for the cloud load-balancer is obtained from the **readinessProbe** configured in the [Citrix CPX deployment yaml file](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml).
 So if the health check fails for some reason, you may need to check the readinessProbe configured for Citrix CPX.
 
 
@@ -102,7 +102,7 @@ This is supported in kubernetes since v1.10.0.
 
 #### Topology for standalone Citrix CPX deployment:
 
-<img src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/images/Azure_Standalone_CPX.png" width="500">
+<img src="https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/images/Azure_Standalone_CPX.png" width="500">
 
 
 #### Steps:
@@ -110,7 +110,7 @@ This is supported in kubernetes since v1.10.0.
 Just execute the below command to create a Citrix CPX ingress with inbuilt Citrix Ingress Controller in your Kubernetes cluster
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/all-in-one.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 ```
 
 ##### To access the application:
@@ -124,13 +124,13 @@ curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 Just execute the below command to delete the complete deployment
 
 ```
-kubectl delete -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/all-in-one.yaml
+kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 ```
 
 
 
 
-### High availability CPX deployment
+### High availability Citrix CPX deployment
 
 In the standalone deployment of Citrix CPX as ingress, if the ingress device fails for some reason, there would be a traffic
 outage for a few seconds. To avoid this disruption, instead of deploying a single Citrix CPX ingress, we deploy two Citrix CPX ingress
@@ -139,7 +139,7 @@ devices. So that if one Citix CPX fails, the other Citrix CPX is availble to han
 
 #### Topology for high availability CPX deployment:
 
-<img src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/images/Azure_HA_CPX.png" width="500">
+<img src="https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/images/Azure_HA_CPX.png" width="500">
 
 
 #### Steps:
@@ -147,7 +147,7 @@ devices. So that if one Citix CPX fails, the other Citrix CPX is availble to han
 Just execute the below command to create a CPX ingress with inbuilt Citrix Ingress Controller in your Kubernetes cluster
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/all-in-one-ha.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml
 ```
 
 ##### To access the application:
@@ -161,7 +161,7 @@ curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 Just execute the below command to delete the complete deployment
 
 ```
-kubectl delete -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/all-in-one-ha.yaml
+kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml
 ```
 
 
@@ -174,7 +174,7 @@ devices when the traffic is high.
 
 #### Topology for CPX per node deployment:
 
-<img src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/images/Azure_CPX_per_node.png" width="500">
+<img src="https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/images/Azure_CPX_per_node.png" width="500">
 
 
 #### Steps:
@@ -182,7 +182,7 @@ devices when the traffic is high.
 Just execute the below command to create a CPX ingress with inbuilt Citrix Ingress Controller in your kubernetes cluster
 
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/all-in-one-reliable.yaml
+kubectl create -fhttps://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml
 ```
 
 ##### To access the application:
@@ -196,7 +196,7 @@ curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 Just execute the below command to delete the complete deployment
 
 ```
-kubectl delete -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/azure/manifest/all-in-one-reliable.yaml
+kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml
 ```
 
 
