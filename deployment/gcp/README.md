@@ -44,14 +44,14 @@ This is supported in kubernetes since v1.10.0.
 
 #### Topology for standalone CPX deployment:
 
-<img src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/images/CPX-GCP-Topology-Standalone.png" width="500">
+<img src="https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/images/CPX-GCP-Topology-Standalone.png" width="500">
 
 
 #### Steps:
 
 Just execute the below command to create a CPX ingress with inbuilt Citrix Ingress Controller in your kubernetes cluster
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/manifest/cpx-gcp-demo.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx-gcp-demo.yaml
 ```
 
 
@@ -102,7 +102,7 @@ curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 Just execute the below command to delete the complete deployment
 
 ```
-kubectl delete -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/manifest/cpx-gcp-demo.yaml
+kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx-gcp-demo.yaml
 ```
 
 
@@ -117,14 +117,14 @@ devices. So that if one CPX fails, the other CPX is availble to handle traffic t
 
 #### Topology for high availability CPX deployment:
 
-<img src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/images/CPX-GCP-HA-Solution-Topology.png" width="500">
+<img src="https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/images/CPX-GCP-HA-Solution-Topology.png" width="500">
 
 
 #### Steps:
 
 Just execute the below command to create a CPX ingress with inbuilt Citrix Ingress Controller in your kubernetes cluster
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/manifest/cpx-gcp-ha-demo.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx-gcp-ha-demo.yaml
 ```
 
 
@@ -175,7 +175,7 @@ curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 Just execute the below command to delete the complete deployment
 
 ```
-kubectl delete -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/manifest/cpx-gcp-ha-demo.yaml
+kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx-gcp-ha-demo.yaml
 ```
 
 
@@ -190,14 +190,14 @@ devices when the traffic is high.
 
 #### Topology for CPX per node deployment:
 
-<img src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/images/CPX-GCP-Daemonset-Topology.png" width="500">
+<img src="https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/images/CPX-GCP-Daemonset-Topology.png" width="500">
 
 
 #### Steps:
 
 Just execute the below command to create a CPX ingress with inbuilt Citrix Ingress Controller in your kubernetes cluster
 ```
-kubectl create -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/manifest/cpx-gcp-reliable-demo.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx-gcp-reliable-demo.yaml
 ```
 
 
@@ -248,7 +248,7 @@ curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 Just execute the below command to delete the complete deployment
 
 ```
-kubectl delete -f https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/gcp/manifest/cpx-gcp-reliable-demo.yaml
+kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx-gcp-reliable-demo.yaml
 ```
 
 
