@@ -26,6 +26,14 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: citrix-readonly-pull-secret
+data:
+  .dockerconfigjson: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJZMmwwY21sNEsyTnBZM0psWVdSdmJteDVPbFpKVVZrM1JGSkxVVk5FVVRnM1F6aE1OMGd5VTAxYVdWVXdOa2RETUVjd1YwUXdUMVZVVEVWV1VsbEVRVVJFTjFjNFUxQldTalkxU2s1R1YxUkhWVmc9IiwKICAgICAgImVtYWlsIjogIiIKICAgIH0KICB9Cn0=
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cpx-ingress-k8s-role
@@ -61,6 +69,8 @@ spec:
           - --ingress-classes
             citrix
         imagePullPolicy: Always
+      imagePullSecrets:
+      - name: citrix-readonly-pull-secret
 ---
 apiVersion: v1
 kind: Service

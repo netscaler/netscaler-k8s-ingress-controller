@@ -1,20 +1,16 @@
-# **Citrix Ingress Controller for kubernetes:**
+# Citrix Ingress Controller for kubernetes:
 Citrix Ingress Controller is available in two flavours.
-## **Citrix Ingress Controller:**
+## Citrix Ingress Controller:
 This runs as a POD that monitors the Kubernetes API server and configure NetScaler VPX and MPX. 
 
 **YAML to be used:** ***citrix-k8s-ingress-controller.yaml***
-## **CPX with inbuilt Ingress Controller:**
+## CPX with inbuilt Ingress Controller:
 CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX runs as pod and does N-S load balancing. 
 
 **YAML to be used:** ***citrix-k8s-cpx-ingress.yaml***
 
-```
-   Citrix Ingress Controller will do "clear config -f basic" on the NetScaler. Please refer [here](https://support.citrix.com/article/CTX112695/#basic) for more details.
-   Fix  will be avilable soon.
-```
 
-# **Install Citrix Ingress Controller on Kubernetes:**
+## Install Citrix Ingress Controller on Kubernetes:
  1. Download or copy the YML file "citrix-k8s-ingress-controller.yaml" from the deployment Directory.
                         
     This yaml has four section, in which first three is for cluster role creation and service account creation and the 
@@ -131,46 +127,51 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
      podCIDR  = 10.244.1.0/24
      add route 10.244.1.0 255.255.255.0 10.102.53.101
    ```
-# **Install CPX with inbuilt Ingress Controller on Kubernetes:**
-   This is end user license agreement which has to be YES for CPX to up and run.
-   This pulls image from `quay.io/citrix/citrix-k8s-cpx-ingress:latest` which has both cpx and citrix ingress controller in built and start configuring itself.
-   ```
+
+## Install CPX with inbuilt Ingress Controller on Kubernetes:
+   1. Get the imagePullSecrets <br/>
+      citrix cpx images requires "image pull secrets" to download the image.<br/>
+      For secret, raise query [here](https://netscalercpx.slack.com/messages/C285PG1RU) <br/>
+   2. Update the Secret <br/> 
+      Update the ".dockerconfigjson" field under secret in citrix-k8s-cpx-ingress.yml <br/>
+   3. End user license agreement <br/>
+      End user license agreement has to be YES for CPX to up and run. <br/>
+
+      This pulls image from `quay.io/citrix/citrix-k8s-cpx-ingress:latest` which has both cpx and citrix ingress controller in built and start configuring itself.
+      ```
            kubectl create -f citrix-k8s-cpx-ingress.yml
-   ```
+      ```
 # **Annotations**
 
 
 List of annotations supported by Citrix Ingress Controller:
 
-* ingress.citrix.com/frontend-ip 
+* ingress.citrix.com/frontend-ip
 ```
-            Custom VIP. This IP will be configured in NetScaler as VIP. 
+            Custom VIP. This IP will be configured in NetScaler as VIP.
             Default Value : NSIP of NetScaler.
 ```
-* ingress.citrix.com/secure-port 
+* ingress.citrix.com/secure-port
 ```
-            Port for https traffic 
-            This port will be configured in NetScaler CS Vserver. 
+            Port for https traffic
+            This port will be configured in NetScaler CS Vserver.
             Default Value : 443.
 ```
 * ingress.citrix.com/insecure-port
 ```
-            Port for http traffic 
-            This port will be configured in NetScaler CS Vserver. 
+            Port for http traffic
+            This port will be configured in NetScaler CS Vserver.
             Default Value : 80.
 ```
-* ingress.citrix.com/insecure-termination 
+* ingress.citrix.com/insecure-termination
 ```
             Use "allow" to permit http traffic
             Use "redirect" to redirect http to https
-            Use "disallow" to drop http traffic. 
+            Use "disallow" to drop http traffic.
             Default Value : disallow.
 ```
-* ingress.citrix.com/secure-backend  
+* ingress.citrix.com/secure-backend
 ```
             Set secure-backend as True, to have SSL backend
             Default Value : False.
 ```
-
-
-                        
