@@ -31,7 +31,7 @@ kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-co
 - **Create an ingress object**
 
 ```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/standalone_cpx.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/cpx_ingress.yaml
 ```
 
 - **Expose the Citrix CPX as a service of type Load-balancer.** This would create an Azure LB with an External IP for receiving traffic.
@@ -182,7 +182,7 @@ devices when the traffic is high.
 Just execute the below command to create a CPX ingress with inbuilt Citrix Ingress Controller in your kubernetes cluster
 
 ```
-kubectl create -fhttps://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml
 ```
 
 ##### To access the application:

@@ -39,7 +39,7 @@ kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-co
 - **Create an ingress object**
 
 ```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/standalone_cpx.yaml
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_ingress.yaml
 ```
 
 - **Expose the Citrix CPX as a service of type Load-balancer.** This would create an Azure LB with an External IP for receiving traffic.
