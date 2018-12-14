@@ -4,5 +4,6 @@
 3.  [SmartAnnotations](../docs/smartannotations.md)
 
 # Deployment Solutions
-1.  [Google Cloud](gcp/README.md)
-2.  [Azure Cloud](azure/README.md)
+1.  [On-Prem](baremetal)
+2.  [Google Cloud](gcp/README.md)
+3.  [Azure Cloud](azure/README.md)
