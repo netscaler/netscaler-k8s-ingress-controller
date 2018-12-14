@@ -7,7 +7,15 @@ Learn more about using Ingress on [k8s.io](https://kubernetes.io/docs/concepts/s
 
 An Ingress Controller is a controller that watches the Kubernetes API server for updates to the Ingress resource and reconfigures the Ingress load balancer accordingly.
 
-The Citrix Ingress Controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
+The Citrix Ingress Controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
+
+# **Citrix Ingress Controller Features**
+
+Features supported by Citrix Ingress Controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment)
+
+# **Deployment Solutions**
+
+Citrix Ingress Controller can be deployed in many platforms. detailed information can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment)
 
 # **Examples**
 
