@@ -1,3 +1,6 @@
+[![Docker Repository on Quay](https://quay.io/repository/citrix/citrix-k8s-ingress-controller/status "Docker Repository on Quay")](https://quay.io/repository/citrix/citrix-k8s-ingress-controller)
+
+
 # **Description**
 
 This repository contains the Citrix NetScaler Ingress Controller built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/). This controller automatically configures one or more Citrix NetScaler ADC based on Ingress resource configuration.
