@@ -1,7 +1,7 @@
 # Citrix Ingress Controller Features
 1.  [Ingress Class](../docs/ingress-class.md)
 2.  [Annotations](../docs/annotations.md)
-3.  [SmartAnnotations](../docs/smartannotations.md)
+3.  [Smart Annotations](../docs/smart-annotations.md)
 
 # Deployment Solutions
 1.  [On-Prem](baremetal)
