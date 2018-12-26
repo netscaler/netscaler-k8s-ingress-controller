@@ -109,24 +109,11 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
                 
    Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:latest` </span> 
 
-4. Configure routes for POD reachability
-   ```
-   Obtain podCIDR using below options:
-   # kubectl get nodes -o yaml | grep podCIDR
-     podCIDR: 10.244.0.0/24
-     podCIDR: 10.244.1.0/24
-     podCIDR: 10.244.2.0/24
-
-   Add Route to Netscaler
-   # add route <podCIDR_network> <podCIDR_netmask> <node_HostIP>
-   ```     
-   Ensure that Ingress MPX/VPX has a SNIP present in the host-network (i.e. network over which K8S nodes communicate with each other. Usually eth0 IP is from this network).
-   ```       
-     Example: 
-     Node1 IP = 10.102.53.101 
-     podCIDR  = 10.244.1.0/24
-     add route 10.244.1.0 255.255.255.0 10.102.53.101
-   ```
+4. #### Reachability to the Pod Network:
+    For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
+    `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
+    Refer [Network Configuration](../../docs/network-config.md) for further details regarding the same. 
+    By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
 
 ## Install CPX with inbuilt Ingress Controller on Kubernetes:
    1. Get the imagePullSecrets <br/>
@@ -141,37 +128,3 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
       ```
            kubectl create -f citrix-k8s-cpx-ingress.yml
       ```
-# **Annotations**
-
-
-List of annotations supported by Citrix Ingress Controller:
-
-* ingress.citrix.com/frontend-ip
-```
-            Custom VIP. This IP will be configured in NetScaler as VIP.
-            Default Value : NSIP of NetScaler.
-```
-* ingress.citrix.com/secure-port
-```
-            Port for https traffic
-            This port will be configured in NetScaler CS Vserver.
-            Default Value : 443.
-```
-* ingress.citrix.com/insecure-port
-```
-            Port for http traffic
-            This port will be configured in NetScaler CS Vserver.
-            Default Value : 80.
-```
-* ingress.citrix.com/insecure-termination
-```
-            Use "allow" to permit http traffic
-            Use "redirect" to redirect http to https
-            Use "disallow" to drop http traffic.
-            Default Value : disallow.
-```
-* ingress.citrix.com/secure-backend
-```
-            Set secure-backend as True, to have SSL backend
-            Default Value : False.
-```
