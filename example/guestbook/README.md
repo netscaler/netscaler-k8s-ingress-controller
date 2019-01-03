@@ -19,7 +19,7 @@
    wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml
    ```
 ###### 1.3. Update the guestbook-ingress.yaml
-   Update `guestbook-ingress.yaml` with a valid virtual IP. Annotation for frontend ip is ingress.citrix.com/frontend-ip`.
+   Update `guestbook-ingress.yaml` with a valid virtual IP. Annotation for frontend ip is `ingress.citrix.com/frontend-ip`.
 ###### 1.4. Create the guestbook ingress
    ```
    kubectl create -f guestbook-ingress.yaml
