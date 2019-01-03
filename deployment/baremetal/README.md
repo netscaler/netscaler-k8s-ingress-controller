@@ -11,7 +11,10 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
 
 ## Install Citrix Ingress Controller on Kubernetes:
- 1. Download or copy the YML file "citrix-k8s-ingress-controller.yaml" from the deployment Directory.
+ 1. Download the "citrix-k8s-ingress-controller.yaml" from the deployment Directory.
+    ```
+      wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+    ```
                         
     This yaml has four section, in which first three is for cluster role creation and service account creation and the 
     next one is for citrix ingress controller pod creation. 
@@ -116,12 +119,16 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
     By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
 
 ## Install CPX with inbuilt Ingress Controller on Kubernetes:
-   1. Get the imagePullSecrets <br/>
+   1. Download the "citrix-k8s-cpx-ingress.yml" from the deployment Directory.
+      ```
+          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+      ```
+   2. Get the imagePullSecrets <br/>
       citrix cpx images requires "image pull secrets" to download the image.<br/>
       For secret, raise query [here](https://netscalercpx.slack.com/messages/C285PG1RU) <br/>
-   2. Update the Secret <br/> 
+   3. Update the Secret <br/> 
       Update the ".dockerconfigjson" field under secret in citrix-k8s-cpx-ingress.yml <br/>
-   3. End user license agreement <br/>
+   4. End user license agreement <br/>
       End user license agreement has to be YES for CPX to up and run. <br/>
 
       This pulls image from `quay.io/citrix/citrix-k8s-cpx-ingress:latest` which has both cpx and citrix ingress controller in built and start configuring itself.
