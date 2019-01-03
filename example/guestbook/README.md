@@ -11,23 +11,28 @@
   ```
 
 ## **Choose the  deployment**
-
 #### **1. Bring up Citrix Ingress Controller for VPX, MPX**
-   Deploy Citrix ingress controller follow [Deployment](../../deployment/baremetal).
-
-   Update `guestbook-ingress.yaml` with a valid virtual IP. Annotation for frontend ip is `ingress.citrix.com/frontend-ip`.
-
+###### 1.1. Deploy Citrix ingress controller
+   Follow [Deployment](../../deployment) guide to deploy citrix ingress controller
+###### 1.2. Download the guestbook-ingress.yaml
    ```
-    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml 
+   wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml
    ```
-
+###### 1.3. Update the guestbook-ingress.yaml
+   Update `guestbook-ingress.yaml` with a valid virtual IP. Annotation for frontend ip is ingress.citrix.com/frontend-ip`.
+###### 1.4. Create the guestbook ingress
+   ```
+   kubectl create -f guestbook-ingress.yaml
+   ```  
 #### **2. Bring up CPX with builtin Controller**
 
-   Deploy CPX with citrix ingress controller follow [Deployment](../../deployment/baremetal).
-   Create an ingress resource by following command.
+###### 2.1 Deploy CPX with citrix ingress controller
+   Follow [Deployment](../../deployment) guide to deploy the CPX with citrix ingress controller
+###### 2.2 Create an ingress resource by following command
    ```
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml 
    ```
+
 ##  **Test the application**
    For CPX create a host entry for dns resolution`www.guestbook.com X.X.X.X(IP of k8s master node)` in hostfile.Get NodePort information for cpx-service(http)[kubectl describe service cpx-service].Access `http://www.guestbook.com:NodePort` from browser which opens guestbook application. 
 
