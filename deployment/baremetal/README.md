@@ -44,6 +44,8 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        <summary>NS_USER and NS_PASSWORD</summary>
 
          This is for authenticating with NetScaler if it has non default username and password. We can directly pass username/password or use Kubernetes secrets.
+         Please refer our [guide](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/command-policy.md) for configuring a non default NetScaler username and password.
+         
          Given Yaml uses k8s secrets. Following steps helps to create secrets to be used in yaml.
 
          Create secrets on Kubernetes for NS_USER and NS_PASSWORD
