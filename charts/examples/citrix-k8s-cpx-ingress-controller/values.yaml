@@ -7,7 +7,8 @@ image:
   pullPolicy: Always 
 license:
   accept: no
-exporter:
+ingressClass: Citrix
+exporter: 
   require: 0
   image:
        repository: quay.io/citrix/netscaler-metrics-exporter

@@ -48,7 +48,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }} 
         args: 
         - --ingress-class
-            Citrix
+            {{ .Values.ingressClass }} 
         env:
         - name: "NS_IP"
           value: "{{ .Values.nsIP }}"

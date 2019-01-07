@@ -46,9 +46,11 @@ spec:
       - name: cic-k8s-ingress-controller
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }} 
+{{- if .Values.ingressClass }}
         args: 
         - --ingress-class
-            Citrix
+            {{ .Values.ingressClass }}
+{{- end }}
         env:
         - name: "NS_IP"
           value: "{{ .Values.nsIP }}"

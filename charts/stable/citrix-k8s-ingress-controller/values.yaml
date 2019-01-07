@@ -15,6 +15,7 @@ nsPort: 443 # Set port for NetScaler NITRO
 nsProtocol: HTTPS #set protocol for NetScaler NITRO
 logLevel: DEBUG
 kubernetesURL:
+ingressClass: 
 exporter:
   require: 0
   image:
