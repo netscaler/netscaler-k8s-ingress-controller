@@ -5,7 +5,7 @@
 
 ## TL;DR;
 ``` 
-helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes
+helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>
 ```
 ## Introduction
 This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager
@@ -17,11 +17,11 @@ This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kuberne
 
 To install the chart with the release name ``` my-release:```
 
-```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes```
+```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>```
 
 If you want to run exporter along with CIC.
 
-```helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,exporter.require=1.0```
+```helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,ingressClass=<ingressClassName>,exporter.require=1.0```
 
 The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration lists the parameters that can be configured during installation.
  
@@ -51,8 +51,11 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```nsProtocol```|Optional:This protocol is used by Citrix Ingress Controller to communicate with NetScaler. Can use HTTP with nsPort as 80|```HTTPS```|
 |```logLevel```|Optional: This is used for controlling the logs generated from Citrix Ingress Controller. options available are CRITICAL ERROR WARNING INFO DEBUG |```DEBUG```|
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
+|```ingressClass```| Name of Ingress Class|```nil```|
  
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller/values.yaml)
+
+> Note: Please provide frontend-ip (VIP) in your application ingress yaml file. For more info refer [this](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md)
 
 ## Route Addition in MPX/VPX
 
@@ -89,6 +92,9 @@ By default the chart will install the recommended [RBAC](https://kubernetes.io/d
 
 ## Exporter
 [Exporter](https://github.com/citrix/netscaler-metrics-exporter) is running along with the CIC and pulling metrics from the VPX/MPX. It exposes the metrics using Kubernetes NodePort.
+
+## Ingress Class
+To know more about Ingress Class refer [this](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/ingress-class.md).
 
 ## For More Info: https://github.com/citrix/citrix-k8s-ingress-controller
 

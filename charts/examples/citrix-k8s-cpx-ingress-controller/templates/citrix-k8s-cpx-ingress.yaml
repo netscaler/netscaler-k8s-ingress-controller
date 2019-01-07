@@ -52,7 +52,7 @@ spec:
            privileged: true
         args:
          - --ingress-class
-            Citrix
+            {{ .Values.ingressClass }}
         env:
          - name: "EULA"
            value: "{{ .Values.license.accept }}"

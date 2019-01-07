@@ -50,9 +50,11 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }} 
         securityContext:
            privileged: true
+{{- if .Values.ingressClass }}
         args:
          - --ingress-class
-            Citrix
+            {{ .Values.ingressClass }}
+{{- end }}
         env:
          - name: "EULA"
            value: "{{ .Values.license.accept }}"

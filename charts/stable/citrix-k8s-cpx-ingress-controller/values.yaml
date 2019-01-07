@@ -7,6 +7,7 @@ image:
   pullPolicy: Always
 license:
   accept: no
+ingressClass:  
 exporter:
   require: 0
   image:
