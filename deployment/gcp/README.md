@@ -71,7 +71,7 @@ cpx-ingress   LoadBalancer   10.7.241.6     <EXTERNAL-IP CREATED>   80:32258/TCP
 kubernetes    ClusterIP      10.7.240.1     <none>           443/TCP                      22h
 ```
 
-The health check for the cloud load-balancer is obtained from the **readinessProbe** configured in the [Citrix CPX deployment yaml file](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp/manifest/cpx_service.yaml).
+The health check for the cloud load-balancer is obtained from the **readinessProbe** configured in the [Citrix CPX deployment yaml file](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp/manifest/standalone_cpx.yaml).
 So if the health check fails for some reason, you may need to check the readinessProbe configured for Citrix CPX.
 
 
