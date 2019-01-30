@@ -38,26 +38,13 @@ metadata:
   name: cpx
   namespace: default
 ---
-#Specify the ingress resource
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: v1
+kind: Secret
 metadata:
-  name: citrix-ingress
-  annotations:
-   kubernetes.io/ingress.class: "citrix-ingress"
-   ingress.citrix.com/secure-backend: "False"
-   ingress.citrix.com/insecure-termination: "allow"
-spec:
-  tls:
-  - secretName: cert-key
-  rules:
-  - host: citrix-ingress.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
+  name: citrix-readonly-pull-secret
+data:
+  .dockerconfigjson: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJZMmwwY21sNEsyTnBZM0psWVdSdmJteDVPbFpKVVZrM1JGSkxVVk5FVVRnM1F6aE1OMGd5VTAxYVdWVXdOa2RETUVjd1YwUXdUMVZVVEVWV1VsbEVRVVJFTjFjNFUxQldTalkxU2s1R1YxUkhWVmc9IiwKICAgICAgImVtYWlsIjogIiIKICAgIH0KICB9Cn0=
+type: kubernetes.io/dockerconfigjson
 ---
 #Deploy a standalone CPX as an ingress device
 apiVersion: extensions/v1beta1
@@ -117,4 +104,7 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           imagePullPolicy: Always
+      imagePullSecrets:
+        - name: citrix-readonly-pull-secret
+      
 ---
