@@ -95,6 +95,14 @@ spec:
           serviceName: apache
           servicePort: 80
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: citrix-readonly-pull-secret
+data:
+  .dockerconfigjson: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJZMmwwY21sNEsyTnBZM0psWVdSdmJteDVPbFpKVVZrM1JGSkxVVk5FVVRnM1F6aE1OMGd5VTAxYVdWVXdOa2RETUVjd1YwUXdUMVZVVEVWV1VsbEVRVVJFTjFjNFUxQldTalkxU2s1R1YxUkhWVmc9IiwKICAgICAgImVtYWlsIjogIiIKICAgIH0KICB9Cn0=
+type: kubernetes.io/dockerconfigjson
+---
 #Deploy two CPX as ingress devices
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -153,6 +161,8 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           imagePullPolicy: Always
+      imagePullSecrets:
+        - name: citrix-readonly-pull-secret
 ---
 #Expose the CPX as a Load-balancer service
 kind: Service
