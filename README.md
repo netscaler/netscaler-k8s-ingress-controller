@@ -31,7 +31,7 @@ Deploy the Guestbook application and use the [Citrix CPX](https://www.citrix.com
 # **Questions**
 For questions and support the following channels are available:
 * [Citrix Discussion Forum](https://discussions.citrix.com/forum/1657-netscaler-cpx/). 
-* [NetScaler CPX Slack Channel](https://netscalercpx.slack.com/messages/C285PG1RU)
+* [NetScaler CPX Slack Channel](https://citrixadccloudnative.slack.com/)
 
 # **Issues**
 Describe the Issue in Details, Collects the logs and  Use the forum mentioned below
