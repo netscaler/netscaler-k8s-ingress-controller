@@ -1,18 +1,17 @@
 Metrics Visualization of NetScaler Appliances in Kubernetes
 ===
 
-This document describes how the [NetScaler Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to monitor VPX/CPX ingress devices and CPX-EW (east-west) devices.
+This document describes how the [NetScaler Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
 
 
 Launching Promethus-Operator
 ---
-Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started quickly, this guide uses [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
-The manifest files help deploy a basic working model;
+Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
 ```
 git clone https://github.com/coreos/prometheus-operator.git
 kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
 ```
-This creates several pods and services, of which ```prometheus-k8s-xx``` pods are for metrics aggregation and timestamping and ```grafana``` pods are for visualization. An output similar to this should be seen;
+This creates several pods and services, of which ```prometheus-k8s-xx``` pods aggregate and timestamp metrics collected from NetScaler devices, and the ```grafana``` pod can be used for visualization. An output similar to this should be seen:
 ```
 $ kubectl get pods -n monitoring
 NAME                                   READY     STATUS    RESTARTS   AGE
@@ -28,7 +27,7 @@ prometheus-k8s-0                       3/3       Running   1          2h
 prometheus-k8s-1                       3/3       Running   1          2h
 prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
 ```
-**NOTE:** It may be preferable to expose the Prometheus and Grafana pods via NodePorts. To do so, the prometheus-service.yaml and grafana-service.yaml files will need to be modified as follows;
+**NOTE:** It may be preferable to expose the Prometheus and Grafana pods via NodePorts. To do so, the prometheus-service.yaml and grafana-service.yaml files will need to be modified as follows:
 
 
 <details>
@@ -53,7 +52,6 @@ spec:
     app: prometheus
     prometheus: k8s
 ```
-To apply these changes into the kubernetes cluseter run: ```kubectl apply -f prometheus-service.yaml```.
 
 </details>
 
@@ -77,11 +75,15 @@ spec:
   selector:
     app: grafana
 ```
-To apply these changes into the kubernetes cluseter run: ```kubectl apply -f grafana-service.yaml```.
 
 </details>
 
 
+To apply these changes into the kubernetes cluseter run:
+```
+kubectl apply -f prometheus-service.yaml
+kubectl apply -f grafana-service.yaml
+```
 
 Configuring NetScaler Metrics Exporter
 ---
@@ -91,7 +93,7 @@ This section describes how to integrate the NetScaler Metrics Exporter with the 
 <summary>VPX Ingress Device</summary>
 <br>
 
-To monitor an ingress VPX device, the netscaler-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. An example yaml file to deploy such an exporter is given below;
+To monitor an ingress VPX device, the netscaler-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. An example yaml file to deploy such an exporter is given below:
 
 ```
 apiVersion: v1
@@ -103,8 +105,8 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
-            imagePullPolicy: IfNotPresent
+      image: "quay.io/citrix/netscaler-metrics-exporter:latest"
+            imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_and_port_of_VPX>"
         - "--port=8888"
@@ -153,9 +155,16 @@ spec:
     spec:
       serviceAccountName: cpx
       containers:
+        # Adding exporter as a side-car
+        - name: exporter
+          image: "quay.io/citrix/netscaler-metrics-exporter:latest"
+          imagePullPolicy: Always
+          args:
+            - "--target-nsip=127.0.0.1"
+            - "--port=8888"
         - name: cpx-ingress
           image: "us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           securityContext:
             privileged: true
           env:
@@ -173,15 +182,6 @@ spec:
               containerPort: 443
             - name: nitro-http
               containerPort: 9080
-            - name: nitro-https
-              containerPort: 9443
-        # Adding exporter as a side-car
-        - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
-          imagePullPolicy: IfNotPresent
-          args:
-            - "--target-nsip=192.0.0.2"
-            - "--port=8888"
 ---
 kind: Service
 apiVersion: v1
@@ -197,7 +197,7 @@ spec:
       port: 8888
       targetPort: 8888
 ```
-Here, the exporter uses the ```192.0.0.2``` local IP to fetch metrics from the CPX.
+Here, the exporter uses the ```127.0.0.1``` local IP to fetch metrics from the CPX.
 
 </details>
 
@@ -237,11 +237,11 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
+          image: "quay.io/citrix/netscaler-metrics-exporter:latest"
           args:
             - "--target-nsip=192.168.0.2:80"
             - "--port=8888"
-          imagePullPolicy: IfNotPresent      
+          imagePullPolicy: Always
 ---
 kind: Service
 apiVersion: v1
@@ -265,10 +265,9 @@ Here, the exporter uses the ```192.168.0.2``` local IP to fetch metrics from the
 
 ServiceMonitors to Detect NetScalers
 ---
-The netscaler metrics exporters helps collect data from the VPX/CPX ingress and CPX-EW devices. These exporters needs to be detected by Prometheus Operator so that the metrics can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
+Till this point, the NetScaler Metrics Exporters was setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
 
-The following example yaml file will detect all the exporter services (given in the example yaml files above) which have the label ```service-type: citrix-adc-monitor``` associated with them. 
-
+The following example file will detect all the Exporter endpoints associated with the Exporter services which have the label ```service-type: citrix-adc-monitor``` associated with them.
 ```
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -295,21 +294,19 @@ Visualization of Metrics
 The NetScaler instances which were detected for monitoring will appear in the ```Targets``` page of the prometheus container. It canbe accessed using ```http://<k8s_cluster_ip>:<prometheus_nodeport>/targets``` and will look similar to the screenshot below
 
 
-![image](https://user-images.githubusercontent.com/39149385/49031498-1ace0100-f1d0-11e8-90c1-c4d0589819cc.png)
+![image](./images/prometheus-targets.png)
 
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafafa_nodeport>``` with default credentials ```admin:admin```
 
 2. Import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json) by selecting the ```+``` icon on the left panel and clicking import.
 
-<img src="https://user-images.githubusercontent.com/39149385/47292375-5e0ee000-d624-11e8-9410-77d46417e358.png" width="200">
+<img src="./images/grafana-import-json.png" width="200">
 
 
 3. A dashboard containing graphs similar to the following should appear
 
-![image](https://user-images.githubusercontent.com/39149385/49060067-f30f8500-f231-11e8-8c94-4be78fa6948a.png)
+![image](./images/grafana-dashboard.png)
 
 4. The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or demo [videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
-
-
 
