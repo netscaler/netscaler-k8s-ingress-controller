@@ -144,7 +144,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
       ```
    2. Get the imagePullSecrets <br/>
       citrix cpx images requires "image pull secrets" to download the image.<br/>
-      For secret, raise query [here](https://netscalercpx.slack.com/messages/C285PG1RU) <br/>
+      For secret, raise query [here](https://citrixadccloudnative.slack.com/) <br/>
    3. Update the Secret <br/> 
       Update the ".dockerconfigjson" field under secret in citrix-k8s-cpx-ingress.yml <br/>
    4. End user license agreement <br/>
