@@ -107,7 +107,8 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        <details>
        <summary>VIP_IP</summary>
        Citrix Ingress Controller will use the IP provided in this environment variable to configure a Vitual IP in the Tier-1 ADC which would recieve the application traffic from external world.
-       This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation.
+       This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the
+[frontend-ip](../../docs/annotations.md) annotation.
        
        
        Usage:
