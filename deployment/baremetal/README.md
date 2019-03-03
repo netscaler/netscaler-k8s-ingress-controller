@@ -9,6 +9,12 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
 **YAML to be used:** ***citrix-k8s-cpx-ingress.yaml***
 
+## Install CPX with inbuilt Ingress Controller on Kubernetes:
+   1. Apply the following command which pulls citrix cpx ingress controller and deploy it.
+      ```
+          kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+      ```
+   
 
 ## Install Citrix Ingress Controller on Kubernetes:
  1. Download the "citrix-k8s-ingress-controller.yaml" from the deployment Directory.
@@ -103,6 +109,23 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
                     annotations:
                           kubernetes.io/ingress.class: "Citrix"
+       </details>
+       <details>
+
+       <summary>VIP_IP</summary>
+
+       Citrix Ingress Controller will use the IP provided in this environment variable to configure a Vitual IP in the Tier-1 ADC which would recieve the application traffic from external world.
+
+       This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the [frontend-ip](../../docs/annotations.md) annotation.
+
+       **Usage:**
+       
+       ```
+       - name: "NS_VIP"       
+         value: "<Virtual IP address of Citrix ADC>"
+       ```
+       
+       </details>
 
 3. Create using kubectl command. 
 
@@ -120,20 +143,3 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
     Refer [Network Configuration](../../docs/network-config.md) for further details regarding the same. 
     By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
 
-## Install CPX with inbuilt Ingress Controller on Kubernetes:
-   1. Download the "citrix-k8s-cpx-ingress.yml" from the deployment Directory.
-      ```
-          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
-      ```
-   2. Get the imagePullSecrets <br/>
-      citrix cpx images requires "image pull secrets" to download the image.<br/>
-      For secret, raise query [here](https://netscalercpx.slack.com/messages/C285PG1RU) <br/>
-   3. Update the Secret <br/> 
-      Update the ".dockerconfigjson" field under secret in citrix-k8s-cpx-ingress.yml <br/>
-   4. End user license agreement <br/>
-      End user license agreement has to be YES for CPX to up and run. <br/>
-
-      This pulls image from `quay.io/citrix/citrix-k8s-cpx-ingress:latest` which has both cpx and citrix ingress controller in built and start configuring itself.
-      ```
-           kubectl create -f citrix-k8s-cpx-ingress.yml
-      ```
