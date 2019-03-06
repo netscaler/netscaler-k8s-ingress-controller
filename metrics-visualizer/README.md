@@ -27,7 +27,10 @@ prometheus-k8s-0                       3/3       Running   1          2h
 prometheus-k8s-1                       3/3       Running   1          2h
 prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
 ```
-**NOTE:** It may be preferable to expose the Prometheus and Grafana pods via NodePorts. To do so, the prometheus-service.yaml and grafana-service.yaml files will need to be modified as follows:
+
+**NOTE:** The files in the ```manifests/``` folder have interdependencies due to which the order in which they get created is important. At times the manifest files may get created out of order leading to ```Error``` messages from Kubernetes. To resolve this, simply re-run the ```kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/``` command. Any yaml files that had not been created the first time around due to unmet dependencies, will get created this time.
+
+It may be preferable to expose the Prometheus and Grafana pods via NodePorts. To do so, the prometheus-service.yaml and grafana-service.yaml files will need to be modified as follows:
 
 
 <details>
@@ -265,9 +268,10 @@ Here, the exporter uses the ```192.168.0.2``` local IP to fetch metrics from the
 
 ServiceMonitors to Detect NetScalers
 ---
-Till this point, the NetScaler Metrics Exporters was setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
+Till this point, NetScaler Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
 
-The following example file will detect all the Exporter endpoints associated with the Exporter services which have the label ```service-type: citrix-adc-monitor``` associated with them.
+The following example file will detect all the Exporter endpoints associated with Exporter services which have the label ```service-type: citrix-adc-monitor``` associated with them.
+
 ```
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -288,6 +292,38 @@ spec:
     - default
 ```
 
+The above ```serviceMonitor``` directs Prometehus to detect Exporters in the ```default``` and ```monitoring``` namespaces only. To detect Exporters from other namespaces add the names of those namespaces under the ```namespaceSelector:```.
+
+**NOTE:** If the Exporter to be monitored exists in a namespace other than the ```default``` or ```monitoring``` namespace, then additional rbac privilages will need to be provided to Promehtheus to access those namespaces. An example yaml file providing Promtheus full access to resources across namespaces is provided below:
+
+<details>
+<summary>prometheus-clusterRole.yaml</summary>
+<br>
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-k8s
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes/metrics
+  - namespaces
+  - services
+  - endpoints
+  - pods
+  verbs: ["*"]
+- nonResourceURLs:
+  - /metrics
+  verbs:  ["*"]
+```
+
+</details>
+
+
+To provide these additional privilages, run ```kubectl apply -f prometheus-clusterRole.yaml```.
 
 Visualization of Metrics
 ---
