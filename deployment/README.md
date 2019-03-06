@@ -22,6 +22,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 2.  [Annotations](../docs/annotations.md)
 3.  [Smart Annotations](../docs/smart-annotations.md)
 4.  [Network Supports](../docs/network-config.md)
+5.  [Automated Certificate Management with cert-manager](../docs/certificate.md)
 
 # Deployment Solutions
 
