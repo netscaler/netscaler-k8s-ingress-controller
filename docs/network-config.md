@@ -42,7 +42,7 @@ This option can be specified in the yaml file "citrix-k8s-ingress-controller.yam
         serviceAccountName: cic-k8s-role
         containers:
         - name: cic-k8s-ingress-controller
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:latest"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.1"
         # feature-node-watch argument configures route(s) on the Ingress NetScaler
         # to provide connectivity to the pod network. By default, this feature is disabled.
         args:

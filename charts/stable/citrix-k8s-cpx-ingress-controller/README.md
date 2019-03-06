@@ -42,14 +42,17 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 |```license.accept```|Set to accept to accept the terms of the Citrix license| ```no``` |
-| ```image.repository ``` | Image Repository| ```us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress```|
-| ```image.tag``` | Image Tag| ```latest``` |
-|```image.pullPolicy```| Image Pull Policy  | ```Always``` |
-|```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
-|```exporter.image.repository```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
-|```exporter.image.tag```|Exporter image tag|```v1.0.0 ```|
-|```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
-|```exporter.ports.containerPort```|Exporter Container Port|```8888```|
+|```cpximage.repository```| CPX Image Repository| ```quay.io/citrix/citrix-k8s-cpx-ingress```|
+|```cpximage.tag```| CPX Image Tag| ```12.1-51.16``` |
+|```cpximage.pullPolicy```| CPX Image Pull Policy  | ```Always``` |
+|```cicimage.repository```| CIC Image Repository| ```quay.io/citrix/citrix-k8s-ingress-controller```|
+|```cicimage.tag```| CIC Image Tag| ```1.1.1``` |
+|```cicimage.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
+|```exporter.require```| Exporter to be run as sidecar with CIC|```0```|
+|```exporter.image.repository```| Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
+|```exporter.image.tag```| Exporter image tag|```v1.0.0 ```|
+|```exporter.image.pullPolicy```| Exporter Image Pull Policy|```Always```|
+|```exporter.ports.containerPort```| Exporter Container Port|```8888```|
 |```ingressClass```| Name of the Ingress Class  | ```nil``` |
  
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml)
