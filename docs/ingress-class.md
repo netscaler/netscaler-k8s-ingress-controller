@@ -28,7 +28,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:latest"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.1"
         # specify the ingress classes names to be supported by Ingress Controller in args section.
         # First line should be --ingress-classes, and every subsequent line should be
         # the name of allowed ingress class. In the given example two classes named

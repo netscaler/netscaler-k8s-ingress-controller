@@ -166,7 +166,7 @@ spec:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
         - name: cpx-ingress
-          image: "us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:12.1-51.16"
           imagePullPolicy: Always
           securityContext:
             privileged: true

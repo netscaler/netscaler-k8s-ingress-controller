@@ -2,7 +2,7 @@
 
 List of annotations supported by Citrix Ingress Controller:
 
-|**Annotations**|**Possible value**|**Description**|**Default**|
+|**Annotations**|**Possible value**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|**Description**|**Default**|
 |---------------|------------------|---------------|-----------|
 |ingress.citrix.com/frontend-ip| IP address | Use this annotation to customize VIP. This IP is configured in Citrix ADC as VIP| Citrix ADC IP is used as VIP.
 |ingress.citrix.com/secure-port|Port number |Use this annotation to configure port on which https traffic should land. This port is configured in Citrix ADC as a port value for corresponding CS Vserver.| 443|
@@ -21,3 +21,4 @@ List of annotations supported by Citrix Ingress Controller:
 | | |Example:  ingress.citrix.com/lbvserver: '{"app-1":{"lbmethod":"ROUNDROBIN"}}' | |
 | | | ingress.citrix.com/servicegroup: '{"app-1":{"maxReq":"100"}}' | |
 | | | Here for app-1, user wants to configure ROUND-ROBIN lbmethod at LB level and maxReq at service group| |
+| ingress.citrix.com/preconfigured-certkey | '{"certs": [{"name": &lt;name&gt;, ["type" : "default \| sni \| ca" ] } ] }' | The annotation allows binding the existing certkeys available on the Citrix ADC to the required SSL virtual server | N/A |
