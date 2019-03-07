@@ -1,8 +1,8 @@
 # Using Rewrite and Responder policies in Kubernetes
 
-In kubernetes environment, to deploy specific layer 7 policies to handle scenarios such as, redirecting HTTP traffic to a specific URL, blocking a set of IP addresses to mitigate DDoS attacks, imposing HTTP to HTTPS and so on, requires you to add appropraite libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
+In kubernetes environment, to deploy specific layer 7 policies to handle scenarios such as, redirecting HTTP traffic to a specific URL, blocking a set of IP addresses to mitigate DDoS attacks, imposing HTTP to HTTPS and so on, requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
 
-Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use in conjuction with Citrix Ingress Controller (CIC) and automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
+Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use in conjunction with Citrix Ingress Controller (CIC) and automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
 
 The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Citrix ADCs to rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
 
@@ -10,13 +10,11 @@ Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster, You can
 
 ## Deploying the Citrix CRD
 
-The Citrix Rewrite and Responder CRD deployment YAML file (`rewrite-responder-policies-deployment.yaml`) is available at: ***<\location-placeholder>***.
+Download the Citrix Rewrite and Responder CRD deployment YAML file, [rewrite-responder-policies-deployment.yaml](../crd/rewrite-responder-policies-deployment.yaml) and deploy it using the following command:
 
 >**Note:**
 >
 >Ensure that you do not modify the deployment YAML file.
-
-Deploy the CRD, using the following command:
 
 ```
 root@master:~# kubectl create -f rewrite-responder-policies-deployment.yaml
@@ -107,7 +105,7 @@ After you have deployed the CRD provided by Citrix in the Kubernetes cluster, yo
 
 In these sections, you need to use the [CRD attributes](#crd-attributes) provided for respective policy configuration (rewrite or responder) to define the policy.
 
-Also, in the `spec` you need to inculde a `rewrite-policies` section to specify the service or services to which the policy needs to be applied. For more information, see [Examples](#examples).
+Also, in the `spec` you need to include a `rewrite-policies` section to specify the service or services to which the policy needs to be applied. For more information, see [Examples](#examples).
 
 After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
 
@@ -115,9 +113,9 @@ After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies t
 >
 > -  If the CRD is associated with a [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) then, by default, the policy is applied to the services associated with the namespace. For example, if you have the same service name associated with multiple namespaces then the policy is applied to the service that belongs to the namespace associated with the CRD.
 >
-> -  If you have defined multiple policies in a single `.yaml` file then the first policy configuration defined in the file takes prirority and the subsequent policy configurations is applied as per the sequance. If you have multiple policies defined in different files then the first policy configuration defined in the file that you deployed first takes prirority.
+> -  If you have defined multiple policies in a single `.yaml` file then the first policy configuration defined in the file takes priority and the subsequent policy configurations is applied as per the sequence. If you have multiple policies defined in different files then the first policy configuration defined in the file that you deployed first takes priority.
 
-Consider a scenario wherein you want to define a policy in Citrix ADC to rewrite all the incoming URLs to `new-url-for-the-application` and send it to the microservices. Create a `.yaml` file called `target-url-rewrite.yaml` and use the approriate [CRD attributes](#crd-attributes) to define the rewrite policy as shown below:
+Consider a scenario wherein you want to define a policy in Citrix ADC to rewrite all the incoming URLs to `new-url-for-the-application` and send it to the microservices. Create a `.yaml` file called `target-url-rewrite.yaml` and use the appropriate [CRD attributes](#crd-attributes) to define the rewrite policy as shown below:
 
 **target-url-rewrite.yaml:**
 
@@ -148,7 +146,7 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
 root@master:demo#kubectl create -f target-url-rewrite.yaml
 ```
 
-After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device. 
+After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
 
 On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the CIC using the following command:
 
@@ -158,7 +156,7 @@ root@master:~# kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\
 
 You can view an entry in the logs as shown in the below image:
 
-![CIC confirmation](/Images/rewrite-responder-cic-confirm.png)
+![CIC confirmation](../Images/rewrite-responder-cic-confirm.png)
 
 Also, you can verify if the configuration is applied on the Citrix ADC, do the following:
 
@@ -168,7 +166,7 @@ Also, you can verify if the configuration is applied on the Citrix ADC, do the f
 
     ```
     > show run | grep `lb vserver`
-    add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -coment "uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325"
+    add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -comment "uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325"
     bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http
     bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http -policyname k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072 -priority 1006 -gotoPriorityExpression END -type REQUEST
     ```
@@ -240,7 +238,7 @@ spec:
 
 ### Multiple policy configurations
 
-You can add multiple policy configurations in a single `.yaml` file and apply the policies to the Citrix ADC device. You need add seperate sections for each policy configuration.
+You can add multiple policy configurations in a single `.yaml` file and apply the policies to the Citrix ADC device. You need add separate sections for each policy configuration.
 
 **multi-policy-config.yaml:**
 

@@ -1,6 +1,6 @@
 # Deploying HTTPS web application on Kubernetes with Citrix Ingress Controller and Hashicorp Vault using cert-manager
 
-This topic provies a sample workflow that leverages HashiCorp Vault as self-signed CA to automate TLS certificate provisioning, revocation, and renewal for an ingress resources deployed with Citrix ingress controller using cert-manager.
+This topic provides a sample workflow that leverages HashiCorp Vault as self-signed CA to automate TLS certificate provisioning, revocation, and renewal for an ingress resources deployed with Citrix ingress controller using cert-manager.
 
 Specifically, the workflow uses the Vault PKI Secrets Engine to create a CA. This tutorial assumes that you've a Vault server installed and reachable from Kubernetes cluster.  Vault's PKI engine is suitable for internal applications and for external facing applications that require public trust, you can refer [automating TLS certificates using letsencrypt CA](./ACME.md)
 
@@ -146,7 +146,7 @@ Perform the following to deploy a sample web application:
 
     ```
 
-5.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server. 
+5.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
     >**Note:**
     >
     > Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
@@ -230,7 +230,7 @@ Perform the following to deploy a sample web application:
 
 Setup an intermediate CA certificate signing request using Hashicorp Vault. This Vault endpoint is used by cert-manager to sign the certificate for the ingress resources.
 
-### Prerequistes
+### Prerequisites
 
 Ensure that you have installed the `jq` utility.
 
@@ -269,7 +269,8 @@ After creating the root CA,  create an intermediate CSR using the root CA. Perfo
 
     ```
     % vault secrets enable -path=${PKI_INT} pki
-    Set the max TTL to 3 year
+
+    #Set the max TTL to 3 year
 
     % vault secrets tune -max-lease-ttl=26280h ${PKI_INT}
     ```
@@ -335,21 +336,25 @@ An "***AppRole***" represents a set of Vault policies and login constraints that
 
 ### Create an Approle
 
-Create a approle named "***Kube-role***" secret id must not expire for cert-manager to use this for authentication, hence dont set TTL or set it to 0. 
+Create a approle named, `Kube-role`.
 
 ```
-% vault auth enable approle of token ttl 5 minutes
+# vault auth enable approle of token ttl 5 minutes
 
 % vault write auth/approle/role/kube-role \
     token_ttl=5m \
     token_max_ttl=10m
 ```
 
+>**Note:**
+>
+> Ensure that the secret id associated with the approle should not have an expiry duration so that the cert-manager can use this for authentication, hence dont set TTL or set it to 0.
+
 ### Associate a policy with the Approle
 
 Perform the following the associate a policy with Approle:
 
-1.  Create a file `pki_int.hcl` with following configuration to allow the signing endpoints of the intermediate CA. 
+1.  Create a file `pki_int.hcl` with following configuration to allow the signing endpoints of the intermediate CA.
 
     ```
     path "${PKI_INT}/sign/*" {
@@ -397,7 +402,7 @@ After you have configured the Vault as intermediate CA, and the Approle auth met
 
 ### Create a secret with Approle secret-id
 
-Perform the following to create a secret with Approle scret-id:
+Perform the following to create a secret with Approle secret-id:
 
 1.  Create a secret file called `secretid.yaml` with following configuration:
 
@@ -419,7 +424,7 @@ Perform the following to create a secret with Approle scret-id:
 2.  Deploy the secret file (`secretid.yaml`) using the following command:
 
     ```
-    % kubectl create -f secretid.yaml 
+    % kubectl create -f secretid.yaml
 
     ```
 
@@ -450,7 +455,7 @@ Perform the following:
               key: secretId
     ```
 
-    Replace `PKI_INT` with appropriate path of the intermediate CA. `SecretRef` is the kubernetes secret name created in the previos step. Replace `roleId` with the `role_id` retrieved from Vault.
+    Replace `PKI_INT` with appropriate path of the intermediate CA. `SecretRef` is the kubernetes secret name created in the previous step. Replace `roleId` with the `role_id` retrieved from Vault.
     An optional base64 encoded caBundle in PEM format can be provided to validate the TLS connection to the Vault Server. When caBundle is set it replaces the CA bundle inside the container running the cert-manager. This parameter has no effect if the connection used is in plain HTTP.
 
 2.  Deploy the file (`issuer-vault.yaml`) using the following command:
@@ -476,9 +481,9 @@ Perform the following:
 
 Once the issuer is successfully registered , you need to get the certificate for the ingress domain `kuard.example.com`.
 
-You need to create a "certificate" resource with the commonName and dnsNames. For more information, see [cert-manager documenataion](https://cert-manager.readthedocs.io/en/latest/reference/certificates.html). You can specify multiple dnsNames which will be used for SAN field in the certificate.
+You need to create a "certificate" resource with the commonName and dnsNames. For more information, see [cert-manager documentation](https://cert-manager.readthedocs.io/en/latest/reference/certificates.html). You can specify multiple dnsNames which will be used for SAN field in the certificate.
 
-To create a "cerficate" CRD object for the certificate, perform the following:
+To create a "certificate" CRD object for the certificate, perform the following:
 
 1.  Create a file called `certificate.yaml` with the following configuration:
 
@@ -528,12 +533,12 @@ Events:
 >
 >At this point, it is quite possible that you may encounter some error due to Vault policies, go back to vault and fix it.
 
-After succesful signing, a `kubernetes.io/tls` secret is created with the `secretName` specified in the `Certificate` resource.
+After successful signing, a `kubernetes.io/tls` secret is created with the `secretName` specified in the `Certificate` resource.
 
 ```
 % kubectl get secret kuard-example-tls
 NAME                TYPE                DATA   AGE
-kuard-exmaple-tls   kubernetes.io/tls   3      4m20s
+kuard-example-tls   kubernetes.io/tls   3      4m20s
 ```
 
 ## Modify the ingress to use the generated Secret
