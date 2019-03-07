@@ -522,7 +522,7 @@ To create a "certificate" CRD object for the certificate, perform the following:
 You can watch the progress of the certificate as it's issued using the following command:
 
 ```
-% ubectl describe certificates kuard-example-tls  | grep -A5 Events
+% kubectl describe certificates kuard-example-tls  | grep -A5 Events
 Events:
   Type    Reason      Age   From          Message
   ----    ------      ----  ----          -------
