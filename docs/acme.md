@@ -8,7 +8,7 @@ A challenge is one of a list of specified tasks that only someone who controls t
 
 -  **DNS-01 challenge:** Posting a specified DNS TXT record in the domain name system. Let's Encrypt will ask your domain's DNS servers for the value of the TXT record to satisfy the challenge.
 
-On succesful validation of the challenge, a certificate is granted for the domain.
+On successful validation of the challenge, a certificate is granted for the domain.
 
 This topic provides information on how to securely deploy an HTTPS web application on a Kubernetes cluster, using:
 
@@ -179,12 +179,12 @@ Perform the following to deploy a sample web application:
     ```
     % kubectl apply -f ingress.yml
     ingress.extensions/kuard created
-    root@ubuntu-vivek-225:~/cert-manager# kubectl get ingress
+    % kubectl get ingress
     NAME    HOSTS               ADDRESS   PORTS   AGE
     kuard   kuard.example.com             80      7s
     ```
 
-7.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command: 
+7.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command:
 
     ```
     kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
@@ -305,7 +305,7 @@ You can request certificate for a given ingress resource using the following met
 
 -  Creating a `certificate` CRD object.
 
-First method is quick and simple, but if you need more customisation and granularity in terms of certificate renewal, you can chose the second method. Depending on your selection, skip the other method.
+First method is quick and simple, but if you need more customization and granularity in terms of certificate renewal, you can chose the second method. Depending on your selection, skip the other method.
 
 #### Adding `Ingress-shim` annotations to Ingress object
 
@@ -345,7 +345,7 @@ spec:
           servicePort: 80
 ```
 
-The `kubernetes.io/tls-acme: "true"` annotation tells cert-manager to use the `letsencrypt-staging` cluster-wide issuer that was created earlier to request a certificate from Let's Encrypt's staging servers. Cert-manager creates a `certificate` object that is used to manage the lifecycle of the certificate for `kuard.example.com`, and the value for the domain name and challenge method for the certificate object is derived from the ingress object. Cert-manager manages the contents of the secret as long as the Ingress is present in your cluster.
+The `kubernetes.io/tls-acme: "true"` annotation tells cert-manager to use the `letsencrypt-staging` cluster-wide issuer that was created earlier to request a certificate from Let's Encrypt's staging servers. Cert-manager creates a `certificate` object that is used to manage the life cycle of the certificate for `kuard.example.com`, and the value for the domain name and challenge method for the certificate object is derived from the ingress object. Cert-manager manages the contents of the secret as long as the Ingress is present in your cluster.
 
 Deploy the `ingress.yaml` using the following command: 
 
@@ -370,7 +370,7 @@ metadata:
   name: kuard-example-tls
   namespace: default
 spec:
-  secretName: kuard-exmaple-tls
+  secretName: kuard-example-tls
   issuerRef:
     name: letsencrypt-staging
   commonName: kuard.example.com
@@ -386,7 +386,7 @@ spec:
       - kuard.example.com
 ```
 
-`ingressClass` refers to the ingress class CIC or CPX is running and `spec.secretName` is the name of the secret where the certificate is stored on succesful issuing the certificate.
+`ingressClass` refers to the ingress class CIC or CPX is running and `spec.secretName` is the name of the secret where the certificate is stored on successful issuing the certificate.
 
 Deploy the `certificate.yaml` on the Kubernetes cluster:
 
@@ -445,7 +445,7 @@ This section describes a way to use DNS validation to get ACME certificate from 
     clusterissuer "letsencrypt-staging" created
     ```
 
-3.  Verify if the issuer is created and registered to the ACME server using the following command: 
+3.  Verify if the issuer is created and registered to the ACME server using the following command:
 
     ```
     % kubectl get issuer
@@ -511,11 +511,11 @@ spec:
           servicePort: 80
 ```
 
-The cert-manager creates a `Certificate` CRD resource with dns01 challenge and it uses the credentials given in the `ClusterIssuer` to create a TXT record in the DNS server for the domain you own. Then, Let's Encypt CA validates the content of the TXT record to complete the challenge.
+The cert-manager creates a `Certificate` CRD resource with dns01 challenge and it uses the credentials given in the `ClusterIssuer` to create a TXT record in the DNS server for the domain you own. Then, Let's Encrypt CA validates the content of the TXT record to complete the challenge.
 
 ## Verify if the certificate is issued
 
-For HTTP challenge, cert-manager will create a temporary ingress resource to route the Let's Encrypt CA generated traffic to cert-manager pods. On succesful validations of the domain, this temporary ingress is deleted.
+For HTTP challenge, cert-manager will create a temporary ingress resource to route the Let's Encrypt CA generated traffic to cert-manager pods. On successful validations of the domain, this temporary ingress is deleted.
 
 You can watch the progress of the certificate as it's issued, use the following command:
 

@@ -1,0 +1,242 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: rewritepolicies.citrix.com
+spec:
+  group: citrix.com
+  version: v1
+  names:
+    kind: rewritepolicy 
+    plural: rewritepolicies
+    singular: rewritepolicy 
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            rewrite-policies:
+              type: array
+              items:
+                properties:
+                  servicenames:
+                    description: 'Name of the services that needs to be binded to rewrite policy.'
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 127
+                  logpackets:
+                    description: 'Adds an audit message action.
+                                  The action specifies whether to log the message, and to which log.'
+                    properties:
+                      logexpression:
+                        description: 'Default-syntax expression that defines the format and content of the log message.'
+                        type: string
+                        maxLength: 7991
+                      loglevel:
+                        description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                        type: string
+                        enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+                    required: [logexpression, loglevel]
+                  rewrite-policy:
+                    properties:
+                      rewrite-criteria:
+                        description: 'Expression against which traffic is evaluated.'
+                        type: string
+                        maxLength: 1299
+                      default-action:
+                        description: 'Action to perform if the result of policy evaluation is undefined (UNDEF). 
+                                      An UNDEF event indicates an internal error condition.'
+                        type: string
+                        maxLength: 77
+                        enum: ['NOREWRITE', 'RESET', 'DROP']
+                      operation:
+                        description: 'Type of user-defined rewrite action.'
+                        type: string
+                        enum: ["noop", "delete", "insert_http_header", "delete_http_header",
+                                "corrupt_http_header", "insert_before", "insert_after", "replace",
+                                "replace_http_res", "delete_all", "replace_all", "insert_before_all",
+                                "insert_after_all", "clientless_vpn_encode", "clientless_vpn_encode_all",
+                                "clientless_vpn_decode", "clientless_vpn_decode_all", "insert_sip_header",
+                                "delete_sip_header", "corrupt_sip_header", "replace_sip_res", "replace_diameter_header_field",
+                                "replace_dns_header_field", "replace_dns_answer_section"]
+                      target:
+                        description: 'Default syntax expression that specifies which part of the request or response to rewrite.'
+                        type: string
+                        maxLength: 1229
+                      modify-expression:
+                        description: 'Default syntax expression that specifies the content to insert into the request 
+                                      or response at the specified location, or that replaces the specified string.'
+                        type: string
+                        maxLength: 7991
+                      multiple-occurence-modify:
+                        description: 'Search facility that is used to match multiple strings in the request or response.'
+                        type: string
+                        maxLength: 171
+                      additional-multiple-occurence-modify:
+                        description: 'Specify additional criteria to refine the results of the search.
+                                      Always starts with the "extend(m,n)" operation, where "m" specifies number of bytes to the left of selected data
+                                      and "n" specifies number of bytes to the right of selected data.
+                                      You can use refineSearch only on body expressions, and only when rewrite-criteria is any one of this:
+                                      INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, and DELETE_ALL.'
+                        type: string
+                        maxLength: 1299
+                      direction:
+                        description: 'Bind point to which to bind the policy.'
+                        type: string
+                        enum: ["REQUEST","RESPONSE"]
+                      comment:
+                        description: 'Any comments to preserve information about this rewrite policy.' 
+                        type: string
+                        maxLength: 255
+                    required: [rewrite-criteria, operation, target, direction]
+                required: [servicenames, rewrite-policy]
+
+            responder-policies:
+              type: array
+              items:
+                properties:
+                  servicenames:
+                    description: 'Name of the services that needs to be binded to responder policy.' 
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 127
+                  logpackets:
+                    description: 'Adds an audit message action.
+                                  The action specifies whether to log the message, and to which log.'
+                    properties:
+                      logexpression:
+                        description: 'Default-syntax expression that defines the format and content of the log message.'
+                        type: string
+                        maxLength: 7991
+                      loglevel:
+                        description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                        type: string
+                        enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING",
+                                "NOTICE", "INFORMATIONAL", "DEBUG"]
+                    required: [logexpression, loglevel]
+                  responder-policy:
+                    properties:
+                      redirect:
+                        description: 'Use this option when you want to Redirect the request when request matches to policy.'
+                        properties:
+                          url:
+                            description: 'URL on which you want to redirect the request.'
+                            type: string
+                            maxLength: 7991
+                          redirect-status-code:
+                            description: 'HTTP response status code, for example 200, 302, 404, etc.'
+                            type: integer
+                            minimum: 100
+                            maximum: 599
+                          redirect-reason:
+                            description: 'Expression specifying the reason for redirecting the request.'
+                            type: string
+                            maxLength: 7991
+                        required: [url]
+                      respondwith:
+                        description: 'Use this parameter when you want to respond to the request when request matches to policy.'
+                        properties:
+                          http-payload-string:
+                            description: 'Expression that you want to sent as response to the request.'
+                            type: string
+                            maxLength: 7991
+                        required: [http-payload-string]
+                      noop:
+                        description: 'Use this option when you want to send the request to the protected server instead of 
+                                      responding to it when request matches to policy.'
+                        properties:
+                          target:
+                            description: 'Default syntax expression that specifies to perform noop operation on'
+                            type: string
+                            maxLength: 1229
+                      reset:
+                        description: 'Use this option when you want to Reset the client connection by closing it when request matches to policy.'
+                        properties:
+                      drop:
+                        description: 'Use this option when you want to drop the request without sending a response to the user when request matches to policy.'
+                        properties:
+                      respond-criteria:
+                        description: 'Default syntax expression that the policy uses to determine whether to respond to the specified request.'
+                        type: string
+                        maxLength: 1299
+                      default-action:
+                        description: 'Action to perform if the result of policy evaluation is undefined (UNDEF).
+                                      An UNDEF event indicates an internal error condition.'
+                        type: string
+                        maxLength: 77
+                        enum: ['NOOP', 'RESET', 'DROP']
+                      comment:
+                        description: 'Any comments to preserve information about this responder policy.'
+                        type: string
+                        maxLength: 255
+                    required: [respond-criteria]
+                    oneOf: [required: [redirect], required: [respondwith], required: [noop], required: [reset], required: [drop]]
+                required: [servicenames, responder-policy]
+
+            dataset:
+              type: array
+              items:
+                properties:
+                  name:
+                    description: 'Name of the dataset.'
+                    type: string
+                    maxLength: 32
+                  type:
+                    description: 'Type of value to bind to the dataset.'
+                    type: string
+                    enum: ["ipv4", "number", "ipv6", "ulong", "double", "mac"]
+                  comment:
+                    description: 'Any comments to preserve information about this dataset.'
+                    type: string
+                    maxLength: 255
+                  values:
+                    description: 'Value of the specified type that is associated with this dataset.'
+                    type: array
+                required: [name, type, values]
+
+            patset:
+              type: array
+              items:
+                properties:
+                  name:
+                    description: 'Name of the Patset.'
+                    type: string
+                    maxLength: 32
+                  comment:
+                    description: 'Any comments to preserve information about this patset.'
+                    type: string
+                    maxLength: 255
+                  values:
+                    description: 'String of characters that constitutes a pattern and is associated with this patset.'
+                    type: array
+                required: [name, values]
+
+            stringmap:
+              type: array
+              items:
+                properties:
+                  name:
+                    description: 'Name of the Stringmap.'
+                    type: string
+                    maxLength: 32
+                  comment:
+                    description: 'Any comments to preserve information about this stringmap.'
+                    type: string
+                    maxLength: 255
+                  values:
+                    description: 'List of (key,value) pairs to be bound to this string map.'
+                    type: array
+                    items:
+                      properties:
+                        key:
+                          description: 'Character string constituting the key to be bound to this string map.'
+                          type: string
+                          maxLength: 2047
+                        value:
+                          description: 'Character string constituting the value associated with the key.'
+                          type: string
+                          maxLength: 2047
+                required: [name, values]
+
