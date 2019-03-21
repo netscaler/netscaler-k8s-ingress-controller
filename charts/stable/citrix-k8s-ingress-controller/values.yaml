@@ -2,20 +2,31 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# image contains information needed to fetch CIC image
 image:
   repository: quay.io/citrix/citrix-k8s-ingress-controller 
   tag: 1.1.1
-  pullPolicy: Always 
-loginFileName: nslogin1 #default secret file for NetScaler login
-nsIP: x.x.x.x # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
-logLevel: DEBUG 
-license:
-   accept: no #Should be 'yes' to run Citrix Ingress Controller
-nsPort: 443 # Set port for NetScaler NITRO
-nsProtocol: HTTPS #set protocol for NetScaler NITRO
+  pullPolicy: Always
+# loginFileName is default secret file for NetScaler login
+loginFileName: nslogin1
+# nsIP is NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
+nsIP: x.x.x.x
+
 logLevel: DEBUG
+# license accept should be 'yes' to run Citrix Ingress Controller
+license:
+   accept: no
+# nsPort is port for NetScaler NITRO
+nsPort: 443
+# nsProtocol is protocol for NetScaler NITRO
+nsProtocol: HTTPS
+# logLevel is to set level of CIC Logs
+logLevel: DEBUG
+# kubernetesURL is for registering events to kubeapi server
 kubernetesURL:
-ingressClass: 
+# ingressClass is the name of the Ingress Class
+ingressClass:
+# exporter conatins information of prometheus-exporter
 exporter:
   require: 0
   image:

@@ -17,11 +17,11 @@ This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kuberne
 
 To install the chart with the release name ``` my-release:```
 
-```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>```
+```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,ingressClass[0]=<ingressClassName>```
 
 If you want to run exporter along with CIC.
 
-```helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,ingressClass=<ingressClassName>,exporter.require=1.0```
+```helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>,exporter.require=1.0```
 
 The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration lists the parameters that can be configured during installation.
  
@@ -30,7 +30,7 @@ The command deploys Citrix ADC CPX with in built ingress controller on the Kuber
 To uninstall/delete the ```my-release``` deployment:
 
 ```
-helm delete my-release
+helm delete --purge my-release
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release
@@ -51,7 +51,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```nsProtocol```|Optional:This protocol is used by Citrix Ingress Controller to communicate with NetScaler. Can use HTTP with nsPort as 80|```HTTPS```|
 |```logLevel```|Optional: This is used for controlling the logs generated from Citrix Ingress Controller. options available are CRITICAL ERROR WARNING INFO DEBUG |```DEBUG```|
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
-|```ingressClass```| Name of Ingress Class|```nil```|
+|```ingressClass```| List containing names of Ingress Classes |```nil```|
  
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller/values.yaml)
 
