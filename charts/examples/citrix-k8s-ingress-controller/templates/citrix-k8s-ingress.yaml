@@ -81,6 +81,7 @@ spec:
            - "--target-nsip={{ .Values.nsIP }}"
            - "--port={{ .Values.exporter.ports.containerPort }}"
         imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -96,5 +97,4 @@ spec:
      name: exp
    selector:
      app: cic-k8s-ingress-controller
-{{- end }}
 

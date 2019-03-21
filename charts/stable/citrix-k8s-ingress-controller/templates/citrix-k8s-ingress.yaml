@@ -41,6 +41,7 @@ metadata:
   namespace: default
 
 ---
+
 apiVersion: v1
 kind: Pod
 metadata:
@@ -48,29 +49,31 @@ metadata:
   labels:
     app: cic-k8s-ingress-controller
 spec: 
-      serviceAccountName: cic-k8-role
+      serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }} 
 {{- if .Values.ingressClass }}
         args: 
-        - --ingress-class
-            {{ .Values.ingressClass }}
+          - --ingress-class
+{{- range .Values.ingressClass}}
+            {{.}}
+{{- end }}
 {{- end }}
         env:
         - name: "NS_IP"
           value: "{{ .Values.nsIP }}"
         - name: "NS_USER"
           valueFrom:
-           secretKeyRef:
-            name: {{ .Values.loginFileName }}
-            key: username
+            secretKeyRef:
+              name: {{ .Values.loginFileName }}
+              key: username
         - name: "NS_PASSWORD"
           valueFrom:
-           secretKeyRef:
-            name: {{ .Values.loginFileName }} 
-            key: password
+            secretKeyRef:
+              name: {{ .Values.loginFileName }} 
+              key: password
         - name: "EULA"
           value: "{{ .Values.license.accept }}"
         - name: "LOGLEVEL"
@@ -87,10 +90,13 @@ spec:
       - name: exp
         image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
         args:
-           - "--target-nsip={{ .Values.nsIP }}"
-           - "--port={{ .Values.exporter.ports.containerPort }}"
+          - "--target-nsip={{ .Values.nsIP }}"
+          - "--port={{ .Values.exporter.ports.containerPort }}"
         imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+{{- end }}
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -105,4 +111,3 @@ spec:
      name: exp
    selector:
      app: cic-k8s-ingress-controller
-{{- end }}

@@ -93,10 +93,16 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
+{{- if .Values.kubernetesURL }}
+          - name: "kubernetes_url"
+            value: "{{ .Values.kubernetesURL }}"
+{{- end}}
 {{- if .Values.ingressClass }}
           args:
            - --ingress-class
-              {{ .Values.ingressClass }}
+{{- range .Values.ingressClass}}
+            {{.}}
+{{- end }}
 {{- end }}
 {{- if .Values.exporter.require }}
         - name: exp

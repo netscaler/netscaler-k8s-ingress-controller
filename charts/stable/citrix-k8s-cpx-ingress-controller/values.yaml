@@ -1,22 +1,28 @@
 # Default values for citrix-k8s-cpx-ingress-controller.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
+# cpximage contains information needed to fetch CPX image
 cpximage:
   repository: quay.io/citrix/citrix-k8s-cpx-ingress
   tag: 12.1-51.16
   pullPolicy: Always
+# cicimage contains information needed to fetch CIC image
 cicimage:
   repository: quay.io/citrix/citrix-k8s-ingress-controller
   tag: 1.1.1
   pullPolicy: Always
+# license is used accept the terms of the Citrix license
 license:
   accept: no
-ingressClass:  
+# ingressClass is the  name of the Ingress Class
+ingressClass:
+# exporter conatins information of prometheus-exporter
 exporter:
   require: 0
   image:
-       repository: quay.io/citrix/netscaler-metrics-exporter
-       tag: v1.0.0
-       pullPolicy: Always
+    repository: quay.io/citrix/netscaler-metrics-exporter
+    tag: v1.0.0
+    pullPolicy: Always
   ports:
-       containerPort: 8888
+    containerPort: 8888
