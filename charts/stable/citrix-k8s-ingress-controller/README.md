@@ -5,7 +5,7 @@
 
 ## TL;DR;
 ``` 
-helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>
+helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes
 ```
 ## Introduction
 This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager

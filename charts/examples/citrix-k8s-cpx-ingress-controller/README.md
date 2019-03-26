@@ -5,7 +5,7 @@
 
 ## TL;DR;
 ``` 
-helm install citrix-k8s-cpx-ingress-controller --set license.accept=yes,ingressClass=<ingressClassName>
+helm install citrix-k8s-cpx-ingress-controller --set license.accept=yes
 ```
 ## Introduction
 This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager
@@ -17,7 +17,7 @@ This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubern
 
 To install the chart with the release name ``` my-release```:
 
-```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass=<ingressClassName>```
+```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>```
 
 To run the exporter as sidecar with CPX
 
@@ -49,7 +49,7 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 |```exporter.image.tag```|Exporter image tag|```v1.0.0 ```|
 |```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
-|```ingressClass```| Name of the Ingress Class  | ```Citrix``` |
+|```ingressClass```| List of name of the Ingress Classes  | ```Citrix``` |
 
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples/citrix-k8s-cpx-ingress-controller/values.yaml)
 

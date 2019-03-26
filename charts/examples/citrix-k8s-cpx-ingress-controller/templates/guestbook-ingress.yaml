@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: guestbook-ingress
   annotations:
-   kubernetes.io/ingress.class: "{{ .Values.ingressClass }}"
+   kubernetes.io/ingress.class: {{- range .Values.ingressClass}} {{ . | quote }} {{- end }}
 spec:
   rules:
   - host:  www.guestbook.com

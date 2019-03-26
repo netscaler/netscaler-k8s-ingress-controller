@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: guestbook-ingress
   annotations:
-   kubernetes.io/ingress.class: "{{.Values.ingressClass}}"
-   ingress.citrix.com/frontend-ip: "{{ .Values.nsVIP }}" 
+   kubernetes.io/ingress.class: {{- range .Values.ingressClass}} {{ . | quote }} {{- end }}
+   ingress.citrix.com/frontend-ip: {{ .Values.nsVIP | quote }}
 spec:
   rules:
   - host:  www.guestbook.com
