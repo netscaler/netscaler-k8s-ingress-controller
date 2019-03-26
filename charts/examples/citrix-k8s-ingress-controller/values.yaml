@@ -14,7 +14,7 @@ logLevel: DEBUG
 license:
    accept: no #Should be 'yes' to run Citrix Ingress Controller
 nsVIP: x.x.x.x #VIP IP
-ingressClass: Citrix
+ingressClass: ["Citrix"]
 exporter:
   require: 0
   image:

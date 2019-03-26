@@ -6,12 +6,18 @@ rules:
   - apiGroups: [""]
     resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
     verbs: ["*"]
-
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
 
 ---
+
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -23,7 +29,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cic-k8-role
-  namespace: default
+  namespace: {{ .Release.Namespace }}
 apiVersion: rbac.authorization.k8s.io/v1
 
 ---
@@ -31,7 +37,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cic-k8-role
-  namespace: default
+  namespace: {{ .Release.Namespace }}
 
 ---
 apiVersion: v1
@@ -46,9 +52,13 @@ spec:
       - name: cic-k8s-ingress-controller
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }} 
+{{- if .Values.ingressClass }}
         args: 
-        - --ingress-class
-            {{ .Values.ingressClass }} 
+          - --ingress-class
+{{- range .Values.ingressClass}}
+            {{.}}
+{{- end }}
+{{- end }}
         env:
         - name: "NS_IP"
           value: "{{ .Values.nsIP }}"

@@ -5,7 +5,7 @@
 
 ## TL;DR;
 ``` 
-helm install citrix-k8s-ingress-controller --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass=<ingressClassName>
+helm install citrix-k8s-ingress-controller --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>
 ```
 ## Introduction
 This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager
@@ -17,7 +17,7 @@ This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kuberne
 
 To install the chart with the release name ``` my-release:```
 
-```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass=<ingressClassName> ```
+```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass[0]=<ingressClassName> ```
 
 If you want to run exporter along with CIC.
 
@@ -54,7 +54,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```exporter.image.tag```|Exporter image tag|```v1.0.0 ```|
 |```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
-|```ingressClass```| Name of Ingress Class|```Citrix```|
+|```ingressClass```| List of name of Ingress Classes |```Citrix```|
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples/citrix-k8s-ingress-controller/values.yaml)
 
 ## Route Addition in MPX/VPX
