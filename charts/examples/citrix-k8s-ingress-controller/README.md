@@ -12,6 +12,7 @@ This Chart deploys Citrix Ingress Controller in the [Kubernetes](https://kuberne
 
 ### Prerequisites
 * Kubernetes 1.6+
+* Prometheus operator needs to be installed if you want to use exporter along with CIC.
 
 ## Installing the Chart
 
@@ -19,11 +20,13 @@ To install the chart with the release name ``` my-release:```
 
 ```helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass[0]=<ingressClassName> ```
 
-If you want to run exporter along with CIC.
+If you want to run exporter along with CIC, please install prometheus operator first and then use the following command:
 
 ```helm install citrix-k8s-ingress-controller --name my-release --set nsIP=<NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass=<ingressClassName>,exporter.require=1.0```
 
-The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
+If you want to visualize the metrices collected by exporter from Citrix ADC please refer "[Visualization of Metrics](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics)".
+
+The command deploys Citrix Ingress Controller on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
  
 ## Uninstalling the Chart
 To uninstall/delete the ```my-release``` deployment:

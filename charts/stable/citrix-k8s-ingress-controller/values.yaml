@@ -7,8 +7,8 @@ image:
   repository: quay.io/citrix/citrix-k8s-ingress-controller 
   tag: 1.1.1
   pullPolicy: Always
-# loginFileName is default secret file for NetScaler login
-loginFileName: nslogin1
+#loginFileName is secret file for NetScaler login
+loginFileName:
 # nsIP is NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
 nsIP: x.x.x.x
 
@@ -31,7 +31,7 @@ exporter:
   require: 0
   image:
        repository: quay.io/citrix/netscaler-metrics-exporter
-       tag: v1.0.0
+       tag: v1.0.4
        pullPolicy: Always
   ports:
        containerPort: 8888

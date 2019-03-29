@@ -67,12 +67,12 @@ spec:
         - name: "NS_USER"
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.loginFileName }}
+              name: {{ .Values.loginFileName | default "nslogin"}}
               key: username
         - name: "NS_PASSWORD"
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.loginFileName }} 
+              name: {{ .Values.loginFileName | default "nslogin"}}
               key: password
         - name: "EULA"
           value: "{{ .Values.license.accept }}"
@@ -90,12 +90,29 @@ spec:
       - name: exp
         image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
         args:
+          - "--secure=YES"
+          - "--username=$(NS_USERNAME)"
+          - "--password=$(NS_PASSWORD)"
           - "--target-nsip={{ .Values.nsIP }}"
           - "--port={{ .Values.exporter.ports.containerPort }}"
+        env:
+          - name: NS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.loginFileName | default "nslogin"}}
+                key: username
+          - name: NS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.loginFileName | default "nslogin"}}
+                key: password
         imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
 {{- end }}
 
 ---
+
+{{- if .Values.exporter.require }}
+
 
 apiVersion: v1
 kind: Service
@@ -103,11 +120,35 @@ metadata:
    name: exp
    labels:
      app: exp
+     service-type: citrix-adc-monitor
 spec:
    type: ClusterIP
    ports:
    - port: {{ .Values.exporter.ports.containerPort }}
      targetPort: {{ .Values.exporter.ports.containerPort }}
-     name: exp
+     name: exporter-port
    selector:
      app: cic-k8s-ingress-controller
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+ name: citrix-adc-servicemonitor
+ labels:
+   servicemonitor: citrix-adc
+spec:
+ endpoints:
+ - interval: 30s
+   port: exporter-port
+ selector:
+   matchLabels:
+     service-type: citrix-adc-monitor
+ namespaceSelector:
+   matchNames:
+   - monitoring
+   - default
+   - {{ .Release.Namespace }}
+
+{{- end }}

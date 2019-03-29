@@ -121,6 +121,7 @@ metadata:
   name: cpx-service
   labels:
     app: cpx-service
+    service-type: citrix-adc-monitor
 spec:
   type: NodePort
   ports:
@@ -133,7 +134,33 @@ spec:
 {{- if .Values.exporter.require }}
   - port: {{ .Values.exporter.ports.containerPort }}
     targetPort: {{ .Values.exporter.ports.containerPort }}
-    name: exp-port
+    name: exporter-port
 {{- end }}
   selector:
     app: cpx-ingress
+
+
+---
+
+{{- if .Values.exporter.require }}
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+ name: citrix-adc-servicemonitor
+ labels:
+   servicemonitor: citrix-adc
+spec:
+ endpoints:
+ - interval: 30s
+   port: exporter-port
+ selector:
+   matchLabels:
+     service-type: citrix-adc-monitor
+ namespaceSelector:
+   matchNames:
+   - monitoring
+   - default
+   - {{ .Release.Namespace }}
+
+{{- end }}
