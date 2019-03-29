@@ -47,13 +47,18 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 | ``` image.repository ``` | Image Repository|```quay.io/citrix/citrix-k8s-ingress-controller```|
 | ``` image.tag```  | Image Tag    |```1.1.1```|
 |```  image.pullPolicy```| Image Pull Policy  |```Always```|
-|```loginFileName```| Secret keys for login into NetScaler VPX or MPX Refer Secret Keys |```nslogin1```|
+|```loginFileName```| Secret keys for login into NetScaler VPX or MPX Refer Secret Keys |```nslogin```|
 |```nsIP```|NetScaler VPX/MPX IP|```x.x.x.x```|
 |```nsPort```|Optional:This port is used by Citrix Ingress Controller to communicate with NetScaler. Can use 80 for HTTP |```443```|
 |```nsProtocol```|Optional:This protocol is used by Citrix Ingress Controller to communicate with NetScaler. Can use HTTP with nsPort as 80|```HTTPS```|
 |```logLevel```|Optional: This is used for controlling the logs generated from Citrix Ingress Controller. options available are CRITICAL ERROR WARNING INFO DEBUG |```DEBUG```|
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
-|```ingressClass```| List containing names of Ingress Classes |```nil```|
+|```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
+|```exporter.image.repository```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
+|```exporter.image.tag```|Exporter image tag|```v1.0.4 ```|
+|```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
+|```exporter.ports.containerPort```|Exporter Container Port|```8888```|
+|```ingressClass```| List of name of Ingress Classes |```nil```|
  
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller/values.yaml)
 

@@ -53,7 +53,7 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 |```cicimage.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
 |```exporter.require```| Exporter to be run as sidecar with CIC|```0```|
 |```exporter.image.repository```| Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
-|```exporter.image.tag```| Exporter image tag|```v1.0.0 ```|
+|```exporter.image.tag```| Exporter image tag|```v1.0.4 ```|
 |```exporter.image.pullPolicy```| Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```| Exporter Container Port|```8888```|
 |```ingressClass```| List containing name of the Ingress Classes  | ```nil``` |
