@@ -1,6 +1,6 @@
 # Citrix ADC CPX with inbuilt Ingress Controller  
 
-[Citrix](https://www.citrix.com) ADC CPX with a builtin Ingress Controller agent will configure the CPX that runs as pod in Kubernetes cluster and does N-S load balancing.
+[Citrix](https://www.citrix.com) ADC CPX with the Citrix Ingress Controller running in side-car mode will configure the CPX that runs as pod in Kubernetes cluster and does N-S load balancing.
 
 
 ## TL;DR;
@@ -14,6 +14,7 @@ This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubern
 
 ### Prerequisites
 * Kubernetes 1.6+
+* Prometheus operator needs to be installed if you want to use exporter along with CIC.
 
 ## Installing the Chart
 
@@ -21,11 +22,13 @@ To install the chart with the release name ``` my-release```:
 
 ```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>```
 
-To run the exporter as sidecar with CPX
+To run the exporter as sidecar with CPX, please install prometheus operator first and then use the following command:
 
 ```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>,exporter.require=1.0```
 
-The command deploys Citrix ADC CPX with in built ingress controller on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
+If you want to visualize the metrices collected by exporter from Citrix ADC CPX please refer "[Visualization of Metrics](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics)".
+
+The command deploys Citrix ADC CPX with Citrix Ingress Controller running in side-car mode on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
 
 ## Uninstalling the Chart
 To uninstall/delete the ```my-release``` deployment:

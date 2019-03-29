@@ -16,7 +16,7 @@ exporter:
   require: 0
   image:
        repository: quay.io/citrix/netscaler-metrics-exporter
-       tag: v1.0.0
+       tag: v1.0.4
        pullPolicy: Always
   ports:
        containerPort: 8888
