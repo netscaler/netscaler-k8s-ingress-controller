@@ -7,11 +7,14 @@
 ``` 
 helm install citrix-k8s-cpx-ingress-controller --set license.accept=yes
 ```
+> Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
+
 ## Introduction
 This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager
 
 ### Prerequisites
 * Kubernetes 1.6+
+* Helm 2.8.x+
 * Prometheus operator needs to be installed if you want to use exporter along with CIC.
 
 ## Installing the Chart
