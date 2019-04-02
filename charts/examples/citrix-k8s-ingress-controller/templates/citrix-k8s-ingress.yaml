@@ -85,7 +85,7 @@ spec:
           value: "{{ .Values.kubernetesURL }}"
 {{- end}}
 {{- if .Values.exporter.require }}
-      - name: exp
+      - name: exporter
         image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
         args:
           - "--secure=YES"
@@ -115,9 +115,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-   name: exp
+   name: exporter
    labels:
-     app: exp
+     app: exporter
      service-type: citrix-adc-monitor
 spec:
    type: ClusterIP

@@ -3,6 +3,7 @@ appVersion: "1.0"
 description: A Helm chart for Citrix Ingress Controller configuring MPX/VPX 
 name: citrix-k8s-ingress-controller
 version: 1.1.1
+icon: https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/gh-pages/icon.png
 home: https://www.citrix.com
 sources:
 - https://github.com/citrix/citrix-k8s-ingress-controller

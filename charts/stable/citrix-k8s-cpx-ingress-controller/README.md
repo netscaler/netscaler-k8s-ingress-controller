@@ -1,30 +1,40 @@
-# Citrix ADC CPX with inbuilt Ingress Controller  
+# Citrix ADC CPX with Citrix Ingress Controller running as sidecar.
 
-[Citrix](https://www.citrix.com) ADC CPX with the Citrix Ingress Controller running in side-car mode will configure the CPX that runs as pod in Kubernetes cluster and does N-S load balancing.
+[Citrix](https://www.citrix.com) ADC CPX with the Citrix Ingress Controller running in side-car mode will configure the CPX that runs as pod in Kubernetes cluster.
 
 
 ## TL;DR;
 
-``` 
-helm install citrix-k8s-cpx-ingress-controller --set license.accept=yes
 ```
+helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
+
+helm install cic/citrix-k8s-cpx-ingress-controller --set license.accept=yes
+```
+> Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
 
 ## Introduction
 This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager
 
 ### Prerequisites
 * Kubernetes 1.6+
+* Helm 2.8.x+
 * Prometheus operator needs to be installed if you want to use exporter along with CIC.
 
 ## Installing the Chart
 
+Add the Citrix Ingress Controller helm chart repository using command:
+
+```
+helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
+```
+
 To install the chart with the release name ``` my-release```:
 
-```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>```
+```helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>```
 
 To run the exporter as sidecar with CPX, please install prometheus operator first and then use the following command:
 
-```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>,exporter.require=1.0```
+```helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>,exporter.require=1.0```
 
 If you want to visualize the metrices collected by exporter from Citrix ADC CPX please refer "[Visualization of Metrics](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics)".
 

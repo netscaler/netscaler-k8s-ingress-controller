@@ -26,6 +26,8 @@ logLevel: DEBUG
 kubernetesURL:
 # ingressClass is the name of the Ingress Class
 ingressClass:
+#nodeWatch is used for automatic route configuration on NetScaler towards the pod network
+nodeWatch: false
 # exporter conatins information of prometheus-exporter
 exporter:
   require: 0
