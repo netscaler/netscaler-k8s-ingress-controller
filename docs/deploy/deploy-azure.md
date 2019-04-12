@@ -1,4 +1,4 @@
-# Deploying Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster
+# Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster
 
 This section explains how to deploy Citrix ADC CPX as an ingress device in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster with basic networking mode (kubenet). You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy Citrix ADC CPX as the ingress device.
 

@@ -11,7 +11,7 @@ You can either do this manually or Citrix Ingress Controller (CIC) provides an o
 !!! note "Note"
     Ensure that the Citrix ADC instance (MPX or VPX) has SNIP configured on the host network. The host network is the network on which the Kubernetes nodes communicate with each other.
 
-## Manually configure route on Citrix ADC instance
+## Manually configure route on the Citrix ADC instance
 
 Perform the following:
 
@@ -37,7 +37,7 @@ Perform the following:
 
         add route 10.244.1.0 255.255.255.0 10.106.162.106
 
-## Automatically configure route on Citrix ADC instance
+## Automatically configure route on the Citrix ADC instance
 
 In the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file, you can use an argument,`feature-node-watch` to automatically configure route on the associated Citrix ADC instance.
 
