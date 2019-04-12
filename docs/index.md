@@ -10,7 +10,7 @@ Citrix Ingress Controller automates the configuration of Citrix ADCs to proxy tr
 
 Typically, North-South traffic is load balanced by Ingress devices such as Citrix ADCs while East-West traffic is load balanced by [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy). Since kube-proxy only provides limited layer-4 load balancing, service owners can utilize the Citrix Ingress Controller to achieve sophisticated layer-7 controls for [East-West traffic using the Ingress CPX ADCs](deployment-topologies.md#dual-tier-topology-with-hairpin-e-w-mode).
 
-## Deploying Citrix Ingress Controller
+## Deploy Citrix Ingress Controller
 
 You can deploy Citrix Ingress Controller in the following deployment modes:
 
