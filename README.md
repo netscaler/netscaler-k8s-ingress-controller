@@ -27,7 +27,7 @@ Features supported by Citrix Ingress Controller can be found [here](https://gith
 
 ## Documentation
 
-For detailed documentation, see [Citrix Ingress Controller Live Documentation]().
+For detailed documentation, see [Citrix Ingress Controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
 ## Deployment Solutions
 
