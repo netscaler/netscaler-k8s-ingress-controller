@@ -1,4 +1,4 @@
-# Deploying Citrix Ingress Controller using YAML
+# Deploy Citrix Ingress Controller using YAML
 
 You can deploy Citrix Ingress Controller (CIC) in the following modes:
 
@@ -6,7 +6,7 @@ You can deploy Citrix Ingress Controller (CIC) in the following modes:
 
 -  As a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/) (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology) topologies.
 
-## Deploying CIC as a standalone pod in the Kubernetes cluster for Citrix ADC MPX or VPX appliances
+## Deploy CIC as a standalone pod in the Kubernetes cluster for Citrix ADC MPX or VPX appliances
 
 Use the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file to run Citrix Ingress Controller (CIC) as a standalone pod in your Kubernetes cluster.
 
@@ -95,7 +95,7 @@ Perform the following:
 
         kubectl get pods --all-namespaces
 
-## Deploying CIC as a sidecar with Citrix ADC CPX
+## Deploy CIC as a sidecar with Citrix ADC CPX
 
 Use the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) file to deploy a Citrix ADC CPX with CIC as a sidecar. The YAML file deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster.
 

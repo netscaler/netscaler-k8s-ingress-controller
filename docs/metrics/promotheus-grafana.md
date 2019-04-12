@@ -124,7 +124,7 @@ The IP and port of the Citrix ADC VPX device needs to be provided in the `--targ
 
 **Citrix ADC CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a side-car. The following is a sample yaml file of a CPX ingress device with an exporter as a side car:
+To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar. The following is a sample yaml file of a CPX ingress device with an exporter as a side car:
 
 ```YAML
 ---
@@ -170,7 +170,7 @@ spec:
               containerPort: 9080
             - name: nitro-https
               containerPort: 9443
-        # Adding exporter as a side-car
+        # Adding exporter as a sidecar
         - name: exporter
           image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
           imagePullPolicy: IfNotPresent
@@ -197,7 +197,7 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 
 **Citrix ADC CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a side-car. The following is a sample yaml file of a Citrix ADC CPX (east-west) device with an exporter as a side car:
+To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar. The following is a sample yaml file of a Citrix ADC CPX (east-west) device with an exporter as a side car:
 
 ```YAML
 apiVersion: extensions/v1beta1
