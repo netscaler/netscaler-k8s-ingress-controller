@@ -63,7 +63,7 @@ You can get your Google account details using the following command.
     |kubernetes| ClusterIP| 10.7.240.1|none|443/TCP|22h|`
 
     !!! note "Note"
-        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX.
+        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX service YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX.
         For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 1.  Access the application using the following command.
