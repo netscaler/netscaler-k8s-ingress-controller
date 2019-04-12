@@ -1,4 +1,8 @@
-# Configure Static Routing
+# Configure static route on Ingress Citrix ADC VPX or MPX
+
+In a Kubernetes cluster, pods run on an overlay network. The overlay network can be Flannel, Calico, Weave, and so on. The pods in the cluster are assigned with an IP address from the overlay network which is different from the host network.
+
+The Ingress Citrix ADC VPX or MPX outside the Kubernetes cluster receives all the Ingress traffic to the microservices deployed in the Kubernetes cluster. You need to establish network connectivity between the Ingress Citrix ADC instance and the pods for the ingress traffic to reach the microservices.
 
 One of the ways to achieve network connectivity between pods and Citrix ADC VPX or MPX instance outside the Kubernetes cluster is to configure routes on the Citrix ADC instance to the overlay network.
 
@@ -55,8 +59,8 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
 ```
 
 !!! info "Points to Note"
-    -  By default, the `feature-node-watch` argument is set to `false`. Set the argument to `true` to enable the automatic route configuration.
-    -  For automatic route configuration, you must provide permissions to listen to the events of nodes resource type. You can provide the required permissions in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
+    - By default, the `feature-node-watch` argument is set to `false`. Set the argument to `true` to enable the automatic route configuration.
+    - For automatic route configuration, you must provide permissions to listen to the events of nodes resource type. You can provide the required permissions in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
 
 ```yml
   kind: ClusterRole

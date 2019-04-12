@@ -15,13 +15,13 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Single Tier Topology](../docs/deployment-topologies.md#single-tier-topology)
 -  [Dual Tier Topology](../docs/deployment-topologies.md#dual-tier-topology)
 -  [Cloud Topology](../docs/deployment-topologies.md#cloud-topology)
--  [Using the Ingress ADC for East-West traffic](../docs/deployment-topologies.md#using-the-ingress-adc-for-east-west-traffic)
+-  [Using the Ingress ADC for East-West traffic](../docs/deployment-topologies.md#using-the-ingress-adc-for-east--west-traffic)
 
 ## Citrix Ingress Controller Features
 
 1.  [Ingress Class](../docs/configure/ingress-classes.md)
 2.  [Annotations](../docs/configure/annotations.md)
-3.  [Smart Annotations](../docs/configure/annotations.md))
+3.  [Smart Annotations](../docs/configure/annotations.md)
 4.  [Network Supports](../docs/network/staticrouting.md)
 5.  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
 6.  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
