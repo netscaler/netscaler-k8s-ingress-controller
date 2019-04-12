@@ -7,7 +7,7 @@ site_url:
 
 # Repository
 repo_name: "Citrix Ingress Controller"
-repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller-docs"
+repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller"
 edit_uri: "edit/master/docs"
 
 # Copyright
@@ -36,9 +36,7 @@ theme:
   palette:
     primary: white
     accent: blue
-  font:
-    text: Roboto
-    code: Roboto Mono
+  font: false
   favicon: /media/favicon.ico
   logo: https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png
 
@@ -56,9 +54,9 @@ extra:
 
 markdown_extensions:
   - admonition
-  - codehilite:
-      guess_lang: true
-  - toc
+  - codehilite
+  - toc:
+      permalink: true
   - footnotes
   - meta
   - extra
