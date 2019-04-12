@@ -97,7 +97,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        <details>
        <summary>Ingress Class</summary>
 
-         [Ingress class](../../docs/ingress-class.md) is used when multiple Ingress Loadbalancers are used to load balance different ingress resources. 
+         [Ingress class](../../docs/configure/ingress-classes.md) is used when multiple Ingress Loadbalancers are used to load balance different ingress resources. 
 
          Citrix Ingress Controller will configure NetScaler only with the ingress classes listed under --ingress-classes
 
@@ -116,7 +116,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
        Citrix Ingress Controller will use the IP provided in this environment variable to configure a Vitual IP in the Tier-1 ADC which would recieve the application traffic from external world.
 
-       This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the [frontend-ip](../../docs/annotations.md) annotation.
+       This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the [frontend-ip](../../docs/configure/annotations.md) annotation.
 
        **Usage:**
        
@@ -140,6 +140,6 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 4. #### Reachability to the Pod Network:
     For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
     `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
-    Refer [Network Configuration](../../docs/network-config.md) for further details regarding the same. 
+    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same. 
     By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
 
