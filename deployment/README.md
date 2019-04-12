@@ -12,22 +12,23 @@ In usual k8s environment the E-W traffic is load balanced by kube-proxy and N-S 
 
 The E-W traffic can also be load balanced by Ingress load balancer with E-W Hairpin mode.
 
-1.  [Single Tier Topology](../docs/single-tier-topology.md)
-2.  [Dual Tier Topology](../docs/dual-tier-topology.md)
-3.  [Dual Tier Topology with Hairpin E-W](../docs/dual-tier-topology-with-hairpin-E-W.md)
+-  [Single Tier Topology](../docs/deployment-topologies.md#single-tier-topology)
+-  [Dual Tier Topology](../docs/deployment-topologies.md#dual-tier-topology)
+-  [Cloud Topology](../docs/deployment-topologies.md#cloud-topology)
+-  [Using the Ingress ADC for East-West traffic](../docs/deployment-topologies.md#using-the-ingress-adc-for-east--west-traffic)
 
 ## Citrix Ingress Controller Features
 
-1.  [Ingress Class](../docs/ingress-class.md)
-2.  [Annotations](../docs/annotations.md)
-3.  [Smart Annotations](../docs/smart-annotations.md)
-4.  [Network Supports](../docs/network-config.md)
-5.  [Automated Certificate Management with cert-manager](../docs/certificate.md)
-6.  [TLS Certificate Handling](../docs/tls-certificate-handling.md)
-7.  [Rewrite and Responder Policy Support using CRD](../docs/rewrite-responder-policy.md)
+1.  [Ingress Class](../docs/configure/ingress-classes.md)
+2.  [Annotations](../docs/configure/annotations.md)
+3.  [Smart Annotations](../docs/configure/annotations.md)
+4.  [Network Supports](../docs/network/staticrouting.md)
+5.  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
+6.  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
+7.  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
 
 ## Deployment Solutions
 
 1.  [On-Prem](baremetal)
-2.  [Google Cloud](gcp/README.md)
-3.  [Azure Cloud](azure/README.md)
+2.  [Google Cloud](../docs/deploy/deploy-gcp.md)
+3.  [Azure Cloud](../docs/deploy/deploy-azure.md)

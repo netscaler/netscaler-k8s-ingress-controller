@@ -13,7 +13,7 @@
 ## **Choose the  deployment**
 #### **1. Bring up Citrix Ingress Controller for VPX, MPX**
 ######    1.1. Deploy Citrix ingress controller
-   Follow [Deployment](../../deployment) guide to deploy citrix ingress controller
+   Follow [Deployment](../../docs/deploy) guide to deploy citrix ingress controller
 ######    1.2. Download the guestbook-ingress.yaml
    ```
    wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml
@@ -27,7 +27,7 @@
 #### **2. Bring up CPX with builtin Controller**
 
 ######    2.1 Deploy CPX with citrix ingress controller
-   Follow [Deployment](../../deployment) guide to deploy the CPX with citrix ingress controller
+   Follow [Deployment](../../docs/deploy) guide to deploy the CPX with citrix ingress controller
 ######    2.2 Create an ingress resource by following command
    ```
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml 
