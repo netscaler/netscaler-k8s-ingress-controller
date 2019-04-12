@@ -1,12 +1,12 @@
-# Upgrading Citrix Ingress Controller
+# Upgrade Citrix Ingress Controller
 
 This topic explains how to upgrade the Citrix Ingress Controller (CIC) instance for Citrix ADC CPX with CIC as sidecar and CIC standalone deployments.
 
-## Upgrading Citrix ADC CPX with CIC as Sidecar
+## Upgrade Citrix ADC CPX with CIC as a sidecar
 
-To upgrade a Citrix ADC CPX instance with CIC as sidecar, you can follow the procedure available at: [Upgrading a NetScaler CPX Instance](https://docs.citrix.com/en-us/citrix-adc-cpx/12-1/upgrade-cpx.html).
+To upgrade a Citrix ADC CPX instance with CIC as a sidecar, you can follow the procedure available at: [Upgrading a NetScaler CPX Instance](https://docs.citrix.com/en-us/citrix-adc-cpx/12-1/upgrade-cpx.html).
 
-## Upgrading a Standalone CIC
+## Upgrade a standalone CIC
 
 To upgrade a standalone CIC instance, you can either modify the YAML definition file or use the Helm chart. In the YAML file, you need to change the version for the image under containers. For example, consider you have the following YAML file.
 
