@@ -40,7 +40,7 @@ Citrix Ingress Controller (CIC) configures the Citrix ADC appliance (MPX or VPX)
 -  Configure Virtual IP address (VIP)
 -  Check the status of the Citrix ADC appliance
 
-##### To create the system user account, perform the following:
+To create the system user account, perform the following:
 
 1.  Log on to the Citrix ADC appliance. Perform the following:
     1.  Use an SSH client, such as PuTTy, to open an SSH connection to the Citrix ADC appliance.
