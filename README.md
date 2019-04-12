@@ -9,13 +9,13 @@
 
 ## Description
 
-This repository contains the Citrix Ingress Controller (CIC) built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+This repository contains Citrix Ingress Controller (CIC) built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
 ## What is an Ingress Controller?
 
 An Ingress Controller is a controller that watches the Kubernetes API server for updates to the Ingress resource and reconfigures the Ingress load balancer accordingly.
 
-## What is an Citrix Ingress Controller?
+## What is Citrix Ingress Controller?
 
 Citrix provides an Ingress Controller to Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures one or more Citrix ADC based on the Ingress resource configuration.
 
