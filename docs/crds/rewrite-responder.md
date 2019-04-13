@@ -1,14 +1,20 @@
 # Use Rewrite and Responder policies in Kubernetes
 
-In kubernetes environment, to deploy specific layer 7 policies to handle scenarios such as, redirecting HTTP traffic to a specific URL, blocking a set of IP addresses to mitigate DDoS attacks, imposing HTTP to HTTPS and so on, requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
+In a Kubernetes environment, to deploy specific layer 7 policies to handle scenarios such as:
 
-Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use along with Citrix Ingress Controller (CIC) and automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
+-  Redirecting HTTP traffic to a specific URL
+-  Blocking a set of IP addresses to mitigate DDoS attacks
+-  Imposing HTTP to HTTPS
+
+Requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
+
+Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with Citrix Ingress Controller (CIC) to automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
 
 The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Citrix ADCs. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
 
 Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Citrix ADC, see [Rewrite policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html) and [Responder policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html).
 
-## Deploy the Citrix CRD
+## Deploy the Citrix Rewrite and Responder CRD
 
 The Citrix Rewrite and Responder CRD deployment YAML file: [rewrite-responder-policies-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml).
 
@@ -17,10 +23,12 @@ The Citrix Rewrite and Responder CRD deployment YAML file: [rewrite-responder-po
 
 Deploy the CRD, using the following command:
 
-```
-root@master:~# kubectl create -f rewrite-responder-policies-deployment.yaml
-customresourcedefinition.apiextensions.k8s.io/rewritepolicies.citrix.com created
-```
+    kubectl create -f rewrite-responder-policies-deployment.yaml
+
+For example,
+
+    root@master:~# kubectl create -f rewrite-responder-policies-deployment.yaml
+    customresourcedefinition.apiextensions.k8s.io/rewritepolicies.citrix.com created
 
 ## CRD attributes
 
@@ -143,13 +151,13 @@ spec:
 
 After you have defined the policy configuration, deploy the `.yaml` file using the following command:
 
-    root@master:demo#kubectl create -f target-url-rewrite.yaml
+    kubectl create -f target-url-rewrite.yaml
 
 After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
 
 On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the CIC using the following command:
 
-    root@master:~# kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'
+    kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'
 
 You can view an entry in the logs as shown in the following image:
 
@@ -161,7 +169,7 @@ Also, you can verify if the configuration is applied on the Citrix ADC, do the f
 
 1.  Use the following command to verify if the configuration is applied to the Citrix ADC:
 
-        $ show run | grep `lb vserver`
+        show run | grep `lb vserver`
         add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -coment "uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325"
         bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http
         bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http -policyname k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072 -priority 1006 -gotoPriorityExpression END -type REQUEST
@@ -204,7 +212,7 @@ In this example, if Citrix ADC receives any URL that matches the `/app1`, `/app2
 
 **black-list-urls-audit-log.yaml:**
 
-```YAML
+```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
@@ -237,7 +245,7 @@ You can add multiple policy configurations in a single `.yaml` file and apply th
 
 **multi-policy-config.yaml:**
 
-``` yaml
+``` yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:

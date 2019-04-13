@@ -2,15 +2,19 @@
 
 ## What is Ingress class?
 
-In Kubernetes cluster, there might be multiple ingress controllers, and you need to have a way to associate a particular ingress resource with an ingress controller. `kubernetes.io/ingress.class` annotation in the ingress resource enables multiple ingress controllers to run effectively in the cluster. Otherwise every ingress resource is processed by all the ingress controllers in the cluster.
+In a Kubernetes cluster, there might be multiple ingress controllers and you need to have a way to associate a particular ingress resource with an ingress controller.
+
+You can specify the ingress controller that should handle the ingress resource by using the `kubernetes.io/ingress.class` annotation in your ingress resource definition.
 
 ## Citrix Ingress Controller and Ingress classes
 
-Citrix Ingress Controller provides a support to accept multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However Ingress Controller might need to handle various ingress resources from different classes.
+Citrix Ingress Controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However Ingress Controller might need to handle various ingress resources from different classes.
 
-You can associate Ingress Controller with multiple ingress classes using `--ingress-classes` argument under spec section of the YAML file.
+You can associate Ingress Controller with multiple ingress classes using the `--ingress-classes` argument under `spec` section of the YAML file.
 
-If ingress-classes are not specified for Ingress Controller, then it accepts all ingress resources irrespective of the presence of `kubernetes.io/ingress.class` annotation in the ingress object. If `ingress-classes` are specified, then Ingress Controller accepts only those ingress resources for which match the `kubernetes.io/ingress.class` annotation. Ingress resource without `ingress.class` annotation is not handled by Ingress Controller in the given case.
+If `ingress-classes` is not specified for the Ingress Controller, then it accepts all ingress resources irrespective of the presence of `kubernetes.io/ingress.class` annotation in the ingress object.
+
+If `ingress-classes` is specified, then Ingress Controller accepts only those ingress resources that match the `kubernetes.io/ingress.class` annotation. Ingress resource without the `ingress.class` annotation is not handled by Ingress Controller in the given case.
 
 !!! note "Note"
     Ingress class names are case-insensitive.
@@ -19,9 +23,9 @@ If ingress-classes are not specified for Ingress Controller, then it accepts all
 
 Following is the snippet from a sample yaml file to associate `ingress-classes` with the Ingress Controller. This works in both cases where Ingress Controller runs as a standalone pod or runs as sidecar with Citrix ADC CPX. In the given yaml snippet, following ingress classes are associated with the Ingress Controller.
 
--  my-custom-class
+-  `my-custom-class`
 
--  Citrix
+-  `Citrix`
 
 ```YAML
 spec:
@@ -39,7 +43,7 @@ spec:
           my-custom-class
 ```
 
-Following is the snippet from an Ingress yaml file where Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix Ingress Controller is configured to accept `my-custom-class`, it processes this Ingress resource.
+Following is the snippet from an Ingress yaml file where the Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix Ingress Controller is configured to accept `my-custom-class`, it processes this Ingress resource.
 
 ```yml
 apiVersion: extensions/v1beta1
