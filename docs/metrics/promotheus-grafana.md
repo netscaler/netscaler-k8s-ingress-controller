@@ -1,4 +1,4 @@
-# View metrics of Citrix ADCs in Kubernetes
+# View metrics of Citrix ADCs using Prometheus and Grafana
 
 You can use the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
 
