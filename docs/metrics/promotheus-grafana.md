@@ -6,16 +6,15 @@ You can use the [Citrix ADC metrics exporter](https://github.com/citrix/netscale
 
 Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter).
 
-## Launch prometheus-operator
+## Launch prometheus operator
 
-Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
+The Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
 
     git clone https://github.com/coreos/prometheus-operator.git
 
     kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
 
-
-Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-operator), several pods and services are deployed, of which `prometheus-k8s-xx` pods are for metrics aggregation and timestamping and `grafana` pods are for visualization. If you view all the container images running in the cluster, you can see the following output:
+Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-operator), several pods and services are deployed. From the deployed pods, the `prometheus-k8s-xx` pods are for metrics aggregation and timestamping, and the `grafana` pods are for visualization. If you view all the container images running in the cluster, you can see the following output:
 
     $ kubectl get pods -n monitoring
     NAME                                   READY     STATUS    RESTARTS   AGE
@@ -55,7 +54,7 @@ spec:
     prometheus: k8s
 ```
 
-To apply these changes into the kubernetes cluster use the following command:
+After you modify the `prometheus-service.yaml`file, apply the changes to the Kubernetes cluster using the following command:
 
     kubectl apply -f prometheus-service.yaml
 
@@ -77,7 +76,7 @@ spec:
     app: grafana
 ```
 
-To apply these changes into the kubernetes cluster use the following command:
+After you modify the `grafana-service.yaml`file, apply the changes to the Kubernetes cluster using the following command:
 
     kubectl apply -f grafana-service.yaml
 
@@ -87,7 +86,7 @@ This topic describes how to integrate the [Citrix ADC metrics exporter](https://
 
 **Citrix ADC VPX Ingress device**:
 
-To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. The following is a sample yaml file to deploy such an exporter:
+To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. The following is a sample YAML file to deploy the exporter:
 
 ```YAML
 apiVersion: v1
@@ -120,11 +119,11 @@ spec:
       targetPort: 8888
 ```
 
-The IP and port of the Citrix ADC VPX device needs to be provided in the `--target-nsip` parameter. For example, `--target-nsip=10.0.0.20`.
+The IP address and the port of the Citrix ADC VPX device needs to be provided in the `--target-nsip` parameter. For example, `--target-nsip=10.0.0.20`.
 
 **Citrix ADC CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar. The following is a sample yaml file of a CPX ingress device with an exporter as a side car:
+To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
 
 ```YAML
 ---
@@ -197,7 +196,7 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 
 **Citrix ADC CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar. The following is a sample yaml file of a Citrix ADC CPX (east-west) device with an exporter as a side car:
+To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
 
 ```YAML
 apiVersion: extensions/v1beta1
@@ -254,9 +253,9 @@ Here, the exporter uses the local IP (`192.168.0.2`) to fetch metrics from the C
 
 ### ServiceMonitors to detect Citrix ADC
 
-The Citrix ADC metrics exporter helps collect data from the Citrix ADC VPX or CPX ingress and Citrix ADC CPX (east-west) devices. Prometheus Operator need to detect these exporters so that the metrics can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ServiceMonitors to detect pods belonging to a service, using the labels attached to that service.
+The Citrix ADC metrics exporter helps collect data from the Citrix ADC VPX or CPX ingress and Citrix ADC CPX (east-west) devices. The Prometheus Operator needs to detect these exporters so that the metrics can be timestamped, stored, and exposed for visualization on Grafana. The Prometheus Operator uses the concept of ServiceMonitors to detect pods that belong to a service, using the labels attached to that service.
 
-The following example yaml file detects all the exporter services (given in the sample yaml files) which have the label service-type: citrix-adc-monitor associated with them.
+The following example YAML file detects all the exporter services (given in the sample YAML files) which have the label service-type: citrix-adc-monitor associated with them.
 
 ```YAML
 apiVersion: monitoring.coreos.com/v1
@@ -278,22 +277,22 @@ spec:
     - default
 ```
 
-### View the metrics in Grafana
+### View the metrics in grafana
 
-The Citrix ADC instances which were detected for monitoring appears in the `Targets` page of the prometheus container. It can be accessed using `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets` and looks like the following image:
+The Citrix ADC instances that are detected for monitoring appears in the **Targets** page of the prometheus container. You can be access the **Targets** page using the following URL: `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets`:
 
-![metrics](../media/metrics.png)
+![Metrics](../media/metrics.png)
 
 To view the metrics graphically:
 
 1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  Import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json) by selecting the `+` icon on the left panel and clicking import.
+1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 
-1.  A dashboard containing graphs similar to the following should appear:
+    A dashboard containing the graphs similar to the following appears:
 
     ![dashboard](../media/dashboard.png)
 
-1.  The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or [demo videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
+    You can further enhance the dashboard using Grafana's [documentation](http://docs.grafana.org/) or [demo videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
