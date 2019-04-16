@@ -88,6 +88,6 @@ nav:
       - Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager: certificate-management/acme.md
       - Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager: certificate-management/vault.md
   - Metrics:
-    - Integrate with Promotheus and Grafana: metrics/promotheus-grafana.md
+    - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
