@@ -92,7 +92,7 @@ nav:
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
   
- google_analytics:
+google_analytics:
   - 'UA-59929653-12'
   - 'auto'
   
