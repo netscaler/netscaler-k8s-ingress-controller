@@ -23,7 +23,7 @@ The following are the annotations supported by Citrix:
 Smart annotation is an option provided by Citrix Ingress Controller (CIC) to efficiently enable Citrix ADC features using Citrix ADC entity name. CIC converts the Ingress in Kubernetes to a set of Citrix ADC objects. You can efficiently control these objects using smart annotations.
 
 !!! info "Important"
-    To use smart annotations, you must have good understanding of Citrix ADC features and their respective enitity names. For more information on Citrix ADC features and entity names, see [Citrix ADC Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1.html).
+    To use smart annotations, you must have good understanding of Citrix ADC features and their respective entity names. For more information on Citrix ADC features and entity names, see [Citrix ADC Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1.html).
 
 Smart annotation takes JSON format as input. The key and value that you pass in the JSON format must match the Citrix ADC NITRO format. For more information on Citrix ADC NITRO API, see [Citrix ADC 12.1 REST APIs - NITRO Documentation](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/latest/).
 
