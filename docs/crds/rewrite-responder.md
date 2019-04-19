@@ -604,7 +604,7 @@ Output:
 
 ![Curl-output](../media/output-with-x-forwarded-for.png)
 
-### Redirect HTTP request to HTTPS request using reponder policy
+### Redirect HTTP request to HTTPS request using responder policy
 
 You can define a responder policy definition as shown in the following example YAML(`http_to_https_redirect.yaml`) to redirect HTTP requests to HTTPS request:
 
