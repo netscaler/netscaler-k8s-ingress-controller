@@ -30,7 +30,7 @@ For example,
     root@master:~# kubectl create -f rewrite-responder-policies-deployment.yaml
     customresourcedefinition.apiextensions.k8s.io/rewritepolicies.citrix.com created
 
-## CRD attributes
+## Rewrite and Responder CRD attributes
 
 The **CRD** provides attributes for various options required to define the rewrite and responder policies. Also, it provides attributes for dataset, patset, string map, and audit logs to use within the rewrite and responder policies. These CRD attributes correspond to **Citrix ADC** command and attribute respectively.
 
@@ -114,7 +114,7 @@ After you have deployed the CRD provided by Citrix in the Kubernetes cluster, yo
 
 In these sections, you need to use the [CRD attributes](#crd-attributes) provided for respective policy configuration (rewrite or responder) to define the policy.
 
-Also, in the `spec` you need to include a `rewrite-policies` section to specify the service or services to which the policy needs to be applied. For more information, see [Sample policy configurations](#sample-policy-configurations).
+Also, in the `spec` section, you need to include a `rewrite-policies` section to specify the service or services to which the policy must be applied. For more information, see [Sample policy configurations](#sample-policy-configurations).
 
 After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
 
@@ -208,7 +208,7 @@ spec:
 
 In this example, if Citrix ADC receives any URL that matches the `/app1`, `/app2`, or `/app3` strings defined in the `patset`, Citrix ADC blocks the URL.
 
-### Policy with audit log enabled
+### Policy with audit logs enabled
 
 **black-list-urls-audit-log.yaml:**
 
@@ -304,6 +304,371 @@ The example contains two responder policies and a rewrite policy, based on these
 -  Any incoming URL with strings provided in the `modifyurls` stringmap is modified to the value provided in the stringmap. For example, if the incoming URL has the string `/app1/` is modified to `/internal-app1/`
 
 -  Adds a session ID as a new header in the response to the client.
+
+## Example use cases
+
+### Add response headers
+
+When the requested URL from the client contains `/citrix-app/`, you can add the following headers in the HTTP response from the microservices to the client using a rewrite policy:
+
+-  Client source port to the header
+-  Server destination IP address
+-  random HTTP header
+
+The following sample rewrite policy definition adds these headers to the HTTP response from the microservices to the client:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+name: addresponseheaders
+spec:
+rewrite-policies:
+  - servicenames:
+      - frontend
+    rewrite-policy:
+      operation: insert_before_all
+      target: http.res.full_header
+      modify-expression: '"\r\nx-port: "+client.tcp.srcport+"\r\nx-ip:"+client.ip.dst+"\r\nx-new-dummy-header: Sending_a_gift"'
+      multiple-occurence-modify: 'text("\r\n\r\n")'
+      comment: 'Response header rewrite'
+      direction: RESPONSE
+      rewrite-criteria: 'http.req.url.contains("/citrix-app/")'
+```
+
+Create a YAML file (`add_response_headers.yaml`) with the rewrite policy definition and deploy the YAML file using the following command:
+
+    kubectl create -f add_response_headers.yaml
+
+You can verify the HTTP header added to the response as shown below:
+
+    $ curl -vvv http://app.cic-citrix.org/citrix-app/
+    *   Trying 10.102.33.176...
+    * TCP_NODELAY set
+    * Connected to app.cic-citrix.org (10.102.33.176) port 80 (#0)
+    > GET /citrix-app/ HTTP/1.1
+    > Host: app.cic-citrix.org
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    > 
+    < HTTP/1.1 200 OK
+    < Server: nginx/1.8.1
+    < Date: Fri, 29 Mar 2019 11:14:04 GMT
+    < Content-Type: text/html
+    < Transfer-Encoding: chunked
+    < Connection: keep-alive
+    < X-Powered-By: PHP/5.5.9-1ubuntu4.14
+    < x-port: 22481 ==================> NEW RESPONSE HEADER
+    < x-ip:10.102.33.176 ==================> NEW RESPONSE HEADER
+    < x-new-dummy-header: Sending_a_gift ==================> NEW RESPONSE HEADER
+    < 
+    <html>
+    <head>
+    <title> Front End App - v1 </title>
+
+
+    TRIMMED
+    .......
+
+### Add custom header to the HTTP response packet
+
+Using a rewrite policy, you can add custom headers in the HTTP response from the microservices to the client.
+
+The following sample rewrite policy definition adds custom header to the HTTP response from the microservices to the client:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: addcustomheaders
+spec:
+  rewrite-policies:
+    - servicenames:
+        - frontend
+      rewrite-policy:
+        operation: insert_before_all
+        target: http.res.full_header
+        modify-expression: '"\r\nx-request-time:"+sys.time+"\r\nx-using-citrix-ingress-controller: true"'
+        multiple-occurence-modify: 'text("\r\n\r\n")'
+        comment: 'Adding custom headers'
+        direction: RESPONSE
+        rewrite-criteria: 'http.req.is_valid'
+
+```
+
+Create a YAML file (`add_custom_headers.yaml`) with the rewrite policy definition and deploy the YAML file using the following command:
+
+    kubectl create -f add_custom_headers.yaml
+
+You can verify the custom HTTP header added to the response as shown below:
+
+    $ curl -vvv http://app.cic-citrix.org/
+    * Trying 10.102.33.176...
+    * TCP_NODELAY set
+    * Connected to app.cic-citrix.org (10.102.33.176) port 80 (#0)
+    > GET / HTTP/1.1
+    > Host: app.cic-citrix.org
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    > 
+    < HTTP/1.1 200 OK
+    < Server: nginx/1.8.1
+    < Date: Fri, 29 Mar 2019 12:15:09 GMT
+    < Content-Type: text/html
+    < Transfer-Encoding: chunked
+    < Connection: keep-alive
+    < X-Powered-By: PHP/5.5.9-1ubuntu4.14
+    < x-request-time:Fri, 29 Mar 2019 13:27:40 GMT =============> NEW HEADER ADDED
+    < x-using-citrix-ingress-controller: true  ===============> NEW HEADER ADDED
+    < 
+    <html>
+    <head>
+    <title> Front End App - v1 </title>
+    <style>
+
+    TRIMMED
+    ........
+
+### Replace host name in the request
+
+You can define a rewrite policy as shown in the following example YAML (`http_request_modify_prefixasprefix.yaml`) to replace the host name in an HTTP request as per your requirement:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: httpheadermodifyretainprefix
+spec:
+  rewrite-policies:
+    - servicenames:
+        - frontend
+      rewrite-policy:
+        operation: replace_all
+        target: 'http.req.header("host")'
+        modify-expression: '"citrix-service-app"'
+        multiple-occurence-modify: 'text("app.cic-citrix.org")'
+        comment: 'HTTP header rewrite of hostname'
+        direction: REQUEST
+        rewrite-criteria: 'http.req.is_valid'
+```
+
+Create a YAML file (`http_request_modify_prefixasprefix.yaml`) with the rewrite policy definition and deploy the YAML file using the following command:
+
+    kubectl create -f http_request_modify_prefixasprefix.yaml
+
+You can verify the policy definition using the `curl` command. The host name in the request is replaced with the defined host name.
+
+    curl http://app.cic-citrix.org/prefix/foo/bar
+
+Output:
+![Replace host name](../media/output-replace-hostname.png)
+
+### Modify the application root
+
+You can define a rewrite policy to modify the application root if the existing application root is `/`.
+
+The following sample rewrite policy modifies `/` to `/citrix-approot/` in the request URL:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+ name: httpapprootrequestmodify
+spec:
+ rewrite-policies:
+   - servicenames: 
+       - frontend
+     rewrite-policy:
+       operation: replace
+       target: http.req.url
+       modify-expression: '"/citrix-approot/"'
+       comment: 'HTTP app root request modify'
+       direction: REQUEST
+       rewrite-criteria: http.req.url.eq("/")
+```
+
+Create a YAML file (`kubectl create -f http_approot_request_modify.yaml`) with the rewrite policy definition and deploy the YAML file using the following command:
+
+    kubectl create -f kubectl create -f http_approot_request_modify.yaml
+
+Using the `curl` command, you can verify if the application root is modified as per your requirement:
+
+    curl -vvv http://app.cic-citrix.org/
+
+Output:
+
+![Modify app-root](../media/output-modify-approot.png)
+
+### Modify strings in the requested URL
+
+You can define a rewrite policy to modify the strings in the requested URL as per your requirement.
+
+The following sample rewrite policy replaces the strings `something` to `simple` in the requested URL:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+name: httpurlreplacestring
+spec:
+rewrite-policies:
+ - servicenames:
+     - frontend
+   rewrite-policy:
+     operation: replace_all
+     target: http.req.url
+     modify-expression: '"/"'
+     multiple-occurence-modify: 'regex(re~((^(\/something\/))|(^\/something$))~)'
+     comment: 'HTTP url replace string'
+     direction: REQUEST
+     rewrite-criteria: http.req.is_valid
+```
+
+Create a YAML file (`http_url_replace_string.yaml`) with the rewrite policy definition and deploy the YAML using the following command:
+
+    kubectl create -f http_url_replace_string.yaml
+
+You can verify the policy definition using a `curl` request with the string `something`. The string `something` is replaced with the string `simple` as shown in the following examples:
+
+**Example 1:**
+
+    curl http://app.cic-citrix.org/something/simple/citrix
+
+Output:
+
+![Replace string](../media/output-replace-string.png)
+
+**Example 2:**
+
+    curl http://app.cic-citrix.org/something
+
+Or, 
+
+    curl http://app.cic-citrix.org/something/
+
+Output:
+
+![Replace string](../media/output-replace-string-advanced.png)
+
+### Add X-Forwarded-For header within an HTTP request
+
+You can define a rewrite policy as shown in the following example YAML (`http_x_forwarded_for_insert.yaml`) to add `X-Forwarded-For` header within an HTTP request:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: httpxforwardedforaddition
+spec:
+  rewrite-policies:
+    - servicenames:
+        - frontend
+      rewrite-policy:
+        operation: insert_http_header
+        target: X-Forwarded-For
+        modify-expression: client.ip.src
+        comment: 'HTTP Initial X-Forwarded-For header add'
+        direction: REQUEST
+        rewrite-criteria: 'HTTP.REQ.HEADER("X-Forwarded-For").EXISTS.NOT'
+
+    - servicenames:
+        - frontend
+      rewrite-policy:
+        operation: replace
+        target: HTTP.REQ.HEADER("X-Forwarded-For")
+        modify-expression: 'HTTP.REQ.HEADER("X-Forwarded-For").APPEND(",").APPEND(CLIENT.IP.SRC)'
+        comment: 'HTTP Append X-Forwarded-For IPs'
+        direction: REQUEST
+        rewrite-criteria: 'HTTP.REQ.HEADER("X-Forwarded-For").EXISTS'
+```
+
+Create a YAML file (`http_x_forwarded_for_insert.yaml`) with the rewrite policy definition and deploy the YAML file using the following command:
+
+    kubectl create -f http_x_forwarded_for_insert.yaml
+
+Using the `curl` command you can verify the HTTP packet with and without `X-Forwarded-For` header.
+
+**Example:** Output of the HTTP request packet without `X-Forwarded-For` header:
+
+    curl http://app.cic-citrix.org/
+
+Output:
+
+![Curl-output](../media/output-without-x-forwarded-for.png)
+
+**Example:** Output of the HTTP request packet with `X-Forwarded-For` header:
+
+    curl  curl --header "X-Forwarded-For: 1.1.1.1" http://app.cic-citrix.org/
+
+Output:
+
+![Curl-output](../media/output-with-x-forwarded-for.png)
+
+### Redirect HTTP request to HTTPS request using reponder policy
+
+You can define a responder policy definition as shown in the following example YAML(`http_to_https_redirect.yaml`) to redirect HTTP requests to HTTPS request:
+
+```yml
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: httptohttps
+spec:
+  responder-policies:
+    - servicenames:
+        - frontend
+      responder-policy:
+        redirect: 
+          url: '"https://" +http.req.HOSTNAME.SERVER+":"+"443"+http.req.url'
+        respond-criteria: 'http.req.is_valid'
+        comment: 'http to https'
+
+```
+
+Create a YAML file (`http_to_https_redirect.yaml`) with the responder policy definition and deploy the YAML file using the following command:
+
+    kubectl create -f http_to_https_redirect.yaml
+
+You can verify if the HTTP request is redirected to HTTPS as shown below:
+
+**Example 1:**
+
+    $ curl -vvv  http://app.cic-citrix.org
+    * Rebuilt URL to: http://app.cic-citrix.org/
+    *   Trying 10.102.33.176...
+    * TCP_NODELAY set
+    * Connected to app.cic-citrix.org (10.102.33.176) port 80 (#0)
+    > GET / HTTP/1.1
+    > Host: app.cic-citrix.org
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    > 
+    < HTTP/1.1 302 Found : Moved Temporarily
+    < Location: https://app.cic-citrix.org:443/   =======> Redirected to HTTPS
+    < Connection: close
+    < Cache-Control: no-cache
+    < Pragma: no-cache
+    < 
+    * Closing connection 0
+
+**Example 2:**
+
+    $ curl -vvv  http://app.cic-citrix.org/simple
+    *   Trying 10.102.33.176...
+    * TCP_NODELAY set
+    * Connected to app.cic-citrix.org (10.102.33.176) port 80 (#0)
+    > GET /simple HTTP/1.1
+    > Host: app.cic-citrix.org
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    > 
+    < HTTP/1.1 302 Found : Moved Temporarily
+    < Location: https://app.cic-citrix.org:443/simple     ========> Redirected to HTTPS
+    < Connection: close
+    < Cache-Control: no-cache
+    < Pragma: no-cache
+    < 
+    * Closing connection 0
 
 ## Related articles
 
