@@ -1,4 +1,4 @@
-# Deploy HTTPS web application on Kubernetes with Citrix Ingress Controller and Hashicorp Vault using cert-manager
+# Deploy HTTPS web application on Kubernetes with Citrix ingress controller and Hashicorp Vault using cert-manager
 
 This topic provides a sample workflow that uses HashiCorp Vault as self-signed CA to automate TLS certificate provisioning, revocation, and renewal for ingress resources deployed with Citrix ingress controller using cert-manager.
 
@@ -12,7 +12,7 @@ The workflow uses a Vault secret engine and authentication methods, refer the fo
 
 This topic provides you information on how to deploy an HTTPS web application on a Kubernetes cluster, using:
 
--  Citrix ingress controller (CIC)
+-  Citrix ingress controller
 -  JetStack's [cert-manager](https://github.com/jetstack/cert-manager) to provision TLS certificates from [Hashicorp Vault](https://www.vaultproject.io/)
 -  [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -26,7 +26,7 @@ Ensure that you have:
 
 -  Deployed Citrix ADC MPX, VPX or CPX in Tier 1 or Tier 2 deployment model.
 
-    In the Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC) and Citrix Ingress Controller (CIC) running in Kubernetes cluster configures the virtual services for the services running on Kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of Let's Encrypt generated certificate.
+    In the Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC) and Citrix ingress controller running in Kubernetes cluster configures the virtual services for the services running on Kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of Let's Encrypt generated certificate.
   
     Similarly in the Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in the Kubernetes cluster. Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
 
@@ -136,7 +136,7 @@ Perform the following steps to deploy a sample web application.
 1.  Expose this service to outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
 
     !!! note "Note"
-        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Citrix ingress controller is started.
 
         apiVersion: extensions/v1beta1
         kind: Ingress
@@ -169,7 +169,7 @@ Perform the following steps to deploy a sample web application.
         kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
         root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
         exec: sh cs vs
-        1)	k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP	Type: CONTENT
+        1) k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP Type: CONTENT
           State: UP
           Last state change was at Thu Feb 21 09:02:14 2019
           Time since last state change: 0 days, 00:00:41.140
@@ -180,12 +180,12 @@ Perform the following steps to deploy a sample web application.
           Appflow logging: ENABLED
           Port Rewrite : DISABLED
           State Update: DISABLED
-          Default: 	Content Precedence: RULE
+          Default: Content Precedence: RULE
           Vserver IP and Port insertion: OFF
-          L2Conn: OFF	Case Sensitivity: ON
+          L2Conn: OFF Case Sensitivity: ON
           Authentication: OFF
           401 Based Authentication: OFF
-          Push: DISABLED	Push VServer:
+          Push: DISABLED Push VServer:
           Push Label Rule: none
           Listen Policy: NONE
           IcmpResponse: PASSIVE
@@ -213,7 +213,7 @@ Ensure that you have installed the `jq` utility.
 
 ### Create a root CA
 
-For the sample workflow you can generate your own Root Certificate Authority within the Vault. In a production environment, you should use an external Root CA to sign the intermediate CA that Vault uses to generate certificates. If you have a root CA generated elsewhere, skip this step. 
+For the sample workflow you can generate your own Root Certificate Authority within the Vault. In a production environment, you should use an external Root CA to sign the intermediate CA that Vault uses to generate certificates. If you have a root CA generated elsewhere, skip this step.
 
 !!! note "Note"
     `PKI_ROOT` is a path where you mount the root CA, typically it is 'pki'. ${DOMAIN} in this procedure is `example.com`
@@ -507,8 +507,8 @@ Perform the following steps to modify the ingress to use the generated secret.
         exec: shsslvs
         1) Vserver Name: k8s-10.244.3.148:443:ssl
           DH: DISABLED
-          DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-          Session Reuse: ENABLED		Timeout: 120 seconds
+          DH Private-Key Exponent Size Limit: DISABLED Ephemeral RSA: ENABLED Refresh Count: 0
+          Session Reuse: ENABLED Timeout: 120 seconds
           Cipher Redirect: DISABLED
           SSLv2 Redirect: DISABLED
           ClearText Port: 0
@@ -534,8 +534,8 @@ Perform the following steps to modify the ingress to use the generated secret.
 
           Advanced SSL configuration for VServer k8s-10.244.3.148:443:ssl:
           DH: DISABLED
-          DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-          Session Reuse: ENABLED		Timeout: 120 seconds
+          DH Private-Key Exponent Size Limit: DISABLED Ephemeral RSA: ENABLED Refresh Count: 0
+          Session Reuse: ENABLED Timeout: 120 seconds
           Cipher Redirect: DISABLED
           SSLv2 Redirect: DISABLED
           ClearText Port: 0
@@ -554,15 +554,15 @@ Perform the following steps to modify the ingress to use the generated secret.
           Zero RTT Early Data: DISABLED
           DHE Key Exchange With PSK: NO
           Tickets Per Authentication Context: 1
-        , P_256, P_384, P_224, P_5216)	CertKey Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO	Server Certificate for SNI
+        , P_256, P_384, P_224, P_5216) CertKey Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO Server Certificate for SNI
 
-        7)	Cipher Name: DEFAULT
+        7) Cipher Name: DEFAULT
           Description: Default cipher list with encryption strength >= 128bit
         Done
 
         root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh certkey k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO'
         exec: sh certkey k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO
-          Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO		Status: Valid,   Days to expiration:0
+          Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO Status: Valid,   Days to expiration:0
           Version: 3
           Serial Number: 524C1D9306F784A2F5277C05C2A120D5258D9A2F
           Signature Algorithm: sha256WithRSAEncryption
@@ -570,13 +570,13 @@ Perform the following steps to modify the ingress to use the generated secret.
           Validity
             Not Before: Feb 26 06:48:39 2019 GMT
             Not After : Feb 27 06:49:09 2019 GMT
-          Certificate Type:	"Client Certificate"	"Server Certificate"
+          Certificate Type: "Client Certificate" "Server Certificate"
           Subject:  CN=kuard.example.com
           Public Key Algorithm: rsaEncryption
           Public Key size: 2048
           Ocsp Response Status: NONE
-          2)	 URI:http://127.0.0.1:8200/v1/pki_int/crl
-          3)	VServer name: k8s-10.244.3.148:443:ssl	Server Certificate for SNI
+          2) URI:http://127.0.0.1:8200/v1/pki_int/crl
+          3) VServer name: k8s-10.244.3.148:443:ssl Server Certificate for SNI
         Done
 
 The HTTPS webserver is UP with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the 'RenewBefore" parameter in the Certificate, before expiry of the certificate.

@@ -15,7 +15,7 @@ The following are the annotations supported by Citrix:
 
 ## Smart annotations
 
-Smart annotation is an option provided by Citrix Ingress Controller (CIC) to efficiently enable Citrix ADC features using Citrix ADC entity name. CIC converts the Ingress in Kubernetes to a set of Citrix ADC objects. You can efficiently control these objects using smart annotations.
+Smart annotation is an option provided by Citrix ingress controller to efficiently enable Citrix ADC features using Citrix ADC entity name. Citrix ingress controller converts the Ingress in Kubernetes to a set of Citrix ADC objects. You can efficiently control these objects using smart annotations.
 
 !!! info "Important"
     To use smart annotations, you must have good understanding of Citrix ADC features and their respective entity names. For more information on Citrix ADC features and entity names, see [Citrix ADC Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1.html).
@@ -24,7 +24,7 @@ Smart annotation takes JSON format as input. The key and value that you pass in 
 
 For example, if you want to enable SRCIPDESTIPHASH based lb method, you must use the corresponding NITRO key and value format `lbmethod`,`SRCIPDESTIPHASH` respectively.
 
-The following table details the smart annotations provided by CIC:
+The following table details the smart annotations provided by Citrix ingress controller:
 
 | Citrix ADC Entity Name | Smart Annotation | Example |
 | ----------------------- | ---------------- | ------- |

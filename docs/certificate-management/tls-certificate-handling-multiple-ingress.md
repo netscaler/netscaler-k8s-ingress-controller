@@ -19,9 +19,9 @@ All Citrix ADC instances that do not support a FIPS card (including virtual appl
 
 In the Citrix ADC instance, the TLS offloading is configured in the Content Switching Virtual Server (CS Vserver). By default, each Citrix ADC instance can have one certificate and the application receives the traffic based on the policy bound to the certificate. However, you have the Server Name Indication (SNI) option to have multiple certificates bound to multiple applications. If you want to have one certificate, then you can disable the SNI option and the certificate is bound to the CS Vserver.
 
-You can define all these requirements (certificate and domain name) in the Citrix Ingress Controller.
+You can define all these requirements (certificate and domain name) in the Citrix ingress controller.
 
-## Define certificates to Citrix Ingress Controller
+## Define certificates to Citrix ingress controller
 
 Using the yaml, you can define a certificate under `args` and under `tls` section. If you have defined a certificate under `args`, then the certificate is bound to non-SNI certificate. If you have defined a certificate under `tls`, then the certificate is bound to SNI certificate.
 
@@ -181,7 +181,7 @@ imagePullPolicy: Always
 
 **TLS**:
 
-You can secure an Ingress by specifying a secret containing TLS pem. CIC configures the certificate resource in Citrix ADC and use it to encrypt the communication. The example in this section shows you how to secure an Ingress using TLS/SSL certificates.
+You can secure an Ingress by specifying a secret containing TLS pem. Citrix ingress controller configures the certificate resource in Citrix ADC and use it to encrypt the communication. The example in this section shows you how to secure an Ingress using TLS/SSL certificates.
 
 **Import Existing Certificate**:
 
@@ -207,11 +207,11 @@ data:
   tls.key: base64 encoded key
 ```
 
-The secret that is created can be used with CIC to secure the communication from client to Citrix ADC using TLS.
+The secret that is created can be used with Citrix ingress controller to secure the communication from client to Citrix ADC using TLS.
 
 You can provide the secret to the yaml in two ways:
 
--  **Using CIC yaml file** - This is the non-SNI enabled HTTP traffic that is the default certificate for all HTTPs incoming traffic. This certificate does not have the full domain name.
+-  **Using Citrix ingress controller yaml file** - This is the non-SNI enabled HTTP traffic that is the default certificate for all HTTPs incoming traffic. This certificate does not have the full domain name.
 
 -  **Using ingress yaml file** - This is the SNI-enabled HTTPs traffic that requires a domain name.
 
@@ -221,7 +221,7 @@ You can provide the secret to the yaml in two ways:
 
 -  In case of default certificate:
 
-    For example, let us consider a secret `colddrink-secret` specified under `args` in the CIC yaml, then the secret is bound as non-SNI certificate.
+    For example, let us consider a secret `colddrink-secret` specified under `args` in the Citrix ingress controller yaml, then the secret is bound as non-SNI certificate.
 
 ```yaml
 kind: ClusterRole
@@ -392,13 +392,13 @@ spec:
 
 ```
 
-`tls` section is required to ensure that the `frontend-colddrinks` service has the HTTPs traffic and need tls secret for encryption. Hence, secret provided as default under CIC is used for this service.
+`tls` section is required to ensure that the `frontend-colddrinks` service has the HTTPs traffic and need tls secret for encryption. Hence, secret provided as default under Citrix ingress controller is used for this service.
 
 **Assumptions**:
 
--  There can be at most 1 default secret under `args` in CIC yaml that is considered as default certificate for all HTTPs traffic.
+-  There can be at most 1 default secret under `args` in Citrix ingress controller yaml that is considered as default certificate for all HTTPs traffic.
 
--  This default certificate is used globally for all services managed by this CIC yaml file.
+-  This default certificate is used globally for all services managed by this Citrix ingress controller yaml file.
 
 -  Need to add empty secret name under TLS section to enable TLS feature for that service.
 
@@ -406,7 +406,7 @@ spec:
 
 All HTTPs request uses default certificate without matching the CN name of certificate used with secret.
 
-**Secret in CIC ingress Yaml (SNI enabled)**:
+**Secret in Citrix ingress controller ingress Yaml (SNI enabled)**:
 
 The secret in ingress can be added in two ways:
 
@@ -482,7 +482,7 @@ spec:
 
 -  **Multiple ingress**
 
-**Secret in CIC ingress yaml (SNI enabled)**:
+**Secret in Citrix ingress controller ingress yaml (SNI enabled)**:
 
 If multiple ingress files is used for different services, then all secrets will be used together to bind with context switch virtual server of Citrix ADC instance.
 
