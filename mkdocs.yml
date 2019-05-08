@@ -92,3 +92,8 @@ nav:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
+  
+google_analytics:
+  - 'UA-59929653-12'
+  - 'auto'
+  
