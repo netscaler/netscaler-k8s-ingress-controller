@@ -1,4 +1,4 @@
-# Deploy HTTPS web application on Kubernetes with Citrix Ingress Controller and Let`s Encrypt using cert-manager
+# Deploy HTTPS web application on Kubernetes with Citrix ingress controller and Let`s Encrypt using cert-manager
 
 [Let's Encrypt](https://letsencrypt.org/docs/) and the ACME (Automatic Certificate Management Environment) protocol enables you to set up an HTTPS server and automatically obtain a browser-trusted certificate. To get a certificate for your website’s domain from Let’s Encrypt, you have to demonstrate control over the domain. Currently there are two different challenge types, http-01 and dns-01.
 
@@ -12,7 +12,7 @@ On successful validation of the challenge, a certificate is granted for the doma
 
 This topic provides information on how to securely deploy an HTTPS web application on a Kubernetes cluster, using:
 
--  Citrix Ingress Controller (CIC)
+-  Citrix ingress controller
 
 -  JetStack's [cert-manager](https://github.com/jetstack/cert-manager) to provision TLS certificates from the [Let's Encrypt project](https://letsencrypt.org/docs/).
 
@@ -24,7 +24,7 @@ Ensure that you have:
 
 -  Deployed Citrix ADC MPX, VPX, or CPX deployed in Tier 1 or Tier 2 deployment model.
 
-    In Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC) and Citrix Ingress Controller (CIC) running in kubernetes cluster configures the virtual services for the services running on kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of Let's Encrypt generated certificate.
+    In Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC) and Citrix ingress controller running in kubernetes cluster configures the virtual services for the services running on kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of Let's Encrypt generated certificate.
   
     Similarly in Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in kubernetes cluster.  Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
 
@@ -135,8 +135,7 @@ Perform the following to deploy a sample web application:
 1.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
 
     !!! note "Note"
-        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
-
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Citrix ingress controller is started.
 
             apiVersion: extensions/v1beta1
             kind: Ingress
@@ -164,12 +163,12 @@ Perform the following to deploy a sample web application:
         NAME    HOSTS               ADDRESS   PORTS   AGE
         kuard   kuard.example.com             80      7s
 
-1.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command: 
+1.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command:
 
         $ kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
         root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
         exec: sh cs vs
-        1)	k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP	Type: CONTENT
+        1)k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP Type: CONTENT
           State: UP
           Last state change was at Thu Feb 21 09:02:14 2019
           Time since last state change: 0 days, 00:00:41.140
@@ -180,12 +179,12 @@ Perform the following to deploy a sample web application:
           Appflow logging: ENABLED
           Port Rewrite : DISABLED
           State Update: DISABLED
-          Default: 	Content Precedence: RULE
+          Default:  Content Precedence: RULE
           Vserver IP and Port insertion: OFF
-          L2Conn: OFF	Case Sensitivity: ON
+          L2Conn: OFF Case Sensitivity: ON
           Authentication: OFF
           401 Based Authentication: OFF
-          Push: DISABLED	Push VServer:
+          Push: DISABLED  Push VServer:
           Push Label Rule: none
           Listen Policy: NONE
           IcmpResponse: PASSIVE
@@ -213,7 +212,7 @@ HTTP validation using cert-manager is simple way of getting a certificate from L
 
 The cert-manager supports two different CRDs for configuration, an `Issuer`, which is scoped to a single namespace, and a `ClusterIssuer`, which is cluster-wide.
 
-For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively you can create an `Issuer` for each namespace on which you are creating an Ingress resource.
+For Citrix ingress controller to use ingress from any namespace, use `ClusterIssuer`. Alternatively you can create an `Issuer` for each namespace on which you are creating an Ingress resource.
 
 1.  Create a file called `issuer-letsencrypt-staging.yaml` with the following configuration:
 
@@ -232,7 +231,6 @@ For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively yo
               name: letsencrypt-staging
             # Enable the HTTP-01 challenge provider
             http01: {}
-
 
     !!! note "Note"
         http01 challenge provider is enabled in the `ClusterIssuer` CRD. Replace `user@example.com` with your email address. This is the email address that Let's Encrypt uses to communicate with you about certificates you request. For more information, see [Issuer reference docs](https://docs.cert-manager.io/en/latest/reference/issuers.html).
@@ -311,7 +309,7 @@ spec:
 
 The `kubernetes.io/tls-acme: "true"` annotation tells cert-manager to use the `letsencrypt-staging` cluster-wide issuer that was created earlier to request a certificate from Let's Encrypt's staging servers. Cert-manager creates a `certificate` object that is used to manage the lifecycle of the certificate for `kuard.example.com`, and the value for the domain name and challenge method for the certificate object is derived from the ingress object. Cert-manager manages the contents of the secret as long as the Ingress is present in your cluster.
 
-Deploy the `ingress.yaml` using the following command: 
+Deploy the `ingress.yaml` using the following command:
 
     % kubectl apply -f ingress.yml
     ingress.extensions/kuard configured
@@ -337,7 +335,7 @@ spec:
     name: letsencrypt-staging
   commonName: kuard.example.com
   #Renew before 15 days of expiry
-  renewBefore: 360h 
+  renewBefore: 360h
   dnsNames:
   - kuard.example.com
   acme:
@@ -348,7 +346,7 @@ spec:
       - kuard.example.com
 ```
 
-`ingressClass` refers to the ingress class CIC or CPX is running and `spec.secretName` is the name of the secret where the certificate is stored on successful issuing the certificate.
+`ingressClass` refers to the ingress class Citrix ingress controller or CPX is running and `spec.secretName` is the name of the secret where the certificate is stored on successful issuing the certificate.
 
 Deploy the `certificate.yaml` on the Kubernetes cluster:
 
@@ -496,8 +494,8 @@ Log on to Citrix ADC CPX and verify if the certificate is bound to the SSL virtu
     exec: sh ssl vserver
     1) Vserver Name: k8s-10.244.3.148:443:ssl
       DH: DISABLED
-      DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-      Session Reuse: ENABLED		Timeout: 120 seconds
+      DH Private-Key Exponent Size Limit: DISABLED Ephemeral RSA: ENABLED Refresh Count: 0
+      Session Reuse: ENABLED  Timeout: 120 seconds
       Cipher Redirect: DISABLED
       SSLv2 Redirect: DISABLED
       ClearText Port: 0
@@ -522,8 +520,8 @@ Log on to Citrix ADC CPX and verify if the certificate is bound to the SSL virtu
 
       Advanced SSL configuration for VServer k8s-10.244.3.148:443:ssl:
       DH: DISABLED
-      DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-      Session Reuse: ENABLED		Timeout: 120 seconds
+      DH Private-Key Exponent Size Limit: DISABLED Ephemeral RSA: ENABLED Refresh Count: 0
+      Session Reuse: ENABLED  Timeout: 120 seconds
       Cipher Redirect: DISABLED
       SSLv2 Redirect: DISABLED
       ClearText Port: 0
@@ -542,16 +540,16 @@ Log on to Citrix ADC CPX and verify if the certificate is bound to the SSL virtu
       Zero RTT Early Data: DISABLED
       DHE Key Exchange With PSK: NO
       Tickets Per Authentication Context: 1
-    , P_256, P_384, P_224, P_5216)	CertKey Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO	Server Certificate for SNI
+    , P_256, P_384, P_224, P_5216) CertKey Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO Server Certificate for SNI
 
-    7)	Cipher Name: DEFAULT
+    7) Cipher Name: DEFAULT
       Description: Default cipher list with encryption strength >= 128bit
     Done
 
 
     rcli_script.sh 'sh certkey k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO'
     exec: sh certkey k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO
-      Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO		Status: Valid,   Days to expiration:89
+      Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO Status: Valid,   Days to expiration:89
       Version: 3
       Serial Number: FA0DFEDAB578C0228273927DA7C5E17CF098
       Signature Algorithm: sha256WithRSAEncryption
@@ -559,12 +557,12 @@ Log on to Citrix ADC CPX and verify if the certificate is bound to the SSL virtu
       Validity
         Not Before: Feb 25 08:00:38 2019 GMT
         Not After : May 26 08:00:38 2019 GMT
-      Certificate Type:	"Client Certificate"	"Server Certificate"
+      Certificate Type: "Client Certificate" "Server Certificate"
       Subject:  CN=kuard.example.com
       Public Key Algorithm: rsaEncryption
       Public Key size: 2048
       Ocsp Response Status: NONE
-      2)	VServer name: k8s-10.244.3.148:443:ssl	Server Certificate for SNI
+      2) VServer name: k8s-10.244.3.148:443:ssl Server Certificate for SNI
     Done
 
 The HTTPS webserver is now UP with fake LE signed certificate. Next step is to move to production with actual Let's Encrypt certificate.
@@ -686,8 +684,8 @@ Use `kubectl describe` command to verify if both certificates and key are popula
 
 If both `tls.crt` and `tls.key` are populated in the kubernetes secret, certificate generation is complete.  If only tls.key is present, certificate generation is incomplete. Analyze the cert-manager logs for more details about the issue.
 
-### Analyze the logs from Citrix Ingress Controller
+### Analyze the logs from Citrix ingress controller
 
-If kubernetes secret is generated and complete, but this secret is not uploaded to Citrix ADC CPX or VPX, you can analyze the logs from citrix ingress controller using `kubectl logs` command.
+If kubernetes secret is generated and complete, but this secret is not uploaded to Citrix ADC CPX or VPX, you can analyze the logs from Citrix ingress controller using `kubectl logs` command.
 
     % kubectl logs -f cpx-ingress-685c8bc976-zgz8q  
