@@ -333,7 +333,7 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 ![image](./images/prometheus-targets.png)
 
 To view the metrics graphically,
-1. Log into grafana using ```http://<k8s_cluster_ip>:<grafafa_nodeport>``` with default credentials ```admin:admin```
+1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
 2. Import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json) by selecting the ```+``` icon on the left panel and clicking import.
 
