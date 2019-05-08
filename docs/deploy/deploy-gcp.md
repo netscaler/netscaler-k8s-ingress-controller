@@ -87,7 +87,7 @@ To deploy Citrix ADC CPX as an Ingress in a standalone deployment model in GCP, 
 
 ![CPX-GCP-Topology-Standalone](../media/CPX-GCP-Topology-Standalone.png)
 
-1.  Deploy a Citrix ADC CPX ingress with in built Citrix Ingress Controller in your Kubernetes cluster using the following command.
+1.  Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 

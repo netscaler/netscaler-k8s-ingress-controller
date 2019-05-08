@@ -6,9 +6,9 @@ In a Kubernetes cluster, there might be multiple ingress controllers and you nee
 
 You can specify the ingress controller that should handle the ingress resource by using the `kubernetes.io/ingress.class` annotation in your ingress resource definition.
 
-## Citrix Ingress Controller and Ingress classes
+## Citrix ingress controller and Ingress classes
 
-Citrix Ingress Controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However Ingress Controller might need to handle various ingress resources from different classes.
+Citrix ingress controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However Ingress Controller might need to handle various ingress resources from different classes.
 
 You can associate Ingress Controller with multiple ingress classes using the `--ingress-classes` argument under `spec` section of the YAML file.
 
@@ -43,7 +43,7 @@ spec:
           my-custom-class
 ```
 
-Following is the snippet from an Ingress yaml file where the Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix Ingress Controller is configured to accept `my-custom-class`, it processes this Ingress resource.
+Following is the snippet from an Ingress yaml file where the Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
 
 ```yml
 apiVersion: extensions/v1beta1
