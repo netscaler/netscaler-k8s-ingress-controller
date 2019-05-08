@@ -90,7 +90,7 @@ To deploy Citrix ADC CPX as an Ingress device in a standalone deployment model i
 
 Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingress device.
 
-1.  Deploy a Citrix ADC CPX ingress with in built Citrix Ingress Controller in your Kubernetes cluster using the following command.
+1.  Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 

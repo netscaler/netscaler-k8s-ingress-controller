@@ -8,7 +8,7 @@ In a Kubernetes environment, to deploy specific layer 7 policies to handle scena
 
 Requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
 
-Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with Citrix Ingress Controller (CIC) to automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
+Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with Citrix ingress controller to automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
 
 The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Citrix ADCs. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
 
@@ -116,7 +116,7 @@ In these sections, you need to use the [CRD attributes](#crd-attributes) provide
 
 Also, in the `spec` section, you need to include a `rewrite-policies` section to specify the service or services to which the policy must be applied. For more information, see [Sample policy configurations](#sample-policy-configurations).
 
-After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
+After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
 
 > **Points to note:**
 >
@@ -153,9 +153,9 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
 
     kubectl create -f target-url-rewrite.yaml
 
-After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
+After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
 
-On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the CIC using the following command:
+On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the Citrix ingress controller using the following command:
 
     kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'
 
@@ -350,7 +350,7 @@ You can verify the HTTP header added to the response as shown below:
     > Host: app.cic-citrix.org
     > User-Agent: curl/7.54.0
     > Accept: */*
-    > 
+    >
     < HTTP/1.1 200 OK
     < Server: nginx/1.8.1
     < Date: Fri, 29 Mar 2019 11:14:04 GMT
@@ -361,7 +361,7 @@ You can verify the HTTP header added to the response as shown below:
     < x-port: 22481 ==================> NEW RESPONSE HEADER
     < x-ip:10.102.33.176 ==================> NEW RESPONSE HEADER
     < x-new-dummy-header: Sending_a_gift ==================> NEW RESPONSE HEADER
-    < 
+    <
     <html>
     <head>
     <title> Front End App - v1 </title>
@@ -410,7 +410,7 @@ You can verify the custom HTTP header added to the response as shown below:
     > Host: app.cic-citrix.org
     > User-Agent: curl/7.54.0
     > Accept: */*
-    > 
+    >
     < HTTP/1.1 200 OK
     < Server: nginx/1.8.1
     < Date: Fri, 29 Mar 2019 12:15:09 GMT
@@ -420,7 +420,7 @@ You can verify the custom HTTP header added to the response as shown below:
     < X-Powered-By: PHP/5.5.9-1ubuntu4.14
     < x-request-time:Fri, 29 Mar 2019 13:27:40 GMT =============> NEW HEADER ADDED
     < x-using-citrix-ingress-controller: true  ===============> NEW HEADER ADDED
-    < 
+    <
     <html>
     <head>
     <title> Front End App - v1 </title>
@@ -476,7 +476,7 @@ metadata:
  name: httpapprootrequestmodify
 spec:
  rewrite-policies:
-   - servicenames: 
+   - servicenames:
        - frontend
      rewrite-policy:
        operation: replace
@@ -542,7 +542,7 @@ Output:
 
     curl http://app.cic-citrix.org/something
 
-Or, 
+Or,
 
     curl http://app.cic-citrix.org/something/
 
@@ -618,7 +618,7 @@ spec:
     - servicenames:
         - frontend
       responder-policy:
-        redirect: 
+        redirect:
           url: '"https://" +http.req.HOSTNAME.SERVER+":"+"443"+http.req.url'
         respond-criteria: 'http.req.is_valid'
         comment: 'http to https'
@@ -642,13 +642,13 @@ You can verify if the HTTP request is redirected to HTTPS as shown below:
     > Host: app.cic-citrix.org
     > User-Agent: curl/7.54.0
     > Accept: */*
-    > 
+    >
     < HTTP/1.1 302 Found : Moved Temporarily
     < Location: https://app.cic-citrix.org:443/   =======> Redirected to HTTPS
     < Connection: close
     < Cache-Control: no-cache
     < Pragma: no-cache
-    < 
+    <
     * Closing connection 0
 
 **Example 2:**
@@ -661,13 +661,13 @@ You can verify if the HTTP request is redirected to HTTPS as shown below:
     > Host: app.cic-citrix.org
     > User-Agent: curl/7.54.0
     > Accept: */*
-    > 
+    >
     < HTTP/1.1 302 Found : Moved Temporarily
     < Location: https://app.cic-citrix.org:443/simple     ========> Redirected to HTTPS
     < Connection: close
     < Cache-Control: no-cache
     < Pragma: no-cache
-    < 
+    <
     * Closing connection 0
 
 ## Related articles
