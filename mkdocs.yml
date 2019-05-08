@@ -78,6 +78,7 @@ nav:
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
+    - NodePort: network/nodeport.md
   - CRDs: 
     - Using Rewrite and Responder policies in Kubernetes: crds/rewrite-responder.md
   - Certificate management:
