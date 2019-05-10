@@ -14,7 +14,7 @@ Use the [citrix-k8s-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8
 
 ### Prerequisites
 
- -  Determine the NS_IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
+-  Determine the NS_IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
 
     -  (Standalone appliances) NSIP - The management IP address of a standalone Citrix ADC appliance. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html).
 
@@ -22,7 +22,7 @@ Use the [citrix-k8s-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8
 
     -  (Appliances in Clustered mode) CLIP - The cluster management IP (CLIP) address for a clustered Citrix ADC deployment. For more information, see [IP addressing for a cluster](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering/cluster-overview/ip-addressing.html).
 
- -  The username and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. The Citrix ADC appliance needs to have system user account (non-default) with certain privileges so that Citrix ingress controller can configure the Citrix ADC VPX or MPX appliance. For instructions to create the system user account on Citrix ADC, see[Create System User Account for Citrix ingress controller in Citrix ADC](#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+-  The username and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. The Citrix ADC appliance needs to have system user account (non-default) with certain privileges so that Citrix ingress controller can configure the Citrix ADC VPX or MPX appliance. For instructions to create the system user account on Citrix ADC, see[Create System User Account for Citrix ingress controller in Citrix ADC](#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
     You can directly pass the username and password or use Kubernetes secrets. If you want to use Kubernetes secrets, create a secrete for the username and password using the following command:
 
