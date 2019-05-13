@@ -138,8 +138,9 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
    Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.1.1` </span>
 
 4. #### Reachability to the Pod Network:
-    For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
-    `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
-    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same. 
+    For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running.
+There are two ways to achieve this:
+* If ingress Netscaler device is in the same network as your kubernetes cluster, `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network.
+    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same.
     By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
-
+* Otherwise, you can define the type of service being deployed as "NodePort". Citrix Ingress Controller, in this case, uses IP of the node in which pod is deployed instead of pod IP to configure services in Netscaler.
