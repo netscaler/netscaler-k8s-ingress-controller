@@ -1,0 +1,393 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates a Citrix ADC VPX 12.1 version  instance with a single network interface
+Metadata:
+  Copyright:
+    - 'Copyright (c) 2019 Citrix Systems, Inc.'
+    - 'All rights reserved.'
+    - ''
+    - 'Redistribution and use in source and binary forms, with or without'
+    - 'modification, are permitted provided that the following conditions are'
+    - 'met:'
+    - '    * Redistributions of source code must retain the above copyright'
+    - '      notice, this list of conditions and the following disclaimer.'
+    - '    * Redistributions in binary form must reproduce the above copyright'
+    - '      notice, this list of conditions and the following disclaimer in'
+    - '      the documentation and/or other materials provided with the'
+    - '      distribution.'
+    - '    * Neither the name of the Citrix Systems, Inc. nor the'
+    - '      names of its contributors may be used to endorse or promote'
+    - '      products derived from this software without specific prior written'
+    - '      permission.'
+    - ''
+    - 'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS'
+    - '\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT'
+    - 'LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A'
+    - 'PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Citrix Systems,'
+    - 'Inc. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,'
+    - 'OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF'
+    - 'SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS'
+    - 'INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN'
+    - 'CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)'
+    - 'ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF'
+    - 'THE POSSIBILITY OF SUCH DAMAGE.'
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Network Configuration
+        Parameters:
+          - VpcId
+          - SubnetId
+      - Label:
+          default: Amazon EC2 Configuration
+        Parameters:
+          - VPXInstanceType
+          - KeyName
+          - VPXTenancyType
+    ParameterLabels:
+      VpcId:
+        default: Which VPC should this be deployed to?
+      SubnetId:
+        default: Subnet in the VPC (subnet should be able to accept public traffic)?
+      VPXInstanceType:
+        default: Instance Type for the NetScaler VPX.
+      VPXTenancyType:
+        default: Tenancy Type
+      KeyName:
+        default: SSH Keypair
+Mappings:
+   AWSInstanceType2Arch:
+     m4.large:
+       Arch: "64"
+     m4.2xlarge:
+       Arch: "64"
+     m4.xlarge:
+       Arch: "64"
+     m4.4xlarge:
+       Arch: "64"
+     m4.10xlarge:
+       Arch: "64"
+     c4.large:
+       Arch: "64"
+     c4.xlarge:
+       Arch: "64"
+     c4.2xlarge:
+       Arch: "64"
+     c4.4xlarge:
+       Arch: "64"
+     c4.8xlarge:
+       Arch: "64"
+   AWSRegionArch2AMI:
+     us-east-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0fe34330ab860f7f6
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     us-east-2:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0cbd0a3af75c2d849
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     us-west-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0f7079dc26313c083
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     us-west-2:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0330b7f1cd4367eb8
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     us-gov-west-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-7f58391e
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     ca-central-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-06f6d5000b2edc8c1
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     eu-central-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0dbd87bc3f6b7ac0a
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     eu-west-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0198651093460fef7
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     eu-west-2:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-087f98b111285ff8a
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     ap-southeast-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0af3ea5ad3eefdbc3
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     ap-southeast-2:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0e0ef92e0f3c299c9
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     ap-south-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-038c43b331d7e5c56
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     ap-northeast-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0e2c84948e8c42db0
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     ap-northeast-2:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-009afa7d85d599854
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+     sa-east-1:
+       "32": NOT_YET_SUPPORTED
+       "64": ami-0ae382bdd08cbbb88
+       64Cluster: NOT_YET_SUPPORTED
+       64GPU: NOT_YET_SUPPORTED
+Parameters:
+  VpcId:
+    Type: 'AWS::EC2::VPC::Id'
+    Description: VpcId of an existing Virtual Private Cloud in the region
+  VPXInstanceType:
+     Default: m4.xlarge
+     ConstraintDescription: Must be a valid EC2 instance type.
+     Type: String
+     Description: Type of Citrix ADC VPX instance
+     AllowedValues:
+       - m4.xlarge
+       - m4.2xlarge
+       - m4.4xlarge
+       - m4.10xlarge
+       - c4.large
+       - c4.xlarge
+       - c4.2xlarge
+       - c4.4xlarge
+       - c4.8xlarge
+  VPXTenancyType:
+     Default: default
+     Type: String
+     Description: Instance tenancy default or dedicated
+     AllowedValues:
+       - default
+       - dedicated 
+  SubnetId:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: SubnetId of an existing subnet in the specified VPC
+  KeyName:
+    ConstraintDescription: 'Can contain only alphanumeric characters, spaces, dashes and underscores.'
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    MinLength: '1'
+    AllowedPattern: '[-_ a-zA-Z0-9]*'
+    MaxLength: '64'
+    Type: 'AWS::EC2::KeyPair::KeyName'
+Conditions: {}
+Resources:
+  SecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow http/s and ssh to  ENI from Internet
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+  CitrixNodesInstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      Policies:
+        - PolicyName: Citrixnode
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - 'ec2:DescribeInstances'
+                  - 'ec2:DescribeNetworkInterfaces'
+                  - 'ec2:DetachNetworkInterface'
+                  - 'ec2:AttachNetworkInterface'
+                  - 'autoscaling:*'
+                  - 'sns:*'
+                  - 'sqs:*'
+                Resource: '*'
+                Effect: Allow
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+  CitrixNodesProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref CitrixNodesInstanceRole
+  VPXEni:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      Description: 'VPX Network Interface'
+      SourceDestCheck: 'false'
+      GroupSet:
+      - !Ref SecurityGroup
+      SubnetId: !Ref SubnetId
+      SecondaryPrivateIpAddressCount: 2
+  VPXInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Value: CitrixADCVPX
+          Key: Name
+        - Value: LoadBalancer
+          Key: Purpose
+      ImageId: !FindInMap
+        - AWSRegionArch2AMI
+        - !Ref 'AWS::Region'
+        - 64
+      KeyName: !Ref KeyName
+      Tenancy: !Ref VPXTenancyType
+      IamInstanceProfile: !Ref CitrixNodesProfile
+      InstanceType: !Ref VPXInstanceType
+      NetworkInterfaces:
+        - DeviceIndex: '0'
+          NetworkInterfaceId: !Ref VPXEni
+  ElasticIpVIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: vpc
+  AssociateElasticIpVIP:
+    Type: 'AWS::EC2::EIPAssociation'
+    Properties:
+      AllocationId: !GetAtt
+        - ElasticIpVIP
+        - AllocationId
+      InstanceId: !Ref VPXInstance
+      PrivateIpAddress: !GetAtt
+        - VPXEni 
+        - PrimaryPrivateIpAddress 
+  ElasticIpNsIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: vpc
+  AssociateElasticIpNsIP:
+    Type: 'AWS::EC2::EIPAssociation'
+    Properties:
+      AllocationId: !GetAtt
+        - ElasticIpNsIP
+        - AllocationId
+      InstanceId: !Ref VPXInstance
+      PrivateIpAddress: !Select [ 0, !GetAtt VPXEni.SecondaryPrivateIpAddresses  ]
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: lambdalogtocloudwatch
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+        - PolicyName: lambdaallowreadec2
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - 'ec2:DescribeInstances'
+                  - 'ec2:DescribeSubnets'
+                  - 'ec2:DescribeVpcs'
+                  - 'ec2:DescribeNetworkInterfaces'
+                Resource: '*'
+                Effect: Allow
+  VPXBootStrapFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !Join
+          - ''
+          - - citrix-adc-vpx-cft-fn-
+            - !Ref 'AWS::Region'
+        S3Key: lambda-ha-1-nic-eks.zip 
+      Handler: handler.lambda_handler
+      Runtime: python2.7
+      Timeout: '300'
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+  VPXBootStrap:
+    Type: 'Custom::LambdaCallout'
+    Properties:
+      ServiceToken: !GetAtt
+        - VPXBootStrapFunction
+        - Arn
+      EC2InstanceId: !Ref VPXInstance
+      PublicIpVIP: !Ref ElasticIpVIP
+      PublicNSIP: !Ref ElasticIpNsIP
+Outputs:
+  ManagementURL:
+    Description: HTTPS URL to the Management GUI (uses self-signed cert)
+    Value: !Join
+      - ''
+      - - 'https://'
+        - !Ref ElasticIpNsIP
+  ManagementURL2:
+    Description: HTTP URL to the Management GUI
+    Value: !Join
+      - ''
+      - - 'http://'
+        - !Ref ElasticIpNsIP
+  InstanceIdNS:
+    Description: Instance Id of newly created VPX instance
+    Value: !Ref VPXInstance
+  PublicIpVIP:
+    Description: Elastic IP address of the VPX instance associated with the VIP
+    Value: !Ref ElasticIpVIP
+  PrivateNSIP:
+    Description: Private IP (NS IP) used for management
+    Value: !Select [ 0, !GetAtt VPXEni.SecondaryPrivateIpAddresses  ] 
+  PublicNSIP:
+    Description: Public IP (NS IP) used for management
+    Value: !Ref ElasticIpNsIP
+  PrivateVIP:
+    Description: Private IP address of the VPX instance associated with the VIP
+    Value: !GetAtt
+      - VPXInstance 
+      - PrivateIp 
+  SNIP:
+    Description: Private IP address of the VPX instance associated with the SNIP
+    Value: !Select [ 1, !GetAtt VPXEni.SecondaryPrivateIpAddresses  ] 
+  SecurityGroup:
+    Description: Security group id that the VPX belongs to
+    Value: !Ref SecurityGroup
+
