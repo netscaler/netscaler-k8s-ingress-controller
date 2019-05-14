@@ -1,6 +1,6 @@
 # Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller
 
-The topic covers a solution to deploy Citrix ADC VPX in active-active high availability mode on multiple availability zones in AWS Elastic Container Service (EKS) platform. The solution combines AWS Elastic load balancing (ELB) and Citrix ADC VPX to load balance the Ingress traffic to the microservices deployed in EKS cluster. AWS ELB handles the Layer 4 traffic and the Citrix ADC VPXs provides advanced Layer 7 functionalities such as, advanced load balancing, caching, and content-based routing. 
+The topic covers a solution to deploy Citrix ADC VPX in active-active high availability mode on multiple availability zones in AWS Elastic Container Service (EKS) platform. The solution combines AWS Elastic load balancing (ELB) and Citrix ADC VPX to load balance the Ingress traffic to the microservices deployed in EKS cluster. AWS ELB handles the Layer 4 traffic and the Citrix ADC VPXs provides advanced Layer 7 functionalities such as, advanced load balancing, caching, and content-based routing.
 
 ## Solution overview
 
@@ -8,17 +8,17 @@ A basic architecture of an EKS cluster would include three public subnet and thr
 
 ![EKS Architecture](../media/eks-diagram.png)
 
-With the solution the architecture of the EKS cluster would be as shown in the following diagram: 
+With the solution, the architecture of the EKS cluster would be as shown in the following diagram: 
 
 ![Solution Architecture](../media/eks_vpx_architecture.png)
 
 In the AWS cloud, AWS [Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html) handles the Layer 4 TCP connections and load balances the traffic using a flow hash routing algorithm. The ELB can be either Network Load Balancer or a Classic Load Balancer.
 
-AWS Elastic Load Balancing (ELB) has a DNS name to which an IP address is assigned dynamically. The IP address can be used to add an Alias A record for your domain in [Route53](https://aws.amazon.com/route53/).
+AWS ELB listens for incoming connections as defined by its listeners. Each listener forwards a new connection to one of the available Citrix ADC VPX instances. The Citrix ADC VPX instance load balances the traffic to the EKS pods. It also performs other Layer 7 functionalities such as, rewrite policy, responder policy, SSL offloading and so on provided by Citrix ADC VPX.
 
-AWS ELB listens for incoming connections as defined by its listeners. Each listener forwards a new connection to one of the available Citrix ADC VPX instances. The Citrix ADC VPX instance load balances the traffic to the Kubernetes pods. It also performs other Layer 7 functionalities such as, rewrite policy, responder policy, SSL offloading and so on provided by Citrix ADC VPX.
+A Citrix ingress controller is deployed in the EKS cluster for each Citrix ADC VPX instance. The Citrix ingress controllers are configured with the same ingress class. And, it configures the Ingress objects in the EKS cluster on the respective Citrix ADC VPX instances.
 
-A Citrix ingress controller is deployed in the EKS cluster for each Citrix ADC VPX instance. The Citrix ingress controllers are configured with the same ingress class. And, it configures the Ingress objects in the Kubernetes cluster on the respective Citrix ADC VPX instances.
+AWS Elastic Load Balancing (ELB) has a DNS name to which an IP address is assigned dynamically. The DNS name can be added as Alias A record for your domain in [Route53](https://aws.amazon.com/route53/) to access the application hosted in the EKS cluster.
 
 ## Deployment process
 
@@ -34,16 +34,16 @@ Perform the following to deploy the solution:
 
 ### Deploy Citrix ADC VPX instances
 
-Citrix ADC VPX is available as [CloudFormation Template](https://github.com/kumar-swamy/Citrix-ADC-VPX-AWS-EKS/blob/master/templates/eks_single_nic/README.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the management IP address, VIP, and SNIP.
+Citrix ADC VPX is available as [CloudFormation Template](https://github.com/kumar-swamy/Citrix-ADC-VPX-AWS-EKS/blob/master/templates/eks_single_nic/README.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Citrix ADC VPX instance.
 
 For this solution you need to deploy two instances of Citrix ADC VPX. Deploy the Citrix ADC VPX instances on two availability zones by specifying the same Citrix ADC VPX and different public subnet.
 
-After you deploy the Citrix ADC VPX instances, you can verify the deployment by reviewing the output of the CloudFormation template as shown in the following screenshot. The output must show the various IP addresses (VIP, SNIP, and management IP) configured for the Citrix VPX instances:
+After you deploy the Citrix ADC VPX instances, you can verify the deployment by reviewing the output of the CloudFormation template as shown in the following screenshot. The output must show the various IP addresses (VIP, SNIP, and NSIP) configured for the Citrix VPX instances:
 
 ![CloudFormation Template output](../media/cft-output.png)
 
 > **Note:**
-> The CloudFormation template deploys the Citrix ADC VPX instance with primary IP address as VIP and secondary IP address as management IP address.
+> The CloudFormation template deploys the Citrix ADC VPX instance with primary IP address of the Citrix ADC VPX EC2 instance as VIP and secondary IP address as management IP address.
 
 After the Citrix ADC VPX instances are successfully deployed, you must edit the security groups to allow traffic from EKS node group security group. Also, you must change the EKS node group security group to allow traffic from VPX instances.
 
@@ -53,7 +53,7 @@ Deploy separate instance of Citrix ingress controller for each Citrix ADC VPX in
 
 After the Citrix ADC VPX instance is up, you must set up a system user account on the Citrix ADC VPX instances. The system user account is used by Citrix ingress controller to log into the Citrix ADC VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#create-system-user-account-for-cic-in-citrix-adc).
 
-1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml](https://github.com/kumar-swamy/Citrix-ADC-VPX-AWS-EKS/blob/master/manifest/citrix-ingress-controller.yaml)). 
+1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml]()). 
 
     Replace `NS_IP` with the `Private NSIP` address of the respective Citrix ADC VPX instance. Also, provide the system user account user name and password that you have created on the Citrix ADC VPX instance. Once you edited the citrix-ingress-controller.yaml file, deploy the updated YAML file using the following command:
 
