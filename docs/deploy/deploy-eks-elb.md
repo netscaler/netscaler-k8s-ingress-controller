@@ -8,7 +8,7 @@ A basic architecture of an EKS cluster would include three public subnet and thr
 
 ![EKS Architecture](../media/eks-diagram.png)
 
-With the solution, the architecture of the EKS cluster would be as shown in the following diagram: 
+With the solution, the architecture of the EKS cluster would be as shown in the following diagram:
 
 ![Solution Architecture](../media/eks_vpx_architecture.png)
 
@@ -34,7 +34,7 @@ Perform the following to deploy the solution:
 
 ### Deploy Citrix ADC VPX instances
 
-Citrix ADC VPX is available as [CloudFormation Template](/cloud-formation-template.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Citrix ADC VPX instance.
+Citrix ADC VPX is available as [CloudFormation Template](cloud-formation-template.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Citrix ADC VPX instance.
 
 For this solution you need to deploy two instances of Citrix ADC VPX. Deploy the Citrix ADC VPX instances on two availability zones by specifying the same Citrix ADC VPX and different public subnet.
 
@@ -49,9 +49,9 @@ After the Citrix ADC VPX instances are successfully deployed, you must edit the 
 
 ### Deploy Citrix ingress controller
 
-Deploy separate instance of Citrix ingress controller for each Citrix ADC VPX instance. Follow the [deployment instructions](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/) to deploy Citrix ingress controller.
+Deploy separate instance of Citrix ingress controller for each Citrix ADC VPX instance. Follow the [deployment instructions](deploy-cic-yaml.md) to deploy Citrix ingress controller.
 
-After the Citrix ADC VPX instance is up, you must set up a system user account on the Citrix ADC VPX instances. The system user account is used by Citrix ingress controller to log into the Citrix ADC VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#create-system-user-account-for-cic-in-citrix-adc).
+After the Citrix ADC VPX instance is up, you must set up a system user account on the Citrix ADC VPX instances. The system user account is used by Citrix ingress controller to log into the Citrix ADC VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Citrix ADC](deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
 1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml](/deployment/aws/manifest/citrix-ingress-controller.yaml)).
 
