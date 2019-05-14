@@ -1,0 +1,121 @@
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets","nodes"]
+    verbs: ["*"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cic-k8s-role
+subjects:
+- kind: ServiceAccount
+  name: cic-k8s-role
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cic-k8s-role
+  namespace: default
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-k8s-ingress-controller-1
+  labels:
+    app: cic-k8s-ingress-controller-1
+spec: 
+      serviceAccountName: cic-k8s-role
+      containers:
+      - name: cic-k8s-ingress-controller-1
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.1"
+        env:
+         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+         - name: "NS_IP"
+           value: "x.x.x.x"
+         - name: "NS_VIP"
+           value: "x.x.x.x"
+         # Set username for Nitro
+         - name: "NS_USER"
+           valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: username
+         # Set user password for Nitro
+         - name: "NS_PASSWORD"
+           valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: password
+         # Set log level
+         - name: "EULA"
+           value: "yes"
+        args:
+          - --ingress-classes
+            citrix
+          - --feature-node-watch
+            false
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-k8s-ingress-controller-2
+  labels:
+    app: cic-k8s-ingress-controller-2
+spec: 
+      serviceAccountName: cic-k8s-role
+      containers:
+      - name: cic-k8s-ingress-controller-2
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.1"
+        env:
+         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+         - name: "NS_IP"
+           value: "x.x.x.x"
+         - name: "NS_VIP"
+           value: "x.x.x.x"
+         # Set username for Nitro
+         - name: "NS_USER"
+           valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: username
+         # Set user password for Nitro
+         - name: "NS_PASSWORD"
+           valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: password
+         # Set log level
+         - name: "EULA"
+           value: "yes"
+        args:
+          - --ingress-classes
+            citrix
+          - --feature-node-watch
+            false
+        imagePullPolicy: Always
