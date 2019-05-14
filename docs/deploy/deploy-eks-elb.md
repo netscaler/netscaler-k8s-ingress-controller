@@ -34,7 +34,7 @@ Perform the following to deploy the solution:
 
 ### Deploy Citrix ADC VPX instances
 
-Citrix ADC VPX is available as [CloudFormation Template](https://github.com/kumar-swamy/Citrix-ADC-VPX-AWS-EKS/blob/master/templates/eks_single_nic/README.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Citrix ADC VPX instance.
+Citrix ADC VPX is available as [CloudFormation Template](/cloud-formation-template.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Citrix ADC VPX instance.
 
 For this solution you need to deploy two instances of Citrix ADC VPX. Deploy the Citrix ADC VPX instances on two availability zones by specifying the same Citrix ADC VPX and different public subnet.
 
@@ -53,7 +53,7 @@ Deploy separate instance of Citrix ingress controller for each Citrix ADC VPX in
 
 After the Citrix ADC VPX instance is up, you must set up a system user account on the Citrix ADC VPX instances. The system user account is used by Citrix ingress controller to log into the Citrix ADC VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#create-system-user-account-for-cic-in-citrix-adc).
 
-1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml]()). 
+1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml](/deployment/aws/manifest/citrix-ingress-controller.yaml)).
 
     Replace `NS_IP` with the `Private NSIP` address of the respective Citrix ADC VPX instance. Also, provide the system user account user name and password that you have created on the Citrix ADC VPX instance. Once you edited the citrix-ingress-controller.yaml file, deploy the updated YAML file using the following command:
 
@@ -206,14 +206,13 @@ Alternative to Amazon Network load balancer, you can set up Classic Load Balance
 
        1.  Click **Create**.
 
-
 ### Verify the solution
 
 After you have successfully deployed Citrix ADC VPX, AWS ELB, and Citrix ingress controller, you can verify the solution using a sample service.
 
 Perform the following:
 
-1.  Deploy a sample service and ingress using [app.yaml](https://github.com/kumar-swamy/Citrix-ADC-VPX-AWS-EKS/blob/master/manifest/app.yaml).
+1.  Deploy a sample service and ingress using [app.yaml](/deployment/aws/manifest/app.yaml).
 
         kubectl apply -f app.yaml
 
