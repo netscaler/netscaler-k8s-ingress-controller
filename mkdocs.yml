@@ -68,6 +68,7 @@ nav:
   - Deploy Citrix Ingress Controller: 
     - Using YAML: deploy/deploy-cic-yaml.md
     - Using Helm charts: deploy/deploy-cic-helm.md
+    - Using Kops: deploy/deploy-cic-kops.md
   - Deployment solutions:
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
