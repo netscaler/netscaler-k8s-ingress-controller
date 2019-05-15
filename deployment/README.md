@@ -20,15 +20,16 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 ## Citrix Ingress Controller Features
 
 1.  [Ingress Class](../docs/configure/ingress-classes.md)
-2.  [Annotations](../docs/configure/annotations.md)
-3.  [Smart Annotations](../docs/configure/annotations.md)
-4.  [Network Supports](../docs/network/staticrouting.md)
-5.  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
-6.  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
-7.  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
+1.  [TCP Ingress](../docs/how-to/tcp-udp-ingress.md)
+1.  [Annotations](../docs/configure/annotations.md)
+1.  [Smart Annotations](../docs/configure/annotations.md)
+1.  [Network Supports](../docs/network/staticrouting.md)
+1.  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
+1.  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
+1.  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
 
 ## Deployment Solutions
 
 1.  [On-Prem](baremetal)
-2.  [Google Cloud](../docs/deploy/deploy-gcp.md)
-3.  [Azure Cloud](../docs/deploy/deploy-azure.md)
+1.  [Google Cloud](../docs/deploy/deploy-gcp.md)
+1.  [Azure Cloud](../docs/deploy/deploy-azure.md)
