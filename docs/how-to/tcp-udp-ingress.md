@@ -55,7 +55,7 @@ metadata:
     name: colddrinks-ingress
     annotations:
         kubernetes.io/ingress.class: “colddrink”
-        ingress.citrix.com/insecure-service-type: “ssl_tcp”
+        ingress.citrix.com/secure-service-type: “ssl_tcp”
         ingress.citrix.com/secure_backend: ‘{“frontendcolddrinks”:”True”}’
 spec:
     tls:
