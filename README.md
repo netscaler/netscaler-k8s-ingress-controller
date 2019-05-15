@@ -39,6 +39,7 @@ Deploy the Guestbook application and use the [Citrix ADC CPX](https://www.citrix
 
 -  [Quick Deploy using yaml](./example)
 -  [Quick Deploy using Helm](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples)
+-  [Quick Deploy using Kops](./docs/deploy/deploy-cic-kops.md)
 -  [Deployment in Google Cloud](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp)
 -  [Deployment in Azure Cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/azure)
 
