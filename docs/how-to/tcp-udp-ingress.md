@@ -1,0 +1,96 @@
+# How to load balance Ingress traffic to TCP or UDP based application
+
+In a Kubernetes environment, an Ingress is an object that allows access to the Kubernetes services from outside the Kubernetes cluster. Standard Kubernetes Ingress resources assume that all the traffic is HTTP-based and does not cater to non-HTTP based protocols such as, TCP, TCP-SSL, and UDP. Hence, critical applications based on L7 protocols such as DNS, FTP, LDAP, and so on, cannot be exposed using standard Kubernetes Ingress.
+
+To expose TCP or UDP based applications, the only solution is to use [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) service type. However, using [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) service type is a costly proposition as you have to bring up a dedicated cloud load balancer for each service that you want to expose.
+
+Citrix ingress controller enables you to load balance TCP or UDP based Ingress traffic. It provides the following [annotations](/docs/configure/annotations.md) that you can use in your Kubernetes Ingress resource definition and load balance the TCP or UDP based Ingress traffic:
+
+-  `ingress.citrix.com/insecure-service-type`: The annotation enables L4 load balancing with TCP, UDP, or ANY as protocol for Citrix ADC.
+-  `ingress.citrix.com/insecure-port`: The annotation configures the TCP port. The annotation is helpful when micro service access is required on a non-standard port. By default, port 80 is configured.
+
+**Sample:** Ingress definition for TCP-based Ingress.
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: redis-master-ingress
+    annotations:
+        kubernetes.io/ingress.class: “guestbook”
+        ingress.citrix.com/insecure-service-type: “tcp”
+        ingress.citrix.com/insecure-port: “6379”
+spec:
+    backend:
+        serviceName: redis-master-pods
+        servicePort: 6379
+```
+
+**Sample:** Ingress definition for UDP-based Ingress.
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: udp-ingress
+    annotations:
+        ingress.citrix.com/insecure-service-type: “udp”
+        ingress.citrix.com/insecure-port: “5084”
+spec:
+    backend:
+        serviceName: frontend
+        servicePort: 53
+```
+
+## Load balance Ingress traffic based on TCP over SSL
+
+Citrix ingress controller provides an `‘ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
+
+**Sample:** Ingress definition for TCP over SSL based Ingress.
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: colddrinks-ingress
+    annotations:
+        kubernetes.io/ingress.class: “colddrink”
+        ingress.citrix.com/insecure-service-type: “ssl_tcp”
+        ingress.citrix.com/secure_backend: ‘{“frontendcolddrinks”:”True”}’
+spec:
+    tls:
+    - secretName: “colddrink-secret”
+    backend:
+        serviceName: frontend-colddrinks
+        servicePort: 443
+```
+
+## Monitor and improve the performance of your TCP or UDP based applications
+
+Application developers can closely monitor the health of TCP or UDP based applications through rich monitors (such as TCP-ECV, UDP-ECV) in Citrix ADC. The ECV (extended content validation) monitors help in checking whether the
+application is returning expected content or not.
+
+Also, the application performance can be improved by using persistence methods such as `Source IP`. You can use these Citrix ADC features through [Smart Annotations](/docs/configure/annotations.md#smart-annotations) in
+Kubernetes. The following is one such example:
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: mongodb
+    annotations:
+        NETSCALER_HTTP_PORT: “80”
+        NETSCALER_VIP: “192.168.1.1”
+        ingress.citrix.com/csvserver: ‘{“l2conn”:”on”}’
+        ingress.citrix.com/lbvserver: ‘{“mongodb-svc”:{“lbmethod”:”SRCIPDESTIPHASH”}}’
+        ingress.citrix.com/monitor: ‘{“mongodbsvc”:{“type”:”tcp-ecv”}}’
+spec:
+    rules:
+    - host: mongodb.beverages.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: mongodb-svc
+            servicePort: 80
+```
