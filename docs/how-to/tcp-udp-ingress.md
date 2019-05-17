@@ -79,8 +79,8 @@ kind: Ingress
 metadata:
     name: mongodb
     annotations:
-        NETSCALER_HTTP_PORT: “80”
-        NETSCALER_VIP: “192.168.1.1”
+        ingress.citrix.com/insecure-port: “80”
+        ingress.citrix.com/frontend-ip: “192.168.1.1”
         ingress.citrix.com/csvserver: ‘{“l2conn”:”on”}’
         ingress.citrix.com/lbvserver: ‘{“mongodb-svc”:{“lbmethod”:”SRCIPDESTIPHASH”}}’
         ingress.citrix.com/monitor: ‘{“mongodbsvc”:{“type”:”tcp-ecv”}}’
