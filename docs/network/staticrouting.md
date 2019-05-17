@@ -51,7 +51,7 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
         containers:
         - name: cic-k8s-ingress-controller
           image: "quay.io/citrix/citrix-k8s-ingress-controller:latest"
-        # feature-node-watch argument configures route(s) on the Ingress NetScaler
+        # feature-node-watch argument configures route(s) on the Ingress Citrix ADC
         # to provide connectivity to the pod network. By default, this feature is disabled.
         args:
         - --feature-node-watch
