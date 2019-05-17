@@ -126,6 +126,21 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        ```
        
        </details>
+       <details>
+
+       <summary>NS_APPS_NAME_PREFIX</summary>
+
+       Citrix Ingress Controller will use the provided prefix to form the application entity name at Citrix ADC. 
+
+       This is useful in the case, one Citrix ADC, load balancing applications from different cluster. Prefix allows to segregate the  kubernetes cluster configuration. Default value take as k8s_.
+       **Usage:**
+       
+       ```
+       - name: "NS_APPS_NAME_PREFIX"       
+         value: "<Name of your choice>"
+       ```
+       </details>
+       
 
 3. Create using kubectl command. 
 
