@@ -43,7 +43,7 @@ spec:
         - --default-ssl-certificate
           ssl/hotdrink.secret
         env:
-        # Set NetScaler Management IP
+        # Set Citrix ADM Management IP
         - name: "NS_IP"
           value: "xx.xx.xx.xx"
         # Set port for Nitro

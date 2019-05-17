@@ -4,7 +4,7 @@ This topic explains how to upgrade the Citrix ingress controller instance for Ci
 
 ## Upgrade Citrix ADC CPX with Citrix ingress controller as a sidecar
 
-To upgrade a Citrix ADC CPX instance with Citrix ingress controller as a sidecar, you can follow the procedure available at: [Upgrading a NetScaler CPX Instance](https://docs.citrix.com/en-us/citrix-adc-cpx/12-1/upgrade-cpx.html).
+To upgrade a Citrix ADC CPX instance with Citrix ingress controller as a sidecar, you can follow the procedure available at: [Upgrading a Citrix ADC CPX Instance](https://docs.citrix.com/en-us/citrix-adc-cpx/12-1/upgrade-cpx.html).
 
 ## Upgrade a standalone Citrix ingress controller
 
