@@ -39,22 +39,6 @@ metadata:
 spec:
     backend:
         serviceName: frontend
-        servicePort: 53
-```
-
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix Ingress Controller version 1.1.3:
-
-```yml
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-    name: udp-ingress
-    annotations:
-        ingress.citrix.com/insecure-service-type: “udp”
-        ingress.citrix.com/insecure-port: “5084”
-spec:
-    backend:
-        serviceName: frontend
         servicePort: udp_53  /* Service port name defined in the service defination */
 ```
 
@@ -75,6 +59,22 @@ spec:
     protocol: UDP
   selector:
     name: bind
+```
+
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix Ingress Controller version 1.1.3:
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: udp-ingress
+    annotations:
+        ingress.citrix.com/insecure-service-type: “udp”
+        ingress.citrix.com/insecure-port: “5084”
+spec:
+    backend:
+        serviceName: frontend
+        servicePort: 53
 ```
 
 ## Load balance Ingress traffic based on TCP over SSL
