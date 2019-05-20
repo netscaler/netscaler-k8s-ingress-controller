@@ -26,7 +26,7 @@ spec:
         servicePort: 6379
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix Ingress Controller version 1.1.1:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.1.1:
 
 ```yml
 apiVersion: extensions/v1beta1
@@ -61,7 +61,7 @@ spec:
     name: bind
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix Ingress Controller version 1.1.3:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.1.3:
 
 ```yml
 apiVersion: extensions/v1beta1
