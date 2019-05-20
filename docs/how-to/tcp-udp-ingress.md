@@ -53,7 +53,7 @@ metadata:
     app: bind
 spec:
   ports:
-  - name: udp-53
+  - name: udp_53
     port: 53
     targetPort: 53
     protocol: UDP
