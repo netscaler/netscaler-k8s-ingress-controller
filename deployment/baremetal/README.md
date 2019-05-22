@@ -112,7 +112,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        </details>
        <details>
 
-       <summary>VIP_IP</summary>
+       <summary>NS_VIP</summary>
 
        Citrix Ingress Controller will use the IP provided in this environment variable to configure a Vitual IP in the Tier-1 ADC which would recieve the application traffic from external world.
 
