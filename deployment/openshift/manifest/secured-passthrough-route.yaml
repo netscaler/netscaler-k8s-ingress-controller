@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: secured-passthrough-route
+spec:
+  host: secured-passthrough-route.openshift.citrix-cic.com
+  to:
+    kind: Service
+    name: svc-apache-multi-ssl
+  tls:
+    termination: passthrough
