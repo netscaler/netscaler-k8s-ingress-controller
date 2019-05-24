@@ -51,8 +51,7 @@ spec:
       serviceAccountName: citrix
       containers:
         - name: cpx
-          # Change the image with quay image
-          image: "in-docker-reg.eng.citrite.net/cpx-dev/cpx:13.0-36.14"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28"
           securityContext: 
              privileged: true
           env:
@@ -68,8 +67,7 @@ spec:
           imagePullPolicy: Always
         # Add cic as a sidecar
         - name: cic
-          # Change the image with quay image
-          image: "in-docker-reg.eng.citrite.net/cic-dev/cic:279"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
           imagePullPolicy: Always
           env:
           - name: "EULA"
