@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: apache-only-http
-        image: in-docker-reg.eng.citrite.net/cpx-dev/openshift:apache-multi-http-v1
+        image: "raghulc/apache-multiport-http:1.0.0"
         ports:
         # All HTTP Ports
         - containerPort: 80
@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: apache-only-ssl
-        image: in-docker-reg.eng.citrite.net/cpx-dev/openshift:apache-multi-ssl-v1
+        image: "raghulc/apache-multiport-ssl:1.0.0"
         ports:
         # All SSL Ports
         - containerPort: 443
