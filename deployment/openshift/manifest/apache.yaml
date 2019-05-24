@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: apache-only-http
+  labels:
+      name: apache-only-http
+spec:
+  selector:
+    matchLabels:
+      app: apache-only-http
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: apache-only-http
+    spec:
+      containers:
+      - name: apache-only-http
+        image: in-docker-reg.eng.citrite.net/cpx-dev/openshift:apache-multi-http-v1
+        ports:
+        # All HTTP Ports
+        - containerPort: 80
+        - containerPort: 5080
+        - containerPort: 5081
+        - containerPort: 5082
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: apache-only-ssl
+  labels:
+      name: apache-only-ssl
+spec:
+  selector:
+    matchLabels:
+      app: apache-only-ssl
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: apache-only-ssl
+    spec:
+      containers:
+      - name: apache-only-ssl
+        image: in-docker-reg.eng.citrite.net/cpx-dev/openshift:apache-multi-ssl-v1
+        ports:
+        # All SSL Ports
+        - containerPort: 443
+        - containerPort: 5443
+        - containerPort: 5444
+        - containerPort: 5445
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-apache-multi-http
+spec:
+  ports:
+  - name: apache-http-6080
+    port: 6080
+    targetPort: 5080
+  - name: apache-http-6081
+    port: 6081
+    targetPort: 5081
+  - name: apache-http-6082
+    port: 6082
+    targetPort: 5082
+  selector:
+    app: apache-only-http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-apache-multi-ssl
+spec:
+  ports:
+  - name: apache-ssl-6443
+    port: 6443
+    targetPort: 5443
+  - name: apache-ssl-6444
+    port: 6444
+    targetPort: 5444
+  - name: apache-ssl-6445
+    port: 6445
+    targetPort: 5445
+  selector:
+    app: apache-only-ssl
+---
