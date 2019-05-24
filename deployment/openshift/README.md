@@ -109,7 +109,7 @@ Perform the following steps to deploy Citrix ingress controller as a pod:
 
 1.  Download the [cic.yaml](../../deployment/openshift/manifest/cic.yaml) file using the following command:
 
-        wget  https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/cic.yaml
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml
 
     The contents of the `cic.yaml` is given as follows:
 
@@ -589,8 +589,6 @@ spec:
 The contents of the ``secured-passthrough-route`` is given as follows:
 
 ```yml
-
-
 apiVersion: v1
 kind: Route
 metadata:
