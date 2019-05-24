@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: unsecured-route
+spec:
+  host: unsecured-route.openshift.citrix-cic.com
+  path: "/"
+  to:
+    kind: Service
+    name: svc-apache-multi-http

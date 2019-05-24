@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: secured-reencrypt-route
+spec:
+  host: secured-reencrypt-route.openshift.citrix-cic.com
+  path: "/"
+  to:
+    kind: Service
+    name: svc-apache-multi-ssl
+  tls:
+    termination: reencrypt
+
+    key: |-                      
+      -----BEGIN RSA PRIVATE KEY-----
+      ***REMOVED***
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      ***REMOVED***
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      -----END RSA PRIVATE KEY-----
+
+    certificate: |-              
+      -----BEGIN CERTIFICATE-----
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      -----END CERTIFICATE-----
+    
+    destinationCACertificate: |-            
+      -----BEGIN CERTIFICATE-----
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      awevTse0/kSJ5z2qQ22OPRtL3Q==
+      -----END CERTIFICATE-----
