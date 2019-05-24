@@ -61,8 +61,7 @@ spec:
       serviceAccount: citrix
       containers:
       - name: cic
-        # Change the image name with quay image
-        image: "in-docker-reg.eng.citrite.net/cic-dev/cic:279"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
         securityContext:
            privileged: true
         env:
