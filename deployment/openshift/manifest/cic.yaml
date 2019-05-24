@@ -1,0 +1,91 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: citrix
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "routes/status", "tokenreviews", "subjectaccessreviews"]
+    verbs: ["*"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: citrix
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: citrix
+subjects:
+- kind: ServiceAccount
+  name: citrix
+  namespace: default
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: citrix
+  namespace: default
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: cic
+spec:
+  replicas: 1
+  selector:
+     router: cic
+  strategy:
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 0
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      name: cic
+      labels:
+         router: cic
+    spec:
+      serviceAccount: citrix
+      containers:
+      - name: cic
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
+        securityContext:
+           privileged: true
+        env:
+        - name: "EULA"
+          value: "yes"
+        # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
+        - name: "NS_IP"
+          value: "X.X.X.X"
+        # Set NetScaler VIP that receives the traffic
+        - name: "NS_VIP"
+          value: "X.X.X.X"
+        # Set username for Nitro
+        - name: "NS_USER"
+          valueFrom:
+           secretKeyRef:
+            name: nslogin
+            key: username
+        # Set user password for Nitro
+        - name: "NS_PASSWORD"
+          valueFrom:
+           secretKeyRef:
+            name: nslogin
+            key: password
+        args:
+        - --default-ssl-certificate
+          default/default-cert
+        imagePullPolicy: Always
