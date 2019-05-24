@@ -109,7 +109,7 @@ Perform the following steps to deploy Citrix ingress controller as a pod:
 
 1.  Download the [cic.yaml](../../deployment/openshift/manifest/cic.yaml) file using the following command:
 
-        wget  https://<repository-address>/cic.yaml
+        wget  https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/cic.yaml
 
     The contents of the `cic.yaml` is given as follows:
 
@@ -236,7 +236,7 @@ Perform the following steps to deploy Citrix ingress controller as a sidecar wit
 
 1.  Download the [cpx_cic_side_car.yaml](../../deployment/openshift/manifest/cpx_cic_side_car.yaml) file using the following command:
 
-        wget https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml
 
     The contents of the `cpx_cic_side_car.yaml` file is given as follows:
 
@@ -470,7 +470,7 @@ In this example, Citrix ingress controller is deployed as a router in the OpenSh
 
             oc create -f unsecured-route.yaml
 
-    -  For creating a secured OpenShift route with edge termination ([secured-route-edge.yaml](../../deployment/openshift/manifest/secured-route-edge.yaml)), use the following command.
+    -  For creating a secured OpenShift route with edge termination ([secured-edge-route.yaml](../../deployment/openshift/manifest/secured-edge-route.yaml)), use the following command.
 
             oc create -f secured-route-edge.yaml
 
