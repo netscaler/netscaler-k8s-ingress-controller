@@ -4,7 +4,11 @@ metadata:
   name: cic-k8s-role
 rules:
   - apiGroups: [""]
+{{- if .Values.openshift }}
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets","nodes", "routes", "routes/status", "tokenreviews", "subjectaccessreviews"]
+{{- else}}
     resources: ["services", "endpoints", "ingresses", "pods", "secrets","nodes"]
+{{- end}}
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
@@ -42,19 +46,49 @@ metadata:
 
 ---
 
+{{- if .Values.openshift }}
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: cic
+spec:
+  replicas: 1
+  selector:
+     router: cic
+  strategy:
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 0
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      name: cic
+      labels:
+         router: cic
+    spec:
+{{- else}}
 apiVersion: v1
 kind: Pod
 metadata:
   name: cic-k8s-ingress-controller
   labels:
     app: cic-k8s-ingress-controller
-spec: 
+spec:
+{{- end}}
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }} 
-        args: 
+        image: "{{ .Values.cic.image }}"
+        imagePullPolicy: {{ .Values.cic.pullPolicy }}
+        args:
+{{- if .Values.defaultSSLCert }}
+        - --default-ssl-certificate
+          {{ .Values.defaultSSLCert }}
+{{- end }}
 {{- if .Values.ingressClass }}
           - --ingress-class
 {{- range .Values.ingressClass}}
@@ -66,6 +100,10 @@ spec:
         env:
         - name: "NS_IP"
           value: "{{ .Values.nsIP }}"
+{{- if .Values.openshift }}
+        - name: "NS_VIP"
+          value: "{{ .Values.nsVIP }}"
+{{- end}}
         - name: "NS_USER"
           valueFrom:
             secretKeyRef:
@@ -88,9 +126,9 @@ spec:
         - name: "kubernetes_url"
           value: "{{ .Values.kubernetesURL }}"
 {{- end}}
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
       - name: exporter
-        image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+        image: "{{ .Values.exporter.image }}"
         args:
           - "--secure=YES"
           - "--username=$(NS_USERNAME)"
@@ -108,12 +146,11 @@ spec:
               secretKeyRef:
                 name: {{ .Values.loginFileName | default "nslogin"}}
                 key: password
-        imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.exporter.pullPolicy }}
 {{- end }}
-
 ---
 
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
 
 
 apiVersion: v1
