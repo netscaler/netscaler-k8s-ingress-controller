@@ -1,82 +1,148 @@
 # Citrix ADC CPX with Citrix Ingress Controller running as sidecar.
 
-[Citrix](https://www.citrix.com) ADC CPX with the Citrix Ingress Controller running in side-car mode will configure the CPX that runs as pod in Kubernetes cluster.
-
+In a [Kubernetes](https://kubernetes.io/) or [OpenShift](https://www.openshift.com) cluster, you can deploy [Citrix ADC CPX](https://docs.citrix.com/en-us/citrix-adc-cpx) with Citrix ingress controller as a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/). The Citrix ADC CPX instance is used for load balancing the North-South traffic to the microservices in your cluster. And, the sidecar Citrix ingress controller configures the Citrix ADC CPX.
 
 ## TL;DR;
 
+### For Kubernetes
 ```
-helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
+   helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
 
-helm install cic/citrix-k8s-cpx-ingress-controller --set license.accept=yes
+   helm install cic/citrix-k8s-cpx-ingress-controller --set license.accept=yes
 ```
-> Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
+
+### For OpenShift
+
+```
+   helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
+
+   helm install cic/citrix-k8s-cpx-ingress-controller --set license.accept=yes,openshift=true
+```
+> **Important:**
+>
+> The "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
+
 
 ## Introduction
-This Chart deploys Citrix ADC CPX with inbuilt Ingress Controller in the [Kubernetes](https://kubernetes.io) Cluster using [Helm](https://helm.sh) package manager
+This Helm chart deploys a Citrix ADC CPX with Citrix ingress controller as a sidecar in the [Kubernetes](https://kubernetes.io/) or in the [Openshift](https://www.openshift.com) cluster using the [Helm](https://helm.sh/) package manager.
 
 ### Prerequisites
-* Kubernetes 1.6+
-* Helm 2.8.x+
-* Prometheus operator needs to be installed if you want to use exporter along with CIC.
+
+Ensure that:
+
+-  The [Kubernetes](https://kubernetes.io/) version is 1.6 or later if using Kubernetes environment.
+-  The [Openshift](https://www.openshift.com) version 3.11.x or later if using OpenShift platform.
+-  The [Helm](https://helm.sh/) version is 2.8.x or later. You can follow instruction given [here](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/Helm_Installation_Kubernetes.md) to install Helm in Kubernetes environment and [here](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/Helm_Installation_OpenShift.md) for OpenShift platform.
+-  You have installed [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 
 ## Installing the Chart
-
 Add the Citrix Ingress Controller helm chart repository using command:
 
 ```
-helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
+   helm repo add cic https://citrix.github.io/citrix-k8s-ingress-controller/
 ```
 
+### For Kubernetes:
+#### 1. Citrix ADC CPX with Citrix Ingress Controller running as side car.
 To install the chart with the release name ``` my-release```:
 
-```helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>```
+```
+   helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>
+```
+> **Note:**
+>
+> By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
 
-To run the exporter as sidecar with CPX, please install prometheus operator first and then use the following command:
+The command deploys Citrix ADC CPX with Citrix ingress controller as a sidecar on the Kubernetes cluster with the default configuration. The [configuration](#configuration) section lists the mandatory and optional parameters that you can configure during installation.
 
-```helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>,exporter.require=1.0```
+#### 2. Citrix ADC CPX with Citrix Ingress Controller and Exporter running as side car.
+[Metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed as sidecar to the Citrix ADC CPX and collects metrics from the Citrix ADC CPX instance. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
+> **Note:**
+>
+> Ensure that you have installed [Prometheus Operator](https://github.com/coreos/prometheus-operator).
 
-If you want to visualize the metrices collected by exporter from Citrix ADC CPX please refer "[Visualization of Metrics](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics)".
+Use the following command for this:
+```
+   helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName>,exporter.required=true
+```
 
-The command deploys Citrix ADC CPX with Citrix Ingress Controller running in side-car mode on the Kubernetes cluster in the default configuration. The configuration section lists the parameters that can be configured during installation.
+### For OpenShift:
+If Citrix ADC CPX with Citrix ingress controller running as side car needs to be deployed in the OpenShift platform please install Helm and Tiller using instruction given [here](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/Helm_Installation_OpenShift.md). It will make sure Helm and Tiller have the proper permission that is needed to install Citrix ingress controller on OpenShift.
+
+Add the service account named "cpx-ingress-k8s-role" to the privileged Security Context Constraints of OpenShift:
+
+```
+   oc adm policy add-scc-to-user privileged system:serviceaccount:<namespace>:cpx-ingress-k8s-role
+```
+
+#### 1. Citri ADC CPX with Citrix Ingress Controller running as side car.
+To install the chart with the release name, `my-release`, use the following command:
+```
+   helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,openshift=true
+```
+
+#### 2. Citri ADC CPX with Citrix Ingress Controller and Exporter running as side car.
+[Metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed as sidecar to the Citrix ADC CPX and collects metrics from the Citrix ADC CPX instance. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
+> **Note:**
+>
+> Ensure that you have installed [Prometheus Operator](https://github.com/coreos/prometheus-operator).
+
+Use the following command for this:
+```
+   helm install cic/citrix-k8s-ingress-controller --name my-release --set license.accept=yes,openshift=true,exporter.required=true
+```
+
+### Installed components
+
+The following components are installed:
+
+-  [Citrix ADC CPX](https://docs.citrix.com/en-us/citrix-adc-cpx/netscaler-cpx.html)
+-  [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller) (if enabled)
+-  [Exporter](https://github.com/citrix/netscaler-metrics-exporter) (if enabled)
+
+## Configuration
+The following table lists the configurable parameters of the Citrix ADC CPX with Citrix ingress controller as side car chart and their default values.
+
+| Parameters | Mandatory or Optional | Default value | Description |
+| ---------- | --------------------- | ------------- | ----------- |
+| license.accept | Mandatory | no | Set `yes` to accept the Citrix ingress controller end user license agreement. |
+| cpx.image | Mandatory | `quay.io/citrix/citrix-k8s-cpx-ingress:12.1-51.16` | The Citrix ADC CPX image. |
+| cpx.pullPolicy | Mandatory | Always | The Citrix ADC CPX image pull policy. |
+| lsIP | Optional | N/A | Provide the Citrix Application Delivery Management (ADM) IP address to license Citrix ADC CPX. For more information, see [Licensing](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/licensing/)|
+| lsPort | Optional | 27000 | Citrix ADM port if non-default port is used. |
+| platform | Optional | N/A | Platform license. The platform is **CP1000**. |
+| cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.1.1` | The Citrix ingress controller image. |
+| cic.pullPolicy | Mandatory | Always | The Citrix ingress controller image pull policy. |
+| cic.required | Optional | true | CIC to be run as sidecar with Citrix ADC CPX |
+| exporter.required | Optional | false | Use the argument if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with Citrix ingress controller to pull metrics for the Citrix ADC CPX|
+| exporter.image | Optional | `quay.io/citrix/netscaler-metrics-exporter:v1.0.4` | The Exporter for Citrix ADC Stats image. |
+| exporter.pullPolicy | Optional | Always | The Exporter for Citrix ADC Stats image pull policy. |
+| exporter.ports.containerPort | Optional | 8888 | The Exporter for Citrix ADC Stats container port. |
+| ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify Citrix ingress controller to configure Citrix ADC associated with specific ingress class.|
+| openshift | Optional | false | Set this argument if OpenShift environment is being used. |
+
+> **Note:**
+>
+> If Citrix ADM related information is not provided during installation, Citrix ADC CPX will come up with the default license.
+
+Alternatively, you can define a YAML file with the values for the parameters and pass the values while installing the chart.
+
+For example:
+```
+    helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass[0]=<ingressClassName> -f values.yaml
+```
+
+> **Tip:**
+>
+> The [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml) contains the default values of the parameters.
 
 ## Uninstalling the Chart
 To uninstall/delete the ```my-release``` deployment:
-
 ```
-helm delete --purge my-release
+   helm delete --purge my-release
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release
+## Related documentation
 
-## Configuration
-The following table lists the configurable parameters of the CPX with inBuilt Ingress Controller chart and their default values.
-
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-|```license.accept```|Set to accept to accept the terms of the Citrix license| ```no``` |
-|```cpximage.repository```| CPX Image Repository| ```quay.io/citrix/citrix-k8s-cpx-ingress```|
-|```cpximage.tag```| CPX Image Tag| ```12.1-51.16``` |
-|```cpximage.pullPolicy```| CPX Image Pull Policy  | ```Always``` |
-|```cicimage.repository```| CIC Image Repository| ```quay.io/citrix/citrix-k8s-ingress-controller```|
-|```cicimage.tag```| CIC Image Tag| ```1.1.1``` |
-|```cicimage.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
-|```exporter.require```| Exporter to be run as sidecar with CIC|```0```|
-|```exporter.image.repository```| Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
-|```exporter.image.tag```| Exporter image tag|```v1.0.4 ```|
-|```exporter.image.pullPolicy```| Exporter Image Pull Policy|```Always```|
-|```exporter.ports.containerPort```| Exporter Container Port|```8888```|
-|```ingressClass```| List containing name of the Ingress Classes  | ```nil``` |
- 
-> Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml)
-
-## RBAC
-By default the chart will install the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and rolebindings.
-
-## Exporter
-[Exporter](https://github.com/citrix/netscaler-metrics-exporter) is running as sidecar with the CPX and pulling metrics from the CPX. It exposes the metrics using Kubernetes NodePort.
-
-## Ingress Class
-To know more about Ingress Class refer [this](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/ingress-class.md). 
-
-## For More Info: https://github.com/citrix/citrix-k8s-ingress-controller
+-  [Citrix ADC CPX Documentation](https://docs.citrix.com/en-us/citrix-adc-cpx/12-1/cpx-architecture-and-traffic-flow.html)
+-  [Citrix ingress controller Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/)
