@@ -50,8 +50,8 @@ spec:
       serviceAccountName: cic-k8-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }} 
+        image: "{{ .Values.cic.image }}"
+        imagePullPolicy: {{ .Values.cic.pullPolicy }}
 {{- if .Values.ingressClass }}
         args: 
           - --ingress-class
@@ -84,9 +84,9 @@ spec:
         - name: "kubernetes_url"
           value: "{{ .Values.kubernetesURL }}"
 {{- end}}
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
       - name: exporter
-        image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+        image: "{{ .Values.exporter.image }}"
         args:
           - "--secure=YES"
           - "--username=$(NS_USERNAME)"
@@ -104,12 +104,12 @@ spec:
               secretKeyRef:
                 name: {{ .Values.loginFileName | default "nslogin"}}
                 key: password
-        imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.exporter.pullPolicy }}
 {{- end }}
 
 ---
 
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
 
 
 apiVersion: v1
