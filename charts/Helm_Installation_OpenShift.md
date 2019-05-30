@@ -1,7 +1,7 @@
 ## Introduction
-Helm, the package manager for Kubernetes that contains information sufficient for installing, upgrading and managing a set of Kubernetes resources into a Kubernetes cluster. Helm packages are called charts. A Helm chart encapsulates YAML definitions, provides a mechanism for configuration at deploy-time and allows you to define metadata and documentation that might be useful when sharing the package.
+Helm, the package manager that contains information sufficient for installing, upgrading and managing a set of resources into a OpenShift cluster. Helm packages are called charts. A Helm chart encapsulates YAML definitions, provides a mechanism for configuration at deploy-time and allows you to define metadata and documentation that might be useful when sharing the package.
 
-Helm has two parts: a client (helm) and a server (tiller). Tiller is the in-cluster component of Helm. It interacts directly with the Kubernetes API server to install, upgrade, query, and remove Kubernetes resources. Tiller manages both, the releases (installations) and revisions (versions) of charts deployed on the cluster. When you run helm commands, your local Helm client sends instructions to tiller in the cluster that in turn make the requested changes.
+Helm has two parts: a client (helm) and a server (tiller). Tiller is the in-cluster component of Helm. It interacts directly with the Kubernetes API server to install, upgrade, query, and remove resources. Tiller manages both, the releases (installations) and revisions (versions) of charts deployed on the cluster. When you run helm commands, your local Helm client sends instructions to tiller in the cluster that in turn make the requested changes.
 
 ## Installation
 ### `1`. Create an openshift project for tiller or use an already created project
