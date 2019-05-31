@@ -66,7 +66,7 @@ nav:
   - Overview: index.md
   - Release notes: release-notes.md
   - Deployment topologies: deployment-topologies.md
-  - Deploy Citrix Ingress Controller: 
+  - Deploy the Citrix Ingress Controller: 
     - Using YAML: deploy/deploy-cic-yaml.md
     - Using Helm charts: deploy/deploy-cic-helm.md
     - Using Kops: deploy/deploy-cic-kops.md
@@ -75,7 +75,8 @@ nav:
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
-    - Deploy Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
+    - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
+    - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md

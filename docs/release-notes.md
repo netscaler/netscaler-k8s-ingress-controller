@@ -22,7 +22,7 @@ You can create the service of type [NodePort](https://kubernetes.io/docs/concept
 
 #### Using Citrix ADC with admin partitions as ingress device
 
-The Citrix ingress controller can now be deployed to automatically configure Citrix ADC with admin partitions based on the Ingress resource configuration. For more information, see [Deploy the Citrix ingress controller for Citrix ADC with admin partitions](deploy/deploy-cic-admin-partition.md).
+The Citrix ingress controller can now be deployed to automatically configure Citrix ADC with admin partitions based on the Ingress resource configuration. For more information, see [Deploy the Citrix ingress controller for Citrix ADC with admin partitions](deploy/deploy-cic-adc-admin-partition.md).
 
 #### Rancher managed Kubernetes cluster support
 
