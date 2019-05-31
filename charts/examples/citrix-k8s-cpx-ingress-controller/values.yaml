@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 cpx:
-  image: quay.io/citrix/citrix-k8s-cpx-ingress:12.1-51.16
+  image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28
   pullPolicy: Always
 cic:
-  image: quay.io/citrix/citrix-k8s-ingress-controller:1.1.1
+  image: quay.io/citrix/citrix-k8s-ingress-controller:1.1.3
   pullPolicy: Always
   required: true
 license:
