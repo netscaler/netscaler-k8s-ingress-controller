@@ -9,6 +9,7 @@ The release notes include one or more of the following sections:
 -  [**Points to note**](#points-to-note): The important aspects to keep in mind while using this release.
 
 ## Version 1.1.3
+---
 
 ### What's New
 
