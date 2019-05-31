@@ -5,33 +5,37 @@
 
 ---
 
-# Citrix Ingress Controller
+# Citrix ingress controller
 
 ## Description
 
-This repository contains Citrix Ingress Controller (CIC) built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+This repository contains Citrix ingress controller built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
-## What is an Ingress Controller?
+## What is an ingress controller?
 
 An Ingress Controller is a controller that watches the Kubernetes API server for updates to the Ingress resource and reconfigures the Ingress load balancer accordingly.
 
-## What is Citrix Ingress Controller?
+## What is Citrix ingress controller?
 
-Citrix provides an Ingress Controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures one or more Citrix ADC based on the Ingress resource configuration.
+Citrix provides an ingress controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures one or more Citrix ADC based on the Ingress resource configuration.
 
-The Citrix Ingress Controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
+The Citrix ingress controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
 
 ## Features
 
-Features supported by Citrix Ingress Controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+Features supported by Citrix ingress controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+
+## Release notes
+
+Click [here](docs/release-notes.md) for the release notes of the latest Citrix ingress controller release.
 
 ## Documentation
 
-For detailed documentation, see [Citrix Ingress Controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
+For detailed documentation, see [Citrix ingress controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
 ## Deployment Solutions
 
-You can deploy Citrix Ingress Controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+You can deploy Citrix ingress controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
 
 ## Examples
 
