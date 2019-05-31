@@ -166,7 +166,7 @@ spec:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:12.1-51.16"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28"
           imagePullPolicy: Always
           securityContext:
             privileged: true
@@ -228,7 +228,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "in-docker-reg.eng.citrite.net/cpx-dev/cpx:12.1-48.118"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28"
           securityContext: 
              privileged: true
           env:
