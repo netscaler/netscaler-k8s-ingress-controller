@@ -106,12 +106,12 @@ The following table lists the configurable parameters of the Citrix ADC CPX with
 | Parameters | Mandatory or Optional | Default value | Description |
 | ---------- | --------------------- | ------------- | ----------- |
 | license.accept | Mandatory | no | Set `yes` to accept the Citrix ingress controller end user license agreement. |
-| cpx.image | Mandatory | `quay.io/citrix/citrix-k8s-cpx-ingress:12.1-51.16` | The Citrix ADC CPX image. |
+| cpx.image | Mandatory | `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28` | The Citrix ADC CPX image. |
 | cpx.pullPolicy | Mandatory | Always | The Citrix ADC CPX image pull policy. |
 | lsIP | Optional | N/A | Provide the Citrix Application Delivery Management (ADM) IP address to license Citrix ADC CPX. For more information, see [Licensing](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/licensing/)|
 | lsPort | Optional | 27000 | Citrix ADM port if non-default port is used. |
 | platform | Optional | N/A | Platform license. The platform is **CP1000**. |
-| cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.1.1` | The Citrix ingress controller image. |
+| cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.1.3` | The Citrix ingress controller image. |
 | cic.pullPolicy | Mandatory | Always | The Citrix ingress controller image pull policy. |
 | cic.required | Optional | true | CIC to be run as sidecar with Citrix ADC CPX |
 | exporter.required | Optional | false | Use the argument if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with Citrix ingress controller to pull metrics for the Citrix ADC CPX|

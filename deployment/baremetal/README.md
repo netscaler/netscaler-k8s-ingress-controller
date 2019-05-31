@@ -150,7 +150,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
    This pulls the latest image and brings up the Citrix Ingress Controller.
                 
-   Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.1.1` </span>
+   Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.1.3` </span>
 
 4. #### Reachability to the Pod Network:
     For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
