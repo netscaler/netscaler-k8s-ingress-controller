@@ -26,7 +26,7 @@ The Citrix ingress controller can now be deployed to automatically configure Cit
 
 #### Rancher managed Kubernetes cluster support
 
-The Citrix ingress controller can now be deployed on a Rancher managed Kubernetes cluster. For more information, see [Deploy the Citrix ingress controller on a Rancher managed Kubernetes cluster](deploy/deploy-cic-rancher.md)
+The Citrix ingress controller can now be deployed on a Rancher managed Kubernetes cluster. For more information, see [Deploy the Citrix ingress controller on a Rancher managed Kubernetes cluster](deploy/deploy-cic-rancher.md).
 
 ### Known issues
 
