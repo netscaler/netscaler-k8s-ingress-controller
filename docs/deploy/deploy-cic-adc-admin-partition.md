@@ -4,17 +4,12 @@ Citrix ingress controller is used to automatically configure one or more Citrix 
 
 For Citrix ADC with admin partitions, you must deploy a single instance of Citrix ingress controller for each partition. And, the partition must be associated with a [partition user](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition.html#user-access-and-roles) specific to the Citrix ingress controller instance.
 
->**Important:**
-> Citrix ingress controller does not support the following Citrix ADC admin partition use cases:
->-  Partition associated with multiple partition users.
->-  Partition user associated with multiple partitions.
-
 ## Prerequisites
 
 Ensure that:
 
 -  Admin partitions are configured on the Citrix ADC appliance. For instructions see, [Configure admin partitions](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition/admin-partition-access-and-configure.html).
--  A partition user is created specifically for the Citrix ingress controller. Citrix ingress controller configures the Citrix ADC using the partition user account.
+-  Create a partition user specifically for the Citrix ingress controller. Citrix ingress controller configures the Citrix ADC using this partition user account. Ensure that you do not associate this partition user to other partitions in the Citrix ADC appliance.
 
 >Note:
 > For SSL-related use cases in the admin partition, ensure that you use Citrix ADC version 12.0–56.8 and above.
