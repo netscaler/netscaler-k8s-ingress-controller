@@ -39,7 +39,7 @@ Perform the following steps to deploy the Citrix ingress controller as a standal
 
         kubectl get pods --all-namespaces
 
-## Deploy theCitrix ingress controller as a standalone pod
+## Deploy the Citrix ingress controller as a standalone pod
 
 In this deployment, Citrix ingress controller which runs as a stand-alone pod allows you to control the Citrix ADC MPX, or VPX appliance from the Kubernetes cluster. You can use the `citrix-k8s-ingress-controller.yaml` file for this deployment.
 
