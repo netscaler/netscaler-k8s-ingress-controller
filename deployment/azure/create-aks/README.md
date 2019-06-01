@@ -3,18 +3,19 @@
 This guide explains the steps to create a basic Kubernetes cluster in AKS using Azure CLI.
 There are two ways to create a AKS cluster
 
-- Using Kubenet networking (Basic)
-- Using Azure CNI networking (Advanced)
+- Using Kubenet CNI (Basic networking)
+- Using Azure CNI (Advanced networking)
 
-This guide provides commands to create a Kubernetes cluster using both the ways
+**Note:**
+We currently support only Azure Basic Networking (Kubenet CNI).
 
 #### Prerequisites:
 
-Make sure Azure CLI (az) is installed with all its dependencies
-Kubectl is installed
+- Make sure Azure CLI (az) is installed with all its dependencies
+- Kubectl is installed
 
 
-## Create a Kubernetes cluster using Kubenet networking (Basic mode in Azure):
+## Create a Kubernetes cluster using Kubenet CNI (Basic networking mode in Azure):
 
 #### Steps:
 
@@ -57,36 +58,4 @@ kubectl commands should now work on the cluster.
 ```
 kubectl get nodes
 kubectl get pods
-```
-
-## Create a Kubernetes cluster using Azure CNI networking (Advanced mode in Azure):
-
-#### Steps:
-
-Create a Resource Group
-
-```
-az group create --name AKS_RG --location southindia
-```
-
-Create a VNET and a subnet in that resource Group or in any existing resource group
-
-```
-az network vnet create -g AKS_RG -n azurecni_vnet1 --address-prefix 20.0.0.0/8 --subnet-name subnet1 --subnet-prefix 20.0.0.0/16
-```
-
-Get the subnet resource ID from the vnet and store in a variable
-
-```
-subnet_id=$(az network vnet subnet list --resource-group AKS_RG --vnet-name azurecni_vnet1 --query [].id --output tsv)
-
-#Print the captured subnet_id
-echo $subnet_id
-/subscriptions/<subscription_ID>/resourceGroups/AKS_RG/providers/Microsoft.Network/virtualNetworks/azurecni_vnet1/subnets/subnet1
-```
-
-Create a cluster in AKS using Azure CNI
-
-```
-az aks create --resource-group AKS_RG --name cpx-cluster-azurecni-1 --network-plugin azure --vnet-subnet-id $subnet_id --docker-bridge-address 172.17.0.1/16 --dns-service-ip 10.2.0.10 --service-cidr 10.2.0.0/24
 ```

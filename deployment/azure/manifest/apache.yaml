@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: apache
-  replicas: 2
+  replicas: 6
   template:
     metadata:
       labels:
@@ -34,4 +34,3 @@ spec:
   selector:
     app: apache
 ---
-
