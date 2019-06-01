@@ -14,7 +14,7 @@ spec:
   externalTrafficPolicy: Local
   type: LoadBalancer
   selector:
-    name: cpx-ingress
+    app: cpx-ingress
   ports:
     - name: http
       port: 80
