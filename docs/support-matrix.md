@@ -6,13 +6,13 @@ This topic provides details about various Kubernetes platforms, deployment topol
 
 Citrix ingress controller is supported on the following platforms:
 
--  Kubernetes version 1.10 and later
--  Google Cloud Platform (GCP)
--  Amazon Web Services (AWS)
--  Microsoft Azure
+-  Kubernetes v1.10 on bare metal or self-hosted on public clouds such as, AWS, GCP, or Azure.
+-  Google Kubernetes Engine (GKE)
+-  Elastic Kubernetes Service (EKS)
+-  Azure Kubernetes Service (AKS)
 -  Red Hat OpenShift version 3.11 and later
 -  Pivotal Container Service (PKS)
--  Diamanti
+-  Diamanti Enterprise Kubernetes Platform
 
 ## Citrix ADC platforms
 
@@ -32,13 +32,13 @@ The following table lists the various deployment topologies supported by Citrix 
 | --------------------- | ---------- | --------------------------- | ------------------------- |
 | [Single-Tier](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#single-tier-topology) (Citrix ADC MPX or VPX in tier-1)| Yes | Yes | Yes |
 | [Dual-Tier](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#dual-tier-topology) (Citrix ADC MPX or VPX in tier-1 and Citrix ADC CPXs in tier-2) | Yes | Yes | Yes |
-| Citrix ADC CPX for [east-west traffic (hair-pin)](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#using-the-ingress-adc-for-east-west-traffic) | Yes | Yes | Yes |
+| Citrix ADC CPX for [east-west traffic (service mesh-lite)](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#using-the-ingress-adc-for-east-west-traffic) | Yes | Yes | Yes |
 
 ## Supported deployment topologies on cloud platforms
 
 The following table lists the various deployment topologies supported by Citrix ingress controller on the supported cloud platforms:
 
-| Deployment Topologies | GCP - GKE | AWS - EKS | Microsoft Azure - AKS (Basic mode - Kubenet) | Microsoft Azure - AKS (Advanced mode - Azure CNI) |
+| Deployment Topologies | GKE | EKS | AKS (Basic mode - Kubenet) | AKS (Advanced mode - Azure CNI) |
 | --------------------- |  --------------------------- | ------------------------- | --------------- | ----------------- |
 | Single-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Citrix ADC VPX in tier-1) | Yes | Yes | Yes | No | |
 | Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Citrix ADC VPX in tier-1 and Citrix ADC CPXs in tier-2) | Yes | No | Yes | No |
@@ -48,7 +48,7 @@ The following table lists the various deployment topologies supported by Citrix 
 
 The following table lists the Citrix ingress controller features supported on various cloud-native platforms:
 
-| Citrix ingress controller features | Kubernetes | GCP | AWS | Microsoft Azure | Red Hat OpenShift | PKS |
+| Citrix ingress controller features | Kubernetes | GKE | EKS | AKS | Red Hat OpenShift | PKS |
 | --------------------- | ---------- | --------------------------- | ------------------------- | --------------- | ----------------- | --------------------------------|
 | [TCP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [UDP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | Yes | Yes | Yes | Yes | Yes | Yes |
@@ -68,7 +68,7 @@ The following table lists the Citrix ingress controller features supported on re
 | [TCP over SSL Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later| 12.1–51.16 and later |
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
-| OpenShift Routes | 1.1.3 | 12.1–51.16 and later | 12.1–51.16 and later |
+| OpenShift Routes | 1.1.3 | 12.1–51.16 and later | 13.0–36.28 |
 
 ## Container network interface (CNI) for Citrix ADC CPX
 
