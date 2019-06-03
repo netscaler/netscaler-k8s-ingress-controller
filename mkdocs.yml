@@ -65,9 +65,9 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - Release notes: release-notes.md
-  - Deployment topologies: deployment-topologies.md
   - Supported platforms and deployments: support-matrix.md
-  - Deploy Citrix Ingress Controller: 
+  - Deployment topologies: deployment-topologies.md
+  - Deploy the Citrix ingress controller: 
     - Using YAML: deploy/deploy-cic-yaml.md
     - Using Helm charts: deploy/deploy-cic-helm.md
     - Using Kops: deploy/deploy-cic-kops.md
