@@ -56,7 +56,7 @@ The following table lists the Citrix ingress controller features supported on va
 | [TCP over SSL Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/#load-balance-ingress-traffic-based-on-tcp-over-ssl) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | Yes | Yes | Yes | Yes | Yes | Yes |
-| OpenShift Routes | N/A | N/A | N/A | N/A | Yes | Yes |
+| OpenShift Routes | N/A | N/A | N/A | N/A | Yes | N/A |
 
 The following table lists the Citrix ingress controller features supported on respective Citrix Ingress Controller version and Citrix ADC versions:
 
