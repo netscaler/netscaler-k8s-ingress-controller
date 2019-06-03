@@ -25,6 +25,10 @@ The Citrix ingress controller can be deployed either by directly using [yamls](h
 
 Features supported by Citrix ingress controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
 
+## Supported platforms and deployments
+
+Click [here](docs/support-matrix.md) for detailed list of supported platforms and deployments.
+
 ## Documentation
 
 For detailed documentation, see [Citrix ingress controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
