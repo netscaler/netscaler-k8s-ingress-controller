@@ -33,7 +33,7 @@ Click [here](docs/support-matrix.md) for detailed list of supported platforms an
 
 For detailed documentation, see [Citrix ingress controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
-## Deployment Solutions
+## Deployment solutions
 
 You can deploy Citrix ingress controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
 
