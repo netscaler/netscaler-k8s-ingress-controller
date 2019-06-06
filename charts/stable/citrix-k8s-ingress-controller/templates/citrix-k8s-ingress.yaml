@@ -19,6 +19,9 @@ rules:
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["continuousdeployments"]
+    verbs: ["get", "list", "watch"]
 
 ---
 
