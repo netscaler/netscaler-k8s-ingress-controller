@@ -73,10 +73,10 @@ nav:
     - Using Kops: deploy/deploy-cic-kops.md
     - On Rancher: deploy/deploy-cic-rancher.md
   - Deployment solutions:
+    - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
-    - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
   - Licensing: licensing.md
   - Configure:
