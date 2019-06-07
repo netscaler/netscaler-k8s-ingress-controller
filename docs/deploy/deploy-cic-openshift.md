@@ -38,6 +38,18 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 
 In this deployment, you can use the Citrix ADC CPX instance for load balancing the North-South traffic to microservices in your OpenShift cluster. The Citrix ingress controller is deployed as a sidecar alongside the Citrix ADC CPX container in the same pod using the [cpx_cic_side_car.yaml](../../deployment/openshift/manifest/cpx_cic_side_car.yaml) file.
 
+**Before you begin**
+
+  When you deploy Citrix ADC CPX as a router, port conflicts can arise with the default router in OpenShift. You should remove the default router in OpenShift before deploying Citrix ADC CPX as a router. To remove the default router in OpenShift, perform the following steps:
+
+1.  Back up the default router configuration using the following command.
+
+        oc get -o yaml service/router dc/router clusterrolebinding/router-router-role serviceaccount/router > default-router-backup.yaml
+
+2.  Delete the default router using the following command.
+
+        oc delete -f default-router-backup.yaml
+
 Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix ingress controller as a sidecar.
 
 1.  Download the [cpx_cic_side_car.yaml](../../deployment/openshift/manifest/cpx_cic_side_car.yaml) file using the following command:
@@ -144,6 +156,8 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
                     - --default-ssl-certificate
                       $(POD_NAMESPACE)/default-cert
                   imagePullPolicy: Always
+              nodeSelector:
+                  "node-role.kubernetes.io/infra": "true"
 2.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
         oc adm policy add-scc-to-user privileged system:serviceaccount:default:citrix
@@ -151,6 +165,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
 3.  Deploy the Citrix ingress controller using the following command:
 
         oc create -f cpx_cic_side_car.yaml
+
 
 4.  Verify if the Citrix ingress controller is deployed successfully using the following command:
 
@@ -333,7 +348,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 3.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
         oc adm policy add-scc-to-user privileged system:serviceaccount:default:citrix
-4.  Save the edited ``cic.yaml`` file and deploy it using the following command:
+4.   Save the edited ``cic.yaml`` file and deploy it using the following command:
 
          oc create -f cic.yaml
 
@@ -341,9 +356,27 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 
         oc create get pods --all-namespaces
 
-6.  Configure static routes on Citrix ADC VPX or MPX to reach the pods inside the OpenShift cluster. For more information on creating static routes, see [static routing](../network/staticrouting.md#manually-configure-route-on-the-citrix-adc-instance)
-        !!! note "Note"
-        The steps in the link for static route configuration on Citrix ADC VPX or MPX works only when the Citrix ADC VPX or MPX and OpenShift nodes are on the same network.
+6.  Configure static routes on Citrix ADC VPX or MPX to reach the pods inside the OpenShift cluster.
+
+      1.  Use the following command to get the information about host names, host IP addresses, and subnets for static route configuration.
+
+                oc get hostsubnet
+
+      1.  Log on to the Citrix ADC instance.
+      1.  Add the route on the Citrix ADC instance using the following command.
+
+              add route <pod_network> <podCIDR_netmask> <gateway>
+
+    For example, if the output of the `oc get hostsubnet` is as follows:
+
+        oc get hostsubnet
+
+        NAME            HOST           HOST IP        SUBNET
+        os.example.com  os.example.com 192.168.122.46 10.1.1.0/24
+
+    The required static route is as follows:
+
+           add route 10.1.1.0 255.255.255.0 192.168.122.46
 
 ## Example: Deploy the Citrix ingress controller as a router plug-in in an OpenShift cluster
 
@@ -483,7 +516,9 @@ In this example, the Citrix ingress controller is deployed as a router plug-in i
 
 4.  Access the application using the following command.
 
-        curl http://<VIP of Citrix ADC VPX>/ -H 'Host: < host-name-as-per-the-host-configuration-in-route >'
+      ```
+      curl http://<VIP of Citrix ADC VPX>/ -H 'Host: < host-name-as-per-the-host-configuration-in-route >'
+      ```
 
 ## YAML files for routes
 
@@ -694,4 +729,4 @@ The following restrictions apply while deploying the Citrix ingress controller a
 
 -  [Router sharding](https://docs.openshift.com/container-platform/3.9/architecture/networking/routes.html#router-sharding) is not supported.
 -  [Automatic static route configuration](../network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported.
--  When you modify the OpenShift route configuration, applying those changes using the `oc apply command` is not supported. As a workaround, delete the existing OpenShift route and recreate the route.
+-   When you modify the OpenShift route configuration, applying those changes using the `oc apply command` is not supported. As a workaround, delete the existing OpenShift route and recreate the route.
