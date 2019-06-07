@@ -96,3 +96,5 @@ spec:
             - --default-ssl-certificate
               $(POD_NAMESPACE)/default-cert
           imagePullPolicy: Always
+      nodeSelector:
+          "node-role.kubernetes.io/infra": "true"
