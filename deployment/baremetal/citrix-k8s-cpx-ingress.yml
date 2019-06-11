@@ -16,7 +16,7 @@ rules:
     resources: ["deployments"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["continuousdeployments"]
+    resources: ["canarycrds"]
     verbs: ["get", "list", "watch"]
 
 ---
