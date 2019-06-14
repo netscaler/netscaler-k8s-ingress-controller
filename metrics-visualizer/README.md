@@ -8,8 +8,8 @@ Launching Promethus-Operator
 ---
 Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
 ```
-git clone https://github.com/coreos/prometheus-operator.git
-kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
+git clone https://github.com/coreos/kube-prometheus.git
+kubectl create -f kube-prometheus/manifests/
 ```
 This creates several pods and services, of which ```prometheus-k8s-xx``` pods aggregate and timestamp metrics collected from NetScaler devices, and the ```grafana``` pod can be used for visualization. An output similar to this should be seen:
 ```
