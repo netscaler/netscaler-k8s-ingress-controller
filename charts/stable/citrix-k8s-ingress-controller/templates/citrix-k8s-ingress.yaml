@@ -14,8 +14,12 @@ rules:
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["canarycrds", "rewritepolicies"]
+    resources: ["rewritepolicies"]
     verbs: ["*"]
+    #canarycrds rule for canary continuous deployment
+  - apiGroups: ["citrix.com"]
+    resources: ["canarycrds"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
