@@ -1,0 +1,88 @@
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+#                          Pre-requisites:                            #
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# Fill this value with the VIP of the Tier-1 VPX/CPX
+# value: "<VIP of the Tier-1 VPX>"
+#
+# Fill this value with the NetScaler IP of the Tier-1 VPX/MPX
+# value: "<NSIP of the Tier-1 VPX>"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "nodes"]
+    verbs: ["*"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cic-k8s-role
+subjects:
+- kind: ServiceAccount
+  name: cic-k8s-role
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cic-k8s-role
+  namespace: default
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-k8s-ingress-controller
+  labels:
+    app: cic-k8s-ingress-controller
+spec:
+      serviceAccountName: cic-k8s-role
+      containers:
+      - name: cic-k8s-ingress-controller
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
+        env:
+        # Set NetScaler Management IP or SNIP in case of HA
+        - name: "NS_IP"
+          value: "<Kubernetes facing SNIP of VPX where MGMT access is enabled> or <NS IP of the VPX if it is reachable from K8s cluster>"
+        # Set username for Nitro
+        - name: "NS_USER"
+          valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: username
+        # Set user password for Nitro
+        - name: "NS_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: password
+        - name: "EULA"
+          value: "yes"
+        - name: "NS_VIP"
+          value: "<VIP of the Tier-1 VPX>"
+        args:
+          - --ingress-classes
+            tier-1-vpx
+          - --feature-node-watch
+            true
+        imagePullPolicy: Always
+---
