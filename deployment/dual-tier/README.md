@@ -7,7 +7,7 @@ Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the
 The Dual-Tier deployment can be set up on Kubernetes in bare metal environment or on public clouds such as, AWS, GCP, or Azure.
 
 The following diagram shows a Dual-Tier deployment:
-![Dual-Tier deployment](../media/dualtier.png)
+![Dual-Tier deployment](/docs/media/dualtier.png)
 
 ## Setup process
 
