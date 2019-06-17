@@ -1,122 +1,113 @@
-# Dual Tiered Ingress Deployment
+# How to set up dual-tier deployment
 
-In a Dual Tiered Ingress deployment Citrix ADC VPX/MPX is deployed outside the Kubernetes cluster (Tier-1) and Citrix ADC CPX(s) are deployed inside the Kubernetes cluster (Tier-2).<br>
-The Tier-1 VPX/MPX would load-balance the Tier-2 CPX inside the Kubernetes cluster.
+In a dual-tier deployment, Citrix ADC VPX or MPX is deployed outside the Kubernetes cluster (Tier-1) and Citrix ADC CPXs are deployed inside the Kubernetes cluster (Tier-2).
 
-This is a generic deployment model followed widely irrespective of the platform. Be it Google Cloud or AWS or Azure or On-premises deployment, Dual tiered Ingress deployment is mostly followed.
+Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix ingress controller deployed as a standalone pod configures the Tier-1 Citrix ADC. And, the sidecar Citrix ingress controller in one or more Citrix ADC CPX pods configures the associated Citrix ADC CPX in the same pod.
 
-### Automation of the Tier-1 VPX/MPX:
-Typically, the Tier-1 VPX/MPX is automated to load-balance the Tier-2 CPX(s). This is done by the [Citrix Ingress Controller (CIC)](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal#install-citrix-ingress-controller-on-kubernetes) running as a pod inside the Kubernetes cluster.
+The Dual-Tier deployment can be set up on Kubernetes in bare metal environment or on public clouds such as, AWS, GCP, or Azure.
 
-A seperate [Ingress class](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/ingress-classes.md) is configured for Tier-1 VPX/MPX so that the configuration does not overlap with other Ingress resources.
+The following diagram shows a Dual-Tier deployment:
+![Dual-Tier deployment](../media/dualtier.png)
 
+## Setup process
 
-## Topology:
+The Citrix ingress controller [repo](https://github.com/citrix/citrix-k8s-ingress-controller) provides a sample Apache microservice and manifests for Citrix ADC CPX for Tier-2, ingress object for Tier-2 Citrix ADC CPX, Citrix ingress controller, and an ingress object for Tier-1 Citrix ADC for demonstration purpose. These samples are used in the setup process to deploy a dual-tier topology.
 
-<img
-src="https://code.citrite.net/projects/NS/repos/citrix-k8s-ingress-controller/raw/deployment/dual-tier/images/Generic-Dual-Tiered-Ingress-Topology.png"
-width="750">
+Perform the following:
 
-### Pre-requisites for deploying Tier-1 VPX/MPX:
+1.  Create a Kubernetes cluster in cloud or on-premises. The Kubernetes cluster in cloud can be a managed Kubernetes (for example: GKE, EKS, or AKS) or a custom created Kubernetes deployment.
 
-* An UP and running Kubernetes cluster
-* In cloud deployments, VPX usually would be deployed in a multiple subnet mode with separate subnets for management, client (public) and server (private). VPX/MPX should be deployed in such a way that it has one subnet/vpc configured to receive external client traffic through a VIP and another subnet as the same subnet/vpc where the Kubernetes cluster is deployed (usually the server subnet is where the Kubernetes cluster would be deployed). This communication to the Kubernetes cluster is through a SNIP configured in the VPX.
-* After deploying a VPX/MPX, make sure you configure a SNIP in the Citrix ADC as the same subnet of the Kubernetes cluster.
-* In this case, enable management access for the SNIP which is in the same subnet of the Kubernetes cluster. This SNIP would be used as ```NS_IP``` variable in the [CIC yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml) file to enable Citrix Ingress controller to configure the Tier-1 VPX.
-* Enable Mac based Forwarding mode in the Tier-1 VPX. Since VPX is deployed in multiple subnet mode, it would not have return route to reach the POD CNI network or the Client network. Enabling MBF mode in the Tier-1 VPX would resolve this.
-* For Citrix Ingres Controller to automate the configuration of the VPX/MPX, it requires access to the VPX/MPX through a Citrix ADC system user. Please read through the [installation guide](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal#install-citrix-ingress-controller-on-kubernetes) for more details.
-* Firewall rules/Security groups (usually 80, 443,etc ports) should be allowed for the required ports for the VPX/MPX
+1.  Deploy Citrix ADC MPX or VPX on a multi-NIC deployment mode outside the Kubernetes cluster.
+    -  For instructions to deploy Citrix ADC MPX, see [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/13).
 
-### Reaching the Kubernetes CNI network from VPX/MPX:
+    -  For instructions to deploy Citrix ADC VPX, see [Deploy a Citrix ADC VPX instance](https://docs.citrix.com/en-us/citrix-adc/13/deploying-vpx.html).
 
-Since the VPX/MPX deployed in Tier-1 is going to load-balance the CPX(s) inside the Kubernetes cluster, a SNIP should be configured in the Tier-1 VPX/MPX. This SNIP should be of the same subnet/vpc of the Kubernetes cluster. 
+    Perform the following after you deploy Citrix ADC VPX or MPX:
 
-When this pre-requisite is met, [Citrix Ingress Controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal#install-citrix-ingress-controller-on-kubernetes) can automate the static route configuration in the VPX/MPX, so that Tier-1 Citrix ADC can reach the pods inside the Kubernetes cluster
+    1.  Configure an IP address from the subnet of the Kubernetes cluster as SNIP on the Citrix ADC. For information on configuring SNIPs in Citrix ADC, see [Configuring Subnet IP Addresses (SNIPs)](https://docs.citrix.com/en-us/citrix-adc/13/networking/ip-addressing/configuring-citrix-adc-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html).
 
-Please read our [detailed guide](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal#install-citrix-ingress-controller-on-kubernetes) for more information on the pod reachability from Tier-1 VPX/MPX.
+    1.  Enable management access for the SNIP that is the same subnet of the Kubernetes cluster. The SNIP should be used as `NS_IP` variable in the [Citrix ingress controller YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml) file to enable Citrix ingress controller to configure the Tier-1 Citrix ADC.
 
-## Deployment Steps:
+        >**Note:**
+        >It is not mandatory to use SNIP as `NS_IP`. If the management IP address of the Citrix ADC is reachable from Citrix ingress controller then you can use the management IP address as `NS_IP`.
 
-### Create a Kubernetes cluster:
-Create a Kubernetes cluster in cloud or on-premises.<br> The Kubernetes cluster in cloud could be a managed Kubernetes (like GKE, EKS or AKS) or a custom created Kubernetes.
+    1.  In cloud deployments, enable [MAC-Based Forwarding mode](https://docs.citrix.com/en-us/citrix-adc/13/networking/interfaces/configuring-mac-based-forwarding.html) on the Tier-1 Citrix ADC VPX. As Citrix ADC VPX is deployed in multi-NIC mode, it would not have the return route to reach the POD CNI network or the Client network. Hence, you need to enable MAC-Based Forwarding mode on the Tier-1 Citrix ADC VPX to handle this scenario.
 
-### Deploy a VPX/MPX:
-Deploy the VPX/MPX in a multiple subnet mode outside the Kubernetes cluster.<br>
-Configure a SNIP in the same subnet of the Kubernetes cluster.<br>
-Enable [MBF mode](https://docs.citrix.com/en-us/netscaler/12/networking/interfaces/configuring-mac-based-forwarding.html) in the VPX.<br>
-Refer the pre-requisites section.
+    1.  Create a [Citrix ADC system user account](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc) specific to Citrix ingress controller. Citrix ingress controller uses the system user account to automatically configure the Tier-1 Citrix ADC.
 
-#### Deployment guides of VPX in Clouds:
+    1.  Configure your on-premises firewall or security groups on your cloud to allow inbound traffic to the ports required for Citrix ADC. The Setup process uses port 80 and port 443, you can modify these ports based on your requirement.
 
-Please deploy the VPX in the cloud of your choice by using the below deployment guides.
+1.  Deploy a sample microservice. Use the following command:
 
-* [AWS](https://docs.citrix.com/en-us/netscaler/12-1/deploying-vpx/deploy-aws/launch-vpx-for-aws-ami.html)
-* [Azure](https://docs.citrix.com/en-us/netscaler/12-1/deploying-vpx/deploy-vpx-on-azure.html)
-* [GCP](https://docs.citrix.com/en-us/netscaler/12-1/deploying-vpx/deploy-vpx-google-cloud.html)
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/apache.yaml
 
+1.  Deploy Citrix ADC CPX as Tier-2 ingress. Use the following command:
 
-### Deploy a sample microservice
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/tier-2-cpx.yaml
 
-Let us deploy a sample microservice inside the Kubernetes cluster using Citrix ADC CPX (Tier-2) as an Ingress device. We would then extend this CPX to be load-balance using a Tier-1 VPX which is automated by the Citrix Ingress Controller.
+1.  Create an ingress object for the Tier-2 Citrix ADC CPX. Use the following command:
 
-**Create a sample application and expose it as service.**<br>
-In our demo, we would use a simple apache pod as a microservice.
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/ingress-tier-2-cpx.yaml
 
-```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/apache.yaml
-```
+1.  Deploy the Citrix ingress controller for Tier-1 Citrix ADC. Perform the following:
 
-**Create a Citrix CPX as Tier-2 Ingress**<br>
+    1.  Download the Citrix ingress controller manifest file. Use the following command:
 
-```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/tier-2-cpx.yaml
-```
+            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml
 
-**Create an ingress object for Tier-2 CPX**<br>
+    1.  Edit the Citrix ingress controller manifest file and enter the values for the following environmental variables:
 
-```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/ingress-tier-2-cpx.yaml
-```
+        | Environment Variable | Mandatory or Optional | Description |
+        | ---------------------- | ---------------------- | ----------- |
+        | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](/docs/deploy/deploy-cic-yaml.md#prerequisites). |
+        | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](/docs/deploy/deploy-cic-yaml.md#prerequisites). |
+        | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
+        | LOGLEVEL | Optional | The log levels to control the logs generated by Citrix ingress controller. By default, the value is set to DEBUG. The supported values are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Log Levels](../configure/log-levels.md)|
+        | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by Citrix ingress controller to communicate with Citrix ADC. By default, Citrix ingress controller uses HTTPS on port 443. You can also use HTTP on port 80. |
+        | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify Citrix ingress controller to configure Citrix ADC associated with specific ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
+        | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
 
-**Create a Citrix Ingress Controller for Tier-1 VPX**<br>
+    1.  Deploy the updated Citrix ingress controller manifest file. Use the following command:
 
-Download the manifest file and update the Citrix ADC IP, Credentials , Citrix ADC VIP IP and other required details.
+            kubectl create -f tier-1-vpx-cic.yaml
 
-```
-wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml
-```
+1.  Create an ingress object for the Tier-1 Citrix ADC. Use the following command:
 
-After updating the details, apply the manifest to Kubernetes
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/ingress-tier-1-vpx.yaml
 
-```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml
-```
+1.  Update DNS server details in the cloud or on-premises to point your website to the VIP of the Tier-1 Citrix ADC.
 
-**Create an Ingress object for Tier-1 VPX**<br>
+    For example: `citrix-ingress.com 10.250.9.1`
 
-```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/ingress-tier-1-vpx.yaml
-```
+    Where `10.250.9.1` is the VIP of the Tier-1 Citrix ADC and `citrix-ingress.com` is the microservice running in your Kubernetes cluster.
 
-**DNS changes**<br>
-You can now update your DNS servers in cloud/on-premises to point your website to the VIP of the Tier-1 VPX.
+1.  Access the URL of the microservice to verify the deployment.
 
-For example,
-```citrix-ingress.com 10.250.9.1```<br>
-where ```10.250.9.1``` is the VIP of the Tier-1 VPX and ```citrix-ingress.com``` is the microservice inside the Kubernetes cluster
+## Set up dual-tier deployment using one step deployment manifest file
 
-**Deployment Complete!** You can now try accessing the URL of the Microservice and it should be up and running.
+For easy deployment, the Citrix ingress controller [repo](https://github.com/citrix/citrix-k8s-ingress-controller) includes an all-in-one deployment manifest. You can download the file and update it with values for the following environmental variables and deploy the manifest file.
 
-### One step deployment 
-For easing the deployment, we have an all-in-one deployment manifest. Just download the manifest and update the required details like NS_IP, NS_VIP, etc and apply to Kubernetes and you are done!
+>**Note:**
+>Ensure that you have completed step 1–2 in the [Setup process](#setup-process).
 
+Perform the following:
 
-```
-wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/all-in-one-dual-tier-demo.yaml
-```
+1.  Download the all-in-one deployment manifest file. Use the following command:
 
-Apply to Kubernetes after updating details in the manifest
+        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/all-in-one-dual-tier-demo.yaml
 
-```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/dual-tier/manifest/all-in-one-dual-tier-demo.yaml
-```
+1.  Edit the all-in-one deployment manifest file and enter the values for the following environmental variables:
+
+    | Environment Variable | Mandatory or Optional | Description |
+    | ---------------------- | ---------------------- | ----------- |
+    | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](/docs/deploy/deploy-cic-yaml.md#prerequisites). |
+    | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](/docs/deploy/deploy-cic-yaml.md#prerequisites). |
+    | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
+    | LOGLEVEL | Optional | The log levels to control the logs generated by Citrix ingress controller. By default, the value is set to DEBUG. The supported values are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Log Levels](../configure/log-levels.md)|
+    | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by Citrix ingress controller to communicate with Citrix ADC. By default, Citrix ingress controller uses HTTPS on port 443. You can also use HTTP on port 80. |
+    | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify Citrix ingress controller to configure Citrix ADC associated with specific ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
+    | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
+
+1.  Deploy the updated all-in-one deployment manifest file. Use the following command:
+
+        kubectl create -f all-in-one-dual-tier-demo.yaml
