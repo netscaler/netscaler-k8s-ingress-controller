@@ -100,6 +100,7 @@ nav:
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
   - How-to:
+    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
   
 google_analytics:
