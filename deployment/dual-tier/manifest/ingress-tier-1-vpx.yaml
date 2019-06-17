@@ -1,0 +1,20 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vpx-ingress
+  annotations:
+   kubernetes.io/ingress.class: "tier-1-vpx"
+   ingress.citrix.com/insecure-termination: "allow"
+spec:
+  tls:
+  - secretName: cert2k
+  rules:
+  - host: citrix-ingress.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cpx-ingress
+          servicePort: 80
+---
