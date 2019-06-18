@@ -75,13 +75,13 @@ Add the service account named "cpx-ingress-k8s-role" to the privileged Security 
    oc adm policy add-scc-to-user privileged system:serviceaccount:<namespace>:cpx-ingress-k8s-role
 ```
 
-#### 1. Citri ADC CPX with Citrix Ingress Controller running as side car.
+#### 1. Citrix ADC CPX with Citrix Ingress Controller running as side car.
 To install the chart with the release name, `my-release`, use the following command:
 ```
    helm install cic/citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,openshift=true
 ```
 
-#### 2. Citri ADC CPX with Citrix Ingress Controller and Exporter running as side car.
+#### 2. Citrix ADC CPX with Citrix Ingress Controller and Exporter running as side car.
 [Metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed as sidecar to the Citrix ADC CPX and collects metrics from the Citrix ADC CPX instance. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
 > **Note:**
 >

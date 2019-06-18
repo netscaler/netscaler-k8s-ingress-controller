@@ -120,6 +120,7 @@ spec:
 {{- range .Values.ingressClass}}
             {{.}}
 {{- end }}
+{{- end }}
 {{- if .Values.defaultSSLCert }}
            - --default-ssl-certificate
             {{ .Values.defaultSSLCert }}
@@ -132,7 +133,6 @@ spec:
             - "--target-nsip=127.0.0.1"
             - "--port={{ .Values.exporter.ports.containerPort }}"
           imagePullPolicy: {{ .Values.exporter.pullPolicy }}
-{{- end }}
 {{- end }}
 
 ---
