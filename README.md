@@ -58,6 +58,8 @@ For questions and support the following channels are available:
 -  [Citrix Discussion Forum](https://discussions.citrix.com/forum/1657-netscaler-cpx/)
 -  [Citrix ADC CPX Slack Channel](https://citrixadccloudnative.slack.com/)
 
+To request an invitation to participate in the Slack channel, please supply your email address using this form: [https://podio.com/webforms/22979270/1633242](https://podio.com/webforms/22979270/1633242)
+
 ## Issues
 
 Please report the issues in detail. Use the following command to collect the logs:
