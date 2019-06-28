@@ -13,6 +13,7 @@ The following are the annotations supported by Citrix:
 | ingress.citrix.com/secure-service-type | `ssl` or `ssl_tcp` | The annotation allows L4 load balancing with SSL over TCP as protocol. Use `ssl_tcp`, if you want to use SSL over TCP. | `ssl` |
 |ingress.citrix.com/insecure-service-type| `http`, `tcp`, `udp`, or `any` | The annotation allows L4 load balancing with tcp/udp/any as protocol. Use `tcp`, if you want TCP as the protocol. Use `udp`, if you want UDP as the protocol.| `http` |
 |ingress.citrix.com/service_weights|In JSON form, weights distribution (in %) among the back-end services. Sum of weight must be 100% | It allows CIC to play a role in canary deployment. The values must be in JSON format. For each back-end app in the ingress, there must be corresponding traffic %. All weights must be in % and sum must be 100. </br> For example: `ingress.citrix.com/service_weights: {"canary-app1":5, "baseline-app1":5 "production-app1":90}`. Here there are 3 apps and % traffic distribution is 5%, 5%, and 90%. | No weight distribution|
+| ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression. </br> Use `exact` for Citrix ingress controller to consider the path as a exact match. | `prefix` |
 
 ## Smart annotations
 
