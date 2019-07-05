@@ -8,27 +8,25 @@ The release notes include one or more of the following sections:
 -  [**Known issues**](#known-issues): The issues that exist in the current release and their workarounds, wherever applicable.
 -  [**Points to note**](#points-to-note): The important aspects to keep in mind while using this release.
 
-## Version 1.1.3
+## Version 1.1.2
 
 ---
 
 ### What's New
 
-#### Red Hat OpenShift support
+#### Expose services as LoadBalancer
 
-The Citrix ingress controller can now be deployed as an OpenShift [router plug-in](https://docs.openshift.com/container-platform/3.9/architecture/networking/assembly_available_router_plugins.html). Also, Citrix ADC CPX can be deployed as a router within the OpenShift cluster. For more information, see [Deploy the Citrix ingress controller as an OpenShift router plug-in](deploy/deploy-cic-openshift.md).
+You can create a service of type LoadBalancer and expose it externally using the ingress Citrix ADC.  You can manually assign an IP address to the service using the `service.citrix.com/frontend-ip` annotation. Else, you can also automatically assign IP address to service using the IPAM controller provided by Citrix. The Citrix ingress controller configures the assigned IP address as virtual IP (VIP) in the ingress Citrix ADC. And, the service is exposed using the IP address. For more information, see [link to the topic]().
 
-#### Expose services using NodePort
+#### Red Hat OpenShift Router Sharding support
 
-You can create the service of type [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) and make the services accessible from outside of the Kubernetes cluster. The Citrix ADC (VPX or MPX) instance outside the Kubernetes cluster load balances the Ingress traffic to the nodes that contain the pods running the services. For more information, see [Expose services using NodePort](network/nodeport.md).
+***[TBD]***
 
-#### Using Citrix ADC with admin partitions as ingress device
+#### Ability to match the ingress path
 
-The Citrix ingress controller can now be deployed to automatically configure Citrix ADC with admin partitions based on the Ingress resource configuration. For more information, see [Deploy the Citrix ingress controller for Citrix ADC with admin partitions](deploy/deploy-cic-adc-admin-partition.md).
+Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to 
 
-#### Rancher managed Kubernetes cluster support
-
-The Citrix ingress controller can now be deployed on a Rancher managed Kubernetes cluster. For more information, see [Deploy the Citrix ingress controller on a Rancher managed Kubernetes cluster](deploy/deploy-cic-rancher.md).
+### Fixed issues
 
 ### Known issues
 
@@ -74,3 +72,27 @@ If you are using the UDP related ingress, you must perform the following steps w
 1.  Upgrade the Citrix ingress controller.
 1.  Update each UDP ingress YAML file as mentioned in [UDP-based Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/).
 1.  Reapply the UDP related Ingress configuration.
+---
+## Previous releases
+
+### Version 1.1.3
+
+#### What's New
+
+**Red Hat OpenShift support**
+
+The Citrix ingress controller can now be deployed as an OpenShift [router plug-in](https://docs.openshift.com/container-platform/3.9/architecture/networking/assembly_available_router_plugins.html). Also, Citrix ADC CPX can be deployed as a router within the OpenShift cluster. For more information, see [Deploy the Citrix ingress controller as an OpenShift router plug-in](deploy/deploy-cic-openshift.md).
+
+**Expose services using NodePort**
+
+You can create the service of type [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) and make the services accessible from outside of the Kubernetes cluster. The Citrix ADC (VPX or MPX) instance outside the Kubernetes cluster load balances the Ingress traffic to the nodes that contain the pods running the services. For more information, see [Expose services using NodePort](network/nodeport.md).
+
+**Using Citrix ADC with admin partitions as ingress device**
+
+The Citrix ingress controller can now be deployed to automatically configure Citrix ADC with admin partitions based on the Ingress resource configuration. For more information, see [Deploy the Citrix ingress controller for Citrix ADC with admin partitions](deploy/deploy-cic-adc-admin-partition.md).
+
+**Rancher managed Kubernetes cluster support**
+
+The Citrix ingress controller can now be deployed on a Rancher managed Kubernetes cluster. For more information, see [Deploy the Citrix ingress controller on a Rancher managed Kubernetes cluster](deploy/deploy-cic-rancher.md).
+
+
