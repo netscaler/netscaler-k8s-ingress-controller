@@ -20,11 +20,11 @@ You can create a service of type LoadBalancer and expose it externally using the
 
 #### Red Hat OpenShift Router Sharding support
 
-***[TBD]***
+OpenShift router sharding allows you to distribute a set of routes among multiple OpenShift routers by partitioning routes between them. By default, an OpenShift router selects all routes from all namespaces.  In router sharding, labels are added to routes and router namespaces and each router shard selects only routes with specific labels. Citrix ADC CPX  supports router sharding when you deploy it as an OpenShift router. For more information, see [link to the topic]().
 
 #### Ability to match the ingress path
 
-Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to 
+Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define 
 
 ### Fixed issues
 
