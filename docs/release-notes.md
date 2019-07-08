@@ -24,9 +24,17 @@ OpenShift router sharding allows you to distribute a set of routes among multipl
 
 #### Ability to match the ingress path
 
-Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define 
+Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define the Citrix ingress controller to consider the path string in the ingress path has prefix expression or as a exact match.
 
 ### Fixed issues
+
+-  Preconfigured cert related changes
+
+    [[NSNET-10130](https://issues.citrite.net/browse/NSNET-10130), [NSNET-9943](https://issues.citrite.net/browse/NSNET-9943)]
+
+-  Session limit issue fixed
+
+    [[NSNET-10262](https://issues.citrite.net/browse/NSNET-10262)]
 
 ### Known issues
 
