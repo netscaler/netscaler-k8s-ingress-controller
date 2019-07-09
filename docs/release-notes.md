@@ -8,7 +8,7 @@ The release notes include one or more of the following sections:
 -  [**Known issues**](#known-issues): The issues that exist in the current release and their workarounds, wherever applicable.
 -  [**Points to note**](#points-to-note): The important aspects to keep in mind while using this release.
 
-## Version 1.1.2
+## Version 1.2.0
 
 ---
 
@@ -26,6 +26,10 @@ OpenShift router sharding allows you to distribute a set of routes among multipl
 
 Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define the Citrix ingress controller to consider the path string in the ingress path has prefix expression or as a exact match.
 
+#### NSNET-10113  -> changes for NS entities names . separator from "." to "_"
+
+
+
 ### Fixed issues
 
 -  Preconfigured cert related changes
@@ -35,6 +39,10 @@ Citrix ingress controller now provides an annotation `ingress.citrix.com/path-ma
 -  Session limit issue fixed
 
     [[NSNET-10262](https://issues.citrite.net/browse/NSNET-10262)]
+
+-  Citrix ingress controller fails to configure Citrix ADC if it is being deployed in standalone mode after rebooting Citrix ADC VPX.
+
+    [[NSNET-10239]](https://issues.citrite.net/browse/NSNET-10239)
 
 ### Known issues
 
@@ -63,23 +71,7 @@ Citrix ingress controller now provides an annotation `ingress.citrix.com/path-ma
 -  When you apply the rewrite policy CRD deployment file on the Kubernetes cluster, Citrix ingress controller requires 12 seconds to process the CRD deployment file.
 
     [[NSNET-8315]](https://issues.citrite.net/browse/NSNET-8315)
-  
-#### Other issues
 
--  Citrix ingress controller fails to configure Citrix ADC if it is being deployed in standalone mode after rebooting Citrix ADC VPX.
-
-    [[NSNET-10239]](https://issues.citrite.net/browse/NSNET-10239)
-
-     **Workaround:** Delete the Citrix ingress controller and redeploy it again.
-
-### Points to note
-
-If you are using the UDP related ingress, you must perform the following steps while upgrading the Citrix ingress controller:
-
-1.  Remove the UDP related Ingress configuration.
-1.  Upgrade the Citrix ingress controller.
-1.  Update each UDP ingress YAML file as mentioned in [UDP-based Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/).
-1.  Reapply the UDP related Ingress configuration.
 ---
 ## Previous releases
 
@@ -103,4 +95,11 @@ The Citrix ingress controller can now be deployed to automatically configure Cit
 
 The Citrix ingress controller can now be deployed on a Rancher managed Kubernetes cluster. For more information, see [Deploy the Citrix ingress controller on a Rancher managed Kubernetes cluster](deploy/deploy-cic-rancher.md).
 
+**Points to note**
 
+If you are using the UDP related ingress, you must perform the following steps while upgrading the Citrix ingress controller:
+
+1.  Remove the UDP related Ingress configuration.
+1.  Upgrade the Citrix ingress controller.
+1.  Update each UDP ingress YAML file as mentioned in [UDP-based Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/).
+1.  Reapply the UDP related Ingress configuration.
