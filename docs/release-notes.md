@@ -5,6 +5,7 @@ The Citrix ingress controller release notes describe the new features, enhanceme
 The release notes include one or more of the following sections:
 
 -  [**What's new**](#whats-new): The new features and enhancements available in the current release.
+-  [**Fixed issues**](#fixed-issues): The issues that are fixed in the current release.
 -  [**Known issues**](#known-issues): The issues that exist in the current release and their workarounds, wherever applicable.
 -  [**Points to note**](#points-to-note): The important aspects to keep in mind while using this release.
 
@@ -27,8 +28,6 @@ OpenShift router sharding allows you to distribute a set of routes among multipl
 Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define the Citrix ingress controller to consider the path string in the ingress path has prefix expression or as a exact match.
 
 #### NSNET-10113  -> changes for NS entities names . separator from "." to "_"
-
-
 
 ### Fixed issues
 
@@ -73,6 +72,7 @@ Citrix ingress controller now provides an annotation `ingress.citrix.com/path-ma
     [[NSNET-8315]](https://issues.citrite.net/browse/NSNET-8315)
 
 ---
+
 ## Previous releases
 
 ### Version 1.1.3
@@ -95,7 +95,43 @@ The Citrix ingress controller can now be deployed to automatically configure Cit
 
 The Citrix ingress controller can now be deployed on a Rancher managed Kubernetes cluster. For more information, see [Deploy the Citrix ingress controller on a Rancher managed Kubernetes cluster](deploy/deploy-cic-rancher.md).
 
-**Points to note**
+#### Known issues
+
+**Red Hat OpenShift support:**
+
+-  [Automatic route configuration](network/staticrouting.md#automatically-configure-route-on-the-citrix-adc-instance) using the Citrix Ingress Controller (`feature-node-watch`) is not supported in OpenShift.
+
+    [[#NSNET-8506]](https://issues.citrite.net/browse/NSNET-8506)
+
+-  The router sharding feature in OpenShift is not supported.
+
+    [[#NSNET-8658]](https://issues.citrite.net/browse/NSNET-8658)
+
+-  When you frequently modify the OpenShift route configuration, the Citrix ingress controller might crash with the following SSL exception: `SSL: DECRYPTION_FAILED_OR_BAD_RECORD_MAC`.
+
+    [[#NSNET-10027]](https://issues.citrite.net/browse/NSNET-10027)
+
+-  After modifying the OpenShift route configuration, applying those changes using the `oc apply` command does not work.
+
+    [[NSNET-10264]](https://issues.citrite.net/browse/NSNET-10264)
+
+    **Workaround:** Delete the existing OpenShift route and recreate the route.
+
+**Rewrite policy CRD:**
+
+-  When you apply the rewrite policy CRD deployment file on the Kubernetes cluster, Citrix ingress controller requires 12 seconds to process the CRD deployment file.
+
+    [[NSNET-8315]](https://issues.citrite.net/browse/NSNET-8315)
+  
+**Other issues:**
+
+-  Citrix ingress controller fails to configure Citrix ADC if it is being deployed in standalone mode after rebooting Citrix ADC VPX.
+
+    [[NSNET-10239]](https://issues.citrite.net/browse/NSNET-10239)
+
+     **Workaround:** Delete the Citrix ingress controller and redeploy it again.
+
+**Points to note:**
 
 If you are using the UDP related ingress, you must perform the following steps while upgrading the Citrix ingress controller:
 
