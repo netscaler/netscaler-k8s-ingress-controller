@@ -1,6 +1,6 @@
 # VIP CustomResourceDefinitions
 
-Citrix provides a VIP [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) for asynchronous communication between the IPAM controller and [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller).
+Citrix provides a [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called **VIP** for asynchronous communication between the IPAM controller and [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller).
 
 The **IPAM controller** is provided by Citrix for IP address management. It allocates IP address to the service from a defined IP address range. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX VPX. And, the service is exposed using the IP address.
 
