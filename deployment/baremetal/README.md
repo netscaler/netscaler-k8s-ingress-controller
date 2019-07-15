@@ -141,6 +141,22 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        ```
        </details>
 
+       <details>
+
+       <summary>NS_NETPROFILE</summary>
+
+       [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) uses the network profile (netprofile) provided in this environment variable to establish network connectivity between the Kubernetes nodes and Ingress Citrix ADC.
+
+       >Note: Ensure that you provide the same netprofile name while deploying the Citrix node controller. For more information on how to deploy Citrix node controller, see [Deploy the Citrix k8s node controller](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy)
+
+       **Usage:**
+
+       ```
+       - name: "NS_NETPROFILE"
+         value: "<Name of your choice>"
+       ```
+       </details>
+
 
 3. Create using kubectl command. 
 
@@ -152,9 +168,18 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
                 
    Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.1.3` </span>
 
-4. #### Reachability to the Pod Network:
-    For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
-    `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
-    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same. 
-    By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
+4. #### Reachability to the Pod Network
 
+    - **Static routing**:
+
+      For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
+    `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
+    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same.
+
+      By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
+
+    - **Citrix node controller**:
+
+      If the Kubernetes cluster and the Ingress Citrix ADC are in different subnet, you cannot establish a route between them using Static routing. This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Citrix ADC.  
+
+      The [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) is a microservice that you can use to create a VXLAN based overlay network between the cluster and the Ingress Citrix ADC device.
