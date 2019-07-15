@@ -17,7 +17,7 @@ The release notes include one or more of the following sections:
 
 #### Expose services as LoadBalancer
 
-You can create a service of type LoadBalancer and expose it externally using the ingress Citrix ADC.  You can manually assign an IP address to the service using the `service.citrix.com/frontend-ip` annotation. Else, you can also automatically assign IP address to service using the IPAM controller provided by Citrix. The Citrix ingress controller configures the assigned IP address as virtual IP (VIP) in the ingress Citrix ADC. And, the service is exposed using the IP address. For more information, see [link to the topic]().
+You can create a service of type LoadBalancer and expose it externally using the ingress Citrix ADC.  You can manually assign an IP address to the service using the `service.citrix.com/frontend-ip` annotation. Else, you can also automatically assign IP address to service using the IPAM controller provided by Citrix. The Citrix ingress controller configures the assigned IP address as virtual IP (VIP) in the ingress Citrix ADC. And, the service is exposed using the IP address. For more information, see [Expose services of type LoadBalancer](network/type_loadbalancer.md).
 
 #### Ability to match the ingress path
 
@@ -32,10 +32,6 @@ By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix
 -  Preconfigured certificates with "**.**" in the certificate name is not supported. For example, hotdrink.cert.
 
     [[NSNET-10130](https://issues.citrite.net/browse/NSNET-10130)]
-
--  Session limit issue fixed
-
-    [[NSNET-10262](https://issues.citrite.net/browse/NSNET-10262)]
 
 -  Citrix ingress controller fails to configure Citrix ADC if it is being deployed in standalone mode after rebooting Citrix ADC VPX.
 
@@ -63,7 +59,7 @@ By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix
 
     **Workaround:** Delete the existing OpenShift route and recreate the route.
 
-**Rewrite policy CRD**
+**Rewrite policy CRD:**
 
 -  When you apply the rewrite policy CRD deployment file on the Kubernetes cluster, Citrix ingress controller requires 12 seconds to process the CRD deployment file.
 
