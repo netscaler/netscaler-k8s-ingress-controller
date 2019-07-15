@@ -28,12 +28,12 @@ spec:
 
 ```
 
-You should change the version of the image to the required version. For example, `quay.io/citrix/citrix-k8s-ingress-controller:1.1.3`.
+You should change the version of the image to the required version. For example, `quay.io/citrix/citrix-k8s-ingress-controller:1.2.0`.
 
 After updating the YAML file, you can use one of the following ways to upgrade the Citrix ingress controller image:
 
 - Using the `kubectl edit` command, type `kubectl edit Deployment cic-k8s-ingress-controller`.
     This command enables you to upgrade the Citrix ingress controller image after you save the changes.
 
-- Using the `kubectl set` command, type `kubectl set image Deployment/cic-k8s-ingress-controller  cic-k8s-ingress-controller=quay.io/citrix/citrix-k8s-ingress-controller:1.1.3`
+- Using the `kubectl set` command, type `kubectl set image Deployment/cic-k8s-ingress-controller  cic-k8s-ingress-controller=quay.io/citrix/citrix-k8s-ingress-controller:1.2.0`
     This command enables you to upgrade the Citrix ingress controller image.
