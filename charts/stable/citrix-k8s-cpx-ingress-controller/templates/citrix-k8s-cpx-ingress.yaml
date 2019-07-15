@@ -7,14 +7,14 @@ rules:
 {{- if .Values.openshift }}
     resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews"]
 {{- else }}
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status"]
 {{- end}}
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies"]
+    resources: ["rewritepolicies", "vips"]
     verbs: ["*"]
   - apiGroups: ["apps"]
     resources: ["deployments"]

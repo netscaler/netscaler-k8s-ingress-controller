@@ -44,9 +44,9 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 |```license.accept```|Set to accept to accept the terms of the Citrix license| ```no``` |
-|```cpx.image```| CPX Image Repository| ```quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28```|
+|```cpx.image```| CPX Image Repository| ```quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29```|
 |```cpx.pullPolicy```| CPX Image Pull Policy  | ```Always``` |
-|```cic.image```| CIC Image Repository| ```quay.io/citrix/citrix-k8s-ingress-controller:1.1.3```|
+|```cic.image```| CIC Image Repository| ```quay.io/citrix/citrix-k8s-ingress-controller:1.2.0```|
 |```cic.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
 |```cic.required```| CIC to be run as sidecar with Citrix ADC CPX| ```true```|
 |```exporter.required```|Exporter to be run as sidecar with Citrix ADC CPX and CIC|```false```|
