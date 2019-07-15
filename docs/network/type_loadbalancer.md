@@ -1,4 +1,4 @@
-# Expose services as LoadBalancer
+# Expose services of type LoadBalancer
 
 In a single-tier deployment, the Ingress Citrix ADC (VPX or MPX) outside the Kubernetes cluster receives all the Ingress traffic to the microservices deployed in the Kubernetes cluster. You need to establish network connectivity between the Ingress Citrix ADC instance and the pods for the ingress traffic to reach the microservices.
 
