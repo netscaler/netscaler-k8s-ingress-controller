@@ -85,9 +85,11 @@ nav:
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
-    - NodePort: network/nodeport.md
+    - Expose services of type NodePort: network/nodeport.md
+    - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 
     - Using Rewrite and Responder policies in Kubernetes: crds/rewrite-responder.md
+    - VIP: crds/vip.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     - TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
