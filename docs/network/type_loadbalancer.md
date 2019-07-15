@@ -8,7 +8,7 @@ The Citrix ingress controller supports the services of type `LoadBalancer`. You 
 
 You can manually assign an IP address to the service using the `service.citrix.com/frontend-ip` annotation. Else, you can also automatically assign IP address to service using the **IPAM controller** provided by Citrix.
 
-## Difference between service of type LoadBalancer and Ingress
+## Difference between service of type LoadBalancer and an Ingress
 
 Service of type `LoadBalancer` is a service type in Kubernetes. When you deploy the service, it automatically configures an external load balancer, which in this case is a Citrix ADC VPX. The service of type `LoadBalancer` does not require any Ingress resource as the service itself configures the Citrix ADC VPX with a virtual IP address. And, the service can be accessed using the IP address.
 
