@@ -51,7 +51,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
          This is for authenticating with NetScaler if it has non default username and password. We can directly pass username/password or use Kubernetes secrets.
          Please refer our [guide](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/command-policy.md) for configuring a non default NetScaler username and password.
-         
+
          Given Yaml uses k8s secrets. Following steps helps to create secrets to be used in yaml.
 
          Create secrets on Kubernetes for NS_USER and NS_PASSWORD
@@ -66,7 +66,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        <summary>EULA</summary>
 
          This is end user license agreement which has to be YES for Citrix Ingress Controller to up and run.
-                
+
        </details>
     2. "Optional" Arguments:
 
@@ -119,28 +119,28 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the [frontend-ip](../../docs/configure/annotations.md) annotation.
 
        **Usage:**
-       
+
        ```
-       - name: "NS_VIP"       
+       - name: "NS_VIP"
          value: "<Virtual IP address of Citrix ADC>"
        ```
-       
+
        </details>
        <details>
 
        <summary>NS_APPS_NAME_PREFIX</summary>
 
        Citrix Ingress Controller uses the provided prefix to form the application entity name in Citrix ADC. This is useful in the cases where Citrix ADC load balances applications from different cluster. Prefix allows to segregate the  Kubernetes cluster configuration. 
-       
+
        By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumberic charaters for the prefix and the prefix length should not exceed 8 characters. 
        **Usage:**
-       
+
        ```
-       - name: "NS_APPS_NAME_PREFIX"       
+       - name: "NS_APPS_NAME_PREFIX"
          value: "<Name of your choice>"
        ```
        </details>
-       
+
 
 3. Create using kubectl command. 
 
