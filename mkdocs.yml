@@ -85,8 +85,8 @@ nav:
     - Log levels: configure/log-levels.md
   - Network:
     - Expose service using static routing: network/staticrouting.md
-    - Expose services as NodePort: network/nodeport.md
-    - Expose services as LoadBalancer: network/type_loadbalancer.md
+    - Expose services of type NodePort: network/nodeport.md
+    - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 
     - Using Rewrite and Responder policies in Kubernetes: crds/rewrite-responder.md
     - VIP: crds/vip.md
