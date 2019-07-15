@@ -84,7 +84,7 @@ nav:
     - Ingress class: configure/ingress-classes.md
     - Log levels: configure/log-levels.md
   - Network:
-    - Expose service using static routing: network/staticrouting.md
+    - Static routing: network/staticrouting.md
     - Expose services of type NodePort: network/nodeport.md
     - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 
