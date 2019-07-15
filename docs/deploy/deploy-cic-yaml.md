@@ -86,6 +86,7 @@ Perform the following:
     | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by Citrix ingress controller to communicate with Citrix ADC. By default, Citrix ingress controller uses HTTPS on port 443. You can also use HTTP on port 80. |
     | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify Citrix ingress controller to configure Citrix ADC associated with specific ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
     | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
+    | NS_APPS_NAME_PREFIX | Optional | By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumberic charaters for the prefix and the prefix length should not exceed 8 characters. |
 
 1.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 

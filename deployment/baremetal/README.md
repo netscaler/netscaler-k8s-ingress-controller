@@ -130,9 +130,9 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
        <summary>NS_APPS_NAME_PREFIX</summary>
 
-       Citrix Ingress Controller will use the provided prefix to form the application entity name at Citrix ADC. 
-
-       This is useful in the case, one Citrix ADC, load balancing applications from different cluster. Prefix allows to segregate the  kubernetes cluster configuration. Default value take as k8s_.
+       Citrix Ingress Controller uses the provided prefix to form the application entity name in Citrix ADC. This is useful in the cases where Citrix ADC load balances applications from different cluster. Prefix allows to segregate the  Kubernetes cluster configuration. 
+       
+       By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumberic charaters for the prefix and the prefix length should not exceed 8 characters. 
        **Usage:**
        
        ```
