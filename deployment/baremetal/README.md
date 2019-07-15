@@ -51,7 +51,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
          This is for authenticating with NetScaler if it has non default username and password. We can directly pass username/password or use Kubernetes secrets.
          Please refer our [guide](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/command-policy.md) for configuring a non default NetScaler username and password.
-         
+
          Given Yaml uses k8s secrets. Following steps helps to create secrets to be used in yaml.
 
          Create secrets on Kubernetes for NS_USER and NS_PASSWORD
@@ -66,7 +66,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        <summary>EULA</summary>
 
          This is end user license agreement which has to be YES for Citrix Ingress Controller to up and run.
-                
+
        </details>
     2. "Optional" Arguments:
 
@@ -119,28 +119,44 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
        This is useful in the case where all Ingress runs in the Virtual IP. This takes precedence over the [frontend-ip](../../docs/configure/annotations.md) annotation.
 
        **Usage:**
-       
+
        ```
-       - name: "NS_VIP"       
+       - name: "NS_VIP"
          value: "<Virtual IP address of Citrix ADC>"
        ```
-       
+
        </details>
        <details>
 
        <summary>NS_APPS_NAME_PREFIX</summary>
 
-       Citrix Ingress Controller will use the provided prefix to form the application entity name at Citrix ADC. 
+       Citrix Ingress Controller uses the provided prefix to form the application entity name in Citrix ADC. This is useful in the cases where Citrix ADC load balances applications from different cluster. Prefix allows to segregate the  Kubernetes cluster configuration. 
 
-       This is useful in the case, one Citrix ADC, load balancing applications from different cluster. Prefix allows to segregate the  kubernetes cluster configuration. Default value take as k8s_.
+       By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumberic charaters for the prefix and the prefix length should not exceed 8 characters. 
        **Usage:**
-       
+
        ```
-       - name: "NS_APPS_NAME_PREFIX"       
+       - name: "NS_APPS_NAME_PREFIX"
          value: "<Name of your choice>"
        ```
        </details>
-       
+
+       <details>
+
+       <summary>NS_NETPROFILE</summary>
+
+       [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) uses the network profile (netprofile) provided in this environment variable to establish network connectivity between the Kubernetes nodes and Ingress Citrix ADC.
+
+       >Note: Ensure that you provide the same netprofile name while deploying the Citrix node controller. For more information on how to deploy Citrix node controller, see [Deploy the Citrix k8s node controller](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy)
+
+       **Usage:**
+
+       ```
+       - name: "NS_NETPROFILE"
+         value: "<Name of your choice>"
+       ```
+       </details>
+
 
 3. Create using kubectl command. 
 
@@ -152,9 +168,18 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
                 
    Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.1.3` </span>
 
-4. #### Reachability to the Pod Network:
-    For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
-    `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
-    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same. 
-    By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
+4. #### Reachability to the Pod Network
 
+    - **Static routing**:
+
+      For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running. 
+    `feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. 
+    Refer [Network Configuration](../../docs/network/staticrouting.md) for further details regarding the same.
+
+      By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
+
+    - **Citrix node controller**:
+
+      If the Kubernetes cluster and the Ingress Citrix ADC are in different subnet, you cannot establish a route between them using Static routing. This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Citrix ADC.  
+
+      The [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) is a microservice that you can use to create a VXLAN based overlay network between the cluster and the Ingress Citrix ADC device.
