@@ -19,10 +19,6 @@ The release notes include one or more of the following sections:
 
 You can create a service of type LoadBalancer and expose it externally using the ingress Citrix ADC.  You can manually assign an IP address to the service using the `service.citrix.com/frontend-ip` annotation. Else, you can also automatically assign IP address to service using the IPAM controller provided by Citrix. The Citrix ingress controller configures the assigned IP address as virtual IP (VIP) in the ingress Citrix ADC. And, the service is exposed using the IP address. For more information, see [link to the topic]().
 
-#### Red Hat OpenShift Router Sharding support
-
-OpenShift router sharding allows you to distribute a set of routes among multiple OpenShift routers by partitioning routes between them. By default, an OpenShift router selects all routes from all namespaces.  In router sharding, labels are added to routes and router namespaces and each router shard selects only routes with specific labels. Citrix ADC CPX  supports router sharding when you deploy it as an OpenShift router. For more information, see [link to the topic]().
-
 #### Ability to match the ingress path
 
 The Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define the Citrix ingress controller to consider the path string in the ingress path has prefix expression or as a exact match. For more information, see [Annotations](configure/annotations.md).
@@ -33,7 +29,7 @@ By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix
 
 ### Fixed issues
 
--  Preconfigured certificates with "**.**" in the certificate is not supported. For example, hotdrink.cert.
+-  Preconfigured certificates with "**.**" in the certificate name is not supported. For example, hotdrink.cert.
 
     [[NSNET-10130](https://issues.citrite.net/browse/NSNET-10130)]
 
