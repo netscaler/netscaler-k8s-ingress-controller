@@ -28,7 +28,7 @@ Citrix provides a microservice called as **Citrix k8s node controller** that you
 
 The Citrix ingress controller now provides an annotation `ingress.citrix.com/path-match-method` that you can use to define the Citrix ingress controller to consider the path string in the ingress path has prefix expression or as an exact match. For more information, see [Annotations](configure/annotations.md).
 
-#### Ability to customize the prefix Citrix ADC entities
+#### Ability to customize the prefix for Citrix ADC entities
 
 By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed 8 characters.
 
