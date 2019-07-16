@@ -7,7 +7,6 @@ The release notes include one or more of the following sections:
 -  [**What's new**](#whats-new): The new features and enhancements available in the current release.
 -  [**Fixed issues**](#fixed-issues): The issues that are fixed in the current release.
 -  [**Known issues**](#known-issues): The issues that exist in the current release and their workarounds, wherever applicable.
--  [**Points to note**](#points-to-note): The important aspects to keep in mind while using this release.
 
 ## Version 1.2.0
 
