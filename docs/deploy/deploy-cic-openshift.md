@@ -30,7 +30,7 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 
 | Citrix components | Versions |
 | ----------------- | -------- |
-| Citrix ingress controller | Latest (1.1.3) |
+| Citrix ingress controller | Latest (1.2.0) |
 | Citrix ADC VPX | 12.1 50.x and later |
 | Citrix ADC CPX | 13.0–36.28 |
 
