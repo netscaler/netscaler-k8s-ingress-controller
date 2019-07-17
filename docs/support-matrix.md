@@ -68,7 +68,7 @@ The following table lists the Citrix ingress controller features supported on re
 | [TCP over SSL Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later| 12.1–51.16 and later |
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
-| OpenShift Routes | 1.1.3 | 12.1–51.16 and later | 13.0–36.28 |
+| OpenShift Routes | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 |
 
 ## Container network interface (CNI) for Citrix ADC CPX
 
