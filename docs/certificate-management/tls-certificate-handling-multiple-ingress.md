@@ -116,7 +116,7 @@ containers:
 
 - name: cic-k8s-ingress-controller
 
-image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
+image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
 
 env:
 
@@ -310,7 +310,7 @@ containers:
 
 - name: cic-k8s-ingress-controller
 
-image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
+image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
 
 env:
 
