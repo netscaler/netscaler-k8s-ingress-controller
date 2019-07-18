@@ -4,7 +4,7 @@ metadata:
   name: cpx-ingress-k8s-role
 rules:
   - apiGroups: [""]
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
