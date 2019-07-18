@@ -5,7 +5,7 @@
 
 ## TL;DR;
 ``` 
-helm install citrix-k8s-ingress-controller --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>
+helm install citrix-k8s-ingress-controller --set nsIP=<NSIP>,license.accept=yes,nsVIP=<VIP>
 ```
 > Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
 
