@@ -5,9 +5,9 @@ metadata:
 rules:
   - apiGroups: [""]
 {{- if .Values.openshift }}
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets","nodes", "routes", "routes/status", "tokenreviews", "subjectaccessreviews"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets","nodes", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "namespaces"]
 {{- else}}
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets","nodes"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
 {{- end}}
     verbs: ["*"]
   - apiGroups: ["extensions"]
@@ -19,6 +19,9 @@ rules:
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
 
 ---
 
