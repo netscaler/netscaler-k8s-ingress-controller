@@ -358,7 +358,7 @@ spec:
       - name: citrix-ipam-controller
         image: quay.io/citrix/citrix-ipam-controller:latest
         env:
-        # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
+        # This IPAM controller takes environment variable VIP_RANGE. IP addresses in this range are used to assign values for IP range
         - name: "VIP_RANGE"
           value: '["10.217.212.18/31"]'
         # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
