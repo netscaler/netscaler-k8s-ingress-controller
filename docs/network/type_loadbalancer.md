@@ -302,7 +302,6 @@ For more information on how to deploy the Citrix ingress controller, see the [De
 Now, deploy the IPAM controller. The following is manifest of the IPAM controller Deployment:
 
 ```yml
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
