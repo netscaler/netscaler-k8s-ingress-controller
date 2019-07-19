@@ -10,4 +10,4 @@ When a new service is created, the Citrix ingress controller creates a CRD objec
 
 Deploy the VIP CRD using the following command:
 
-    kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/crd/vip.yaml
+    kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
