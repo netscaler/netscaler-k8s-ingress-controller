@@ -18,7 +18,7 @@ Therefore, in the case of services of type `LoadBalancer`, you need to just depl
 
 Create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), in your service definition file, specify `spec.type:LoadBalancer` and specify an IP address in the `service.citrix.com/frontend-ip` annotation.
 
-When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `service.citrix.com/frontend-ip` annotation as virtual IP (VIP) in Citrix ADX VPX. And, the service is exposed using the IP address.
+When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `service.citrix.com/frontend-ip` annotation as virtual IP (VIP) in Citrix ADX. And, the service is exposed using the IP address.
 
 In this section, we shall create a Deployment, `apache`, and deploy it in your Kubernetes cluster. The following is a manifest for the Deployment:
 
@@ -156,7 +156,7 @@ The response should be:
 
 When creating a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use IPAM controller to automatically allocate an IP address to the service.
 
-Citrix provides a controller called **IPAM controller** for IP address management. You must deploy the IPAM controller as a separate pod along with Citrix ingress controller. Once the IPAM controller is deployed, it allocates IP address to the service from a defined IP address range. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX VPX. And, the service is exposed using the IP address.
+Citrix provides a controller called **IPAM controller** for IP address management. You must deploy the IPAM controller as a separate pod along with Citrix ingress controller. Once the IPAM controller is deployed, it allocates IP address to the service from a defined IP address range. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX. And, the service is exposed using the IP address.
 
 The IPAM controller requires the Vip [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix for asynchronous communication between the IPAM controller and Citrix ingress controller.
 
@@ -166,7 +166,7 @@ In this section, we shall deploy the IPAM controller, create a sample Deployment
 
 ### Deploy the IPAM controller
 
-Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more information see, [VIP CustomResourceDefinitions](/crd/vip/README.md).
+Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more information see, [VIP CustomResourceDefinitions](../crds/vip.md).
 
 After you have deployment the Citrix VIP CRD, create the Citrix ingress controller with the `--ipam=citrix-ipam-controller` argument in the `args` field.
 
@@ -375,7 +375,7 @@ Copy the manifest to a file named, `citrix-ipam-controller.yaml`, and update the
 
     kubectl create -f citrix-ipam-controller.yaml
 
-### Create a Deployment
+### Deploy the Apache microservice application
 
 Create a Deployment, `apache`, and deploy it in your Kubernetes cluster. The following is a manifest for the Deployment:
 
@@ -427,7 +427,7 @@ Output:
     apache-7db8f797c7-rjckb      0/1     ContainerCreating   0          6s
     apache-7db8f797c7-w2wlp      0/1     ContainerCreating   0          6s
 
-### Create a service of type LoadBalancer
+### Expose the Apache microservice using service of type LoadBalancer
 
 Create a service (`apache`) of type `LoadBalancer`. The following is a manifest for a service of type `LoadBalancer`:
 
@@ -455,7 +455,7 @@ Copy the manifest to a file named `apache-service.yaml` and create the Deploymen
 
     kubectl create -f apache-service.yaml
 
-When you create the service (`apache`) of type `LoadBalancer`, the IPAM controller assigns an IP address to the `apache` service from the IP address range you had defined in the IPAM controller deployment. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX VPX. And, the service is exposed using the IP address.
+When you create the service (`apache`) of type `LoadBalancer`, the IPAM controller assigns an IP address to the `apache` service from the IP address range you had defined in the IPAM controller deployment. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX. And, the service is exposed using the IP address.
 
 View the service using the following command:
 
