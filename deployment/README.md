@@ -19,14 +19,17 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 
 ## Citrix ingress controller features
 
-1.  [Ingress Class](../docs/configure/ingress-classes.md)
-1.  [TCP Ingress](../docs/how-to/tcp-udp-ingress.md)
-1.  [Annotations](../docs/configure/annotations.md)
-1.  [Smart Annotations](../docs/configure/annotations.md)
-1.  [Network Supports](../docs/network/staticrouting.md)
-1.  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
-1.  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
-1.  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
+-  [Ingress Class](../docs/configure/ingress-classes.md)
+-  [TCP Ingress](../docs/how-to/tcp-udp-ingress.md)
+-  [Annotations](../docs/configure/annotations.md)
+    -  [Smart Annotations](../docs/configure/annotations.md)
+-  Network configuration:
+    -  [Static routing](../docs/network/staticrouting.md)
+    -  [Expose services using NodePort](../docs/network/nodeport.md)
+    -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
+-  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
+-  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
+-  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
 
 ## Deployment solutions
 
