@@ -10,7 +10,7 @@ rules:
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies"]
+    resources: ["rewritepolicies", "vips"]
     verbs: ["*"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
@@ -61,7 +61,7 @@ spec:
       serviceAccount: citrix
       containers:
       - name: cic
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.1.3"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
         securityContext:
            privileged: true
         env:
