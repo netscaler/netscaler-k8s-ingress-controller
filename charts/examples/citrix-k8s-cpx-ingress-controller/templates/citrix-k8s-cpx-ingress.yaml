@@ -4,17 +4,20 @@ metadata:
   name: cpx-ingress-k8-role
 rules:
   - apiGroups: [""]
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies"]
+    resources: ["rewritepolicies", "vips"]
     verbs: ["*"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
 
 ---
 
