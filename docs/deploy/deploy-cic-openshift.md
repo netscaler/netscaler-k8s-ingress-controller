@@ -70,7 +70,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
             resources: ["ingresses", "ingresses/status"]
             verbs: ["*"]
           - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies"]
+            resources: ["rewritepolicies", "vips"]
             verbs: ["*"]
           - apiGroups: ["apps"]
             resources: ["deployments"]
@@ -111,7 +111,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
               serviceAccountName: citrix
               containers:
                 - name: cpx
-                  image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.28"
+                  image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
                   securityContext:
                     privileged: true
                   env:
@@ -257,7 +257,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
             resources: ["ingresses", "ingresses/status"]
             verbs: ["*"]
           - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies"]
+            resources: ["rewritepolicies", "vips"]
             verbs: ["*"]
           - apiGroups: ["apps"]
             resources: ["deployments"]
