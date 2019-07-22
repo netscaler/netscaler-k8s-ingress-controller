@@ -82,7 +82,7 @@ spec:
         env:
         - name: "NS_IP"
           value: "{{ .Values.nsIP }}"
-{{- if .Values.openshift }}
+{{- if .Values.nsVIP }}
         - name: "NS_VIP"
           value: "{{ .Values.nsVIP }}"
 {{- end}}

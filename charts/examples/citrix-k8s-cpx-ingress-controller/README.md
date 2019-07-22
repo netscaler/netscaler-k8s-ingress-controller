@@ -5,6 +5,9 @@
 
 ## TL;DR;
 ``` 
+git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+cd citrix-k8s-ingress-controller/charts/examples/
+
 helm install citrix-k8s-cpx-ingress-controller --set license.accept=yes
 ```
 > Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.

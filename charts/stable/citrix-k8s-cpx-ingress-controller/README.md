@@ -114,6 +114,7 @@ The following table lists the configurable parameters of the Citrix ADC CPX with
 | cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.2.0` | The Citrix ingress controller image. |
 | cic.pullPolicy | Mandatory | Always | The Citrix ingress controller image pull policy. |
 | cic.required | Optional | true | CIC to be run as sidecar with Citrix ADC CPX |
+| defaultSSLCert | Optional | N/A | Default SSL certificate that needs to be used as a non-SNI certificate in Citrix ADC. |
 | exporter.required | Optional | false | Use the argument if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with Citrix ingress controller to pull metrics for the Citrix ADC CPX|
 | exporter.image | Optional | `quay.io/citrix/netscaler-metrics-exporter:v1.0.4` | The Exporter for Citrix ADC Stats image. |
 | exporter.pullPolicy | Optional | Always | The Exporter for Citrix ADC Stats image pull policy. |
