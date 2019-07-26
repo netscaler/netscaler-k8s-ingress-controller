@@ -4,17 +4,20 @@ metadata:
   name: cpx-ingress-k8-role
 rules:
   - apiGroups: [""]
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies"]
+    resources: ["rewritepolicies", "vips"]
     verbs: ["*"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
 
 ---
 
@@ -57,8 +60,8 @@ spec:
       serviceAccountName: cpx-ingress-k8-role
       containers:
         - name: cpx-ingress
-          image: "{{ .Values.cpximage.repository}}:{{ .Values.cpximage.tag}}"
-          imagePullPolicy: {{ .Values.cpximage.pullPolicy }}
+          image: "{{ .Values.cpx.image }}"
+          imagePullPolicy: {{ .Values.cpx.pullPolicy }}
           securityContext:
              privileged: true
           env:
@@ -66,10 +69,11 @@ spec:
             value: "{{ .Values.license.accept }}"
           - name: "KUBERNETES_TASK_ID"
             value: ""
+{{- if .Values.cic.required }}
         # Add cic as a sidecar
         - name: cic
-          image: "{{ .Values.cicimage.repository}}:{{ .Values.cicimage.tag}}"
-          imagePullPolicy: {{ .Values.cicimage.pullPolicy }}
+          image: "{{ .Values.cic.image }}"
+          imagePullPolicy: {{ .Values.cic.pullPolicy }}
           env:
           - name: "EULA"
             value: "{{ .Values.license.accept }}"
@@ -104,13 +108,14 @@ spec:
             {{.}}
 {{- end }}
 {{- end }}
-{{- if .Values.exporter.require }}
+{{- end }}
+{{- if .Values.exporter.required }}
         - name: exporter
-          image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+          image: "{{ .Values.exporter.image }}"
           args:
             - "--target-nsip=127.0.0.1"
             - "--port={{ .Values.exporter.ports.containerPort }}"
-          imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.exporter.pullPolicy }}
 {{- end }}
 
 ---
@@ -131,7 +136,7 @@ spec:
   - port: 443
     protocol: TCP
     name: https
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
   - port: {{ .Values.exporter.ports.containerPort }}
     targetPort: {{ .Values.exporter.ports.containerPort }}
     name: exporter-port
@@ -142,7 +147,7 @@ spec:
 
 ---
 
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
 
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

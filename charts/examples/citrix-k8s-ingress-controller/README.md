@@ -5,7 +5,10 @@
 
 ## TL;DR;
 ``` 
-helm install citrix-k8s-ingress-controller --set nsIP= <NSIP>,license.accept=yes,nsVIP=<VIP>
+git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+cd citrix-k8s-ingress-controller/charts/examples/
+
+helm install citrix-k8s-ingress-controller --set nsIP=<NSIP>,license.accept=yes,nsVIP=<VIP>
 ```
 > Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
 
@@ -25,7 +28,7 @@ To install the chart with the release name ``` my-release:```
 
 If you want to run exporter along with CIC, please install prometheus operator first and then use the following command:
 
-```helm install citrix-k8s-ingress-controller --name my-release --set nsIP=<NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass=<ingressClassName>,exporter.require=1.0```
+```helm install citrix-k8s-ingress-controller --name my-release --set nsIP=<NSIP>,license.accept=yes,nsVIP=<VIP>,ingressClass=<ingressClassName>,exporter.required=true```
 
 If you want to visualize the metrices collected by exporter from Citrix ADC please refer "[Visualization of Metrics](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics)".
 
@@ -45,9 +48,8 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 | Parameter |    Description | Default |
 | --------- |  ---------------- | ------- |
 |```license.accept```|Set to accept to accept the terms of the Citrix license|```no```|
-| ``` image.repository ``` | Image Repository|```quay.io/citrix/citrix-k8s-ingress-controller```|
-| ``` image.tag```  | Image Tag    |```1.1.1```|
-|```  image.pullPolicy```| Image Pull Policy  |```Always```|
+| ``` cic.image ``` | Image Repository|```quay.io/citrix/citrix-k8s-ingress-controller:1.2.0```|
+|```  cic.pullPolicy```| Image Pull Policy  |```Always```|
 |```loginFileName```| Secret keys for login into NetScaler VPX or MPX Refer Secret Keys|```nslogin```|
 |```nsIP```|NetScaler VPX/MPX IP|```x.x.x.x```|
 |```nsPort```|Optional:This port is used by Citrix Ingress Controller to communicate with NetScaler. Can use 80 for HTTP |```443```|
@@ -55,12 +57,12 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```logLevel```|Optional: This is used for controlling the logs generated from Citrix Ingress Controller. options available are CRITICAL ERROR WARNING INFO DEBUG |```DEBUG```|
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
 |```nsVIP```| VIP IP |```nil``` 
-|```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
-|```exporter.image.repository```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
-|```exporter.image.tag```|Exporter image tag|```v1.0.4 ```|
-|```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
+|```exporter.required```|Exporter to be run as sidecar with CIC|```false```|
+|```exporter.image```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter:v1.0.4```|
+|```exporter.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
 |```ingressClass```| List of name of Ingress Classes |```Citrix```|
+
 > Tip: You can use the default [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/examples/citrix-k8s-ingress-controller/values.yaml)
 
 ## Route Addition in MPX/VPX

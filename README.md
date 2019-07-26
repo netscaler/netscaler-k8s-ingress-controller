@@ -5,33 +5,37 @@
 
 ---
 
-# Citrix Ingress Controller
+# Citrix ingress controller
 
 ## Description
 
-This repository contains Citrix Ingress Controller (CIC) built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+This repository contains Citrix ingress controller built around  [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
-## What is an Ingress Controller?
+## What is an ingress controller?
 
 An Ingress Controller is a controller that watches the Kubernetes API server for updates to the Ingress resource and reconfigures the Ingress load balancer accordingly.
 
-## What is Citrix Ingress Controller?
+## What is Citrix ingress controller?
 
-Citrix provides an Ingress Controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures one or more Citrix ADC based on the Ingress resource configuration.
+Citrix provides an ingress controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures one or more Citrix ADC based on the Ingress resource configuration.
 
-The Citrix Ingress Controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
+The Citrix ingress controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
 
 ## Features
 
-Features supported by Citrix Ingress Controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+Features supported by Citrix ingress controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+
+## Supported platforms and deployments
+
+Click [here](docs/support-matrix.md) for detailed list of supported platforms and deployments.
 
 ## Documentation
 
-For detailed documentation, see [Citrix Ingress Controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
+For detailed documentation, see [Citrix ingress controller Live Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
-## Deployment Solutions
+## Deployment solutions
 
-You can deploy Citrix Ingress Controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+You can deploy Citrix ingress controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
 
 ## Examples
 
@@ -43,12 +47,18 @@ Deploy the Guestbook application and use the [Citrix ADC CPX](https://www.citrix
 -  [Deployment in Google Cloud](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp)
 -  [Deployment in Azure Cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/azure)
 
+## Release notes
+
+Click [here](docs/release-notes.md) for the release notes of the latest Citrix ingress controller release.
+
 ## Questions
 
 For questions and support the following channels are available:
 
 -  [Citrix Discussion Forum](https://discussions.citrix.com/forum/1657-netscaler-cpx/)
 -  [Citrix ADC CPX Slack Channel](https://citrixadccloudnative.slack.com/)
+
+To request an invitation to participate in the Slack channel, please supply your email address using this form: [https://podio.com/webforms/22979270/1633242](https://podio.com/webforms/22979270/1633242)
 
 ## Issues
 

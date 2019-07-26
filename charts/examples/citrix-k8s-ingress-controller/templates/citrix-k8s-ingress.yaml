@@ -4,17 +4,20 @@ metadata:
   name: cic-k8-role
 rules:
   - apiGroups: [""]
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies"]
+    resources: ["rewritepolicies", "vips"]
     verbs: ["*"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
 
 ---
 
@@ -50,8 +53,8 @@ spec:
       serviceAccountName: cic-k8-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }} 
+        image: "{{ .Values.cic.image }}"
+        imagePullPolicy: {{ .Values.cic.pullPolicy }}
 {{- if .Values.ingressClass }}
         args: 
           - --ingress-class
@@ -84,9 +87,9 @@ spec:
         - name: "kubernetes_url"
           value: "{{ .Values.kubernetesURL }}"
 {{- end}}
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
       - name: exporter
-        image: "{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+        image: "{{ .Values.exporter.image }}"
         args:
           - "--secure=YES"
           - "--username=$(NS_USERNAME)"
@@ -104,12 +107,12 @@ spec:
               secretKeyRef:
                 name: {{ .Values.loginFileName | default "nslogin"}}
                 key: password
-        imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.exporter.pullPolicy }}
 {{- end }}
 
 ---
 
-{{- if .Values.exporter.require }}
+{{- if .Values.exporter.required }}
 
 
 apiVersion: v1

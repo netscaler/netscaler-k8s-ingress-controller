@@ -8,8 +8,8 @@ Launching Promethus-Operator
 ---
 Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
 ```
-git clone https://github.com/coreos/prometheus-operator.git
-kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
+git clone https://github.com/coreos/kube-prometheus.git
+kubectl create -f kube-prometheus/manifests/
 ```
 This creates several pods and services, of which ```prometheus-k8s-xx``` pods aggregate and timestamp metrics collected from NetScaler devices, and the ```grafana``` pod can be used for visualization. An output similar to this should be seen:
 ```
@@ -108,7 +108,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.5"
+      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.7"
             imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_and_port_of_VPX>"
@@ -160,13 +160,13 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.5"
+          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.7"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:12.1-51.16"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
           imagePullPolicy: Always
           securityContext:
             privileged: true
@@ -228,7 +228,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "in-docker-reg.eng.citrite.net/cpx-dev/cpx:12.1-48.118"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
           securityContext: 
              privileged: true
           env:
@@ -240,7 +240,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.5"
+          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.7"
           args:
             - "--target-nsip=192.168.0.2:80"
             - "--port=8888"
@@ -335,14 +335,13 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [sample services grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 
+3. A dashboard containing graphs similar to any of these following should appear
 
-3. A dashboard containing graphs similar to the following should appear
-
-![image](./images/grafana-dashboard.png)
+<img src="images/service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
 
 4. The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or demo [videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
 

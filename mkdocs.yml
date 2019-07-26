@@ -64,15 +64,20 @@ markdown_extensions:
 # Page tree
 nav:
   - Overview: index.md
+  - Release notes: release-notes.md
+  - Supported platforms and deployments: support-matrix.md
   - Deployment topologies: deployment-topologies.md
-  - Deploy Citrix Ingress Controller: 
+  - Deploy the Citrix ingress controller: 
     - Using YAML: deploy/deploy-cic-yaml.md
     - Using Helm charts: deploy/deploy-cic-helm.md
     - Using Kops: deploy/deploy-cic-kops.md
+    - On Rancher: deploy/deploy-cic-rancher.md
   - Deployment solutions:
+    - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
+    - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
@@ -80,9 +85,11 @@ nav:
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
-    - NodePort: network/nodeport.md
+    - Expose services of type NodePort: network/nodeport.md
+    - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 
     - Using Rewrite and Responder policies in Kubernetes: crds/rewrite-responder.md
+    - VIP: crds/vip.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     - TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
@@ -95,6 +102,7 @@ nav:
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
   - How-to:
+    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
   
 google_analytics:

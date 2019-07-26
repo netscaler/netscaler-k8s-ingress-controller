@@ -1,22 +1,19 @@
 # Default values for citrix-k8s-cpx-ingress-controller.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-cpximage:
-  repository: quay.io/citrix/citrix-k8s-cpx-ingress
-  tag: 12.1-51.16
+cpx:
+  image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29
   pullPolicy: Always
-cicimage:
-  repository: quay.io/citrix/citrix-k8s-ingress-controller
-  tag: 1.1.1
+cic:
+  image: quay.io/citrix/citrix-k8s-ingress-controller:1.2.0
   pullPolicy: Always
+  required: true
 license:
   accept: no
 ingressClass: ["Citrix"]
 exporter: 
-  require: 0
-  image:
-       repository: quay.io/citrix/netscaler-metrics-exporter
-       tag: v1.0.4
-       pullPolicy: Always
+  required: false
+  image: quay.io/citrix/netscaler-metrics-exporter:v1.0.4
+  pullPolicy: Always
   ports:
        containerPort: 8888

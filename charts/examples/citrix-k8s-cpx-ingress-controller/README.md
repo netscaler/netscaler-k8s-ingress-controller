@@ -5,6 +5,9 @@
 
 ## TL;DR;
 ``` 
+git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+cd citrix-k8s-ingress-controller/charts/examples/
+
 helm install citrix-k8s-cpx-ingress-controller --set license.accept=yes
 ```
 > Note: "license.accept" is a mandatory argument and should be set to "yes" to accept the terms of the Citrix license.
@@ -25,7 +28,7 @@ To install the chart with the release name ``` my-release```:
 
 To run the exporter as sidecar with CPX, please install prometheus operator first and then use the following command:
 
-```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass=<ingressClassName>,exporter.require=1.0```
+```helm install citrix-k8s-cpx-ingress-controller --name my-release --set license.accept=yes,ingressClass=<ingressClassName>,exporter.required=true```
 
 If you want to visualize the metrices collected by exporter from Citrix ADC CPX please refer "[Visualization of Metrics](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics)".
 
@@ -44,16 +47,14 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 |```license.accept```|Set to accept to accept the terms of the Citrix license| ```no``` |
-|```cpximage.repository```| CPX Image Repository| ```quay.io/citrix/citrix-k8s-cpx-ingress```|
-|```cpximage.tag```| CPX Image Tag| ```12.1-51.16``` |
-|```cpximage.pullPolicy```| CPX Image Pull Policy  | ```Always``` |
-|```cicimage.repository```| CIC Image Repository| ```quay.io/citrix/citrix-k8s-ingress-controller```|
-|```cicimage.tag```| CIC Image Tag| ```1.1.1``` |
-|```cicimage.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
-|```exporter.require```|Exporter to be run as sidecar with CIC|```0```|
-|```exporter.image.repository```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter```|
-|```exporter.image.tag```|Exporter image tag|```v1.0.4 ```|
-|```exporter.image.pullPolicy```|Exporter Image Pull Policy|```Always```|
+|```cpx.image```| CPX Image Repository| ```quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29```|
+|```cpx.pullPolicy```| CPX Image Pull Policy  | ```Always``` |
+|```cic.image```| CIC Image Repository| ```quay.io/citrix/citrix-k8s-ingress-controller:1.2.0```|
+|```cic.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
+|```cic.required```| CIC to be run as sidecar with Citrix ADC CPX| ```true```|
+|```exporter.required```|Exporter to be run as sidecar with Citrix ADC CPX and CIC|```false```|
+|```exporter.image```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter:v1.0.4```|
+|```exporter.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
 |```ingressClass```| List of name of the Ingress Classes  | ```Citrix``` |
 

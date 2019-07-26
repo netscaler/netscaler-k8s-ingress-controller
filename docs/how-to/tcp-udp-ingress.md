@@ -39,10 +39,10 @@ metadata:
 spec:
     backend:
         serviceName: frontend
-        servicePort: udp_53  /* Service port name defined in the service defination */
+        servicePort: udp-53  /* Service port name defined in the service defination */
 ```
 
-The following is a sample service definition where the service port name is defined as `udp_53`:
+The following is a sample service definition where the service port name is defined as `udp-53`:
 
 ```yml
 apiVersion: v1
@@ -53,7 +53,7 @@ metadata:
     app: bind
 spec:
   ports:
-  - name: udp_53
+  - name: udp-53
     port: 53
     targetPort: 53
     protocol: UDP
@@ -61,7 +61,7 @@ spec:
     name: bind
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.1.3:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.2.0:
 
 ```yml
 apiVersion: extensions/v1beta1

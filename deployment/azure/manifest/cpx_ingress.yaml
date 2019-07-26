@@ -5,7 +5,6 @@ metadata:
   name: citrix-ingress
   annotations:
    kubernetes.io/ingress.class: "citrix-ingress"
-   ingress.citrix.com/secure-backend: "False"
    ingress.citrix.com/insecure-termination: "allow"
 spec:
   tls:

@@ -3,26 +3,32 @@
 # Declare variables to be passed into your templates.
 
 # cpximage contains information needed to fetch CPX image
-cpximage:
-  repository: quay.io/citrix/citrix-k8s-cpx-ingress
-  tag: 12.1-51.16
+cpx:
+  image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29
   pullPolicy: Always
 # cicimage contains information needed to fetch CIC image
-cicimage:
-  repository: quay.io/citrix/citrix-k8s-ingress-controller
-  tag: 1.1.1
+cic:
+  image: quay.io/citrix/citrix-k8s-ingress-controller:1.2.0
   pullPolicy: Always
+  required: true
+# openshift is set to true if charts are being deployed in OpenShift environment.
+openshift: false
+# lsIP contains the Citrix Application Delivery Management (ADM) IP address to license Citrix ADC CPX.
+lsIP:
+# Specify the Citrix ADM port in lsPort only if you have changed it.
+lsPort:
+# Specify the platform license here.
+platform:
 # license is used accept the terms of the Citrix license
 license:
   accept: no
 # ingressClass is the  name of the Ingress Class
 ingressClass:
+defaultSSLCert:
 # exporter conatins information of prometheus-exporter
 exporter:
-  require: 0
-  image:
-    repository: quay.io/citrix/netscaler-metrics-exporter
-    tag: v1.0.4
-    pullPolicy: Always
+  required: false
+  image: quay.io/citrix/netscaler-metrics-exporter:v1.0.4
+  pullPolicy: Always
   ports:
     containerPort: 8888
