@@ -1,12 +1,12 @@
 # Upgrade Citrix ingress controller
 
-This topic explains how to upgrade the Citrix ingress controller instance for Citrix ADC CPX with Citrix ingress controller as sidecar and Citrix ingress controller standalone deployments.
+This topic explains how to upgrade the Citrix ingress controller instance for Citrix ADC CPX with the Citrix ingress controller as sidecar and Citrix ingress controller standalone deployments.
 
 ## Upgrade Citrix ADC CPX with Citrix ingress controller as a sidecar
 
-To upgrade a Citrix ADC CPX with Citrix ingress controller as a sidecar, you can either modify the associated YAML definition file (for example, [citrix-k8s-cpx-ingress.yml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)) or use the Helm chart.
+To upgrade a Citrix ADC CPX with the Citrix ingress controller as a sidecar, you can either modify the associated YAML definition file (for example, [citrix-k8s-cpx-ingress.yml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)) or use the Helm chart.
 
-If you want to upgrade by modifying the YAML defination file, perform the following:
+If you want to upgrade by modifying the **YAML** definition file, perform the following:
 
 1.  Change the version of the Citrix ingress controller and Citrix ADC CPX image under `containers` to the following:
     -  Citrix ADC CPX version: 13.0-36.29 (`quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29`)
@@ -37,13 +37,13 @@ If you want to upgrade by modifying the YAML defination file, perform the follow
         verbs: ["get", "list", "watch"]
     ```
 
-1.  Save the YAML defination file and re-apply the file.
+1.  Save the YAML definition file and reapply the file.
 
 ## Upgrade a standalone Citrix ingress controller to version 1.2.0
 
-To upgrade a standalone Citrix ingress controller instance, you can either modify the YAML definition file or use the Helm chart.
+To upgrade a standalone Citrix ingress controller instance, you can either modify the **YAML** definition file or use the Helm chart.
 
-If you want to upgrade Citrix ingress controller to version 1.2.0 by modifying the YAML defination file, perform the following:
+If you want to upgrade Citrix ingress controller to version 1.2.0 by modifying the **YAML** definition file, perform the following:
 
 1.  Change the version for the Citrix ingress controller image under `containers`. For example, consider you have the following YAML file.
 
@@ -92,4 +92,4 @@ If you want to upgrade Citrix ingress controller to version 1.2.0 by modifying t
         verbs: ["get", "list", "watch"]
     ```
 
-1.  Save the YAML defination file and re-apply the file.
+1.  Save the YAML definition file and reapply the file.
