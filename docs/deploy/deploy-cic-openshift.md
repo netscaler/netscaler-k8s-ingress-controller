@@ -34,6 +34,9 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 | Citrix ADC VPX | 12.1 50.x and later |
 | Citrix ADC CPX | 13.0–36.28 |
 
+!!! note "Note"
+    The [CRDs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd), [annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/), and [smart annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/#smart-annotations) provided for the Citrix ingress controller is not supported for OpenShift routes. You can use OpenShift ingress to use these features.
+
 ## Deploy Citrix ADC CPX as a router within the OpenShift cluster
 
 In this deployment, you can use the Citrix ADC CPX instance for load balancing the North-South traffic to microservices in your OpenShift cluster. The Citrix ingress controller is deployed as a sidecar alongside the Citrix ADC CPX container in the same pod using the [cpx_cic_side_car.yaml](../../deployment/openshift/manifest/cpx_cic_side_car.yaml) file.
