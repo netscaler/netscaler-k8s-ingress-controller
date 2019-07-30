@@ -6,6 +6,9 @@ The **IPAM controller** is provided by Citrix for IP address management. It allo
 
 When a new service is created, the Citrix ingress controller creates a CRD object for the service with an empty IP address field. The IPAM Controller listens to addition, deletion, or modification of the CRD and updates it with an IP address to the CRD. Once the CRD object is updated, the Citrix ingress controller automatically configures Citrix ADC-specfic configuration in the tier-1 Citrix ADC VPX.
 
+!!! note "Note"
+    The VIP CRD is not supported for OpenShift routes. You can use OpenShift ingress to use VIP CRD.
+
 ## Deploy the VIP CRD
 
 Deploy the VIP CRD using the following command:
