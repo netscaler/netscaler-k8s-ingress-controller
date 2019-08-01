@@ -18,6 +18,12 @@ The release notes include one or more of the following sections:
 
 You can create a service of type LoadBalancer and expose it externally using the ingress Citrix ADC. You can manually assign an IP address to the service using the `service.citrix.com/frontend-ip` annotation. Else, you can also automatically assign IP address to service using the IPAM controller provided by Citrix. The Citrix ingress controller configures the assigned IP address as virtual IP (VIP) in the ingress Citrix ADC. And, the service is exposed using the IP address. For more information, see [Expose services of type LoadBalancer](network/type_loadbalancer.md).
 
+#### RedHat OpenShift router sharding support
+
+OpenShift router sharding allows distributing a set of routes among multiple OpenShift routers. By default, an OpenShift router selects all routes from all namespaces. In router sharding, labels are added to routes or namespaces and label selectors to routers for filtering routes. Each router shard selects only routes with specific labels that match its label selection parameters.
+
+Citrix ADC supports OpenShift router sharding when you deploy it as an OpenShift router. For more information, see [Deploy the Citrix ingress controller with OpenShift router sharding support](deploy/deploy-openshift-sharding.md).
+
 #### Establish network connectivity between Kubernetes nodes and Ingress Citrix ADC using Citrix node controller
 
 In Kubernetes environments, when you expose the services for external access through the Ingress device, to route the traffic into the cluster, you need to appropriately configure the network between the Kubernetes nodes and the Ingress device. Configuring the network is challenging as the pods use private IP addresses based on the CNI framework. Without proper network configuration, the Ingress device cannot access these private IP addresses. Also, manually configuring the network to ensure such reachability is cumbersome in Kubernetes environments.
