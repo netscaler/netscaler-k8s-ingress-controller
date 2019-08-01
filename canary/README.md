@@ -5,7 +5,6 @@
 
 ## Contents
 
-  +  [Contents](#contents)
   +  [Software Requirements](#software-requirements)
   +  [Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution](#workflow-of-a-spinnaker-pipeline-for-citrix-adc-integrated-canary-deployment-solution)
   +  [Limitations](#limitations)
@@ -46,7 +45,7 @@ Following Citrix software versions are required for Citrix Integrated Canary Dep
 
 The following diagram explains the workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution.
 
-![Spinnaker_pipeline](media/spinnaker_pipeline.png)
+![Spinnaker_pipeline](../images/spinnaker_pipeline.png)
 
 The following steps explain the workflow specified in the diagram.
 
