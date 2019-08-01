@@ -86,6 +86,7 @@ nav:
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
+    - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
     - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 
