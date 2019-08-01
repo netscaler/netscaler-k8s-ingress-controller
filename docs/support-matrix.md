@@ -57,8 +57,8 @@ The following table lists the Citrix ingress controller features supported on va
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [Type LoadBalancer support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | Yes | Yes | Yes | Yes | Yes | Yes |
-| OpenShift Routes | N/A | N/A | N/A | N/A | Yes | N/A |
-| OpenShift router sharding | N/A | N/A | N/A | N/A | Yes | N/A |
+| [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | N/A | N/A | N/A | N/A | Yes | N/A |
+| [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | N/A | N/A | N/A | N/A | Yes | N/A |
 
 The following table lists the Citrix ingress controller features supported on respective Citrix Ingress Controller version and Citrix ADC versions:
 
@@ -71,8 +71,8 @@ The following table lists the Citrix ingress controller features supported on re
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Type LoadBalancer support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/) | 1.2.0 | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
-| OpenShift Routes | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 |
-| OpenShift router sharding | 1.2.0 | 12.1–51.16 and later | 13.0–36.28 |
+| [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 |
+| [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 | 12.1–51.16 and later | 13.0–36.28 |
 
 ## Container network interface (CNI) for Citrix ADC CPX
 
