@@ -161,13 +161,12 @@ Perform the following steps to deploy the Citrix ADC Integrated Canary Deploymen
 	          enabled: true
                period: 30
                enabled: true
-               
-    1.  To integrate Slack for notification with Spinnaker, update the following values in the ``quick-install.yml`` file.
 
+    1.  To integrate Slack for notification with Spinnaker, update the following values in the ``quick-install.yml`` file.
 
             data:
              config: |
-              deploymentConfigurations:	
+              deploymentConfigurations:
                notifications:
                 slack:
                  enabled: true
@@ -178,6 +177,15 @@ Perform the following steps to deploy the Citrix ADC Integrated Canary Deploymen
     1.  Verify the progress of the deployment using the following command. Once the deployment is complete, this command outputs all the pods as Ready x/x
 
             watch kubectl -n spinnaker get pods
+
+    1.  To enable Spinnaker access, forward a local port to the deck component of Spinnaker using the following command:
+   
+            DECK_POD=$(kubectl -n spinnaker get pods -l \
+            cluster=spin-deck,app=spin \
+            -o=jsonpath='{.items[0].metadata.name}')
+            kubectl -n spinnaker port-forward $DECK_POD 8080:9000 >/dev/null &
+
+    1.  To access Spinnaker, in the Cloud Shell, click the **Web Preview** icon and select **Preview on port 8080**.
 
 ## Troubleshooting
 

@@ -3,6 +3,16 @@
 >**IMPORTANT**
 >This is the beta version of the solution which is still undergoing final testing before its official release.
 
+## Contents
+
+  +  [Contents](#contents)
+  +  [Software Requirements](#software-requirements)
+  +  [Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution](#workflow-of-a-spinnaker-pipeline-for-citrix-adc-integrated-canary-deployment-solution)
+  +  [Limitations](#limitations)
+  +  [Deploy the Citrix ADC Integrated Canary Deployment Solution in Google cloud Platform](#deploy-the-citrix-adc-integrated-canary-deployment-solution-in-google-cloud-platform)
+  +  [Troubleshooting](#troubleshooting)
+  +  [Sample JSON file](#sample-json-file)
+
 Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After user validation, the application is rolled out to the larger set of users. Citrix ADC Integrated Canary Deployment Solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
 
 Citrix ADC comes with a rich application centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Citrix ADC to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Citrix ADC is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta. [Citrix ADC Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Citrix ADC policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to base line and canary leveraging the rich Citrix ADC policy infrastructure.
@@ -36,7 +46,7 @@ Following Citrix software versions are required for Citrix Integrated Canary Dep
 
 The following diagram explains the workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution.
 
-![Spinnaker_pipeline](../Images/spinnaker_pipeline.png)
+![Spinnaker_pipeline](media/spinnaker_pipeline.png)
 
 The following steps explain the workflow specified in the diagram.
 
@@ -161,13 +171,12 @@ Perform the following steps to deploy the Citrix ADC Integrated Canary Deploymen
 	          enabled: true
                period: 30
                enabled: true
-               
-    1.  To integrate Slack for notification with Spinnaker, update the following values in the ``quick-install.yml`` file.
 
+    1.  To integrate Slack for notification with Spinnaker, update the following values in the ``quick-install.yml`` file.
 
             data:
              config: |
-              deploymentConfigurations:	
+              deploymentConfigurations:
                notifications:
                 slack:
                  enabled: true
@@ -178,6 +187,15 @@ Perform the following steps to deploy the Citrix ADC Integrated Canary Deploymen
     1.  Verify the progress of the deployment using the following command. Once the deployment is complete, this command outputs all the pods as Ready x/x
 
             watch kubectl -n spinnaker get pods
+
+    1.  To enable Spinnaker access, forward a local port to the deck component of Spinnaker using the following command:
+   
+            DECK_POD=$(kubectl -n spinnaker get pods -l \
+            cluster=spin-deck,app=spin \
+            -o=jsonpath='{.items[0].metadata.name}')
+            kubectl -n spinnaker port-forward $DECK_POD 8080:9000 >/dev/null &
+
+    1.  To access Spinnaker, in the Cloud Shell, click the **Web Preview** icon and select **Preview on port 8080**.
 
 ## Troubleshooting
 
