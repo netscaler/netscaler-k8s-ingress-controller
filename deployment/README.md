@@ -25,11 +25,14 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
     -  [Smart Annotations](../docs/configure/annotations.md)
 -  Network configuration:
     -  [Static routing](../docs/network/staticrouting.md)
+    -  [Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller](../docs/network/node-controller.md)
     -  [Expose services using NodePort](../docs/network/nodeport.md)
     -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
 -  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
 -  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
+-  [OpenShift router plug-in](../docs/deploy/deploy-cic-openshift.md)
+-  [Openshift router sharding support](../docs/deploy/deploy-openshift-sharding.md)
 
 ## Deployment solutions
 
