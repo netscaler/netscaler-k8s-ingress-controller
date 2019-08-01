@@ -57,10 +57,6 @@ By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix
 
     [[#NSNET-8506]](https://issues.citrite.net/browse/NSNET-8506)
 
--  The router sharding feature in OpenShift is not supported.
-
-    [[#NSNET-8658]](https://issues.citrite.net/browse/NSNET-8658)
-
 -  When you frequently modify the OpenShift route configuration, the Citrix ingress controller might crash with the following SSL exception: `SSL: DECRYPTION_FAILED_OR_BAD_RECORD_MAC`.
 
     [[#NSNET-10027]](https://issues.citrite.net/browse/NSNET-10027)
