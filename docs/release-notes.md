@@ -28,7 +28,8 @@ Citrix ADC supports OpenShift router sharding when you deploy it as an OpenShift
 
 In Kubernetes environments, when you expose the services for external access through the Ingress device, to route the traffic into the cluster, you need to appropriately configure the network between the Kubernetes nodes and the Ingress device. Configuring the network is challenging as the pods use private IP addresses based on the CNI framework. Without proper network configuration, the Ingress device cannot access these private IP addresses. Also, manually configuring the network to ensure such reachability is cumbersome in Kubernetes environments.
 
-Citrix provides a microservice called as **Citrix k8s node controller** that you can use to create the network between the cluster and the Ingress device. For more information, see [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller).
+Citrix provides a microservice called as **Citrix k8s node controller** that you can use to create the network between the cluster and the Ingress device. For more information, see [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) and [Establish network between Kubernetes nodes and Ingress Citrix ADC using Citrix node controller](network/node-controller.md).
+
 
 #### Ability to match the ingress path
 
