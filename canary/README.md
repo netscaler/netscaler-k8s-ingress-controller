@@ -227,9 +227,8 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
 
     1.  To access Spinnaker, in the Cloud Shell, click the **Web Preview icon** and select **Preview on port 8080**.
 
-        !!! note "Note"  
-            You can access Spinnaker securely or via HTTP. To expose Spinnaker seurely, use the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/canary-release/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress.
-            Once the Spinnaker application is publicly exposed, you can use the domain assigned for Spinnaker or IP address of the Ingress to access it.
+        >**Note:**  
+        >You can access Spinnaker securely or via HTTP. To expose Spinnaker seurely, use the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/canary-release/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress. Once the Spinnaker application is publicly exposed, you can use the domain assigned for Spinnaker or IP address of the Ingress to access it.
 
 ### Create a Spinnaker pipeline and configure automated canary deployment
 
@@ -273,16 +272,16 @@ Perform the following steps to deploy a sample application as a canary release.
         kubectl apply -f cic-vpx.yaml
         kubectl apply -f exporter.yaml
 
-    !!! note "Note"
-        Depending on how you are deploying the Citrix ingress controller, you need to edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
+    >**Note:**
+    >Depending on how you are deploying the Citrix ingress controller, you need to edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
 
 1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](manifest/spin-ingress-ssl.yaml) file.
 
 
         kubectl apply -f spin-ingress-ssl.yaml 
 
-    !!! note "Note"
-        For more information on creating a TLS certificate for Ingress, see [TLS certificates in Citrix Ingress Controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/certificate-management/tls-certificate-handling/).
+    >**Note:**
+    >For more information on creating a TLS certificate for Ingress, see [TLS certificates in Citrix Ingress Controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/certificate-management/tls-certificate-handling/).
 
 1. Once Spinnaker is exposed using Citrix ADC, access Spinnaker and perform the steps in [Create a Spinnaker pipeline and configure automated canary deployment](#Create-a-Spinnaker-pipeline-and-configure-automated-canary-deployment) if the steps are not already done. 
  
@@ -303,8 +302,8 @@ Perform the following steps to deploy a sample application as a canary release.
         kubectl apply -f canary-crd-class.yaml
 
 
-    !!! note "Note" 
-        Once you create the CRD, wait for 10 seconds before you apply the CRD object.
+    >**Note:** 
+    >Once you create the CRD, wait for 10 seconds before you apply the CRD object.
 
 1.  Create a CRD object [canary-crd-object.yaml](manifest/canary-crd-object.yaml) based on the canary CRD for customizing the canary configuration.
 
@@ -328,8 +327,8 @@ Perform the following steps to deploy a sample application as a canary release.
 
 1.  Deploy canary and baseline versions of the application.
 
-    !!! note "Note"
-        If you are fully automating the canary deployment, deploy canary and baseline versions using the [Deploy (Manifest) stage](https://www.spinnaker.io/guides/user/kubernetes-v2/deploy-manifest/) in Spinnaker pipeline and there is no need to perform this step.
+    >**Note:**
+    >If you are fully automating the canary deployment, deploy canary and baseline versions using the [Deploy (Manifest) stage](https://www.spinnaker.io/guides/user/kubernetes-v2/deploy-manifest/) in Spinnaker pipeline and there is no need to perform this step.
 
     For manually deploying canary and baseline versions, use [canary.yaml](manifest/canary.yaml) and [baseline.yaml](manifest/baseline.yaml) files.
 
