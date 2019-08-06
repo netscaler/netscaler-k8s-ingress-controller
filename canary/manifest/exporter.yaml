@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exporter
+  labels:
+    name: exporter
+spec:
+  containers:
+    - name: exporter
+      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.8"
+      args:
+        - "--target-nsip=x.x.x.x:80"
+        - "--port=8888"
+        - "--username=nsroot"
+        - "--password=nsroot"
+      imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exporter
+  labels:
+    name: exporter
+spec:
+  type: NodePort
+  ports:
+  - port: 8888
+    targetPort: 8888
+    name: exporter-port
+    nodePort: 30329
+  selector:
+    name: exporter
