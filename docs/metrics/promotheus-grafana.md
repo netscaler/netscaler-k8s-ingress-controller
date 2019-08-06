@@ -12,7 +12,7 @@ The Prometheus Operator has an expansive method of monitoring services on Kubern
 
     git clone https://github.com/coreos/prometheus-operator.git
 
-    kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
+    kubectl create -f kube-prometheus/manifests/
 
 Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-operator), several pods and services are deployed. From the deployed pods, the `prometheus-k8s-xx` pods are for metrics aggregation and timestamping, and the `grafana` pods are for visualization. If you view all the container images running in the cluster, you can see the following output:
 
@@ -31,7 +31,10 @@ Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-opera
     prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
 
 !!! note "Note"
-    It is recommended to expose the Prometheus and Grafana pods through NodePorts. To do so, you need to modify the `prometheus-service.yaml` and `grafana-service.yaml` files as follows:
+    The files in the `manifests` folder are interdependent and hence the order in which they are created is important. In certain scenarios the manifest files might be created out of order and this leads to an error messages from Kubernetes.
+    To resolve this scenario, re-execute the `kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/` command. Any YAML files that were not created the first time due to unmet dependencies, are created now.
+
+It is recommended to expose the Prometheus and Grafana pods through NodePorts. To do so, you need to modify the `prometheus-service.yaml` and `grafana-service.yaml` files as follows:
 
 **prometheus-service.yaml**:
 
@@ -255,7 +258,7 @@ Here, the exporter uses the local IP (`192.168.0.2`) to fetch metrics from the C
 
 The Citrix ADC metrics exporter helps collect data from the Citrix ADC VPX or CPX ingress and Citrix ADC CPX (east-west) devices. The Prometheus Operator needs to detect these exporters so that the metrics can be timestamped, stored, and exposed for visualization on Grafana. The Prometheus Operator uses the concept of ServiceMonitors to detect pods that belong to a service, using the labels attached to that service.
 
-The following example YAML file detects all the exporter services (given in the sample YAML files) which have the label service-type: citrix-adc-monitor associated with them.
+The following example YAML file detects all the exporter services (given in the sample YAML files) which have the label `service-type: citrix-adc-monitor` associated with them.
 
 ```YAML
 apiVersion: monitoring.coreos.com/v1
@@ -276,6 +279,35 @@ spec:
     - monitoring
     - default
 ```
+
+The `ServiceMonitor` directs Prometheus to detect Exporters in the `default` and `monitoring` namespaces only. To detect Exporters from other namespaces add the names of those namespaces under the `namespaceSelector:` field.
+
+!!! note "Note"
+    If the Exporter that needs to be monitored exists in a namespace other than the `default` or `monitoring` namespace, then additional RBAC privileges must be provided to Prometheus to access those namespaces. The following is sample YAML (`prometheus-clusterRole.yaml`) file the provides Prometheus full access to resources across the namespaces:
+
+```yml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-k8s
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes/metrics
+  - namespaces
+  - services
+  - endpoints
+  - pods
+  verbs: ["*"]
+- nonResourceURLs:
+  - /metrics
+  verbs:  ["*"]
+```
+
+To provide additional privileges Prometheus, deploy the sample YAML using the following command:
+
+    kubectl apply -f prometheus-clusterRole.yaml
 
 ### View the metrics in grafana
 
