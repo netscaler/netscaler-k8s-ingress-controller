@@ -183,7 +183,7 @@ The following table lists the mandatory and optional parameters that you can con
 | nodeWatch | Optional | false | Use the argument if you want to automatically configure network route from the Ingress Citrix ADC VPX or MPX to the pods in the Kubernetes cluster. For more information, see [Automatically configure route on the Citrix ADC instance](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/staticrouting/#automatically-configure-route-on-the-citrix-adc-instance). |
 | defaultSSLCert | Optional | N/A | Default SSL certificate that needs to be used as a non-SNI certificate in Citrix ADC. |
 | exporter.required | Optional | false | Use the argument, if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with CIC to pull metrics for the Citrix ADC VPX or MPX|
-| exporter.image    | Optional | `quay.io/citrix/netscaler-metrics-exporter:v1.0.4` | The Exporter image. |
+| exporter.image    | Optional | `quay.io/citrix/netscaler-metrics-exporter:1.0.9` | The Exporter image. |
 | exporter.pullPolicy | Optional | Always | The Exporter image pull policy. |
 | exporter.ports.containerPort | Optional | 8888 | The Exporter container port. |
 | openshift | Optional | false | Set this argument if OpenShift environment is being used. |
