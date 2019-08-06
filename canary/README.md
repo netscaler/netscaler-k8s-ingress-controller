@@ -46,7 +46,7 @@ Following Citrix software versions are required for Citrix-Integrated Canary Dep
 
 -  Citrix ingress controller build/version: `quay.io/citrix/citrix-k8s-ingress-controller:canary-b1`
 -  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.2701` and later
--  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.0.8` and later
+-  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:canary-exporter-b1`
 
 ## Workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution
 
@@ -77,8 +77,8 @@ The following limitations exist for Citrix ADC-Integrated Canary Deployment Solu
 
       -  `path-match-method`
 
--  For `secure-service-type` annotation: Only SSL is supported.  
--  For the `insecure-service-type` only HTTP is supported.
+-  For the `secure-service-type` annotation: Only SSL is supported.  
+-  For the `insecure-service-type` annotation: Only HTTP is supported.
 -  After the creation of a CRD class, there should be a delay of 10 seconds before creating the CRD object for the class.
 
 ## Deploy the Citrix ADC-Integrated Canary Deployment Solution in Google Cloud Platform
@@ -212,9 +212,6 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
             kubectl apply -f quick-install.yaml
 
 
-        
-    1.  To expose Spinnaker securely to public like any other application using Citrix ADC and Citrix ingress controller, see [Citrix ingress controller documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
-
     1.  Verify the progress of the deployment using the following command. Once the deployment is complete, this command outputs all the pods as Ready x/x. 
 
             watch kubectl -n spinnaker get pods
@@ -265,9 +262,9 @@ Perform the following steps to deploy a sample application as a canary release.
 
 1. You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
 
-    Use the [cpx-with-cic-sidecar.yaml](manifest/cpx-with-cic-sidecar.yaml) file to deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX. It also deploys Citrix ADC Metrics Exporter on the same pod.
+    Use the [cpx-with-cic-sidecar.yaml](manifest/cpx-with-cic-sidecar.yml) file to deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX. It also deploys Citrix ADC Metrics Exporter on the same pod.
     
-        kubectl apply -f cpx-with-cic-sidecar.yaml 
+        kubectl apply -f cpx-with-cic-sidecar.yml 
     
     
      To deploy the Citrix ingress controller as a stand-alone pod for Citrix ADC VPX or MPX use the [cic-vpx.yaml](manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](manifest/exporter.yaml) file to deploy Citrix ADC Metrics Exporter.
@@ -279,7 +276,7 @@ Perform the following steps to deploy a sample application as a canary release.
     !!! note "Note"
         Depending on how you are deploying the Citrix ingress controller, you need to edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
 
-1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](manifest/spin-ingress-ssl.yaml).
+1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](manifest/spin-ingress-ssl.yaml) file.
 
 
         kubectl apply -f spin-ingress-ssl.yaml 
@@ -301,7 +298,7 @@ Perform the following steps to deploy a sample application as a canary release.
 
         kubectl apply -f service.yaml
 
-1.  Deploy the canary CRD that defines the canary configuration using the [canary-crd-class.yaml](manifest/canary-crd-class.yaml).
+1.  Deploy the canary CRD that defines the canary configuration using the [canary-crd-class.yaml](manifest/canary-crd-class.yaml) file.
 
         kubectl apply -f canary-crd-class.yaml
 
