@@ -4,7 +4,7 @@ metadata:
   name: cpx 
 rules:
   - apiGroups: [""]
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "events"]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "events", "nodes"]
     verbs: ["*"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
@@ -13,12 +13,8 @@ rules:
     resources: ["deployments", "replicasets"]
     verbs: ["*"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "continuousdeployments"]
+    resources: ["continuousdeployments", "rewritepolicies"]
     verbs: ["*"]
-  - apiGroups: ["apiextensions.k8s.io"]
-    resources: ["customresourcedefinitions"]
-    verbs: ["get", "list", "watch"]
-
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -37,5 +33,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cpx
+  name: cpx 
   namespace: default
+---
