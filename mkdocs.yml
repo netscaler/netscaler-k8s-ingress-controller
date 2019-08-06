@@ -74,11 +74,12 @@ nav:
     - On Rancher: deploy/deploy-cic-rancher.md
   - Deployment solutions:
     - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
+    - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
-  - Canary deployments (beta): canary.md
+  - Citrix ADC Integrated canary deployment solution (beta): canary/canary.md
     #- Software Requirements: canary.md#software-requirements
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
     #- Deploy the Citrix ADC Integrated Canary Deployment Solution in Google cloud Platform:
@@ -90,6 +91,7 @@ nav:
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
+    - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
     - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 

@@ -20,7 +20,7 @@ spec:
       serviceAccountName: cpx 
       containers:
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.8"
+          image: "quay.io/citrix/netscaler-metrics-exporter:canary-exporter-b1"
           args:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
