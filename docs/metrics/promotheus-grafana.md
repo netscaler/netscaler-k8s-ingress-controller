@@ -98,7 +98,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
+      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
             imagePullPolicy: IfNotPresent
       args:
         - "--target-nsip=<IP_and_port_of_VPX>"
@@ -171,7 +171,7 @@ spec:
               containerPort: 9443
         # Adding exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
+          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
           imagePullPolicy: IfNotPresent
           args:
             - "--target-nsip=192.0.0.2"
@@ -228,7 +228,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:v1.0.0"
+          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
           args:
             - "--target-nsip=192.168.0.2:80"
             - "--port=8888"
