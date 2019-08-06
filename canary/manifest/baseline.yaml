@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: fronthotdrinksapp-baseline-deployment
+  labels:
+      name: fronthotdrinksapp
+  namespace: default
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 10
+      maxUnavailable: 10
+  template:
+    metadata:
+      labels:
+        name: fronthotdrinksapp
+        dep: cddep
+        version: "prod version"
+    spec:
+      containers:
+      - name: fronthotdrinksapp
+        image: "index.docker.io/application/fronthotdrinksapp:v1"
+        imagePullPolicy: Always
+        ports:
+        - name: port-8080
+          containerPort: 8080

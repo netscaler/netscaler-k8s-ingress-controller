@@ -1,0 +1,91 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cpx-ingress
+  labels:
+    name: cpx-ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cpx-ingress
+  template:
+    metadata:
+      labels:
+        name: cpx-ingress
+      annotations:
+        NETSCALER_AS_APP: "True"
+    spec:
+      serviceAccountName: cpx 
+      containers:
+        - name: exporter
+          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.8"
+          args:
+            - "--target-nsip=127.0.0.1"
+            - "--port=8888"
+          imagePullPolicy: Always
+        - name: cpx-ingress
+          image: "quay.io/citrix/cpx: 13.0-36.2701"
+          securityContext:
+            privileged: true
+          env:
+            - name: "EULA"
+              value: "YES"
+            - name: "KUBERNETES_TASK_ID"
+              value: ""
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+            - name: nitro-http
+              containerPort: 9080
+            - name: nitro-https
+              containerPort: 9443
+
+          #This is required for Health check to succeed
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 9080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          imagePullPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cpx-ingress
+  labels:
+    name: cpx-ingress
+spec:
+        #externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    name: cpx-ingress
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: exporter
+  labels:
+    name: exporter
+spec:
+  type: ClusterIP
+  selector:
+    name: cpx-ingress
+  ports:
+    - name: exporter-port
+      port: 8888
+      targetPort: 8888
