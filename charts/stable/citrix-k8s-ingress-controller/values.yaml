@@ -32,7 +32,7 @@ nodeWatch: false
 # exporter conatins information of prometheus-exporter
 exporter:
   required: false
-  image: quay.io/citrix/netscaler-metrics-exporter:v1.0.4
+  image: quay.io/citrix/netscaler-metrics-exporter:1.0.9
   pullPolicy: Always
   ports:
        containerPort: 8888
