@@ -1,0 +1,114 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cpx-ingress-deployment
+  labels:
+    name: cpx-ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cpx-ingress
+  template:
+    metadata:
+      name: cpx-ingress
+      labels:
+        name: cpx-ingress
+      annotations:
+        NETSCALER_AS_APP: "True"
+    spec:
+      serviceAccountName: cpx 
+      containers:
+        - name: exporter
+          image: "quay.io/citrix/netscaler-metrics-exporter:canary-exporter-b1"
+          args:
+            - "--target-nsip=127.0.0.1"
+            - "--port=8888"
+          imagePullPolicy: Always
+        - name: cic-k8s-ingress-controller
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:canary-b1"
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "NS_IP"
+            value: "127.0.0.1"
+          - name: "NS_PROTOCOL"
+            value: "HTTP"
+          - name: "NS_PORT"
+            value: "80"
+          - name: "NS_DEPLOYMENT_MODE"
+            value: "SIDECAR"
+          - name: "NS_ENABLE_MONITORING"
+            value: "YES"
+          - name: cic-k8s-ingress-controller
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: default
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          imagePullPolicy: Always
+        - name: cpx-ingress
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.2701"
+          securityContext:
+            privileged: true
+          env:
+            - name: "EULA"
+              value: "YES"
+            - name: "KUBERNETES_TASK_ID"
+              value: ""
+          args:
+            - --ingress-classes
+              canarydemo
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+            - name: nitro-http
+              containerPort: 9080
+            - name: nitro-https
+              containerPort: 9443
+          imagePullPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cpx-ingress
+  labels:
+    name: cpx-ingress
+spec:
+        #externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    name: cpx-ingress
+  ports:
+    - name: http
+      port: 80
+    - name: https
+      port: 443
+    - name: nitro-http
+      port: 9080
+      nodePort: 30328
+    - name: nitro-https
+      port: 9443
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: exporter
+  labels:
+    name: exporter
+spec:
+  type: NodePort
+  selector:
+    name: cpx-ingress
+  ports:
+    - name: exporter-port
+      port: 8888
+      targetPort: 8888
+      nodePort: 30329
+
