@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fronthotdrinksapp
+  namespace: default
+  annotations:
+   kubernetes.io/ingress.class: canarydemo
+spec:
+  rules:
+  - host: canarydemo.com 
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: fronthotdrinksapp
+          servicePort: 8080
