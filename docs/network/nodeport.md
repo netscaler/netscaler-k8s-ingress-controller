@@ -8,6 +8,8 @@ To create the service of type [NodePort](https://kubernetes.io/docs/concepts/ser
 
 ## Sample deployment
 
+Consider a scenario wherein you are using a NodePort based service, for example, an `apache` app and want to expose the app to North-South traffic using an ingress. In this case, you need to create the `apache` app deployment, define the service of type `NodePort`, and create an ingress definition to configure ingress Citrix ADC to send the North-South traffic to the nodeport of the `apache` app.
+
 In this section, we shall create a Deployment, `apache`, and deploy it in your Kubernetes cluster. The following is a manifest for the Deployment:
 
 ```yaml
@@ -27,7 +29,7 @@ spec:
   selector:
     matchLabels:
       app: apache
-  replicas: 8
+  replicas: 4
   template:
     metadata:
       labels:
@@ -48,7 +50,7 @@ Copy the manifest to a file named `apache-deployment.yaml` and create the Deploy
 
     kubectl create -f apache-deployment.yaml
 
-Verify that eight Pods are running using the following:
+Verify that four Pods are running using the following:
 
     kubectl get pods
 
@@ -77,3 +79,18 @@ Copy the manifest to a file named `apache-service.yaml` and create the service u
     kubectl create -f apache-service.yaml
 
 The sample deploys and exposes the apache web server as a service. You can access the service using the `<NodeIP>:<NodePort>` address.
+
+After you have deployed the service, create an ingress definition to configure the ingress Citrix ADC to send the North-South traffic to the nodeport of the `apache` app. The following is a manifest for the ingress definition:
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vpx-ingress
+  annotations:
+   ingress.citrix.com/frontend-ip: "xx.xxx.xxx.xx" # This IP address is configured in Citrix ADC as VIP.
+spec:
+  backend:
+    serviceName: apache
+    servicePort: 80
+```
