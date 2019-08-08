@@ -1,0 +1,137 @@
+#Using a basic apache web server as application for illustration
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: apache
+  labels:
+      name: apache
+spec:
+  selector:
+    matchLabels:
+      app: apache
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: httpd:latest
+        ports:
+        - containerPort: 80
+
+---
+#Expose the apache web server as a Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: apache
+---
+#Cluster role required by CIC
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
+    verbs: ["*"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies", "vips"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+---
+#Cluster role bindings required by CIC
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cic-k8s-role
+subjects:
+- kind: ServiceAccount
+  name: cic-k8s-role
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+---
+#Service account for CIC
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cic-k8s-role
+  namespace: default
+---
+# Deploy the CIC as a pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-k8s-ingress-controller
+  labels:
+    app: cic-k8s-ingress-controller
+spec: 
+      serviceAccountName: cic-k8s-role
+      containers:
+      - name: cic-k8s-ingress-controller
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
+        env:
+         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+         - name: "NS_IP"
+           value: "X.X.X.X"
+         # Set username for Nitro
+         - name: "NS_USER"
+           valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: username
+         # Set user password for Nitro
+         - name: "NS_PASSWORD"
+           valueFrom:
+            secretKeyRef:
+             name: nslogin
+             key: password
+         # Set NetScaler VIP for the data traffic
+         - name: "NS_VIP"
+           value: "X.X.X.X"
+         # Set log level
+         - name: "EULA"
+           value: "yes"
+        # --feature-node-watch is not required due to native VPC routing
+        args:
+          - --ingress-classes
+            citrix-ingress
+        imagePullPolicy: Always
+---
+#Specify the ingress resource
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: citrix-ingress
+  annotations:
+   kubernetes.io/ingress.class: "citrix-ingress"
+spec:
+  rules:
+  - host: citrix-ingress.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: apache
+          servicePort: 80
+---
