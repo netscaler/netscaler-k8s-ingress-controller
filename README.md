@@ -19,6 +19,9 @@ This repository contains Citrix ingress controller built around  [Kubernetes Ing
 To get community support, you can:
 - join the Traefik community forum: [![Join the chat at https://community.containo.us/](https://img.shields.io/badge/style-register-green.svg?style=social&label=Discourse)](https://community.containo.us/)
 
+To get community support, you can:
+- join the CIC slack community forum: [![Join the chat at https://citrixadccloudnative.slack.com](https://img.shields.io/badge/style-register-green.svg?style=social&label=Discourse)](https://citrixadccloudnative.slack.com)
+
 ## What is an ingress controller?
 
 An Ingress Controller is a controller that watches the Kubernetes API server for updates to the Ingress resource and reconfigures the Ingress load balancer accordingly.
