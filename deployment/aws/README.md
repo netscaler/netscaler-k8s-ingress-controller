@@ -1,7 +1,12 @@
 # Deploy Citrix Ingress Controller in EKS with Citrix ADC VPX
 
 Please follow the instructions provided in [Deploy Citrix Ingress Controller in EKS with Citrix ADC
-VPX](quick-deploy-cic/README.md)
+VPX](quick-deploy-cic/README.md).
+
+# Deploy a Citrix ADC CPX Instance in Docker
+
+Please follow the instructions provided in [Deploy a Citrix ADC CPX Instance in Docker](quick-deploy-cpx/README.md).
+
 
 # Citrix ADC CPX as an Ingress in Amazon Web Services (AWS)
 
