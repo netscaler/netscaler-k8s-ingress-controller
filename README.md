@@ -14,6 +14,8 @@ This repository contains Citrix ingress controller built around  [Kubernetes Ing
 
    You can discuss questions/bugs/feature requests for this project on our Slack channel. To request an invitation to participate in the Citrix ADC Cloud Native Slack channel(citrixadccloudnative.slack.com), please supply your email address using this form: https://podio.com/webforms/22979270/1633242 . You can also create issues using the bug reporting template.
 
+- join the CIC community forum: [![Join the chat at https://citrixadccloudnative.slack.com](https://img.shields.io/badge/style-register-green.svg?style=social&label=Discourse)]
+
 ## What is an ingress controller?
 
 An Ingress Controller is a controller that watches the Kubernetes API server for updates to the Ingress resource and reconfigures the Ingress load balancer accordingly.
