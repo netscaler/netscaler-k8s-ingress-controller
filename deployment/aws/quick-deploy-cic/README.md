@@ -83,10 +83,12 @@ This is required for Citrix ADC to interact with the pods inside the Kubernetes 
 #### Update the Citrix ADC VPX management IP and VIP in the Citrix Ingress controller manifest
 
 ```
-wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic-vpx-all-in-one.yaml
+wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
 ```
 
-Update the Citrix ADC VPX's primary IP in the `cic-vpx-all-in-one.yaml` in the below field
+***If you don't have `wget` installed, you can use `fetch` or `curl`***
+
+Update the Citrix ADC VPX's primary IP in the `cic.yaml` in the below field
 
 ```
 # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
@@ -94,7 +96,7 @@ Update the Citrix ADC VPX's primary IP in the `cic-vpx-all-in-one.yaml` in the b
   value: "X.X.X.X"
 ```
 
-Update the Citrix ADC VPX VIP in the `cic-vpx-all-in-one.yaml` in the below field. This is the private IP to which you have assigned an EIP.
+Update the Citrix ADC VPX VIP in the `cic.yaml` in the below field. This is the private IP to which you have assigned an EIP.
 
 ```
 # Set NetScaler VIP for the data traffic
@@ -107,10 +109,37 @@ Update the Citrix ADC VPX VIP in the `cic-vpx-all-in-one.yaml` in the below fiel
 Now that we have configure the Citrix Ingress controller with the required values, let's deploy it.
 
 ```
-kubectl create -f cic-vpx-all-in-one.yaml
+kubectl create -f cic.yaml
 ```
 
-This is an all in one manifest that would create a example microservice, Citrix ingress controller and the ingress resource.
+## Create example microservice and Ingress
+
+#### Example Microservice
+
+In this example, we will deploy an Apache microservice.
+
+Please  update the image field with the required Apache image.
+
+```
+wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/apache.yaml
+```
+
+***If you don't have `wget` installed, you can use `fetch` or `curl`***
+
+
+Create the microservice
+
+```
+kubectl create -f apache.yaml
+```
+
+#### Ingress
+
+Now let's apply the ingress 
+
+```
+kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/ingress.yaml
+```
 
 ## Test your deployment
 
@@ -121,5 +150,5 @@ $ curl --resolve citrix-ingress.com:80:<EIP-of-VIP> http://citrix-ingress.com
 <html><body><h1>It works!</h1></body></html>
 ```
 
-The response received is from example microservice which is inside the Kubernetes cluster. Citrix ADC VPX being an ingress has load-balanced the request.
+The response received is from example microservice (apache) which is inside the Kubernetes cluster. Citrix ADC VPX being an ingress has load-balanced the request.
 
