@@ -1,14 +1,14 @@
-#Deploying a Citrix ADC CPX Instance in Docker
+# Deploying a Citrix ADC CPX Instance in Docker
 This guide provides the step-by-step approach to deploy a Citrix ADC CPX on docker in Linux environment.
 
-##Pre-requisites:
+## Pre-requisites:
 [Linux machine with docker] (https://docs.docker.com/v17.12/install/#supported-platforms)
 
-##System Requirements:
+## System Requirements:
    * RAM : 2 GB
    * CPU : 1
 
-##Pulling Citrix ADC CPX docker image:
+## Pulling Citrix ADC CPX docker image:
 Use the following command to pull the CPX image from quay
 
 ```
@@ -22,7 +22,7 @@ root@ubuntu:~# docker images | grep 'citrix-k8s-cpx-ingress'
 quay.io/citrix/citrix-k8s-cpx-ingress                  13.0-36.29          952a04e73101        2 months ago        469 MB
 ```
 
-##Using 'docker run' command to deploy CPX container:
+## Using 'docker run' command to deploy CPX container:
 Use the following command to create a CPX container instance running in bridge mode
 
 ```
@@ -89,7 +89,7 @@ root@00d58f020a9e:~#
 ```
 
 
-##Using CLI/NITRO on Citrix ADC CPX
+## Using CLI/NITRO on Citrix ADC CPX
 CPX can be configured using **cli_script.sh** or **NITRO API** calls
 
 Using **cli_script.sh** (Requires execution from CPX Shell)
@@ -111,7 +111,7 @@ root@ubuntu:~# curl -u nsroot:nsroot http://172.17.0.6:9080/nitro/v1/config/nsip
 { "errorcode": 0, "message": "Done", "severity": "NONE", "nsip": [ { "ipaddress": "172.17.0.6", "td": "0", "type": "NSIP", "netmask": "255.255.0.0", "flags": "40", "arp": "ENABLED", "icmp": "ENABLED", "vserver": "ENABLED", "telnet": "ENABLED", "ssh": "ENABLED", "gui": "ENABLED", "snmp": "ENABLED", "ftp": "ENABLED", "mgmtaccess": "ENABLED", "restrictaccess": "DISABLED", "decrementttl": "DISABLED", "dynamicrouting": "ENABLED", "hostroute": "DISABLED", "advertiseondefaultpartition": "DISABLED", "networkroute": "DISABLED", "tag": "0", "hostrtgwact": "0.0.0.0", "metric": 0, "ospfareaval": "0", "vserverrhilevel": "ONE_VSERVER", "vserverrhimode": "DYNAMIC_ROUTING", "viprtadv2bsd": false, "vipvsercount": "0", "vipvserdowncount": "1", "vipvsrvrrhiactivecount": "0", "vipvsrvrrhiactiveupcount": "0", "ospflsatype": "TYPE5", "state": "ENABLED", "freeports": "1032095", "riserhimsgcode": 32, "iptype": [ "NSIP" ], "icmpresponse": "NONE", "ownernode": "255", "arpresponse": "NONE", "ownerdownresponse": "YES" }, { "ipaddress": "192.0.0.1", "td": "0", "type": "SNIP", "netmask": "255.255.255.0", "flags": "8", "arp": "ENABLED", "icmp": "ENABLED", "vserver": "DISABLED", "telnet": "DISABLED", "ssh": "DISABLED", "gui": "DISABLED", "snmp": "DISABLED", "ftp": "DISABLED", "mgmtaccess": "DISABLED", "restrictaccess": "DISABLED", "decrementttl": "DISABLED", "dynamicrouting": "DISABLED", "hostroute": "DISABLED", "advertiseondefaultpartition": "DISABLED", "networkroute": "DISABLED", "tag": "0", "hostrtgwact": "0.0.0.0", "metric": 0, "ospfareaval": "0", "vserverrhilevel": "ONE_VSERVER", "vserverrhimode": "DYNAMIC_ROUTING", "viprtadv2bsd": false, "vipvsercount": "0", "vipvserdowncount": "0", "vipvsrvrrhiactivecount": "0", "vipvsrvrrhiactiveupcount": "0", "ospflsatype": "TYPE5", "state": "ENABLED", "freeports": "1032079", "riserhimsgcode": 0, "iptype": [ "SNIP" ], "icmpresponse": "NONE", "ownernode": "255", "arpresponse": "NONE", "ownerdownresponse": "YES" } ] }root@ubuntu:~#
 ```
 
-##Load-balancing using Citrix ADC CPX
+## Load-balancing using Citrix ADC CPX
 
 An example to configure CPX to load-balance HTTP traffic between two Application containers on same Linux host.
 
@@ -266,5 +266,6 @@ Done
 root@ubuntu:~#
    ```
    
-   ##More Info about Citrix ADC CPX
-   Please refer to [CPX Documentation] (https://docs.citrix.com/en-us/citrix-adc-cpx/13/)
+## More Info about Citrix ADC CPX
+
+Please refer to [CPX Documentation] (https://docs.citrix.com/en-us/citrix-adc-cpx/13/)
