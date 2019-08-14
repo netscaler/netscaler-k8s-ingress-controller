@@ -1,4 +1,4 @@
-# Quick Deploy Citrix Ingress Controller in EKS with Citrix ADC VPX
+# Deploy Citrix Ingress Controller in EKS with Citrix ADC VPX
 
 This guide details the steps to deploy Citrix Ingress Controller in EKS with Citrix ADC VPX.
 
