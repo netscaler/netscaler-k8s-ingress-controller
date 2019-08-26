@@ -26,7 +26,7 @@ Kubernetes clusters in public clouds such as [Amazon Web Services (AWS)](https:/
 **Cloud deployment with Cloud LB in tier-1:**
 ![Cloud deployment with CLB in tier-1](media/cloud-deploy-clb-tier-1.png)
 
-## Using the Ingress ADC for East-West traffic
+## Service mesh lite
 
 When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network (East-West) traffic between microservices within the cluster. For this, the target microservice needs to be deployed in [headless](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) mode to bypass [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy), so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  
 
