@@ -29,7 +29,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
     -  [Expose services using NodePort](../docs/network/nodeport.md)
     -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
--  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
+-  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
 -  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
 -  [Canary deployment support](../docs/canary/canary.md)
 -  [OpenShift router plug-in](../docs/deploy/deploy-cic-openshift.md)
