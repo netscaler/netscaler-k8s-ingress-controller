@@ -146,7 +146,8 @@ spec:
 
 1.  In cases wherein if multiple secrets are provided to the Citrix ingress controller the following precedence is followed:
 
-        default-ssl-certificate < preconfigured-default-certkey or non-host tls secret.
+    1.  preconfigured-default-certkey or non-host tls secret
+    1.  default-ssl-certificate
 
 1.  If there is a conflict in precedence among the same grade certificates (for example, two ingress files configure a non-host TLS secret each, as default/non-SNI type), then the Citrix ingress controller binds the Citrix ingress controller default certificate as the non-SNI certificate and uses all other certificates with SNI.
 
