@@ -1,10 +1,10 @@
 # View metrics of Citrix ADCs using Prometheus and Grafana
 
-You can use the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
+You can use the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
 
 ## Citrix ADC metrics exporter
 
-Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter).
+Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter).
 
 ## Launch prometheus operator
 
@@ -85,7 +85,7 @@ After you modify the `grafana-service.yaml`file, apply the changes to the Kubern
 
 ## Configure Citrix ADC metrics exporter
 
-This topic describes how to integrate the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) with Citrix ADC VPX or CPX ingress or Citrix ADC CPX (east-west) devices.
+This topic describes how to integrate the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) with Citrix ADC VPX or CPX ingress or Citrix ADC CPX (east-west) devices.
 
 **Citrix ADC VPX Ingress device**:
 
@@ -319,7 +319,7 @@ To view the metrics graphically:
 
 1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_grafana_dashboard.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 
