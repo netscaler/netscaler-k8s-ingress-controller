@@ -7,7 +7,7 @@ Canary release is a technique to reduce the risk of introducing a new software v
 
 Citrix ADC comes with a rich application-centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Citrix ADC to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Citrix ADC is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta.
 
- [Citrix ADC Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Citrix ADC policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to baseline and canary leveraging the rich Citrix ADC policy infrastructure.
+ [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Citrix ADC policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to baseline and canary leveraging the rich Citrix ADC policy infrastructure.
 
 For example, you can divert traffic from production to canary and baseline using the match expression HTTP.REQ.URL.CONTAINS("citrix india"). The traffic which matches the expression is diverted to canary and baseline and the remaining traffic goes to production.
 
@@ -152,7 +152,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
    	            username: <username>
 	            password: <password>
 
-    1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Citrix ADC Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) and perform the steps.
+    1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and perform the steps.
 
     1.  To integrate Prometheus with Spinnaker, update the following values in the ``quick-install.yml`` file.
 

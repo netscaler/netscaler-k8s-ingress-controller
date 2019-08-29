@@ -161,7 +161,7 @@ Use the following command for this:
 The following components are installed:
 
 -  [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller)
--  [Exporter](https://github.com/citrix/netscaler-metrics-exporter) (if enabled)
+-  [Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) (if enabled)
 
 ### Configuration
 
@@ -182,7 +182,7 @@ The following table lists the mandatory and optional parameters that you can con
 | ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify CIC to configure Citrix ADC associated with specific ingress class. For more information on Ingress class, see [Ingress class support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/ingress-classes/). |
 | nodeWatch | Optional | false | Use the argument if you want to automatically configure network route from the Ingress Citrix ADC VPX or MPX to the pods in the Kubernetes cluster. For more information, see [Automatically configure route on the Citrix ADC instance](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/staticrouting/#automatically-configure-route-on-the-citrix-adc-instance). |
 | defaultSSLCert | Optional | N/A | Default SSL certificate that needs to be used as a non-SNI certificate in Citrix ADC. |
-| exporter.required | Optional | false | Use the argument, if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with CIC to pull metrics for the Citrix ADC VPX or MPX|
+| exporter.required | Optional | false | Use the argument, if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/citrix-adc-metrics-exporter) along with CIC to pull metrics for the Citrix ADC VPX or MPX|
 | exporter.image    | Optional | `quay.io/citrix/netscaler-metrics-exporter:1.0.9` | The Exporter image. |
 | exporter.pullPolicy | Optional | Always | The Exporter image pull policy. |
 | exporter.ports.containerPort | Optional | 8888 | The Exporter container port. |
