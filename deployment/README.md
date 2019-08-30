@@ -41,3 +41,4 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 1.  [Google Cloud](../docs/deploy/deploy-gcp.md)
 1.  [Azure Cloud](../docs/deploy/deploy-azure.md)
 1.  [Rancher managed Kubernetes cluster](../docs/deploy/deploy-cic-rancher.md)
+1.  [Pivotal Container Service (PKS)](../docs/deploy/deploy-pks.md)
