@@ -1,7 +1,7 @@
-Metrics Visualization of NetScaler Appliances in Kubernetes
+Metrics Visualization of Citrix ADC Appliances in Kubernetes
 ===
 
-This document describes how the [NetScaler Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
+This document describes how the [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
 
 
 Launching Promethus-Operator
@@ -96,7 +96,7 @@ This section describes how to integrate the NetScaler Metrics Exporter with the 
 <summary>VPX Ingress Device</summary>
 <br>
 
-To monitor an ingress VPX device, the netscaler-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. An example yaml file to deploy such an exporter is given below:
+To monitor an ingress VPX device, the citrix-adc-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. An example yaml file to deploy such an exporter is given below:
 
 ```
 apiVersion: v1
@@ -108,7 +108,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.1"
             imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_and_port_of_VPX>"
@@ -160,7 +160,7 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.1"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
@@ -240,7 +240,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.1"
           args:
             - "--target-nsip=192.168.0.2:80"
             - "--port=8888"
@@ -335,13 +335,13 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [sample services grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s sample services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_sample_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 
 3. A dashboard containing graphs similar to any of these following should appear
 
-<img src="images/service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
+<img src="images/k8s-service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
 
 4. The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or demo [videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
 
