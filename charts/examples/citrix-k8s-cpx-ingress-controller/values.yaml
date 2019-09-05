@@ -13,7 +13,7 @@ license:
 ingressClass: ["Citrix"]
 exporter: 
   required: false
-  image: quay.io/citrix/netscaler-metrics-exporter:1.0.9
+  image: quay.io/citrix/citrix-adc-metrics-exporter:1.1
   pullPolicy: Always
   ports:
        containerPort: 8888

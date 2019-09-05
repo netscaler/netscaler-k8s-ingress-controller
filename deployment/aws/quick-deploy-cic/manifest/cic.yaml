@@ -1,38 +1,3 @@
-#Using a basic apache web server as application for illustration
-apiVersion: apps/v1beta2
-kind: Deployment
-metadata:
-  name: apache
-  labels:
-      name: apache
-spec:
-  selector:
-    matchLabels:
-      app: apache
-  replicas: 6
-  template:
-    metadata:
-      labels:
-        app: apache
-    spec:
-      containers:
-      - name: apache
-        image: httpd:latest
-        ports:
-        - containerPort: 80
-
----
-#Expose the apache web server as a Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: apache
-spec:
-  ports:
-  - port: 80
-    targetPort: 80
-  selector:
-    app: apache
 ---
 #Cluster role required by CIC
 kind: ClusterRole
@@ -89,7 +54,8 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
+        # CIC Image from AWS Marketplace
+        image: "117940112483.dkr.ecr.us-east-1.amazonaws.com/9893a514-39ef-47cd-b1df-24312ff2c810/cg-1706352000/quay.io/citrix/citrix-k8s-ingress-controller:1.2.0-latest"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
          - name: "NS_IP"
@@ -117,21 +83,4 @@ spec:
           - --ingress-classes
             citrix-ingress
         imagePullPolicy: Always
----
-#Specify the ingress resource
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: citrix-ingress
-  annotations:
-   kubernetes.io/ingress.class: "citrix-ingress"
-spec:
-  rules:
-  - host: citrix-ingress.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
 ---
