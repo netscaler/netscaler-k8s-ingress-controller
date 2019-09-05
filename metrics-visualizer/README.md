@@ -108,7 +108,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.1"
             imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_and_port_of_VPX>"
@@ -160,7 +160,7 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.1"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
@@ -240,7 +240,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.1"
           args:
             - "--target-nsip=192.168.0.2:80"
             - "--port=8888"
@@ -335,13 +335,13 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [sample services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s sample services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_sample_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 
 3. A dashboard containing graphs similar to any of these following should appear
 
-<img src="images/service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
+<img src="images/k8s-service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
 
 4. The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or demo [videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
 
