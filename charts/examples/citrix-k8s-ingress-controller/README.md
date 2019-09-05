@@ -58,7 +58,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
 |```nsVIP```| VIP IP |```nil``` 
 |```exporter.required```|Exporter to be run as sidecar with CIC|```false```|
-|```exporter.image```|Exporter image repository|```quay.io/citrix/netscaler-metrics-exporter:1.0.9```|
+|```exporter.image```|Exporter image repository|```quay.io/citrix/citrix-adc-metrics-exporter:1.1```|
 |```exporter.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
 |```ingressClass```| List of name of Ingress Classes |```Citrix```|
@@ -99,7 +99,7 @@ The created filename can be passed to values.yaml.
 By default the chart will install the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and rolebindings.
 
 ## Exporter
-[Exporter](https://github.com/citrix/netscaler-metrics-exporter) is running along with the CIC and pulling metrics from the VPX/MPX. It exposes the metrics using Kubernetes NodePort.
+[Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) is running along with the CIC and pulling metrics from the VPX/MPX. It exposes the metrics using Kubernetes NodePort.
 
 ## Ingress Class
 To know more about Ingress Class refer [this](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/ingress-class.md). 
