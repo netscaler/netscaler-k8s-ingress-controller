@@ -18,8 +18,8 @@ For handling TLS certificates using Citrix ingress controller, you need to [enab
 
 Citrix Ingress Controller uses the **TLS** section in the ingress definition as an enabler for TLS support with Citrix ADC.
 
-!!! note "Note"
-    In case of Default certificate or Preconfigured certificates, you need to add an empty secrete in the ***spec.tls.secretname*** field in your ingress definition to enable TLS.
+!!! "Note"
+    In case of Default certificate or Preconfigured certificates, you need to add an empty secret in the ***spec.tls.secretname*** field in your ingress definition to enable TLS.
 
 The following sample snippet of the ingress definition:
 
