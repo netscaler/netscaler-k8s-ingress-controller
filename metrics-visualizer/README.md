@@ -88,9 +88,9 @@ kubectl apply -f prometheus-service.yaml
 kubectl apply -f grafana-service.yaml
 ```
 
-Configuring NetScaler Metrics Exporter
+Configuring Citrix ADC Metrics Exporter
 ---
-This section describes how to integrate the NetScaler Metrics Exporter with the VPX/CPX ingress or CPX-EW devices. 
+This section describes how to integrate the Citrix ADC Metrics Exporter with the VPX/CPX ingress or CPX-EW devices. 
 
 <details>
 <summary>VPX Ingress Device</summary>
@@ -268,7 +268,7 @@ Here, the exporter uses the ```192.168.0.2``` local IP to fetch metrics from the
 
 ServiceMonitors to Detect NetScalers
 ---
-Till this point, NetScaler Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
+Till this point, Citrix ADC Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
 
 The following example file will detect all the Exporter endpoints associated with Exporter services which have the label ```service-type: citrix-adc-monitor``` associated with them.
 

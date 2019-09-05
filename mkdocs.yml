@@ -72,6 +72,7 @@ nav:
     - Using Helm charts: deploy/deploy-cic-helm.md
     - Using Kops: deploy/deploy-cic-kops.md
     - On Rancher: deploy/deploy-cic-rancher.md
+    - On PKS: deploy/deploy-pks.md
   - Deployment solutions:
     - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
