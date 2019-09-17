@@ -10,7 +10,7 @@ Apart from rate limiting the requests to the services in Kubernetes environment,
 
 The Rate limit CRD is available in the Citrix ingress controller GitHub repo at: ***link to the CRD YAML*** The Rate limit CRD provides [attributes](#ratelimit-crd-attributes) for various options that are required to define the rate limit policies on the Ingress Citrix ADC that acts as an API gateway.
 
-The following is the Rate limit CRD definition ([ratelimit-crd.yaml](../../crd/ratelimit/ratelimit-crd.yaml)):
+The following is the Rate limit CRD definition ([ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml)):
 
 ```yml
 apiVersion: apiextensions.k8s.io/v1beta1
@@ -96,7 +96,7 @@ The following table lists the various attributes provided in the Rate limit CRD:
 
 Perform the following to deploy the Rate limit CRD:
 
-1.  Download the CRD ([ratelimit-crd.yaml](ratelimit-crd.yaml)).
+1.  Download the CRD ([ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml)).
 
 1.  Deploy the Rate limit CRD using the following command:
 
