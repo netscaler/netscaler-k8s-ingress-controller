@@ -124,7 +124,7 @@ The following are the attributes for policies:
 
 Perform the following to deploy the Auth CRD:
 
-1.  Download the CRD ([auth-crd.yaml](../../crd/auth/auth-crd.yaml)).
+1.  Download the CRD ([auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml)).
 
 1.  Deploy the Auth CRD using the following command:
 
@@ -142,7 +142,7 @@ After you have deployed the CRD provided by Citrix in the Kubernetes cluster, yo
 
 After you deploy the `.yaml` file, the Citrix ingress controller applies the authentication policy configuration on the Ingress Citrix ADC device.
 
-The following is sample authentication policy definition ([auth_example1.yaml](../../crd/auth/auth_example1.yaml)):
+The following is sample authentication policy definition ([auth_example1.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth_example1.yaml)):
 
 ```yml
 apiVersion: citrix.com/v1
