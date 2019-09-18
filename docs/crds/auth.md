@@ -17,7 +17,7 @@ metadata:
   name: authpolicies.citrix.com
 spec:
   group: citrix.com
-  version: v1
+  version: v1beta1
   names:
     kind: authpolicy
     plural: authpolicies
@@ -145,7 +145,7 @@ After you deploy the `.yaml` file, the Citrix ingress controller applies the aut
 The following is sample authentication policy definition ([auth_example1.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth_example1.yaml)):
 
 ```yml
-apiVersion: citrix.com/v1
+apiVersion: citrix.com/v1beta1
 kind: authpolicy
 metadata:
   name: authexample
