@@ -1,4 +1,4 @@
-apiVersion: citrix.com/v1
+apiVersion: citrix.com/v1beta1
 kind: authpolicy
 metadata:
   name: authexample
