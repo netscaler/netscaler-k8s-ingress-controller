@@ -4,7 +4,7 @@ metadata:
   name: authpolicies.citrix.com
 spec:
   group: citrix.com
-  version: v1
+  version: v1beta1
   names:
     kind: authpolicy
     plural: authpolicies
