@@ -1,4 +1,4 @@
-# Define authentication policies on the Ingress Citrix ADC
+p# Define authentication policies on the Ingress Citrix ADC
 
 Authentication policies are used to enforce access restrictions to the resources hosted by an application or API server.
 
