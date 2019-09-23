@@ -88,7 +88,9 @@ nav:
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
+    - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
+    - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
@@ -112,9 +114,12 @@ nav:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
-  - How-to:
-    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+  - Use cases:
+    - Securing ingress: how-to/secure-ingress.md
+    - TCP and HTTP use cases: how-to/tcp-use-cases.md  
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
+    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+    
   
 google_analytics:
   - 'UA-59929653-12'
