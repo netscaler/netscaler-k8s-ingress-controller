@@ -20,6 +20,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 ## Citrix ingress controller features
 
 -  [Ingress Class](../docs/configure/ingress-classes.md)
+-  [Ingress Configuration](../docs/configure/ingress-config.md)
 -  [TCP Ingress](../docs/how-to/tcp-udp-ingress.md)
 -  [Annotations](../docs/configure/annotations.md)
     -  [Smart Annotations](../docs/configure/annotations.md)
@@ -29,6 +30,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
     -  [Expose services using NodePort](../docs/network/nodeport.md)
     -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
+-  [HTTP, TCP, or SSL Profiles support](../docs/configure/profiles.md)
 -  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
 -  [Rewrite and Responder](../docs/crds/rewrite-responder.md)
 -  [Rate limit](../docs/crds/rate-limit.md)
@@ -44,3 +46,10 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 1.  [Azure Cloud](../docs/deploy/deploy-azure.md)
 1.  [Rancher managed Kubernetes cluster](../docs/deploy/deploy-cic-rancher.md)
 1.  [Pivotal Container Service (PKS)](../docs/deploy/deploy-pks.md)
+
+## Use cases
+
+-  [Securing ingress](../docs/how-to/secure-ingress.md)
+-  [TCP and HTTP use cases](../docs/how-to/tcp-use-cases.md)  
+-  [Load balance Ingress traffic to TCP or UDP based application](../docs/how-to/tcp-udp-ingress.md)
+-  [Set up dual-tier deployment](../docs/how-to/deploy-cic-dual-tier.md)
