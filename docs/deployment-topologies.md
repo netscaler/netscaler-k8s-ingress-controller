@@ -31,3 +31,25 @@ Kubernetes clusters in public clouds such as [Amazon Web Services (AWS)](https:/
 When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network (East-West) traffic between microservices within the cluster. For this, the target microservice needs to be deployed in [headless](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) mode to bypass [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy), so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  
 
 ![Dual-tier-Hairpin-mode](media/dual-tier-topology-with-hairpin-E-W.png)
+
+## Services of type LoadBalancer
+
+Service of type `LoadBalancer` in Kubernetes enables you to directly expose services to the outside world without using an ingress resource. It’s generally made available only by cloud providers, who spin up their own native cloud load balancers and assign an external IP address through which the service is accessed. This helps you to deploy microservices easily and expose them outside the Kubernetes cluster.
+
+By default, in a bare metal Kubernetes cluster, service of type `LoadBalancer` simply exposes `NodePorts` for the service. And, tt does not configure external load balancers.
+
+The Citrix ingress controller supports the services of type `LoadBalancer`. You can create a service of type `LoadBalancer` and expose it using the ingress Citrix ADC in Tier-1. The ingress Citrix ADC provisions a load balancer for the service and an external IP address is assigned to the service. The Citrix ingress controller allocates the IP address using the [Citrix IPAM controller](crds/vip.md).
+
+For more information, see [Expose services of type LoadBalancer](network/type_loadbalancer.md).
+
+![Service of type LoadBalancer](media/type-loadbalancer.png)
+
+## Services of type NodePort
+
+By default, Kubernetes services are accessible using the [cluster IP](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) address. The cluster IP address is an internal IP address that can be accessed within the Kubernetes cluster. To make the service accessible from outside of the Kubernetes cluster, you can create a service of type `NodePort`.
+
+The Citrix ingress controller supports services of type `NodePort`. Using the Ingress Citrix ADC and Citrix ingress controller, you can expose the service of type `NodePort` to the outside world.
+
+For more information, see [Expose services of type NodePort](network/nodeport.md).
+
+![Services of type Nodeport](media/type-nodeport.png)
