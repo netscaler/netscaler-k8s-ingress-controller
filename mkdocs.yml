@@ -119,7 +119,6 @@ nav:
     - TCP and HTTP use cases: how-to/tcp-use-cases.md  
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
-    
   
 google_analytics:
   - 'UA-59929653-12'
