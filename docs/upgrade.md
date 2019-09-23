@@ -60,7 +60,7 @@ If you want to upgrade Citrix ingress controller to version 1.2.0 by modifying t
                 env: ...
                 args: ...
 
-    You should change the version of the image to version 1.2.0. For example, `quay.io/citrix/citrix-k8s-ingress-controller:1.2.0`.
+    You should change the version of the image to version 1.2.0. For example, `quay.io/citrix/citrix-k8s-ingress-controller:1.3.0`.
 
 1.  Update the `CluterRole` as follows:
 

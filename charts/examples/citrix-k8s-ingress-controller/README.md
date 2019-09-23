@@ -48,7 +48,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 | Parameter |    Description | Default |
 | --------- |  ---------------- | ------- |
 |```license.accept```|Set to accept to accept the terms of the Citrix license|```no```|
-| ``` cic.image ``` | Image Repository|```quay.io/citrix/citrix-k8s-ingress-controller:1.2.0```|
+| ``` cic.image ``` | Image Repository|```quay.io/citrix/citrix-k8s-ingress-controller:1.3.0```|
 |```  cic.pullPolicy```| Image Pull Policy  |```Always```|
 |```loginFileName```| Secret keys for login into NetScaler VPX or MPX Refer Secret Keys|```nslogin```|
 |```nsIP```|NetScaler VPX/MPX IP|```x.x.x.x```|
