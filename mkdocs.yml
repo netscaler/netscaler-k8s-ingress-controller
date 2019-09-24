@@ -88,7 +88,9 @@ nav:
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
+    - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
+    - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
@@ -96,8 +98,10 @@ nav:
     - Expose services of type NodePort: network/nodeport.md
     - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - CRDs: 
-    - Using Rewrite and Responder policies in Kubernetes: crds/rewrite-responder.md
-    - VIP: crds/vip.md
+    - Authentication: crds/auth.md
+    - Rate limit: crds/rate-limit.md
+    - Rewrite and Responder: crds/rewrite-responder.md
+    - IPAM or VIP: crds/vip.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
@@ -110,9 +114,11 @@ nav:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
-  - How-to:
-    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+  - Use cases:
+    - Securing ingress: how-to/secure-ingress.md
+    - TCP and HTTP use cases: how-to/tcp-use-cases.md  
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
+    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
   
 google_analytics:
   - 'UA-59929653-12'
