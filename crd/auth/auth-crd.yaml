@@ -1,0 +1,71 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: authpolicies.citrix.com
+spec:
+  group: citrix.com
+  version: v1beta1
+  names:
+    kind: authpolicy
+    plural: authpolicies
+    singular: authpolicy 
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            servicenames:
+              description: 'Name of the services that needs to be binded to auth policy.'
+              type: array
+              items:
+                type: string
+            auth_providers:
+              description: 'Auth Config for required auth providers, one or more of these can be created'
+              type: array
+              items:
+                  description: " create config for a single auth provider of a particular type"
+                  properties:
+                    name:
+                      description: 'Name for this provider, has to be unique, referenced by auth policies'
+                      type: string
+
+                    basic_local_db:
+                      description: 'Basic HTTP authentication, user data in local DB'
+
+                  required:
+                    - name
+
+            auth_policies:
+              description: "Auth policies"
+              type: array
+              items:
+                description: "Auth policy"
+                properties:
+                  resource:
+                      description: " endpoint/resource selection criteria"
+                      properties:
+                        path:
+                          description: "api resource path e.g. /products. "
+                          type: array
+                          items:
+                            type: string
+                        method:
+                          type: array
+                          items:
+                            type: string
+                            enum: ['GET', 'PUT', 'POST','DELETE']
+                      required:
+                        - path
+                  provider:
+                    description: "name of the auth provider for the policy, empty if no authentication required"
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - resource
+                  - provider
+
+          required:
+            - servicenames
+                 
