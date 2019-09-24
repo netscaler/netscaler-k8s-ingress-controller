@@ -15,7 +15,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Single Tier Topology](../docs/deployment-topologies.md#single-tier-topology)
 -  [Dual Tier Topology](../docs/deployment-topologies.md#dual-tier-topology)
 -  [Cloud Topology](../docs/deployment-topologies.md#cloud-topology)
--  [Using the Ingress ADC for East-West traffic](../docs/deployment-topologies.md#using-the-ingress-adc-for-east--west-traffic)
+-  [Service Mesh Lite](../docs/deploy/service-mesh-lite.md)
 
 ## Citrix ingress controller features
 
