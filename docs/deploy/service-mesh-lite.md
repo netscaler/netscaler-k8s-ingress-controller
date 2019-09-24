@@ -125,7 +125,7 @@ subsets:
 
 ### Step 2: Create a headless service “`coffee-headless`” for the "`coffee`" microservice pods
 
-Since we have modified coffee service to point to Citrix ADC MPX, we need to create one more service that represents coffee microservice deployment. <Please add it here.>
+Since we have modified coffee service to point to Citrix ADC MPX, we need to create one more service that represents coffee microservice deployment.
 
 ### Step 3: Create an ingress resource with rules for “`coffee-headless`” service having the "`ingress.citrix.com/frontend-ip`" annotation
   
