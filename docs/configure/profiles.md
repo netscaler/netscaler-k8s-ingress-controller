@@ -22,8 +22,8 @@ The Citrix ingress controller provides the following two smart annotations for H
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
-| `ingress.citrix.com/frontend_httpprofile` | Use this annotation to create the front-end HTTP profile (**Client Plane**) | `ingress.citrix.com/frontend_httpprofile: '{"dropinvalreqs":"enabled", "webSocket" : ""enabled"}'`  |
-| `ingress.citrix.com/backend_httpprofile` | Use this annotation to create the back-end HTTP profile (**Server Plane**). </br>**Note:** Ensure that you manually enable the HTTP related global parameters on the Citrix ADC. </br> For example, to use HTTP2 at the back end (**Server Plane**), ensure that you can enable `HTTP2Serverside` global parameter in the Citrix ADC. For more information, see [Configurating HTTP2](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations/configuring-http2.html). | `ingress.citrix.com/backend_httpprofile: '{"app-1": {"dropinvalreqs":"ENABLED", "webSocket" : ""ENABLED"}}'`  |
+| `ingress.citrix.com/frontend-httpprofile` | Use this annotation to create the front-end HTTP profile (**Client Plane**) | `ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "webSocket" : ""enabled"}'`  |
+| `ingress.citrix.com/backend-httpprofile` | Use this annotation to create the back-end HTTP profile (**Server Plane**). </br>**Note:** Ensure that you manually enable the HTTP related global parameters on the Citrix ADC. </br> For example, to use HTTP2 at the back end (**Server Plane**), ensure that you can enable `HTTP2Serverside` global parameter in the Citrix ADC. For more information, see [Configurating HTTP2](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations/configuring-http2.html). | `ingress.citrix.com/backend-httpprofile: '{"app-1": {"dropinvalreqs":"ENABLED", "webSocket" : ""ENABLED"}}'`  |
 
 ## TCP profile
 
@@ -33,8 +33,8 @@ The Citrix ingress controller provides the following two smart annotations for T
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
-| `ingress.citrix.com/frontend_tcpprofile` | Use this annotation to create the front-end TCP profile (**Client Plane**) | `ingress.citrix.com/frontend_tcpprofile: '{"ws":"ENABLED", "sack" : "enabled"}'`  |
-| `ingress.citrix.com/backend_tcpprofile` | Use this annotation to create the back-end TCP profile (**Server Plane**) | `ingress.citrix.com/backend_tcpprofile: '{"citrix-svc":{"ws":"enabled", "sack" : "enabled"}}'`  |
+| `ingress.citrix.com/frontend-tcpprofile` | Use this annotation to create the front-end TCP profile (**Client Plane**) | `ingress.citrix.com/frontend-tcpprofile: '{"ws":"ENABLED", "sack" : "enabled"}'`  |
+| `ingress.citrix.com/backend-tcpprofile` | Use this annotation to create the back-end TCP profile (**Server Plane**) | `ingress.citrix.com/backend-tcpprofile: '{"citrix-svc":{"ws":"enabled", "sack" : "enabled"}}'`  |
 
 ## SSL profile
 
@@ -55,8 +55,8 @@ The Citrix ingress controller provides the following two smart annotations for S
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
-| `ingress.citrix.com/frontend_sslprofile` | Use this annotation to create the front end SSL profile (**Client Plane**). The front end SSL profile is required only if you have enabled TLS on the Client Plane. | `ingress.citrix.com/frontend_sslprofile: '{"hsts":"enabled", "tls12" : "enabled"}'`  |
-| `ingress.citrix.com/backend_sslprofile` | Use this annotation to create the back-end TCP profile (**Server Plane**). The SSL back end profile is required only if you use the [ingress.citrix.com/secure-backend](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/) annotation for the back-end. | `ingress.citrix.com/backend_sslprofile: '{"citrix-svc":{"hsts":"enabled", "tls1" : ""enabled"}}'`  |
+| `ingress.citrix.com/frontend-sslprofile` | Use this annotation to create the front end SSL profile (**Client Plane**). The front end SSL profile is required only if you have enabled TLS on the Client Plane. | `ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls12" : "enabled"}'`  |
+| `ingress.citrix.com/backend-sslprofile` | Use this annotation to create the back-end TCP profile (**Server Plane**). The SSL back end profile is required only if you use the [ingress.citrix.com/secure-backend](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/) annotation for the back-end. | `ingress.citrix.com/backend-sslprofile: '{"citrix-svc":{"hsts":"enabled", "tls1" : ""enabled"}}'`  |
 
 > **IMPORTANT:**
 > SSL profile does not enable you to configure SSL certificate.
@@ -80,8 +80,8 @@ metadata:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
    ingress.citrix.com/insecure-port: "80" 
    ingress.citrix.com/frontend-ip: "192.168.1.1"
-   ingress.citrix.com/frontend_httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : ""enabled"}'
-   ingress.citrix.com/frontend_tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+   ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : ""enabled"}'
+   ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
 spec:
   rules:
   - host:
@@ -112,9 +112,9 @@ metadata:
    ingress.citrix.com/frontend-ip: "1.1.1.1"
    ingress.citrix.com/insecure-port: "80"
    ingress.citrix.com/secure-port: "443"
-   ingress.citrix.com/frontend_httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : ""enabled"}'
-   ingress.citrix.com/frontend_tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
-   ingress.citrix.com/frontend_sslprofile: '{"hsts":"enabled", "tls1" : ""enabled"}'
+   ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : ""enabled"}'
+   ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+   ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls1" : ""enabled"}'
    #ingress.citrix.com/insecure-termination: "redirect"
 spec:
   rules:
@@ -141,8 +141,8 @@ metadata:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
    ingress.citrix.com/frontend-ip: "10.106.172.22"
    ingress.citrix.com/insecure-port: "80"
-   ingress.citrix.com/backend_httpprofile: '{"apache":{"markhttp09inval": "disabled"}}'
-   ingress.citrix.com/backend_tcpprofile: '{"apache":{"sack":"enabled"}}'
+   ingress.citrix.com/backend-httpprofile: '{"apache":{"markhttp09inval": "disabled"}}'
+   ingress.citrix.com/backend-tcpprofile: '{"apache":{"sack":"enabled"}}'
 spec:
   rules:
   - host:  www.apachetest.com
@@ -168,9 +168,9 @@ metadata:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
     ingress.citrix.com/frontend-ip: "10.106.172.22"
     ingress.citrix.com/secure-port: "443"
-    ingress.citrix.com/backend_sslprofile: '{"hotdrink":{"SNIEnable": "enabled"}}'
-    ingress.citrix.com/backend_httpprofile: '{"hotdrink":{"markhttp09inval": "disabled"}}'
-    ingress.citrix.com/backend_tcpprofile: '{"hotdrink":{"sack":"enabled"}}'
+    ingress.citrix.com/backend-sslprofile: '{"hotdrink":{"SNIEnable": "enabled"}}'
+    ingress.citrix.com/backend-httpprofile: '{"hotdrink":{"markhttp09inval": "disabled"}}'
+    ingress.citrix.com/backend-tcpprofile: '{"hotdrink":{"sack":"enabled"}}'
     ingress.citrix.com/secure-backend: '{"hotdrink":"true"}'
 spec:
   tls:
