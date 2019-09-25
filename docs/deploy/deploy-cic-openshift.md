@@ -730,7 +730,4 @@ spec:
 
 ## Restrictions
 
-The following restrictions apply while deploying the Citrix ingress controller as a router plug-in in the OpenShift cluster.
-
--  [Automatic static route configuration](../network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported.
--  When you modify the OpenShift route configuration, applying those changes using the `oc apply command` is not supported. As a workaround, delete the existing OpenShift route and recreate the route.
+[Automatic static route configuration](../network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported.
