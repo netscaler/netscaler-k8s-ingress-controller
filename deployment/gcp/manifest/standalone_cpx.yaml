@@ -92,7 +92,7 @@ spec:
           imagePullPolicy: Always
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
           env:
           - name: "EULA"
             value: "yes"
