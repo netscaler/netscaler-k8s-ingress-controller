@@ -32,7 +32,7 @@ nodeWatch: false
 # exporter conatins information of prometheus-exporter
 exporter:
   required: false
-  image: quay.io/citrix/citrix-adc-metrics-exporter:1.1
+  image: quay.io/citrix/citrix-adc-metrics-exporter:1.2
   pullPolicy: Always
   ports:
        containerPort: 8888
