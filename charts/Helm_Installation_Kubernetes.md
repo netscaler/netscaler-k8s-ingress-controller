@@ -17,8 +17,8 @@ There are several other ways to install Helm as well, you can find it [here](htt
 ## Initialization
 After installing helm on your machine, initialize Helm on your Kubernetes cluster:
 
-   1. If you are using Kubernetes version v.1.16 or later please do the following otherwise skip this step: <br />
-      Helm init command generates a "tiller.yaml" and applies the same on the cluster. However, it generates tiller deployment with apiVersion "extensions/v1beta1" which is not supported anymore from kubernetes version v1.1.16 onwards. So, delete the default tiller deployment and create the new one with updated apiVersion:
+   1. If you are using Kubernetes version v1.16 or later please do the following otherwise skip this step: <br />
+      Helm init command generates a "tiller.yaml" and applies the same on the cluster. However, it generates tiller deployment with apiVersion "extensions/v1beta1" which is not supported anymore from kubernetes version v1.16 onwards. So, delete the default tiller deployment and create the new one with updated apiVersion:
 
       ```
       kubectl delete deployment tiller-deploy -n kube-system
