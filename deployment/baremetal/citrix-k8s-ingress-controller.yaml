@@ -52,6 +52,18 @@ metadata:
   namespace: default
 
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cic-vpx-deployment
+  labels:
+    app: cic-k8s-ingress-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cic-k8s-ingress-controller
+  template:
 apiVersion: v1
 kind: Pod
 metadata:
