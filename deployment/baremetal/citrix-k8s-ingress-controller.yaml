@@ -56,6 +56,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cic-vpx-deployment
+  namespace: default
   labels:
     app: cic-k8s-ingress-controller
 spec:
@@ -82,15 +83,15 @@ spec:
          # Set username for Nitro
          - name: "NS_USER"
            valueFrom:
-            secretKeyRef:
-             name: nslogin
-             key: username
+             secretKeyRef:
+               name: nslogin
+               key: username
          # Set user password for Nitro
          - name: "NS_PASSWORD"
            valueFrom:
-            secretKeyRef:
-             name: nslogin
-             key: password
+             secretKeyRef:
+               name: nslogin
+               key: password
          # Set log level
          - name: "EULA"
            value: "yes"
