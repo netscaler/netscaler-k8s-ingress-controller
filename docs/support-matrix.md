@@ -32,7 +32,9 @@ The following table lists the various deployment topologies supported by Citrix 
 | --------------------- | ---------- | --------------------------- | ------------------------- |
 | [Single-Tier](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#single-tier-topology) (Citrix ADC MPX or VPX in tier-1)| Yes | Yes | Yes |
 | [Dual-Tier](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#dual-tier-topology) (Citrix ADC MPX or VPX in tier-1 and Citrix ADC CPXs in tier-2) | Yes | Yes | Yes |
-| Citrix ADC CPX for [east-west traffic (service mesh-lite)](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#using-the-ingress-adc-for-east-west-traffic) | Yes | Yes | Yes |
+| [Service mesh lite](deployment-topologies.md#service-mesh-lite) | Yes | Yes | Yes |
+| [Services of type LoadBalancer](deployment-topologies.md#services-of-type-loadbalancer) | Yes | Yes | Yes |
+| [Services of type NodePort](deployment-topologies.md#services-of-type-nodeport) | Yes | Yes | Yes |
 
 ## Supported deployment topologies on cloud platforms
 
