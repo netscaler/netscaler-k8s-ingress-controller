@@ -28,7 +28,18 @@ Kubernetes clusters in public clouds such as [Amazon Web Services (AWS)](https:/
 
 ## Service mesh lite
 
-When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network (East-West) traffic between microservices within the cluster. For this, the target microservice needs to be deployed in [headless](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) mode to bypass [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy), so that you can benefit from the advanced ADC functionalities provided by Citrix ADC. For more information, see [Service mesh lite](deploy/service-mesh-lite.md).  
+An Ingress solution (either hardware or virtualized or containerized) typically performs L7 proxy functions for north-south (N-S) traffic. The Service Mesh lite architecture uses the same Ingress solution to manage east-west traffic as well.
+
+In a standard Kubernetes deployment, east-west (E-W) traffic traverses the built-in KubeProxy deployed in each node. [Kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy) being a L4 proxy can only do TCP/UDP based load balancing without the benefits of L7 proxy.
+
+Citrix ADC (MPX, VPX, or CPX) can provide such benefits for E-W traffic such as:
+
+-  Mutual TLS or SSL offload
+-  Content based routing, allow or block traffic based on HTTP or HTTPS header parameters
+-  Advanced load balancing algorithms (for example, least connections, least response time and so on.)
+-  Observability of east-west traffic through measuring golden signals (errors, latencies, saturation, or traffic volume). [Citrix ADM’s](https://docs.citrix.com/en-us/citrix-application-delivery-management-service.html) Service Graph is an observability solution to monitor and debug microservices.
+
+For more information, see [Service mesh lite](deploy/service-mesh-lite.md).  
 
 ![Dual-tier-Hairpin-mode](media/dual-tier-topology-with-hairpin-E-W.png)
 
