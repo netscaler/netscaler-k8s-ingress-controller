@@ -71,7 +71,7 @@ The following table lists the Citrix ingress controller features supported on re
 | [UDP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [SSL Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [TCP over SSL Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later| 12.1–51.16 and later |
-| [HTTP, TCP, or SSL profiles](configure/profiles.md) | 1.3.0 | 11.1–61.7 and later| 12.1–51.16 and later |
+| [HTTP, TCP, or SSL profiles](configure/profiles.md) | 1.4.392 | 11.1–61.7 and later| 12.1–51.16 and later |
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Type LoadBalancer support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/) | 1.2.0 | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
