@@ -18,7 +18,7 @@ The Citrix ingress controller provides individual smart annotations for the fron
 
 An [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#sample-http-configurations) is a collection of HTTP settings. A default HTTP profile (`nshttp_default_profile`) is configured to set the HTTP configurations that are applied by default, globally to all services and virtual servers.
 
-The Citrix ingress controller provides the following two smart annotations for HTTP profile. You can use these annotations to define the HTTP settings for the Citrix ADC. When you deploy an ingress that includes these annotations, the Citrix ingress controller creates a HTTP profile derived from the default HTTP profile (`nshttp_default_profile`) configured on the Citrix ADC. Then, it applies the parameters that you have provided in the annotations to the new HTTP profile and applies the profile to the Citrix ADC.
+The Citrix ingress controller provides the following two smart annotations for HTTP profile. You can use these annotations to define the HTTP settings for the Citrix ADC. When you deploy an ingress that includes these annotations, the Citrix ingress controller creates an HTTP profile derived from the default HTTP profile (`nshttp_default_profile`) configured on the Citrix ADC. Then, it applies the parameters that you have provided in the annotations to the new HTTP profile and applies the profile to the Citrix ADC.
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
@@ -56,7 +56,7 @@ The Citrix ingress controller provides the following two smart annotations for S
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
 | `ingress.citrix.com/frontend-sslprofile` | Use this annotation to create the front end SSL profile (**Client Plane**). The front end SSL profile is required only if you have enabled TLS on the Client Plane. | `ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls12" : "enabled"}'`  |
-| `ingress.citrix.com/backend-sslprofile` | Use this annotation to create the back-end TCP profile (**Server Plane**). The SSL back end profile is required only if you use the [ingress.citrix.com/secure-backend](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/) annotation for the back-end. | `ingress.citrix.com/backend-sslprofile: '{"citrix-svc":{"hsts":"enabled", "tls1" : ""enabled"}}'`  |
+| `ingress.citrix.com/backend-sslprofile` | Use this annotation to create the back-end SSL profile (**Server Plane**). The SSL back end profile is required only if you use the [ingress.citrix.com/secure-backend](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/) annotation for the back-end. | `ingress.citrix.com/backend-sslprofile: '{"citrix-svc":{"hsts":"enabled", "tls1" : ""enabled"}}'`  |
 
 > **IMPORTANT:**
 > SSL profile does not enable you to configure SSL certificate.
@@ -185,3 +185,34 @@ spec:
           servicePort: 443
 
 ```
+
+## Using built-in or existing user-defined profiles on the Ingress Citrix ADC
+
+You can use the individual smart annotations to configure the built-in profiles or existing user-defined profiles on the Ingress Citrix ADC for the front end and back-end configurations based on your requirement. For more information on built-in profiles, see [Built-in TCP Profiles](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html#built-in-tcp-profiles) and [Built-in HTTP profiles](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#built-in-http-profiles).
+
+For the front end configuration, you can provide the name of the built-in or existing user-defined profiles on the Ingress Citrix ADC. The following is a sample ingress annotation:
+
+    ingress.citrix.com/frontend_httpprofile: 'http_preconf_profile1'
+
+Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix ADC.
+
+For the back-end configuration, you must provide the name of the built-in or existing profile on the Ingress Citrix ADC and the back-end service name. The following is a sample ingress annotation:
+
+    ingress.citrix.com/backend_httpprofile: '{"citrix-svc": http_preconf_profile1}'
+
+Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix ADC and `citrix-svc` is the back-end service name.
+
+**Sample HTTP profile:**
+
+    ingress.citrix.com/frontend_httpprofile: 'http_preconf_profile'
+    ingress.citrix.com/backend_httpprofile: '{"citrix-svc": http_preconf_profile}'
+
+**Sample TCP profile:**
+
+    ingress.citrix.com/frontend_tcpprofile: "tcp_preconf_profile"
+    ingress.citrix.com/backend_tcpprofile: '{"citrix-svc":"tcp_preconf_profile"}'
+
+**Sample SSL profile:**
+
+    ingress.citrix.com/frontend_sslprofile: "ssl_preconf_profile"
+    ingress.citrix.com/backend_sslprofile: '{"citrix-svc":"ssl_preconf_profile"}'
