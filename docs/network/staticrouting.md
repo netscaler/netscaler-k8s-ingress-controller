@@ -50,7 +50,7 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
         serviceAccountName: cic-k8s-role
         containers:
         - name: cic-k8s-ingress-controller
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
         # feature-node-watch argument configures route(s) on the Ingress Citrix ADC
         # to provide connectivity to the pod network. By default, this feature is disabled.
         args:

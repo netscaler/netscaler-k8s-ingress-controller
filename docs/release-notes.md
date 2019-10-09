@@ -8,7 +8,7 @@ The release notes include one or more of the following sections:
 -  [**Fixed issues**](#fixed-issues): The issues that are fixed in the current release.
 -  [**Known issues**](#known-issues): The issues that exist in the current release and their workarounds, wherever applicable.
 
-## Version 1.3.0
+## Version 1.4.392
 
 ### What's new
 
