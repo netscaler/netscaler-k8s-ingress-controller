@@ -20,19 +20,30 @@ If you want to upgrade by modifying the **YAML** definition file, perform the fo
           name: cic-k8s-role
         rules:
           - apiGroups: [""]
-            resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
-            verbs: ["*"]
+            resources: ["endpoints", "ingresses", "services", "pods", "secrets", "nodes", "routes", "namespaces"]
+            verbs: ["get", "list", "watch"]
+          # services/status is needed to update the loadbalancer IP in service status for integrating
+          # service of type LoadBalancer with external-dns
+          - apiGroups: [""]
+            resources: ["services/status"]
+            verbs: ["patch"]
           - apiGroups: ["extensions"]
             resources: ["ingresses", "ingresses/status"]
-            verbs: ["*"]
-          - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies", "vips"]
-            verbs: ["*"]
-          - apiGroups: ["apps"]
-            resources: ["deployments"]
-            verbs: ["*"]
+            verbs: ["get", "list", "watch"]
           - apiGroups: ["apiextensions.k8s.io"]
             resources: ["customresourcedefinitions"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apps"]
+            resources: ["deployments"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["vips"]
+            verb s: ["get", "list", "watch", "create", "delete"]
+          - apiGroups: ["route.openshift.io"]
+            resources: ["routes"]
             verbs: ["get", "list", "watch"]
 
 3.  Save the YAML definition file and reapply the file.
@@ -72,6 +83,11 @@ If you want to upgrade Citrix ingress controller to version 1.4.392 by modifying
           - apiGroups: [""]
             resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"]
             verbs: ["get", "list", "watch"]
+          # services/status is needed to update the loadbalancer IP in service status for integrating
+          # service of type LoadBalancer with external-dns
+          - apiGroups: [""]
+            resources: ["services/status"]
+            verbs: ["patch"]
           - apiGroups: [""]
             resources: ["services"]
             verbs: ["get", "list", "watch", "patch"]
