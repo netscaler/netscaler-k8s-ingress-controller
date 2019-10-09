@@ -101,3 +101,15 @@ The following is the sample ingress annotation:
     ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "ENABLED", "sesstimeout : "120"}'
 
 By default, the session reuse option is enabled on the appliance and the timeout value for the same is set to 120 seconds. Therefore, if a client sends a request on another TCP connection and the earlier SSL session ID within 120 seconds, then the appliance performs a partial handshake.
+
+## Using cipher groups
+
+The Ingress Citrix ADC ships with a [predefined set of cipher groups](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances.html). To use ciphers that are not part of the DEFAULT cipher group, you have to explicitly bind them to an SSL profile. You can also [create a user-defined cipher group](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html) to bind to the SSL virtual server on the Ingress Citrix ADC.
+
+Using the annotations for SSL profiles, you can use the predefined set of cipher groups or create a user-defined cipher group.
+
+The following is the syntax of the ingress annotation that you can use to use the predefined set of cipher groups on the Ingress Citrix ADC:
+
+    ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'
+
+The ingress annotation binds all the ciphers mentioned in the `cipername` parameter to the SSL profile `ciphers`.
