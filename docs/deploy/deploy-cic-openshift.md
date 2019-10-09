@@ -67,17 +67,35 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
           name: citrix
         rules:
           - apiGroups: [""]
-            resources: ["services", "endpoints", "ingresses", "pods", "secrets", "nodes", "routes"]
-            verbs: ["*"]
+            resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces"]
+            verbs: ["get", "list", "watch"]
+          # services/status is needed to update the loadbalancer IP in service status for integrating
+          # service of type LoadBalancer with external-dns
+          - apiGroups: [""]
+            resources: ["services/status"]
+            verbs: ["patch"]
+          - apiGroups: [""]
+            resources: ["services"]
+            verbs: ["get", "list", "watch", "patch"]
           - apiGroups: ["extensions"]
             resources: ["ingresses", "ingresses/status"]
-            verbs: ["*"]
-          - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies", "vips"]
-            verbs: ["*"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apiextensions.k8s.io"]
+            resources: ["customresourcedefinitions"]
+            verbs: ["get", "list", "watch"]
           - apiGroups: ["apps"]
             resources: ["deployments"]
-            verbs: ["*"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["vips"]
+            verbs: ["get", "list", "watch", "create", "delete"]
+          - apiGroups: ["route.openshift.io"]
+            resources: ["routes"]
+            verbs: ["get", "list", "watch"]
+
         ---
         kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -254,17 +272,34 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
           name: citrix
         rules:
           - apiGroups: [""]
-            resources: ["services", "endpoints", "ingresses", "pods", "secrets", "nodes", "routes"]
-            verbs: ["*"]
+            resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces"]
+            verbs: ["get", "list", "watch"]
+          # services/status is needed to update the loadbalancer IP in service status for integrating
+          # service of type LoadBalancer with external-dns
+          - apiGroups: [""]
+            resources: ["services/status"]
+            verbs: ["patch"]
+          - apiGroups: [""]
+            resources: ["services"]
+            verbs: ["get", "list", "watch", "patch"]
           - apiGroups: ["extensions"]
             resources: ["ingresses", "ingresses/status"]
-            verbs: ["*"]
-          - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies", "vips"]
-            verbs: ["*"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apiextensions.k8s.io"]
+            resources: ["customresourcedefinitions"]
+            verbs: ["get", "list", "watch"]
           - apiGroups: ["apps"]
             resources: ["deployments"]
-            verbs: ["*"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["vips"]
+            verbs: ["get", "list", "watch", "create", "delete"]
+          - apiGroups: ["route.openshift.io"]
+            resources: ["routes"]
+            verbs: ["get", "list", "watch"]
         ---
         kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1beta1
