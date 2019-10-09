@@ -64,7 +64,7 @@ markdown_extensions:
 # Page tree
 nav:
   - Overview: index.md
-  - Release notes: release-notes.md
+  #- Release notes: release-notes.md
   - Supported platforms and deployments: support-matrix.md
   - Deployment topologies: deployment-topologies.md
   - Deploy the Citrix ingress controller: 
