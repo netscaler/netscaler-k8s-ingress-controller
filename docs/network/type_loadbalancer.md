@@ -16,9 +16,9 @@ When creating a service of type [LoadBalancer](https://kubernetes.io/docs/concep
 
 Citrix provides a controller called **IPAM controller** for IP address management. You must deploy the IPAM controller as a separate pod along with the Citrix ingress controller. Once the IPAM controller is deployed, it allocates IP address to services of type `LoadBalancer` from predefined IP address ranges. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADC MPX or VPX.
 
-The IPAM controller requires the Vip [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix.
+The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix.
 
-When a new service of type `Loadbalancer` is created, the Citrix ingress controller creates a Vip CRD object for the service whenever the `loadBalancerIP` field in the service is empty. The IPAM controller listens for addition, deletion, or modification of the Vip CRD and updates it with an IP address. Once the Vip CRD object is updated, the Citrix ingress controller automatically configures Citrix ADC.
+When a new service of type `Loadbalancer` is created, the Citrix ingress controller creates a VIP CRD object for the service whenever the `loadBalancerIP` field in the service is empty. The IPAM controller listens for addition, deletion, or modification of the VIP CRD and updates it with an IP address. Once the VIP CRD object is updated, the Citrix ingress controller automatically configures Citrix ADC.
 
 In this section, we shall deploy the IPAM controller, create a sample Deployment, create a service of type `LoadBalancer`, and access the service.
 
@@ -28,91 +28,90 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
 
 1.  After you have deployment the Citrix VIP CRD, create a file named `cic-k8s-ingress-controller.yaml` with the following configuration:
 
-    ```yml
-    kind: ClusterRole
-    apiVersion: rbac.authorization.k8s.io/v1beta1
-    metadata:
-    name: cic-k8s-role
-    rules:
-    - apiGroups: [""]
-        resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
-        verbs: ["*"]
-    - apiGroups: ["extensions"]
-        resources: ["ingresses", "ingresses/status"]
-        verbs: ["*"]
-    - apiGroups: ["citrix.com"]
-        resources: ["rewritepolicies", "vips"]
-        verbs: ["*"]
-    - apiGroups: ["apps"]
-        resources: ["deployments"]
-        verbs: ["*"]
-    - apiGroups: ["apiextensions.k8s.io"]
-        resources: ["customresourcedefinitions"]
-        verbs: ["get", "list", "watch"]
+        kind: ClusterRole
+        apiVersion: rbac.authorization.k8s.io/v1beta1
+        metadata:
+        name: cic-k8s-role
+        rules:
+        - apiGroups: [""]
+            resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
+            verbs: ["*"]
+        - apiGroups: ["extensions"]
+            resources: ["ingresses", "ingresses/status"]
+            verbs: ["*"]
+        - apiGroups: ["citrix.com"]
+            resources: ["rewritepolicies", "vips"]
+            verbs: ["*"]
+        - apiGroups: ["apps"]
+            resources: ["deployments"]
+            verbs: ["*"]
+        - apiGroups: ["apiextensions.k8s.io"]
+            resources: ["customresourcedefinitions"]
+            verbs: ["get", "list", "watch"]
 
-    ---
+        ---
 
-    kind: ClusterRoleBinding
-    apiVersion: rbac.authorization.k8s.io/v1beta1
-    metadata:
-    name: cic-k8s-role
-    roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
-    name: cic-k8s-role
-    subjects:
-    - kind: ServiceAccount
-    name: cic-k8s-role
-    namespace: default
+        kind: ClusterRoleBinding
+        apiVersion: rbac.authorization.k8s.io/v1beta1
+        metadata:
+        name: cic-k8s-role
+        roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cic-k8s-role
+        subjects:
+        - kind: ServiceAccount
+        name: cic-k8s-role
+        namespace: default
 
-    ---
+        ---
 
-    apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-    name: cic-k8s-role
-    namespace: default
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+        name: cic-k8s-role
+        namespace: default
 
-    ---
-    apiVersion: v1
-    kind: Pod
-    metadata:
-    name: cic-k8s-ingress-controller
-    labels:
-        app: cic-k8s-ingress-controller
-    spec: 
-        serviceAccountName: cic-k8s-role
-        containers:
-        - name: cic-k8s-ingress-controller
-            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
-            env:
-            # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
-            - name: "NS_IP"
-            value: "x.x.x.x"
-            # Set the username
-            - name: "NS_USER"
-            valueFrom:
-                secretKeyRef:
-                name: nslogin
-                key: username
-            # Set user password
-            - name: "NS_PASSWORD"
-            valueFrom:
-                secretKeyRef:
-                name: nslogin
-                key: password
-            # Set log level
-            - name: "EULA"
-            value: "yes"
-            args:
-            - --ingress-classes
-                citrix
-            - --feature-node-watch
-                false
-            - --ipam
-                citrix-ipam-controller
-            imagePullPolicy: Always
-    ```
+        ---
+        apiVersion: v1
+        kind: Pod
+        metadata:
+        name: cic-k8s-ingress-controller
+        labels:
+            app: cic-k8s-ingress-controller
+        spec: 
+            serviceAccountName: cic-k8s-role
+            containers:
+            - name: cic-k8s-ingress-controller
+                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
+                env:
+                # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+                - name: "NS_IP"
+                value: "x.x.x.x"
+                # Set the username
+                - name: "NS_USER"
+                valueFrom:
+                    secretKeyRef:
+                    name: nslogin
+                    key: username
+                # Set user password
+                - name: "NS_PASSWORD"
+                valueFrom:
+                    secretKeyRef:
+                    name: nslogin
+                    key: password
+                # Set log level
+                - name: "EULA"
+                value: "yes"
+                args:
+                - --ingress-classes
+                    citrix
+                - --feature-node-watch
+                    false
+                - --ipam
+                    citrix-ipam-controller
+                imagePullPolicy: Always
+
 1.  Deploy the Citrix ingress controller using the following command:
 
         kubectl create -f cic-k8s-ingress-controller.yaml
@@ -121,69 +120,67 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
 
 1.  Create a file named `citrix-ipam-controller.yaml` with the following configuration:
 
-    ```yml
-    ---
-    apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-    name: citrix-ipam-controller
-    namespace: kube-system
-    ---
-    kind: ClusterRole
-    apiVersion: rbac.authorization.k8s.io/v1
-    metadata:
-    name: citrix-ipam-controller
-    rules:
-    - apiGroups:
-    - citrix.com
-    resources:
-    - vips
-    verbs:
-    - '*'
-    - apiGroups:
-    - apiextensions.k8s.io
-    resources:
-    - customresourcedefinitions
-    verbs:
-    - '*'
-    ---
-    kind: ClusterRoleBinding
-    apiVersion: rbac.authorization.k8s.io/v1
-    metadata:
-    name: citrix-ipam-controller
-    subjects:
-    - kind: ServiceAccount
-    name: citrix-ipam-controller
-    namespace: kube-system
-    roleRef:
-    kind: ClusterRole
-    apiGroup: rbac.authorization.k8s.io
-    name: citrix-ipam-controller
-
-    ---
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    metadata:
-    name: citrix-ipam-controller
-    namespace: kube-system
-    spec:
-    replicas: 1
-    template:
+        ---
+        apiVersion: v1
+        kind: ServiceAccount
         metadata:
-        labels:
-            app: citrix-ipam-controller
+        name: citrix-ipam-controller
+        namespace: kube-system
+        ---
+        kind: ClusterRole
+        apiVersion: rbac.authorization.k8s.io/v1
+        metadata:
+        name: citrix-ipam-controller
+        rules:
+        - apiGroups:
+        - citrix.com
+        resources:
+        - vips
+        verbs:
+        - '*'
+        - apiGroups:
+        - apiextensions.k8s.io
+        resources:
+        - customresourcedefinitions
+        verbs:
+        - '*'
+        ---
+        kind: ClusterRoleBinding
+        apiVersion: rbac.authorization.k8s.io/v1
+        metadata:
+        name: citrix-ipam-controller
+        subjects:
+        - kind: ServiceAccount
+        name: citrix-ipam-controller
+        namespace: kube-system
+        roleRef:
+        kind: ClusterRole
+        apiGroup: rbac.authorization.k8s.io
+        name: citrix-ipam-controller
+
+        ---
+        apiVersion: extensions/v1beta1
+        kind: Deployment
+        metadata:
+        name: citrix-ipam-controller
+        namespace: kube-system
         spec:
-        serviceAccountName: citrix-ipam-controller
-        containers:
-        - name: citrix-ipam-controller
-            image: quay.io/citrix/citrix-ipam-controller:latest
-            env:
-            # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-            - name: "VIP_RANGE"
-            value: '["10.105.158.195/32", "10.105.158.196/31", "10.105.158.198"]'
-            # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
-            # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
-    ```
+        replicas: 1
+        template:
+            metadata:
+            labels:
+                app: citrix-ipam-controller
+            spec:
+            serviceAccountName: citrix-ipam-controller
+            containers:
+            - name: citrix-ipam-controller
+                image: quay.io/citrix/citrix-ipam-controller:latest
+                env:
+                # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
+                - name: "VIP_RANGE"
+                value: '["10.105.158.195/32", "10.105.158.196/31", "10.105.158.198"]'
+                # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
+                # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
 
     The manifest contains two environment variables, `VIP_RANGE` or `VIP_NAMESPACES`. For more information, see [VIP_RANGE](#viprange) and [VIP_NAMESPACES](#vipnamespaces). Update the `VIP_RANGE` or `VIP_NAMESPACES` environment variables based on your requirement.
 
@@ -277,31 +274,30 @@ Deploy an `apache` application in your Kubernetes cluster.
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
-    ```yml
-    apiVersion: apps/v1beta2
-    kind: Deployment
-    metadata:
-    name: apache
-    labels:
-        name: apache
-    spec:
-    selector:
-        matchLabels:
-        app: apache
-    replicas: 8
-    template:
+
+        apiVersion: apps/v1beta2
+        kind: Deployment
         metadata:
+        name: apache
         labels:
-            app: apache
+            name: apache
         spec:
-        containers:
-        - name: apache
-            image: httpd:latest
-            ports:
-            - name: http
-            containerPort: 80
-            imagePullPolicy: IfNotPresent
-    ```
+        selector:
+            matchLabels:
+            app: apache
+        replicas: 8
+        template:
+            metadata:
+            labels:
+                app: apache
+            spec:
+            containers:
+            - name: apache
+                image: httpd:latest
+                ports:
+                - name: http
+                containerPort: 80
+                imagePullPolicy: IfNotPresent
 
 1. Deploy the `apache` application using the following command:
 
@@ -329,26 +325,24 @@ Create a service (`apache`) of type `LoadBalancer`.
 
 1. Create a file named `apache-service.yaml` with the following configuration:
 
-    ```yml
-    apiVersion: v1
-    kind: Service
-    metadata:
-    name: apache
-    labels:
+        apiVersion: v1
+        kind: Service
+        metadata:
         name: apache
-    spec:
-    externalTrafficPolicy: Local
-    loadBalancerIP: "110.217.212.16"
-    type: LoadBalancer
-    selector:
-        name: apache
-    ports:
-    - name: http
-        port: 80
-        targetPort: http
-    selector:
-        app: apache
-    ```
+        labels:
+            name: apache
+        spec:
+        externalTrafficPolicy: Local
+        loadBalancerIP: "110.217.212.16"
+        type: LoadBalancer
+        selector:
+            name: apache
+        ports:
+        - name: http
+            port: 80
+            targetPort: http
+        selector:
+            app: apache
 
 1.  Deploy the service using the following command:
 
@@ -410,37 +404,35 @@ Create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/serv
 
 When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as virtual IP (VIP) in Citrix ADC.
 
-### Example: Expose an apache application using service of type LoadBalancer
+### **Example:** Expose an apache application using service of type LoadBalancer
 
 Perform the following:
 
 1.  Deploy the `apache` application. Create a file named `apache-deployment.yaml` with the following configuration:
 
-    ```yml
-    apiVersion: apps/v1beta2
-    kind: Deployment
-    metadata:
-    name: apache
-    labels:
-        name: apache
-    spec:
-    selector:
-        matchLabels:
-        app: apache
-    replicas: 8
-    template:
+        apiVersion: apps/v1beta2
+        kind: Deployment
         metadata:
+        name: apache
         labels:
-            app: apache
+            name: apache
         spec:
-        containers:
-        - name: apache
-            image: httpd:latest
-            ports:
-            - name: http
-            containerPort: 80
-            imagePullPolicy: IfNotPresent
-    ```
+        selector:
+            matchLabels:
+            app: apache
+        replicas: 8
+        template:
+            metadata:
+            labels:
+                app: apache
+            spec:
+            containers:
+            - name: apache
+                image: httpd:latest
+                ports:
+                - name: http
+                containerPort: 80
+                imagePullPolicy: IfNotPresent
 
 1.  Deploy the `apache` application using the following command:
 
@@ -464,27 +456,25 @@ Perform the following:
 
 1.  Create a service (`apache`) of type `LoadBalancer`. Create a file name `apache-service.yaml` with the following configuration:
 
-    ```yml
-    apiVersion: v1
-    kind: Service
-    metadata:
-    name: apache
-    labels:
+        apiVersion: v1
+        kind: Service
+        metadata:
         name: apache
-    spec:
-    externalTrafficPolicy: Local
-    loadBalancerIP: "110.217.212.16"
-    type: LoadBalancer
-    selector:
-        name: apache
-    ports:
-    - name: http
-        port: 80
-        targetPort: http
-    selector:
-        app: apache
-    ---
-    ```
+        labels:
+            name: apache
+        spec:
+        externalTrafficPolicy: Local
+        loadBalancerIP: "110.217.212.16"
+        type: LoadBalancer
+        selector:
+            name: apache
+        ports:
+        - name: http
+            port: 80
+            targetPort: http
+        selector:
+            app: apache
+        ---
 
 1.  Deploy the service using the following command:
 
@@ -500,11 +490,11 @@ Perform the following:
 
         <html><body><h1>It works!</h1></body></html>
 
-## Example: Expose microservices using services of type LoadBalancer in Citrix ADC dual-tier deployment
+## **Example use case:** Expose microservices using services of type LoadBalancer in Citrix ADC dual-tier deployment
 
 In this example, you will learn how to expose microservices using services of type LoadBalancer in a Citrix ADC [dual-tier](../deployment-topologies#dual-tier-topology) deployment.
 
-Citrix ADC in a [dual-tier](../deployment-topologies#dual-tier-topology) deployment solution enables you to expose microservices deployed in Kubernetes to clients outside the cluster. You can deploy Citrix ADC VPX, MPX, or CPX as a load balancer in Tier-1 to manage high scale North-South traffic to the microservices. In Tier-2, you can deploy Citrix ADC CPX as an intelligent L7 microservices router for North-South and East-West traffic. In this example, a Citrix ADC VPX (service of type LoadBalancer) is used in Tier-1 and a Citrix ADC CPX (Ingress) is used in Tier-2.
+Citrix ADC in a [dual-tier](../deployment-topologies#dual-tier-topology) deployment solution enables you to expose microservices deployed in Kubernetes to clients outside the cluster. You can deploy Citrix ADC VPX, MPX, or CPX as a load balancer in Tier-1 to manage high scale North-South traffic to the microservices. In Tier-2, you can deploy Citrix ADC CPX as an intelligent L7 microservices router for North-South and East-West traffic. In this example, a Citrix ADC VPX (service of type `LoadBalancer`) is used in Tier-1 and a Citrix ADC CPX (Ingress) is used in Tier-2.
 
 The following diagram depicts the microservice deployment used in this example. The deployment contains three services that are highlighted in blue, red, and green colors respectively. The deployment contains 12 pods running across two worker nodes. These deployments are logically categorized by Kubenetes namespace (for example, team-hotdrink namespace).
 
@@ -518,7 +508,7 @@ Ensure that you have:
 -  Set up the Kubernetes dashboard for deploying containerized applications. For more information, see [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/).
 -  The route configuration present in Tier-1 Citrix ADC so that the Ingress Citrix ADC is able to reach the Kubernetes pod network for seamless connectivity. For detailed instructions, see [Manually configure route on the Citrix ADC instance](staticrouting.md#manually-configure-route-on-the-citrix-adc-instance).
 
-**To deploy microservices using Kubernetes service of type LoadBalancer solution:**
+### Deploy microservices using Kubernetes service of type LoadBalancer solution
 
 1.  Clone the GitHub repository to your Master node using following command:
 
