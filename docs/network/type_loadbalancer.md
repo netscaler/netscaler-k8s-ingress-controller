@@ -33,20 +33,31 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
         metadata:
         name: cic-k8s-role
         rules:
-        - apiGroups: [""]
-            resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
-            verbs: ["*"]
-        - apiGroups: ["extensions"]
+          - apiGroups: [""]
+            resources: ["endpoints", "ingresses", "services", "pods", "secrets", "nodes", "routes", "namespaces"]
+            verbs: ["get", "list", "watch"]
+          # services/status is needed to update the loadbalancer IP in service status for integrating
+          # service of type LoadBalancer with external-dns
+          - apiGroups: [""]
+            resources: ["services/status"]
+            verbs: ["patch"]
+          - apiGroups: ["extensions"]
             resources: ["ingresses", "ingresses/status"]
-            verbs: ["*"]
-        - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies", "vips"]
-            verbs: ["*"]
-        - apiGroups: ["apps"]
-            resources: ["deployments"]
-            verbs: ["*"]
-        - apiGroups: ["apiextensions.k8s.io"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apiextensions.k8s.io"]
             resources: ["customresourcedefinitions"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apps"]
+            resources: ["deployments"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["citrix.com"]
+            resources: ["vips"]
+            verbs: ["get", "list", "watch", "create", "delete"]
+          - apiGroups: ["route.openshift.io"]
+            resources: ["routes"]
             verbs: ["get", "list", "watch"]
 
         ---
