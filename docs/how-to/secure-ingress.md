@@ -12,6 +12,7 @@ he following table lists the TLS use cases with sample annotations that you can 
 | [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"ENABLED", "clientcert" : "Mandatory"}'`|
 | [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionTicket" : "ENABLED", "sessionTicketLifeTime : "300"}'` |
 | [SSL session reuse](#ssl-session-reuse) | `ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "ENABLED", "sesstimeout : "120"}'` |
+| [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'` |
 
 ## Enable TLS v1.3 protocol
 
@@ -112,4 +113,4 @@ The following is the syntax of the ingress annotation that you can use to use th
 
     ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'
 
-The ingress annotation binds all the ciphers mentioned in the `cipername` parameter to the SSL profile `ciphers`.
+The ingress annotation binds all the ciphers mentioned in the `cipername` parameter to the SSL profile, `ciphers`.
