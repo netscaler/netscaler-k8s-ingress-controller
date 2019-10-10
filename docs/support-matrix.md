@@ -78,7 +78,7 @@ The following table lists the Citrix ingress controller features supported on re
 | [Type LoadBalancer support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/) | 1.2.0 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Rate limit CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rate-limit/) | 1.4.392 | 11.1–61.7 and later | 12.1–51.16 and later |
-| [Auth CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/auth/)git  | 1.4.392 | 11.1–61.7 and later | 12.1–51.16 and later |
+| [Auth CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/auth/) | 1.4.392 | 11.1–61.7 and later | 12.1–51.16 and later |
 | [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 |
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 and later | 12.1–51.16 and later | 13.0–36.28 |
 
