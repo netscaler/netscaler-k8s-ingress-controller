@@ -348,7 +348,7 @@ Create a service (`apache`) of type `LoadBalancer`.
 
         kubectl create -f apache-service.yaml
 
-    When you create the service (`apache`) of type `LoadBalancer`, the IPAM controller assigns an IP address to the `apache` service from the IP address range you had defined in the IPAM controller deployment. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADC.
+    When you create the service (`apache`) of type `LoadBalancer`, the IPAM controller assigns an IP address to the `apache` service from the IP address range you had defined in the IPAM controller deployment. The IP address allocated by the IPAM controller is provided in the `status.loadBalancer.ingress:` field of the service definition. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADC.
 
 1.  View the service using the following command:
 
@@ -356,43 +356,13 @@ Create a service (`apache`) of type `LoadBalancer`.
 
     Output:
 
-        apiVersion: v1
-        kind: Service
-        metadata:
-        annotations:
-            NETSCALER_VPORT: "80"
-        creationTimestamp: "2019-09-25T20:52:29Z"
-        labels:
-            name: apache
-        name: apache
-        namespace: default
-        resourceVersion: "21066980"
-        selfLink: /api/v1/namespaces/default/services/apache
-        uid: 639975f4-dfd6-11e9-8359-527c8bde541f
-        spec:
-        clusterIP: 10.110.168.108
-        externalIPs:
-        - 10.1.6.55
-        externalTrafficPolicy: Local
-        healthCheckNodePort: 31084
-        ports:
-        - name: http
-            nodePort: 31379
-            port: 80
-            protocol: TCP
-            targetPort: http
-        selector:
-            app: apache
-        sessionAffinity: None
-        type: LoadBalancer
-        status:
-        loadBalancer: {}
+    ![Service type LoadBalancer output](../media/service-type-lb-status-field.png)
 
 ### Step 4: Access the service
 
-You can access the `apache` service using the IP address assigned by IPAM controller to the service. Use the `curl` command to access the service:
+You can access the `apache` service using the IP address assigned by IPAM controller to the service. You can find the IP address in the `status.loadBalancer.ingress:` field of the service definition. Use the `curl` command to access the service:
 
-    curl <external_IP_address>
+    curl <IP_address>
 
 The response should be:
 
