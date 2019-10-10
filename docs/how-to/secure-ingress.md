@@ -2,7 +2,7 @@
 
 The topic covers the various ways to secure your Ingress using Citrix ADC and the annotations provided by Citrix ingress controller.
 
-he following table lists the TLS use cases with sample annotations that you can use to secure your Ingress using Ingress Citrix ADC and Citrix ingress controller:
+The following table lists the TLS use cases with sample annotations that you can use to secure your Ingress using Ingress Citrix ADC and Citrix ingress controller:
 
 | Use cases | Sample annotations |
 | --------- | ------------------ |
@@ -46,7 +46,7 @@ Where:
 
 The Ingress Citrix ADC can send the revocation status of a server certificate to a client, at the time of the SSL handshake, after validating the certificate status from an OCSP responder. The revocation status of a server certificate is “stapled” to the response the appliance sends to the client as part of the SSL handshake. For more information on Citrix ADC implementation of CRL and OCSP reports, see [OCSP stapling](https://docs.citrix.com/en-us/citrix-adc/12-1/ssl/ssl-11-1-ocsp-stapling-solution.html).
 
-To use the OCSP stapling feature, you can enable it using SSL profile with the below ingress annotation:
+To use the OCSP stapling feature, you can enable it using SSL profile with the following ingress annotation:
 
     ingress.citrix.com/frontend-sslprofile: '{"ocspStapling":"ENABLED"}'
 
@@ -105,12 +105,22 @@ By default, the session reuse option is enabled on the appliance and the timeout
 
 ## Using cipher groups
 
-The Ingress Citrix ADC ships with a [predefined set of cipher groups](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances.html). To use ciphers that are not part of the DEFAULT cipher group, you have to explicitly bind them to an SSL profile. You can also [create a user-defined cipher group](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html) to bind to the SSL virtual server on the Ingress Citrix ADC.
+The Ingress Citrix ADC ships with [built-in cipher groups](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances.html). To use ciphers that are not part of the DEFAULT cipher group, you have to explicitly bind them to an SSL profile. You can also [create a user-defined cipher group](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html) to bind to the SSL virtual server on the Ingress Citrix ADC.
 
-Using the annotations for SSL profiles, you can use the predefined set of cipher groups or create a user-defined cipher group.
+The built-in cipher groups can be used in Tier-1 and Tier-2 Citrix ADC, and the user-defined cipher group can be used only in Tier-1 Citrix ADC.
 
-The following is the syntax of the ingress annotation that you can use to use the predefined set of cipher groups on the Ingress Citrix ADC:
+To use a user-defined cipher group, ensure that the Citrix ADC has a user-defined cipher group. Perform the following:
 
-    ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'
+1.  Create a user-defined cipher group. For example, `testgroup`.
+1.  Bind all the required ciphers to the user-defined cipher group.
+1.  Note down the user-defined cipher group name.
 
-The ingress annotation binds all the ciphers mentioned in the `cipername` parameter to the SSL profile, `ciphers`.
+For detailed instructions, see [Configure a user-defined cipher group](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html#configure-a-user-defined-cipher-group-by-using-the-cli).
+
+Using the annotations for SSL profiles, you can bind the built-in cipher groups, a user-defined cipher group or both to the SSL profile.
+
+The following is the syntax of the ingress annotation that you can use to bind the built-in cipher groups and a user-defined cipher group to an SSL profile:
+
+    ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "SECURE", "cipherpriority" :"1"}, {"ciphername": "testgroup", "cipherpriority" :"2"}]}'
+
+The ingress annotation binds the built-in cipher group, `SECURE`, and the user-defined cipher group, `testgroup`, to the SSL profile.
