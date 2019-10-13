@@ -2,6 +2,8 @@
 
 In a Kubernetes environment, an Ingress is an object that allows access to the Kubernetes services from outside the Kubernetes cluster. Standard Kubernetes Ingress resources assume that all the traffic is HTTP-based and does not cater to non-HTTP based protocols such as, TCP, TCP-SSL, and UDP. Hence, critical applications based on L7 protocols such as DNS, FTP, LDAP, and so on, cannot be exposed using standard Kubernetes Ingress.
 
+Please note that in addition to Ingress option, there is an alternate way to expose end user traffic to TCP applications, which is to use Kubernetes Service Type `LoadBalancer`. Please read more about how to use [Service Type LoadBalancer in Citrix ADC](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/network/type_loadbalancer.md)
+
 Citrix ingress controller enables you to load balance TCP or UDP based Ingress traffic. It provides the following [annotations](/docs/configure/annotations.md) that you can use in your Kubernetes Ingress resource definition and load balance the TCP or UDP based Ingress traffic:
 
 -  `ingress.citrix.com/insecure-service-type`: The annotation enables L4 load balancing with TCP, UDP, or ANY as protocol for Citrix ADC.
@@ -129,4 +131,3 @@ spec:
 ```
 
 
-Please note that in addition to Ingress option, there is an alternate way to expose end user traffic to TCP applications, which is to use Kubernetes Service Type `LoadBalancer`. Please read more about how to use [Service Type LoadBalancer in Citrix ADC](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/network/type_loadbalancer.md)
