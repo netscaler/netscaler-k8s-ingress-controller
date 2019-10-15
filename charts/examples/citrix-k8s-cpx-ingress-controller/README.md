@@ -53,7 +53,7 @@ The following table lists the configurable parameters of the CPX with inBuilt In
 |```cic.pullPolicy```| CIC Image Pull Policy  | ```Always``` |
 |```cic.required```| CIC to be run as sidecar with Citrix ADC CPX| ```true```|
 |```exporter.required```|Exporter to be run as sidecar with Citrix ADC CPX and CIC|```false```|
-|```exporter.image```|Exporter image repository|```quay.io/citrix/citrix-adc-metrics-exporter:1.2```|
+|```exporter.image```|Exporter image repository|```quay.io/citrix/citrix-adc-metrics-exporter:1.3```|
 |```exporter.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
 |```ingressClass```| List of name of the Ingress Classes  | ```Citrix``` |
