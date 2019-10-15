@@ -116,7 +116,7 @@ The following table lists the configurable parameters of the Citrix ADC CPX with
 | cic.required | Mandatory | true | CIC to be run as sidecar with Citrix ADC CPX |
 | defaultSSLCert | Optional | N/A | Default SSL certificate that needs to be used as a non-SNI certificate in Citrix ADC. |
 | exporter.required | Optional | false | Use the argument if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/citrix-adc-metrics-exporter) along with Citrix ingress controller to pull metrics for the Citrix ADC CPX|
-| exporter.image | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.2` | The Exporter for Citrix ADC Stats image. |
+| exporter.image | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.3` | The Exporter for Citrix ADC Stats image. |
 | exporter.pullPolicy | Optional | Always | The Exporter for Citrix ADC Stats image pull policy. |
 | exporter.ports.containerPort | Optional | 8888 | The Exporter for Citrix ADC Stats container port. |
 | ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify Citrix ingress controller to configure Citrix ADC associated with specific ingress class.|
