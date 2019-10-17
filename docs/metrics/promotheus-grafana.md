@@ -10,7 +10,7 @@ Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats an
 
 The Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
 
-    git clone https://github.com/coreos/prometheus-operator.git
+    git clone https://github.com/coreos/kube-prometheus.git
 
     kubectl create -f kube-prometheus/manifests/
 
@@ -32,7 +32,7 @@ Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-opera
 
 !!! note "Note"
     The files in the `manifests` folder are interdependent and hence the order in which they are created is important. In certain scenarios the manifest files might be created out of order and this leads to an error messages from Kubernetes.
-    To resolve this scenario, re-execute the `kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/` command. Any YAML files that were not created the first time due to unmet dependencies, are created now.
+    To resolve this scenario, re-execute the `kubectl create -f kube-prometheus/manifests/` command. Any YAML files that were not created the first time due to unmet dependencies, are created now.
 
 It is recommended to expose the Prometheus and Grafana pods through NodePorts. To do so, you need to modify the `prometheus-service.yaml` and `grafana-service.yaml` files as follows:
 
