@@ -6,7 +6,7 @@ Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/d
 
 ## Auth CRD definition
 
-The Auth CRD is available in the Citrix ingress controller GitHub repo at: ***link to the CRD YAML***. The Auth CRD provides [attributes](#auth-crd-attributes) for various options that are required to define the authentication policies on the Ingress Citrix ADC.
+The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for various options that are required to define the authentication policies on the Ingress Citrix ADC.
 
 The following is the Auth CRD definition:
 
