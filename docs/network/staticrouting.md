@@ -19,17 +19,18 @@ Perform the following:
 
         # kubectl get nodes -o jsonpath="{range .items[*]}{'podNetwork: '}{.spec.podCIDR}{'\t'}{'gateway: '}{.status.addresses[0].address}{'\n'}{end}"
 
-         podNetwork: 10.244.0.0/24    gateway: 10.106.162.108
-         podNetwork: 10.244.2.0/24    gateway: 10.106.162.109
-         podNetwork: 10.244.1.0/24    gateway: 10.106.162.106
+          podNetwork: 10.244.0.0/24    gateway: 10.106.162.108
+          podNetwork: 10.244.2.0/24    gateway: 10.106.162.109
+          podNetwork: 10.244.1.0/24    gateway: 10.106.162.106
 
     If you are using **Calico** CNI then use the following command to get the podCIDR:
 
-        # kubectl get nodes -o jsonpath="{range .items[*]}{'podNetwork: '}{.metadata.annotations.projectcalico\.org/IPv4Address}{'\tgateway: '}{.metadata.annotations.projectcalico\.org/IPv4IPIPTunnelAddr}{'\n'}"
- 
-         podNetwork: 10.106.162.108/24   gateway: 192.168.109.0
-         podNetwork: 10.106.162.109/24   gateway: 192.168.174.0
-         podNetwork: 10.106.162.106/24   gateway: 192.168.76.128
+        # kubectl get nodes -o jsonpath="{range .items[*]}{'podNetwork: '}{.metadata.annotations.projectcalico\.org/IPv4IPIPTunnelAddr}{'\tgateway: '}{.metadata.annotations.projectcalico\.org/IPv4Address}{'\n'}"
+
+          podNetwork: 192.168.109.0       gateway: 10.106.162.108/24
+          podNetwork: 192.168.174.0       gateway: 10.106.162.109/24
+          podNetwork: 192.168.76.128      gateway: 10.106.162.106/24
+
 1.  Log on to the Citrix ADC instance.
 
 1.  Add route on the Citrix ADC instance using the podCIDR information. Use the following command:
