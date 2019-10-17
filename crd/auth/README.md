@@ -189,8 +189,8 @@ spec:
 The sample authentication policy performs the following:
 
 -  The Citrix ADC performs the authentication mechanism specified in the provider `local-auth-provider` on the requests to the following endpoints:
-   -  **orders**, **shipping**, and **GET** or **POST**
-   -  **products** and **POST**
+      -  **orders**, **shipping**, and **GET** or **POST**
+      -  **products** and **POST**
 -  The Citrix ADC does not perform the authentication mechanism for the following endpoints:
-   -  **products** and **POST**
-   -  **reviews**
+      -  **products** and **POST**
+      -  **reviews**

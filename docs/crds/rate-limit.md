@@ -181,4 +181,7 @@ spec:
 
 After you have defined the policy configuration, deploy the `.yaml` file using the following command:
 
+    root@master:~#kubectl create -f ratelimit-example2.yaml
+    ratelimit.citrix.com/throttle-req-per-clientip created
+
 The Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.

@@ -21,7 +21,7 @@ When you create a Kubernetes deployment for a microservice, Kubernetes deploys a
 
 Kubernetes DNS gets populated with an address record that maps the service name with the Cluster IP. So, when an application lets say `tea` wants to access a microservice (let’s say) `coffee` then DNS returns the Cluster IP of `coffee` service to `tea` application. The `Tea` application initiates a connection which is then intercepted by KubeProxy to load balance it to a set of `coffee` pods.
 
-![KubeProxy](../media/image001.png)
+![KubeProxy](../media/coffee-service.png)
 
 ## East-west communication with Citrix ADC CPX in Service Mesh Lite architecture
 
@@ -31,7 +31,7 @@ The goal is to insert the Citrix ADC CPX in the east-west path and use Ingress r
 
 For Citrix ADC CPX to manage east-west traffic, the FQDN of the microservice (for example, `coffee` as mentioned above) should point to Citrix ADC CPX IP address instead of the Cluster IP of the target microservice (`coffee`). (This Citrix ADC CPX deployment can be the same as the Ingress Citrix ADC CPX device.) After this modification, when a pod in the Kubernetes cluster resolves the FQDN for the coffee service, the IP address of the Citrix ADC CPX is returned.
 
-![Modify coffee service](../media/image002.png)
+![Modify coffee service](../media/coffee-svs-cpx.png)
 
 ## Step 2: Create a headless service “`coffee-headless`” for coffee microservice pods
 
@@ -61,11 +61,11 @@ With the above changes, we are now ready to create an ingress object that config
 
 A sample ingress resource is given below.
 
-![Sample](../media/image003.png)
+![Sample](../media/coffee-headless.png)
 
 Using the usual Ingress load balancing methodology with above changes, Citrix ADC CPX can now load balance east-west traffic. The following diagrams show how Citrix ADC CPX Service Mesh Lite architecture provides L7 proxying for east-west communication between `tea` and `coffee` microservices using Ingress rules:
 
-![Sample](../media/image004.png)
+![Sample](../media/coffee-micro-summary.png)
 
 ## East-west communication with Citrix ADC MPX or VPX in Service Mesh Lite architecture
 
@@ -135,7 +135,7 @@ With the above changes we are now ready to create an ingress object that configu
 
 A sample ingress resource is given below.
 
-![Sample](../media/image005.png)
+![Sample](../media/coffee-headless-ingress.png)
 
 Using the usual ingress load balancing methodology with above changes Citrix ADC MPX can now load balance east-west traffic. The following diagram shows the Citrix ADC MPX or VPX configured as N-S and E-W proxy using ingress rules.
 
