@@ -1,12 +1,12 @@
-p# Define authentication policies on the Ingress Citrix ADC
+# Define authentication policies on the Ingress Citrix ADC
 
 Authentication policies are used to enforce access restrictions to the resources hosted by an application or API server.
 
-Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
+Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Auth CRD**that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
 
 ## Auth CRD definition
 
-The Auth CRD is available in the Citrix ingress controller GitHub repo at: ***link to the CRD YAML***. The Auth CRD provides [attributes](#auth-crd-attributes) for various options that are required to define the authentication policies on the Ingress Citrix ADC.
+The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for various options that are required to define the authentication policies on the Ingress Citrix ADC.
 
 The following is the Auth CRD definition:
 
@@ -124,7 +124,7 @@ The following are the attributes for policies:
 
 Perform the following to deploy the Auth CRD:
 
-1.  Download the CRD ([auth-crd.yaml](auth-crd.yaml)).
+1.  Download the CRD ([auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml)).
 
 1.  Deploy the Auth CRD using the following command:
 
@@ -142,7 +142,7 @@ After you have deployed the CRD provided by Citrix in the Kubernetes cluster, yo
 
 After you deploy the `.yaml` file, the Citrix ingress controller applies the authentication policy configuration on the Ingress Citrix ADC device.
 
-The following is sample authentication policy definition ([auth_example1.yaml](auth_example1.yaml)):
+The following is sample authentication policy definition ([auth_example1.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth_example1.yaml)):
 
 ```yml
 apiVersion: citrix.com/v1beta1
