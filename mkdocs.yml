@@ -117,7 +117,10 @@ nav:
   - Use cases:
     - Service mesh lite: deploy/service-mesh-lite.md
     - Securing ingress: how-to/secure-ingress.md
-    - TCP and HTTP use cases: how-to/tcp-use-cases.md  
+    - TCP use cases: how-to/tcp-use-cases.md
+    - HTTP use cases: how-to/http-use-cases.md
+    - Session affinity: how-to/session-affinity.md
+    #- Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md  
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
   
