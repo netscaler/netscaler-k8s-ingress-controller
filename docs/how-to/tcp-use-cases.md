@@ -1,55 +1,16 @@
-# TCP and HTTP use cases
+# TCP use cases
 
-This topic covers various TCP and HTTP use cases that you can configure on the Ingress Citrix ADC using the annotations in Citrix ingress controller.
+This topic covers various TCP use cases that you can configure on the Ingress Citrix ADC using the annotations in the Citrix ingress controller.
 
-The following table lists the TCP and HTTP use cases with sample annotations:
+The following table lists the TCP use cases with sample annotations:
 
 | Use case | Sample annotation |
 | -------- | ----------------- |
-| [Handling HTTP session timeouts](#handling-http-session-timeouts) | `ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "reqtimeoutaction":"DROP"}}'` </br> </br> `ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "adptimeout" : "ENABLE"}}'` </br> </br>  `ingress.citrix.com/backend-httpprofile: '{"apache":{"reusepooltimeout" : "20000"}}'` |
 | [Silently drop idle TCP connections](#silently-drop-idle-tcp-connections) | `ingress.citrix.com/frontend-tcpprofile: '{"apache":{"DropHalfClosedConnOnTimeout" : "ENABLE", "DropEstConnOnTimeout":"ENABLE"}}'`|
 | [Delayed TCP connection acknowledgments](#delayed-tcp-connection-acknowledgements) | `ingress.citrix.com/frontend-tcpprofile: '{"apache":{"delayack" : "150"}}'` |
 [Client side MPTCP session management](#client-side-mptcp-session-management) | `ingress.citrix.com/frontend-tcpprofile: '{"apache":{"mptcp": "ENABLED", "mptcpSessionTimeout":"7200"}}'` |
-
-## Handling HTTP session timeouts
-
-To handle the different type of HTTP request and also to mitigate attacks such as, Slowloris DDoS attack, where in the clients initiate connections that you might want to restrict. On the Ingress Citrix ADC, you can configure the following timeouts for these scenarios:
-
--  reqTimeout and reqTimeoutAction
--  adptTimeout
--  reusePoolTimeout
-
-### reqTimeout and reqTimeoutAction
-
-In Citrix ADC, you can configure the HTTP request timeout value and the request timeout action using the `reqTimeout` and `reqTimeoutAction` parameter in the HTTP profile. The `reqTimeout` value is set in seconds and the HTTP request must complete within the specified time in the `reqTimeout` parameter. If the HTTP request does not complete within defined time, the specified request timeout action in the `reqTimeoutAction` is executed. The minimum timeout value you can set is 0 and the maximum is 86400. By default, the timeout value is set to 0.
-
-Using the `reqTimeoutAction` parameter you can specify the type of action that must be taken in case the HTTP request timeout value (`reqTimeout`) elapses. You can specify the following actions:
-
--  RESET
--  DROP
-
-Using the annotations for HTTP profiles, you can configure the HTTP request timeout and HTTP request timeout action. The following is a sample annotation of HTTP profile to configure the HTTP request timeout and HTTP request timeout action on the Ingress Citrix ADC:
-
-    ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "reqtimeoutaction":"DROP"}}'
-
-### adptTimeout
-
-Instead of using a set timeout value for the requested sessions, you can also enable `adptTimeout`. The `adptTimeout` parameter adapts the request timeout as per the flow conditions. If enabled, then request timeout is increased or decreased internally and applied on the flow. By default, this parameter is set as DISABLED.
-
-Using annotations for HTTP profiles, you can enable or disable the `adpttimeout` parameter as follows:
-
-    ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "adptimeout" : "ENABLE"}}'
-
-### reusePoolTimeout
-
-You can configure a reuse pool timeout value to flush any idle server connections in from the reuse pool. If the server is idle for the configured amount of time, then the corresponding connections are flushed.
-
-The minimum timeout value you can set is 0 and the maximum is 31536000. By default, the timeout value is set to 0.
-
-Using annotations for HTTP profiles, you can configure the required timeout value as follows:
-
-    ingress.citrix.com/backend-httpprofile: '{"apache":{"reusepooltimeout" : "20000"}}'
-
+| [TCP Optimization](#tcp-optimization) | N/A |
+| [Defending TCP against spoofing attacks](#defend-tcp-against-spoofing-attacks) | `ingress.citrix.com/frontend_tcpprofile: '{"rstwindowattenuate" : "enabled", "spoofSynDrop":"enabled"}` |
 
 ## Silently drop idle TCP connections
 
@@ -78,3 +39,77 @@ You can enable MPTCP and set the MPTCP session timeout (`mptcpsessiontimeout`) i
 Using the annotations for TCP profiles, you can enable MPTCP and set the `mptcpsessiontimeout` parameter value on the Ingress Citrix ADC. The following is a sample annotation of TCP profile to enable MPTCP and set the `mptcpsessiontimeout` parameter value to 7200 on the Ingress Citrix ADC:
 
     ingress.citrix.com/frontend-tcpprofile: '{"apache":{"mptcp" : "ENABLED", "mptcpSessionTimeout":"7200"}}'
+
+## TCP Optimization
+
+Most of the relevant TCP optimization capabilities of the Ingress Citrix ADC are exposed through a corresponding TCP profile. Using the annotations for TCP profiles, you can enable the following TCP optimization capabilities on the Ingress Citrix ADC:
+
+-  **Selective acknowledgment (SACK)**: TCP SACK addresses the problem of multiple packet losses which reduces the overall throughput capacity. With selective acknowledgment the receiver can inform the sender about all the segments which are received successfully, enabling sender to only retransmit the segments which were lost. This technique helps T1 improve overall throughput and reduce the connection latency.
+
+    The following is a sample annotation of TCP profile to enable SACK on the Ingress Citrix ADC:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"sack" : "enabled"}
+
+-  **Forward acknowledgment (FACK)**: To avoid TCP congestion by explicitly measuring the total number of data bytes outstanding in the network, and helping the sender (either T1 or a client) control the amount of data injected into the network during retransmission timeouts.
+
+    The following is a sample annotation of TCP profile to enable FACK on the Ingress Citrix ADC:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"fack" : "enabled"}
+
+-  **Window Scaling (WS)**: TCP Window scaling allows increasing the TCP receive window size beyond 65535 bytes. It helps improving TCP performance overall and specially in high bandwidth and long delay networks. It helps with reducing latency and improving response time over TCP.
+
+    The following is a sample annotation of TCP profile to enable WS on the Ingress Citrix ADC:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"ws" : "enabled", "wsval" : "9"}
+
+    Where `wsval` is the factor used to calculate the new window size. The argument is mandatory only when window scaling is enabled.  The minimum value you can set is 0 and the maximum is 14. By default, the value is set to 4.
+
+-  **Maximum Segment Size (MSS)**: MSS of a single TCP segment. This value depends on the MTU setting on intermediate routers and end clients. A value of 1460 corresponds to an MTU of 1500.
+
+    The following is a sample annotation of TCP profile to enable MSS on the Ingress Citrix ADC:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"mss" : "1460", "maxPktPerMss" : "512"}
+
+    Where:
+    -  `mss` is the MSS to use for the TCP connection. The minimum value you can set is 0 and the maximum is 9176.
+    -  `maxPktPerMss` is the maximum number of TCP packets allowed per maximum segment size (MSS). The minimum value you can set is 0 and the maximum is 1460.
+
+-  **Keep-Alive (KA)**: Send periodic TCP keep-alive (KA) probes to check if the peer is still up.
+
+    The following is a sample annotation of TCP profile to enable TCP keep-alive (KA) on the Ingress Citrix ADC:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"ka" : "enabled", "kaprobeupdatelastactivity":"enabled", "KAconnIdleTime": "900",  "kamaxprobes" : "3",  "kaprobeinterval" : "75"}
+
+    Where:
+    -  `ka` is used to enable sending periodic TCP keep-alive (KA) probes to check if the peer is still up. Possible values: ENABLED, DISABLED. Default value: DISABLED.
+    -  `kaprobeupdatelastactivity` updates the last activity for the connection after receiving keep-alive (KA) probes.  Possible values: ENABLED, DISABLED. Default value: ENABLED.
+    -  `KAconnIdleTime` is the duration (in seconds) for the connection to be idle, before sending a keep-alive (KA) probe. The minimum value you can set is 1 and the maximum is 4095.
+    -  `kaprobeinterval` is the time internal (in seconds) before the next keep-alive (KA) probe, if the peer does not respond. The minimum value you can set is 1 and the maximum is 4095.
+
+-  **bufferSize:** Specify the TCP buffer size, in bytes. The minimum value you can set is 8190 and the maximum is 20971520. By default the value is set to 8190.
+
+    The following is a sample annotation of TCP profile to specify the TCP buffer size:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"bufferSize" : "8190"}
+
+-  **MPTCP**: Enable MPTCP and set the optional MPTCP configuration. The following is a sample annotation of TCP profile to enable MPTCP and se the optional MPTCP configurations:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"mptcp" : "enabled", "mptcpDropDataOnPreEstSF":"enabled", "mptcpFastOpen": "enabled", "mptcpSessionTimeout":"7200"}
+
+-  **flavor**: Set the TCP congestion control algorithm. Valid values are Default, BIC, CUBIC, Westwood, and Nile. By default the value is set to Default. The following is a sample annotation of TCP profile to set the TCP congestion control algorithm:
+
+        ingress.citrix.com/frontend_tcpprofile: '{"flavor" : "westwood"}
+
+-  **Dynamic receive buffering**: Enable or disable dynamic receive buffering. When enabled, it allows the receive buffer to be adjusted dynamically based on memory and network conditions. Possible values: ENABLED, DISABLED, and the Default value: DISABLED.
+
+    >**Note:** The buffer size argument must be set for dynamic adjustments to take place.
+
+        ingress.citrix.com/frontend_tcpprofile: '{"dynamicReceiveBuffering" : "enabled"}
+
+## Defend TCP against spoofing attacks
+
+You can enable the Ingress Citrix ADC to defend TCP against spoof attacks using the `rstWindowAttenuation` in TCP profiles. By default the `rstWindowAttenuation` parameter is disabled. This parameter is enabled to protect the Ingress Citrix ADC against spoofing. If you enable, it replies with corrective acknowledgment (ACK) for an invalid sequence number. Possible values are Enabled or Disabled.
+
+The following is a sample annotation of TCP profile to enable `rstWindowAttenuation` on the Ingress Citrix ADC:
+
+    ingress.citrix.com/frontend_tcpprofile: '{"rstwindowattenuate" : "enabled", "spoofSynDrop":"enabled"}
