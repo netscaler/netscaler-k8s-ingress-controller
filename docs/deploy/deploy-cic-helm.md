@@ -63,8 +63,7 @@ Citrix ingress controller configures the Citrix ADC using a system user account 
         add cmdpolicy cic-policy ALLOW "^(?!shell)(?!sftp)(?!scp)(?!batch)(?!source)(?!.*superuser)(?!.*nsroot)(?!install)(?!show\s+system\s+(user|cmdPolicy|file))(?!(set|add|rm|create|export|kill)\s+system)(?!(unbind|bind)\s+system\s+(user|group))(?!diff\s+ns\s+config)(?!(set|unset|add|rm|bind|unbind|switch)\s+ns\s+partition).*|(^install\s*(wi|wf))|(^(add|show)\s+system\s+file)"
 
     !!! note "Note"
-        The system user account would have privileges based on the command policy that you define.
-        Above cmdpolicy is similar to built-in sysAdmin cmdpolicy with additional permission to upload file
+        The system user account would have privileges based on the command policy that you define. The command policy mentioned in ***step 3*** is similar to the built-in `sysAdmin` command policy with additional permission to upload files.
 
 4.  Bind the policy to the system user account using the following command:
 
