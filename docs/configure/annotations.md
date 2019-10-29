@@ -2,9 +2,6 @@
 
 The following are the annotations supported by Citrix:
 
-!!! note "Note"
-    The annotation and smart annotation features are not supported for OpenShift routes. You can use OpenShift ingress to use these features.
-
 |**Annotations**|**Possible value**|**Description**|**Default**|
 |---------------|------------------|---------------|-----------|
 |ingress.citrix.com/frontend-ip| IP address | Use this annotation to customize the virtual IP address (VIP). This IP address is configured in Citrix ADC as VIP. The annotation is mandatory if you are using Citrix ADC VPX or MPX. </br>**Note:** Do not use the annotation if you want to use the Citrix ADC IP address as VIP. | Citrix ADC IP address is used as VIP. |
