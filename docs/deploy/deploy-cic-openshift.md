@@ -35,7 +35,7 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 | Citrix ADC CPX | 13.0–36.28 |
 
 !!! note "Note"
-    The [CRDs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd), [annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/), and [smart annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/#smart-annotations) provided for the Citrix ingress controller is not supported for OpenShift routes. You can use OpenShift ingress to use these features.
+    [CRDs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd) provided for the Citrix ingress controller is not supported for OpenShift routes. You can use OpenShift ingress to use CRDs.
 
 ## Deploy Citrix ADC CPX as a router within the OpenShift cluster
 
@@ -49,7 +49,7 @@ In this deployment, you can use the Citrix ADC CPX instance for load balancing t
 
         oc get -o yaml service/router dc/router clusterrolebinding/router-router-role serviceaccount/router > default-router-backup.yaml
 
-1.  Delete the default router using the following command.
+2.  Delete the default router using the following command.
 
         oc delete -f default-router-backup.yaml
 
