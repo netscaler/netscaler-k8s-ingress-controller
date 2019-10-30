@@ -19,7 +19,7 @@ After you have set the required options, create a Kubernetes cluster using the P
 
  You can either deploy Citrix ADC CPXs as pods inside the cluster or deploy a Citrix ADC MPX or VPX appliance outside the Kubernetes cluster.
 
-Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix ingress controller in a Kubernetes cluster on the Rancher platform:
+Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix ingress controller in a Kubernetes cluster on the PKS:
 
 -  As a sidecar container alongside Citrix ADC CPX in the same pod: In this mode, Citrix ingress controller configures the Citrix ADC CPX.
   
