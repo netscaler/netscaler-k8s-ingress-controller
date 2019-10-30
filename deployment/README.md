@@ -52,5 +52,6 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Securing ingress](../docs/how-to/secure-ingress.md)
 -  [TCP use cases](../docs/how-to/tcp-use-cases.md)
 -  [HTTP use cases](../docs/how-to/http-use-cases.md)
+-  [Whitelisting or Blacklisting IP addresses](../docs/how-to/ip-whitelist-blacklist.md)
 -  [Load balance Ingress traffic to TCP or UDP based application](../docs/how-to/tcp-udp-ingress.md)
 -  [Set up dual-tier deployment](../docs/how-to/deploy-cic-dual-tier.md)
