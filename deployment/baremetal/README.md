@@ -166,7 +166,7 @@ CPX with a builtin Citrix Ingress Controller agent that configures the CPX. CPX 
 
    This pulls the latest image and brings up the Citrix Ingress Controller.
                 
-   Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.4.392` </span>
+   Official Citrix Ingress Controller docker images is <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.5.25` </span>
 
 4. #### Reachability to the Pod Network
 
