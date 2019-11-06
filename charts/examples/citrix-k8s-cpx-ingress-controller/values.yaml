@@ -5,7 +5,7 @@ cpx:
   image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29
   pullPolicy: Always
 cic:
-  image: quay.io/citrix/citrix-k8s-ingress-controller:1.4.392
+  image: quay.io/citrix/citrix-k8s-ingress-controller:1.5.25
   pullPolicy: Always
   required: true
 license:
