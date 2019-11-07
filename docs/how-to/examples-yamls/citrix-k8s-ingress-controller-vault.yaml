@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+  name: cic-vault
+  namespace: default
+spec:
+  containers:
+  - args:
+    - --ingress-classes tier-1-vpx
+    - --feature-node-watch true
+    env:
+    - name: NS_IP
+      value: <Tier 1 ADC IP-ADDRESS>
+    - name: EULA
+      value: "yes"
+    image: in-docker-reg.eng.citrite.net/cpx-dev/kumar-cic:latest
+    imagePullPolicy: Always
+    name: cic-k8s-ingress-controller
+    volumeMounts:
+    - mountPath: /etc/citrix
+      name: shared-data
+  initContainers:
+  - args:
+    - agent
+    - -config=/etc/vault/vault-agent-config.hcl
+    - -log-level=debug
+    env:
+    - name: VAULT_ADDR
+      value: <VAULT URL>
+    image: vault
+    imagePullPolicy: Always
+    name: vault-agent-auth
+    volumeMounts:
+    - mountPath: /etc/vault
+      name: config
+    - mountPath: /home/vault
+      name: vault-token
+  - args:
+    - -config=/etc/consul-template/consul-template-config.hcl
+    - -log-level=debug
+    - -once
+    env:
+    - name: HOME
+      value: /home/vault
+    - name: VAULT_ADDR
+      value: <VAULT_URL>
+    image: hashicorp/consul-template:alpine
+    imagePullPolicy: Always
+    name: consul-template
+    volumeMounts:
+    - mountPath: /home/vault
+      name: vault-token
+    - mountPath: /etc/consul-template
+      name: config
+    - mountPath: /etc/citrix
+      name: shared-data
+  serviceAccountName: vault-auth
+  volumes:
+  - emptyDir:
+      medium: Memory
+    name: vault-token
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: vault-agent-config.hcl
+        path: vault-agent-config.hcl
+      - key: consul-template-config.hcl
+        path: consul-template-config.hcl
+      name: example-vault-agent-config
+    name: config
+  - emptyDir:
+      medium: Memory
+    name: shared-data
