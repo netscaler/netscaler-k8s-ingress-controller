@@ -148,7 +148,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
                   imagePullPolicy: Always
                 # Add cic as a sidecar
                 - name: cic
-                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
                   imagePullPolicy: Always
                   env:
                   - name: "EULA"
@@ -346,7 +346,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
               serviceAccount: citrix
               containers:
               - name: cic
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
                 securityContext:
                   privileged: true
                 env:
