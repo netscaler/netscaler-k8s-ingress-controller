@@ -62,7 +62,7 @@ spec:
     name: bind
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.4.392:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.5.25:
 
 ```yml
 apiVersion: extensions/v1beta1
