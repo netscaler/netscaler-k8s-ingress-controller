@@ -6,7 +6,7 @@ This topic provides details about various Kubernetes platforms, deployment topol
 
 Citrix ingress controller is supported on the following platforms:
 
--  Kubernetes v1.10 on bare metal or self-hosted on public clouds such as, AWS, GCP, or Azure.
+-  Kubernetes v1.10 (and later) on bare metal or self-hosted on public clouds such as, AWS, GCP, or Azure.
 -  Google Kubernetes Engine (GKE)
 -  Elastic Kubernetes Service (EKS)
 -  Azure Kubernetes Service (AKS)
