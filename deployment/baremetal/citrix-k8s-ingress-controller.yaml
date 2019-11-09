@@ -57,13 +57,22 @@ metadata:
   namespace: default
 
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: cic-k8s-ingress-controller
-  labels:
-    app: cic-k8s-ingress-controller
-spec: 
+spec:
+  selector:
+    matchLabels:
+      app: cic-k8s-ingress-controller
+  replicas: 1
+  template:
+    metadata:
+      name: cic-k8s-ingress-controller
+      labels:
+        app: cic-k8s-ingress-controller
+      annotations:
+    spec: 
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
