@@ -9,6 +9,7 @@ Launching Promethus-Operator
 Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
 ```
 git clone https://github.com/coreos/kube-prometheus.git
+kubectl create -f kube-prometheus/manifests/setup/
 kubectl create -f kube-prometheus/manifests/
 ```
 This creates several pods and services, of which ```prometheus-k8s-xx``` pods aggregate and timestamp metrics collected from NetScaler devices, and the ```grafana``` pod can be used for visualization. An output similar to this should be seen:
@@ -28,7 +29,7 @@ prometheus-k8s-1                       3/3       Running   1          2h
 prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
 ```
 
-**NOTE:** The files in the ```manifests/``` folder have interdependencies due to which the order in which they get created is important. At times the manifest files may get created out of order leading to ```Error``` messages from Kubernetes. To resolve this, simply re-run the ```kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/``` command. Any yaml files that had not been created the first time around due to unmet dependencies, will get created this time.
+**NOTE:** The files in the ```manifests/``` folder have interdependencies due to which the order in which they get created is important. At times the manifest files may get created out of order leading to ```Error``` messages from Kubernetes. To resolve this, simply re-run the ```kubectl create -f kube-prometheus/manifests/``` command. Any yaml files that had not been created the first time around due to unmet dependencies, will get created this time.
 
 It may be preferable to expose the Prometheus and Grafana pods via NodePorts. To do so, the prometheus-service.yaml and grafana-service.yaml files will need to be modified as follows:
 
