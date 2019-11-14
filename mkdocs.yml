@@ -120,7 +120,8 @@ nav:
     - TCP use cases: how-to/tcp-use-cases.md
     - HTTP use cases: how-to/http-use-cases.md
     - Session affinity: how-to/session-affinity.md
-    - Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md  
+    - Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md
+    - Interoperability with ExternalDNS: how-to/integrate-externaldns.md 
     - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
