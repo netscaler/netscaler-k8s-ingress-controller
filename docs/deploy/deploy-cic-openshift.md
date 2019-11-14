@@ -765,4 +765,4 @@ spec:
 
 ## Restrictions
 
-[Automatic static route configuration](../network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported.
+[Automatic static route configuration](../network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported. Instead, you can use the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller), based on your requirement.
