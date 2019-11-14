@@ -30,13 +30,16 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 
 | Citrix components | Versions |
 | ----------------- | -------- |
-| Citrix ingress controller | Latest (1.1.3) |
+| Citrix ingress controller | Latest (1.4.0) |
 | Citrix ADC VPX | 12.1 50.x and later |
 | Citrix ADC CPX | 13.0–36.28 |
 
+!!! note "Note"
+    [CRDs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd) provided for the Citrix ingress controller is not supported for OpenShift routes. You can use OpenShift ingress to use CRDs.
+
 ## Deploy Citrix ADC CPX as a router within the OpenShift cluster
 
-In this deployment, you can use the Citrix ADC CPX instance for load balancing the North-South traffic to microservices in your OpenShift cluster. The Citrix ingress controller is deployed as a sidecar alongside the Citrix ADC CPX container in the same pod using the [cpx_cic_side_car.yaml](../../deployment/openshift/manifest/cpx_cic_side_car.yaml) file.
+In this deployment, you can use the Citrix ADC CPX instance for load balancing the North-South traffic to microservices in your OpenShift cluster. The Citrix ingress controller is deployed as a sidecar alongside the Citrix ADC CPX container in the same pod using the [cpx_cic_side_car.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml) file.
 
 **Before you begin**
 
@@ -46,13 +49,13 @@ In this deployment, you can use the Citrix ADC CPX instance for load balancing t
 
         oc get -o yaml service/router dc/router clusterrolebinding/router-router-role serviceaccount/router > default-router-backup.yaml
 
-1.  Delete the default router using the following command.
+2.  Delete the default router using the following command.
 
         oc delete -f default-router-backup.yaml
 
 Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix ingress controller as a sidecar.
 
-1.  Download the [cpx_cic_side_car.yaml](../../deployment/openshift/manifest/cpx_cic_side_car.yaml) file using the following command:
+1.  Download the [cpx_cic_side_car.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml) file using the following command:
 
         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml
 
@@ -64,13 +67,16 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
           name: citrix
         rules:
           - apiGroups: [""]
-            resources: ["endpoints", "ingresses", "services", "pods", "secrets", "nodes", "routes", "namespaces","tokenreviews","subjectaccessreview"]
+            resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces"]
             verbs: ["get", "list", "watch"]
           # services/status is needed to update the loadbalancer IP in service status for integrating
           # service of type LoadBalancer with external-dns
           - apiGroups: [""]
             resources: ["services/status"]
             verbs: ["patch"]
+          - apiGroups: [""]
+            resources: ["services"]
+            verbs: ["get", "list", "watch", "patch"]
           - apiGroups: ["extensions"]
             resources: ["ingresses", "ingresses/status"]
             verbs: ["get", "list", "watch"]
@@ -89,6 +95,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
           - apiGroups: ["route.openshift.io"]
             resources: ["routes"]
             verbs: ["get", "list", "watch"]
+
         ---
         kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -141,7 +148,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
                   imagePullPolicy: Always
                 # Add cic as a sidecar
                 - name: cic
-                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
                   imagePullPolicy: Always
                   env:
                   - name: "EULA"
@@ -188,7 +195,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
 ## Deploy Citrix ADC MPX/VPX as a router outside the OpenShift cluster
 
 In this deployment, the Citrix ingress controller which runs as a stand-alone pod allows you to control the Citrix ADC MPX, or VPX appliance from the OpenShift cluster.
-You can use the [cic.yaml](../../deployment/openshift/manifest/cic.yaml)file for this deployment.
+You can use the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml)file for this deployment.
 
 !!! note "Note"
     The Citrix ADC MPX or VPX can be deployed in *[standalone](https://docs.citrix.com/en-us/citrix-adc/12-1/getting-started-with-citrix-adc.html)*, *[high-availability](https://docs.citrix.com/en-us/citrix-adc/12-1/getting-started-with-citrix-adc/configure-ha-first-time.html)*, or *[clustered](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering.html)* modes.
@@ -253,7 +260,7 @@ The Citrix ingress controller configures a Citrix ADC appliance (MPX or VPX) usi
 
 Perform the following steps to deploy the Citrix ingress controller as a pod:
 
-1.  Download the [cic.yaml](../../deployment/openshift/manifest/cic.yaml) file using the following command:
+1.  Download the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file using the following command:
 
         wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml
 
@@ -265,13 +272,16 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
           name: citrix
         rules:
           - apiGroups: [""]
-            resources: ["endpoints", "ingresses", "services", "pods", "secrets", "nodes", "routes", "namespaces","tokenreviews","subjectaccessreview"]
+            resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces"]
             verbs: ["get", "list", "watch"]
           # services/status is needed to update the loadbalancer IP in service status for integrating
           # service of type LoadBalancer with external-dns
           - apiGroups: [""]
             resources: ["services/status"]
             verbs: ["patch"]
+          - apiGroups: [""]
+            resources: ["services"]
+            verbs: ["get", "list", "watch", "patch"]
           - apiGroups: ["extensions"]
             resources: ["ingresses", "ingresses/status"]
             verbs: ["get", "list", "watch"]
@@ -336,7 +346,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
               serviceAccount: citrix
               containers:
               - name: cic
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
                 securityContext:
                   privileged: true
                 env:
@@ -365,7 +375,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
                   default/default-cert
                 imagePullPolicy: Always
 
-1.  Edit the [cic.yaml](../../deployment/openshift/manifest/cic.yaml) file and enter the values for the following environmental variables:
+1.  Edit the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file and enter the values for the following environmental variables:
 
     | Environment Variable | Mandatory or Optional | Description |
     | ---------------------- | ---------------------- | ----------- |
@@ -412,7 +422,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 
 In this example, the Citrix ingress controller is deployed as a router plug-in in the OpenShift cluster to load balance an application.
 
-1.  Deploy a sample application ([apache.yaml](../../deployment/openshift/manifest/apache.yaml)) in your OpenShift cluster and expose it as a service in your cluster using the following command.
+1.  Deploy a sample application ([apache.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/apache.yaml)) in your OpenShift cluster and expose it as a service in your cluster using the following command.
 
         oc create -f  apache.yaml
 
@@ -523,19 +533,19 @@ In this example, the Citrix ingress controller is deployed as a router plug-in i
 
 1.  Create an OpenShift route for exposing the application.
 
-    -  For creating an unsecured OpenShift route ([unsecured-route.yaml](../../deployment/openshift/manifest/unsecured-route.yaml)), use the following command:
+    -  For creating an unsecured OpenShift route ([unsecured-route.yaml]([../../deployment/openshift/manifest/unsecured-route.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/unsecured-route.yaml))), use the following command:
 
             oc create -f unsecured-route.yaml
 
-    -  For creating a secured OpenShift route with edge termination ([secured-edge-route.yaml](../../deployment/openshift/manifest/secured-edge-route.yaml)), use the following command.
+    -  For creating a secured OpenShift route with edge termination ([secured-edge-route.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/secured-edge-route.yaml)), use the following command.
 
             oc create -f secured-route-edge.yaml
 
-    -  For creating a secured OpenShift route with passthrough termination ([secured-passthrough-route.yaml](../../deployment/openshift/manifest/secured-passthrough-route.yaml)), use the following command.
+    -  For creating a secured OpenShift route with passthrough termination ([secured-passthrough-route.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/secured-passthrough-route.yaml)), use the following command.
 
             oc create -f secured-passthrough-route.yaml
 
-    -  For creating a secured OpenShift route with re-encryption termination ([secured-reencrypt-route.yaml](../../deployment/openshift/manifest/secured-reencrypt-route.yaml)), use the following command.
+    -  For creating a secured OpenShift route with re-encryption termination ([secured-reencrypt-route.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/secured-reencrypt-route.yaml)), use the following command.
 
             oc create -f secured-reencrypt-route.yaml
 
@@ -755,8 +765,4 @@ spec:
 
 ## Restrictions
 
-The following restrictions apply while deploying the Citrix ingress controller as a router plug-in in the OpenShift cluster.
-
--  [Router sharding](https://docs.openshift.com/container-platform/3.9/architecture/networking/routes.html#router-sharding) is not supported.
--  [Automatic static route configuration](../network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported.
--  When you modify the OpenShift route configuration, applying those changes using the `oc apply command` is not supported. As a workaround, delete the existing OpenShift route and recreate the route.
+[Automatic static route configuration](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported. Instead, you can use the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller), based on your requirement.
