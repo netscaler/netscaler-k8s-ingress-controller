@@ -12,7 +12,7 @@ For the ExternalDNS integration to work, the `external-dns.alpha.kubernetes.io/h
 
 1.  Install the [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) with Infoblox provider.
 
-    >**Disclaimer:**
+    >**Note:**
     > The interoperability solution has been tested with Infoblox provider and the solution might work for other providers as well.
 
 1.  Specify the domain name in the ExternalDNS configuration.
