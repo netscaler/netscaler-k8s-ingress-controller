@@ -58,7 +58,7 @@ The following table lists the configurable parameters of the Citrix Ingress Cont
 |```kubernetesURL```| Optional: register for events. If user did not specify it explictly, citrix ingress controller use internal KubeAPIServer IP.|```nil```|
 |```nsVIP```| VIP IP |```nil``` 
 |```exporter.required```|Exporter to be run as sidecar with CIC|```false```|
-|```exporter.image```|Exporter image repository|```quay.io/citrix/citrix-adc-metrics-exporter:1.3```|
+|```exporter.image```|Exporter image repository|```quay.io/citrix/citrix-adc-metrics-exporter:1.4.0```|
 |```exporter.pullPolicy```|Exporter Image Pull Policy|```Always```|
 |```exporter.ports.containerPort```|Exporter Container Port|```8888```|
 |```ingressClass```| List of name of Ingress Classes |```Citrix```|
