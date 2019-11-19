@@ -16,7 +16,7 @@ nsVIP: x.x.x.x #VIP IP
 ingressClass: ["Citrix"]
 exporter:
   required: false
-  image: quay.io/citrix/citrix-adc-metrics-exporter:1.3
+  image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.0
   pullPolicy: Always
   ports:
        containerPort: 8888
