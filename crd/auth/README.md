@@ -21,7 +21,7 @@ spec:
   names:
     kind: authpolicy
     plural: authpolicies
-    singular: authpolicy 
+    singular: authpolicy
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -140,7 +140,7 @@ The following are the attributes for basic authentication:
 
 #### OAuth authentication
 
-The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successfull then Citrix ADC grants access to the client.
+The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successful then Citrix ADC grants access to the client.
 
 ##### OAuth authentication attributes
 
