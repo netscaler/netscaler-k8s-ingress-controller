@@ -21,7 +21,7 @@ spec:
   names:
     kind: authpolicy
     plural: authpolicies
-    singular: authpolicy
+    singular: authpolicy 
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -29,10 +29,11 @@ spec:
         spec:
           properties:
             servicenames:
-              description: 'Name of the services that needs to be binded to auth policy.'
+              description: 'Name of the services that needs to be binded to rewrite policy.'
               type: array
               items:
                 type: string
+                maxLength: 127
             auth_providers:
               description: 'Auth Config for required auth providers, one or more of these can be created'
               type: array
@@ -42,6 +43,31 @@ spec:
                     name:
                       description: 'Name for this provider, has to be unique, referenced by auth policies'
                       type: string
+
+                    oauth:
+                      description: 'Auth provided by external oAuth provider' 
+                      properties:
+                          issuer:
+                              description: 'Identity of the server whose tokens are to be accepted'
+                              type: string
+                          jwks_uri:
+                              description: 'URL of the endpoint that contains JWKs (Json Web Key) for JWT (Json Web Token) verification'
+                              type: string
+                          audience:
+                              description: 'Audience for which token sent by Authorization server is applicable'
+                              type: array
+                              items:
+                                type: string
+                          token_in_hdr:
+                              description: 'custom header name where token is present, default is Authorization header'
+                              type: array
+                              items:
+                                type: string
+                          token_in_param:
+                              description: 'query parameter name where token is present'
+                              type: array
+                              items:
+                                type: string
 
                     basic_local_db:
                       description: 'Basic HTTP authentication, user data in local DB'
@@ -97,16 +123,36 @@ The name of the services that you want to bind to the authentication policy.
 
 ### auth_providers
 
-The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. The current version of the CRD supports only *basic authentication* and hence you should create the user accounts on the ingress Citrix ADC.
+The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. The CRD supports both *basic authentication* and *OAuth authentication*. 
 
-Any new request to the services in your Kubernetes deployment must contain the *Authentication* header with the user name and password and the request is validated with user credentials within the Citrix ADC.
+#### Basic authentication
 
-The following are the attributes for local authentication:
+To use basic authentication, you must create the user accounts on the ingress Citrix ADC. Any new request to the services in your Kubernetes deployment must contain the *Authentication* header with the user name and password and the request is validated with user credentials within the Citrix ADC.
+
+##### Basic authentication attributes
+
+The following are the attributes for basic authentication:
 
 | Attribute | Description |
 | --------- | ----------- |
 | `name` | The name of the provider. This name is used in the [policies](#authproviders) to refer the provider. |
-| `basic_local_db` | Specifies that local authentication is used with the HTTP basic authentication scheme. The requests should contain the Authentication header with user name and password.|
+| `basic_local_db` | Specifies that local authentication is used with the HTTP basic authentication scheme. The requests should contain the authentication header with user name and password.|
+
+#### OAuth authentication
+
+The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successfull then Citrix ADC grants access to the client.
+
+##### OAuth authentication attributes
+
+The following are the attributes for OAuth authentication:
+
+| Attribute | Description |
+| --------- | ----------- |
+| `Issuer` | The identity (usually a URL) of the server whose tokens need to be accepted for authentication.|
+| `jwks_uri` | The URL of the endpoint that contains JWKs (JSON Web Key) for JWT (JSON Web Token) verification.|
+| `audience` | The identity of the service or application for which the token is applicable. |
+| `token_in_hdr` | The custom header name where the token is present. Default is `Authorization` header. </br> **Note:** You can specify more than one header. |
+| `token_in_param` | The query parameter where the token is present. |
 
 ### auth_policies
 
@@ -158,6 +204,12 @@ spec:
         - name: "local-auth-provider"
           basic-local-db:
 
+        - name: "jwt-auth-provider"
+          oauth:
+            issuer: "https://sts.windows.net/tenant1/"
+            jwks_uri: "https://login.microsoftonline.com/tenant1/discovery/v2.0/keys"
+            audience : ["https://vault.azure.net"]
+
     auth_policies:
 
         - resource:
@@ -165,25 +217,26 @@ spec:
               - '/orders/'
               - '/shipping/'
             method: [GET, POST]
-          provider: ["local-auth-provider"]    
+          provider: ["local-auth-provider"]
 
         - resource:
             path:
               - '/products/'
             method: [POST]
-          provider: ["local-auth-provider"]    
+          provider: ["local-auth-provider"]
 
-          # no auth for these
+          # no auth for this
         - resource:
             path:
               - '/products/'
             method: [GET]
           provider: []
 
+          # oauth provider for this
         - resource:
             path:
               -  '/reviews/'
-          provider: []
+          provider: ["jwt-auth-provider"]
 ```
 
 The sample authentication policy performs the following:
@@ -191,6 +244,19 @@ The sample authentication policy performs the following:
 -  The Citrix ADC performs the authentication mechanism specified in the provider `local-auth-provider` on the requests to the following endpoints:
       -  **orders**, **shipping**, and **GET** or **POST**
       -  **products** and **POST**
--  The Citrix ADC does not perform the authentication mechanism for the following endpoints:
-      -  **products** and **POST**
-      -  **reviews**
+-  The Citrix ADC does not perform the authentication for the **products** and **GET** endpoints.
+-  The Citrix ADC performs the authentication mechanism specified in the provider `jwt-auth-provider` on the requests to the **reviews** endpoint. If the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
+
+          oauth:
+            issuer: "https://sts.windows.net/tenant1/"
+            jwks_uri: "https://login.microsoftonline.com/tenant1/discovery/v2.0/keys"
+            audience : ["https://vault.azure.net"]
+            token_in_hdr : [“custom-hdr1”]
+
+    Similarly, if the token is present in a query parameter, it can be specified using the “token_in_param” attribute as follows:
+
+          oauth:
+            issuer: "https://sts.windows.net/tenant1/"
+            jwks_uri: "https://login.microsoftonline.com/tenant1/discovery/v2.0/keys"
+            audience : ["https://vault.azure.net"]
+            token_in_param : [“query-param1”]
