@@ -20,6 +20,8 @@ license:
 nsPort: 443
 # nsProtocol is protocol for NetScaler NITRO
 nsProtocol: HTTPS
+# nsNamespace is the prefix for the resources on the NetScaler
+nsNamespace:
 # logLevel is to set level of CIC Logs
 logLevel: DEBUG
 # kubernetesURL is for registering events to kubeapi server

@@ -120,6 +120,8 @@ spec:
           value: "{{ .Values.nsProtocol }}"
         - name: "NS_PORT"
           value: "{{ .Values.nsPort}}"
+        - name: "NS_APPS_NAME_PREFIX"
+          value: {{ .Values.nsNamespace | default "k8s"}}
 {{- if .Values.kubernetesURL }}
         - name: "kubernetes_url"
           value: "{{ .Values.kubernetesURL }}"
