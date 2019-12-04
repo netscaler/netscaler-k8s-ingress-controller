@@ -50,7 +50,7 @@ spec:
               description: 'Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds'
               type: integer
             limittype:
-              description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+              description: "Burst mode or smooth. Defaults to burst mode if the limittype is not specified"
               type: string
               enum: ['BURSTY','SMOOTH']
             throttle_action:
