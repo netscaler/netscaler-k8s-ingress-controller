@@ -101,8 +101,9 @@ Deploy the definition file using the following command:
 
 Perform the following:
 
-1. Log on to the Citrix ADC command-line interface.
-1. Enable the BGP feature using the following command:
+1.  Log on to the Citrix ADC command-line interface.
+
+1.  Enable the BGP feature using the following command:
 
         > en feature bgp
           Done
@@ -164,12 +165,11 @@ Perform the following:
          Done
 1.  Verify the route add to the routing table using the following command:
 
-    ![Sh route](sh-route.png)
+    ![Sh route](/docs/media/sh-route.png)
 
 Once the route is installed, the Citrix ADC is able to communicate with the services that are present in the Kubernetes cluster:
 
-![Summary](summary.png)
-
+![Summary](/docs/media/summary.png)
 
 ## Troubleshooting
 
