@@ -97,6 +97,7 @@ nav:
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
     - Expose services of type LoadBalancer: network/type_loadbalancer.md
+    - Configure pod to pod communication using Calico: network/calico-network.md
   - CRDs: 
     - Authentication: crds/auth.md
     - Rate limit: crds/rate-limit.md

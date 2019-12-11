@@ -29,6 +29,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
     -  [Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller](../docs/network/node-controller.md)
     -  [Expose services using NodePort](../docs/network/nodeport.md)
     -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
+    -  [Configure pod to pod communication using Calico](../docs/network/calico-network.md)
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
 -  [HTTP, TCP, or SSL Profiles support](../docs/configure/profiles.md)
 -  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
