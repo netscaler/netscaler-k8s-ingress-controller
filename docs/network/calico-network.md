@@ -75,7 +75,7 @@ Using a YAML file, you can apply BGP configuration of a remote node using the `k
 
 Using the Calico ctl, you can obtain the AS number used in the Kubernetes cluster by Calico BGP as shown in the following image:
 
-![Get AS number](as-number.png)
+![Get AS number](../media/as-number.png)
 
 #### Configure global BGP peer
 
@@ -165,11 +165,11 @@ Perform the following:
          Done
 1.  Verify the route add to the routing table using the following command:
 
-    ![Sh route](/docs/media/sh-route.png)
+    ![Sh route](../media/sh-route.png)
 
 Once the route is installed, the Citrix ADC is able to communicate with the services that are present in the Kubernetes cluster:
 
-![Summary](/docs/media/summary.png)
+![Summary](../media/summary.png)
 
 ## Troubleshooting
 
