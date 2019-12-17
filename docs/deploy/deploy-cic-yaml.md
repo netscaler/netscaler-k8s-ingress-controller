@@ -88,7 +88,7 @@ Perform the following:
     | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. </br>**Note:** NS_VIP takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
     | NS_APPS_NAME_PREFIX | Optional | By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumberic charaters for the prefix and the prefix length should not exceed 8 characters. |
     | NS_NETPROFILE | Optional | [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) uses the network profile (netprofile) provided in this environment variable to establish network connectivity between the Kubernetes nodes and Ingress Citrix ADC. </br> **Note:** Ensure that you provide the same netprofile name while deploying the Citrix node controller. For more information on how to deploy Citrix node controller, see [Deploy the Citrix k8s node controller](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy). |
-     | NAMESPACE | Optional | While running a Citrix ingress controller with Role based RBAC, you need to provide the namespace which you want to listen or get events. This namespace must be same as the one used for creating the service account. Using the service account, the Citrix ingress controller can listen on a namespace. You can use the  `NAMESPACE` environment variable to specify the namespace. For more information, see [Deploy the Citrix Ingress controller for a namespace](#Deploy-the-Citrix-Ingress-controller-for-a-namespace). |
+     | NAMESPACE | Optional | While running a Citrix ingress controller with Role based RBAC, you need to provide the namespace which you want to listen or get events. This namespace must be same as the one used for creating the service account. Using the service account, the Citrix ingress controller can listen on a namespace. You can use the  `NAMESPACE` environment variable to specify the namespace. For more information, see [Deploy the Citrix ingress controller for a namespace](#Deploy-the-Citrix-ingress-controller-for-a-namespace). |
 
 2.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 
@@ -116,7 +116,7 @@ Perform the following:
 
         kubectl get pods --all-namespaces
 
-## Deploy the Citrix Ingress controller for a namespace
+## Deploy the Citrix ingress controller for a namespace
 
 In Kubernetes, a role consists of rules that define a set of permissions that can be performed on a set of resources. In an RBAC enabled Kubernetes environment, you can create two kinds of roles based on the scope you need:
 
