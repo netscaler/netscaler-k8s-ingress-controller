@@ -182,7 +182,7 @@ Perform the following to deploy the Auth CRD:
 
         customresourcedefinition.apiextensions.k8s.io/authpolicies.citrix.com created
 
-## How to write the authentication policies
+## How to write authentication policies
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and in the `spec` section add the Auth CRD attributes based on your requirement for the policy configuration.
 
