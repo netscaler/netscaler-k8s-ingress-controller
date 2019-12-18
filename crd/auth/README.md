@@ -1,12 +1,12 @@
 # Define authentication policies on the Ingress Citrix ADC
 
-Authentication policies are used to enforce access restrictions to the resources hosted by an application or API server.
+Authentication policies are used to enforce access restrictions to resources hosted by an application or an API server.
 
-Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Auth CRD**that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
+Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
 
 ## Auth CRD definition
 
-The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for various options that are required to define the authentication policies on the Ingress Citrix ADC.
+The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for various options that are required to define authentication policies on the Ingress Citrix ADC.
 
 The following is the Auth CRD definition:
 
@@ -123,7 +123,7 @@ The name of the services that you want to bind to the authentication policy.
 
 ### auth_providers
 
-The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. The CRD supports both *basic authentication* and *OAuth authentication*. 
+The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. The CRD supports both *basic authentication* and *OAuth authentication*.
 
 #### Basic authentication
 
@@ -140,7 +140,7 @@ The following are the attributes for basic authentication:
 
 #### OAuth authentication
 
-The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successful then Citrix ADC grants access to the client.
+The OAuth authentication mechanism, requires an external identity provider to authenticate the client using the OAuth 2.0 protocol and issue an access token. When the client presents the access token to the Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successful then the Citrix ADC grants access to the client.
 
 ##### OAuth authentication attributes
 
@@ -151,12 +151,12 @@ The following are the attributes for OAuth authentication:
 | `Issuer` | The identity (usually a URL) of the server whose tokens need to be accepted for authentication.|
 | `jwks_uri` | The URL of the endpoint that contains JWKs (JSON Web Key) for JWT (JSON Web Token) verification.|
 | `audience` | The identity of the service or application for which the token is applicable. |
-| `token_in_hdr` | The custom header name where the token is present. Default is `Authorization` header. </br> **Note:** You can specify more than one header. |
+| `token_in_hdr` | The custom header name where the token is present. Default is `Authorization` header.</br> **Note:** You can specify more than one header. |
 | `token_in_param` | The query parameter where the token is present. |
 
 ### auth_policies
 
-The **policies** allow you to define the traffic selection criteria to apply the authentication mechanism and also to specify the provider that you want to use for the selected traffic.
+The **policies** allow you to define the traffic selection criteria for applying the authentication mechanism. You can also specify the provider that you want to use for the selected traffic.
 
 The following are the attributes for policies:
 
@@ -164,7 +164,7 @@ The following are the attributes for policies:
 | --------- | ----------- |
 | `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
 | `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
-| `provider` | Specifies the authentication mechanism that needs to be used. If no value is provided then authentication is not performed. |
+| `provider` | Specifies the authentication mechanism that needs to be used. If the value is not provided, then authentication is not performed. |
 
 ## Deploy the Auth CRD
 
@@ -184,11 +184,11 @@ Perform the following to deploy the Auth CRD:
 
 ## How to write authentication policies
 
-After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and in the `spec` section add the Auth CRD attributes based on your requirement for the policy configuration.
+After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and add Auth CRD attributes in the `spec` section based on your policy configuration requirements.
 
 After you deploy the `.yaml` file, the Citrix ingress controller applies the authentication policy configuration on the Ingress Citrix ADC device.
 
-The following is sample authentication policy definition ([auth_example1.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth_example1.yaml)):
+The following is a sample authentication policy definition ([auth_example1.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth_example1.yaml)):
 
 ```yml
 apiVersion: citrix.com/v1beta1
