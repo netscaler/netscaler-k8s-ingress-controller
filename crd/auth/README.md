@@ -241,11 +241,11 @@ spec:
 
 The sample authentication policy performs the following:
 
--  The Citrix ADC performs the authentication mechanism specified in the provider `local-auth-provider` on the requests to the following endpoints:
+-  The Citrix ADC performs the authentication mechanism specified in the provider `local-auth-provider` on requests to the following endpoints:
       -  **orders**, **shipping**, and **GET** or **POST**
       -  **products** and **POST**
--  The Citrix ADC does not perform the authentication for the **products** and **GET** endpoints.
--  The Citrix ADC performs the authentication mechanism specified in the provider `jwt-auth-provider` on the requests to the **reviews** endpoint. If the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
+-  The Citrix ADC does not perform the authentication for **products** and **GET** endpoints.
+-  The Citrix ADC performs the authentication mechanism specified in the `jwt-auth-provider` attribute on requests to the **reviews** endpoint. If the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
 
           oauth:
             issuer: "https://sts.windows.net/tenant1/"
@@ -253,7 +253,7 @@ The sample authentication policy performs the following:
             audience : ["https://vault.azure.net"]
             token_in_hdr : [“custom-hdr1”]
 
-    Similarly, if the token is present in a query parameter, it can be specified using the “token_in_param” attribute as follows:
+    Similarly, if the token is present in a query parameter, it can be specified using the `token_in_param` attribute as follows:
 
           oauth:
             issuer: "https://sts.windows.net/tenant1/"
