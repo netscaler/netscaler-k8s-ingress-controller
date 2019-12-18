@@ -87,13 +87,14 @@ Perform the following:
     | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify Citrix ingress controller to configure Citrix ADC associated with specific ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
     | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. </br>**Note:** NS_VIP takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
     | NS_APPS_NAME_PREFIX | Optional | By default, the Citrix ingress controller adds "**k8s**" as prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumberic charaters for the prefix and the prefix length should not exceed 8 characters. |
-    | NS_NETPROFILE | Optional | [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) uses the network profile (netprofile) provided in this environment variable to establish network connectivity between the Kubernetes nodes and Ingress Citrix ADC. </br> **Note:** Ensure that you provide the same netprofile name while deploying the Citrix node controller. For more information on how to deploy Citrix node controller, see [Deploy the Citrix k8s node controller](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy) |
+    | NS_NETPROFILE | Optional | [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) uses the network profile (netprofile) provided in this environment variable to establish network connectivity between the Kubernetes nodes and Ingress Citrix ADC. </br> **Note:** Ensure that you provide the same netprofile name while deploying the Citrix node controller. For more information on how to deploy Citrix node controller, see [Deploy the Citrix k8s node controller](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy). |
+     | NAMESPACE | Optional | While running a Citrix ingress controller with Role based RBAC, you need to provide the namespace which you want to listen or get events. This namespace must be same as the one used for creating the service account. Using the service account, the Citrix ingress controller can listen on a namespace. You can use the  `NAMESPACE` environment variable to specify the namespace. For more information, see [Deploy the Citrix ingress controller for a namespace](#Deploy-the-Citrix-ingress-controller-for-a-namespace). |
 
-1.  Once you update the environment variables, save the YAML file and deploy it using the following command:
+2.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
-1.  Verify if Citrix ingress controller is deployed successfully using the following command:
+3.  Verify if Citrix ingress controller is deployed successfully using the following command:
 
         kubectl get pods --all-namespaces
 
@@ -114,3 +115,73 @@ Perform the following:
 1.  Verify if Citrix ingress controller is deployed successfully using the following command:
 
         kubectl get pods --all-namespaces
+
+## Deploy the Citrix ingress controller for a namespace
+
+In Kubernetes, a role consists of rules that define a set of permissions that can be performed on a set of resources. In an RBAC enabled Kubernetes environment, you can create two kinds of roles based on the scope you need:
+
+- `Role`
+- `ClusterRole`
+
+A role can be defined within a namespace with a `Role`, or cluster-wide with a `ClusterRole`. You can create a `Role` to grant access to resources within a single namespace.
+
+In Kubernetes, you can create multiple virtual clusters on the same physical cluster. Namespaces provides a way to divide cluster resources between multiple users and useful in environments with many users spread across multiple teams, or projects.
+
+By default, the Citrix ingress controller monitors Ingress resources across all namespaces in the Kubernetes cluster. If multiple teams want to manage the same Citrix ADC, they can deploy a `Role` based Citrix ingress controller to monitor only ingress resources belongs to a specific namespace. This namespace must be same as the namespace you have provided for creating the service account.
+You need to create a Role and bind the role to the service account for the Citrix ingress controller. In this case, the Citrix ingress controller listens only for events from the specified namespace and then configure the Citrix ADC accordingly.
+
+The following example shows a sample YAML file which defines a Role and RoleBinding for deploying a Citrix ingress controller for a specific namespace.
+
+```yml
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  # services/status is needed to update the loadbalancer IP in service status for integrating
+  # service of type LoadBalancer with external-dns
+  - apiGroups: [""]
+    resources: ["services/status"]
+    verbs: ["patch"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+
+---
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cic-k8s-role
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cic-k8s-role
+
+subjects:
+- kind: ServiceAccount
+  name: cic-k8s-role
+  namespace: default
+
+---
+
+```
+
+### Restrictions
+
+When the Citrix ingress controller runs with a Role (scope with in a namespace), the following functionalities are not supported as they require global scope.
+
+- configuring static routes
+- watching on all namespaces
+- CRDs
