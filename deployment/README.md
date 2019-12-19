@@ -32,6 +32,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
 -  [HTTP, TCP, or SSL Profiles support](../docs/configure/profiles.md)
 -  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
+-  [Install, link, and update certificates on Citrix ADC using Citrix ingress controller](../docs/certificate-management/link-ca-certificate-chain.md)
 -  [Rewrite and Responder](../docs/crds/rewrite-responder.md)
 -  [Canary deployment support](../docs/canary/canary.md)
 -  [Rate limiting](../docs/crds/rate-limit.md)
