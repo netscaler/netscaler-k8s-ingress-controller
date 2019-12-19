@@ -106,7 +106,7 @@ nav:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
     - TLS certificates handling in Citrix ingress controller: certificate-management/tls-certificates.md
-    - Install, link, and update certificates on Citrix ADC using Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
+    - Install, link, and update certificates on Citrix ADC using the Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
     - Automated certificate management with cert-manager:
       - Introduction: certificate-management/certificate.md
       - Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager: certificate-management/acme.md
