@@ -24,6 +24,8 @@ spec:
     plural: vips
     singular: vip
   scope: Namespaced
+  subresources:
+    status: {}
   additionalPrinterColumns:
   - JSONPath: .spec.ipaddress
     name: VIP
