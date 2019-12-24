@@ -1,6 +1,6 @@
 # Citrix Ingress Controller Helm Charts
 
-This[https://github.com/citrix/citrix-helm-charts] repository contains [helm](https://helm.sh) charts of Citrix ingress controller configuring Citrix ADC CPX, VPX or MPX in [Kubernetes](https://kubernetes.io) and [OpenShift](https://www.openshift.com) platform.
+[This](https://github.com/citrix/citrix-helm-charts) repository contains [helm](https://helm.sh) charts of Citrix ingress controller configuring Citrix ADC CPX, VPX or MPX in [Kubernetes](https://kubernetes.io) and [OpenShift](https://www.openshift.com) platform.
 
 > Note: Charts may require access to kube-system namespace and/or cluster wide permissions for full functionality. Install/configure helm/tiller appropriately.
 
