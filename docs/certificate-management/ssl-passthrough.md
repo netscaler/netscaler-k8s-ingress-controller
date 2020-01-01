@@ -2,7 +2,7 @@
 
 SSL passthrough is a method that allows you to pass incoming security sockets layer (SSL) requests directly to a server for decryption rather than decrypting the request using a load balancer. SSL passthrough is widely used for web application security and it uses the TCP mode to pass encrypted data to servers.
 
-The proxy SSL passthrough configuration does not require the installation of an SSL certificate on the load balancer. The SSL certificates are installed on the back end server as they handle the SSL connection instead of the load balancer.
+The proxy SSL passthrough configuration does not require the installation of an SSL certificate on the load balancer. SSL certificates are installed on the back end server as they handle the SSL connection instead of the load balancer.
 
 ![SSL Passthrough](../media/ssl-passthrough-diagram.png)
 
