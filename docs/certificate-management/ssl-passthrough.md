@@ -6,7 +6,7 @@ The proxy SSL passthrough configuration does not require the installation of an 
 
 ![SSL Passthrough](../media/ssl-passthrough-diagram.png)
 
-The Citrix ingress controller provides the following Ingress annotation that you can use enable SSL passthrough on the Ingress Citrix ADC:
+The Citrix ingress controller provides the following Ingress annotation that you can use to enable SSL passthrough on the Ingress Citrix ADC:
 
     ingress.citrix.com/ssl-passthrough: 'True|False'
 
