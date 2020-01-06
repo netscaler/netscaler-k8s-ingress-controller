@@ -1,10 +1,14 @@
 # Configure SSL passthrough using Kubernetes Ingress
 
-SSL passthrough is a method that allows you to pass incoming security sockets layer (SSL) requests directly to a server for decryption rather than decrypting the request using a load balancer. SSL passthrough is widely used for web application security and it uses the TCP mode to pass encrypted data to servers.
+SSL passthrough feature allows you to pass incoming security sockets layer (SSL) requests directly to a server for decryption rather than decrypting the request using a load balancer. SSL passthrough is widely used for web application security and it uses the TCP mode to pass encrypted data to servers.
 
 The proxy SSL passthrough configuration does not require the installation of an SSL certificate on the load balancer. SSL certificates are installed on the back end server as they handle the SSL connection instead of the load balancer.
 
-![SSL Passthrough](../media/ssl-passthrough-diagram.png)
+The following diagram explains the SSL passthrough feature.
+
+![SSL Passthrough](../media/ssl-passthrough.png)
+
+As shown in this diagram, SSL traffic is not terminated at the Citrix ADC and SSL traffic is passed through the Citrix ADC to the back end server. SSL certificate at the back end server is used for the SSL handshake.
 
 The Citrix ingress controller provides the following Ingress annotation that you can use to enable SSL passthrough on the Ingress Citrix ADC:
 
@@ -36,8 +40,7 @@ spec:
   - host:  hotdrinks.beverages.com
     http:
       paths:
-      - path:
-      - path: / any path given will be ignored
+      - path: / # Any specified path is ignored
         backend:
           serviceName: frontend-hotdrinks
           servicePort: 443
