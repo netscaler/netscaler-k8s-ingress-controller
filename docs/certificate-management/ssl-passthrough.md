@@ -6,6 +6,7 @@ The proxy SSL passthrough configuration does not require the installation of an 
 
 The following diagram explains the SSL passthrough feature.
 
+
 ![SSL Passthrough](../media/ssl-passthrough.png)
 
 As shown in this diagram, SSL traffic is not terminated at the Citrix ADC and SSL traffic is passed through the Citrix ADC to the back end server. SSL certificate at the back end server is used for the SSL handshake.
