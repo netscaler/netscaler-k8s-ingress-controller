@@ -40,7 +40,7 @@ spec:
   - host:  hotdrinks.beverages.com
     http:
       paths:
-      - path: / # Any specified path is ignored
+      - path: / # If the path is specified, it is ignored
         backend:
           serviceName: frontend-hotdrinks
           servicePort: 443
