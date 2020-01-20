@@ -97,6 +97,7 @@ nav:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
+    - Pod to pod communication using Calico: network/calico-network.md
   - CRDs: 
     - Authentication: crds/auth.md
     - Rate limit: crds/rate-limit.md
