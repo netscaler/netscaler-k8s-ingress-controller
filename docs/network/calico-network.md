@@ -2,10 +2,10 @@
 
 Configuring a network in Kubernetes is a challenge. It requires you to deal with many nodes and pods in a cluster system. There are four problems you need to address while configuring the network:
 
--  Container to container (which collectively provides a service) communication
--  Pod to pod communication
--  Pod to service communication
--  External to service communication
+- Container to container (which collectively provides a service) communication
+- Pod to pod communication
+- Pod to service communication
+- External to service communication
 
 ## Pod to pod communication
 
@@ -101,35 +101,35 @@ Deploy the definition file using the following command:
 
 Perform the following:
 
-1.  Log on to the Citrix ADC command-line interface.
+1. Log on to the Citrix ADC command-line interface.
 
-2.  Enable the BGP feature using the following command:
+2. Enable the BGP feature using the following command:
 
         > en feature bgp
           Done
 
-3.  Type `vtysh` and press **Enter**.
+3. Type `vtysh` and press **Enter**.
 
         > vtysh
         ns#
 
-4.  Change to config terminal using the `conf t` command:
+4. Change to config terminal using the `conf t` command:
 
         ns#conf t
         Enter configuration commands, one per line. End with CNTL/Z.
         ns(config)#
 
-5.  Add the BGP route with the AS number as 500 for demonstration purpose. You can use any number as the AS number.
+5. Add the BGP route with the AS number as 500 for demonstration purpose. You can use any number as the AS number.
 
         ns(config)#router bgp 500
         ns(config-router)#
 
-6.  Add neighbors using the following command:
+6. Add neighbors using the following command:
 
         ns(config-router)#Neighbor 10.102.33.198 remote-as 64512
         ns(config-router)#Neighbor 10.102.22.202 remote-as 64512
 
-7.  Review the running configuration using the following command:
+7. Review the running configuration using the following command:
 
         ns(config-router)#show running-config
         !
@@ -157,13 +157,13 @@ Perform the following:
         ns(config-router)#
     In the sample, the AS number of Calico is 64512, you can change this number as per your requirement.
 
-8.  Install the BGP routes to Citrix ADC routing table using the following command:
+8. Install the BGP routes to Citrix ADC routing table using the following command:
 
         ns(config)#ns route-install bgp
         ns(config)#exit
         ns#exit
          Done
-9.  Verify the route and add to the routing table using the following command:
+9. Verify the route and add to the routing table using the following command:
 
     ![Sh route](../media/sh-route.png)
 
