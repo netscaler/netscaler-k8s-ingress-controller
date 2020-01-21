@@ -336,6 +336,7 @@ Deploy an `apache` application in your Kubernetes cluster.
 Create a service (`apache`) of type `LoadBalancer`.
 
 1. Create a file named `apache-service.yaml` with the following configuration:
+
 ```yml
         apiVersion: v1
         kind: Service
@@ -392,7 +393,7 @@ Perform the following:
 
 1.  Deploy the `apache` application. Create a file named `apache-deployment.yaml` with the following configuration:
 
-    ```yml
+```yml
         apiVersion: apps/v1beta2
         kind: Deployment
         metadata:
@@ -419,7 +420,7 @@ Perform the following:
 
         
     
-    ```
+```
 
 2.  Deploy the `apache` application using the following command:
 
