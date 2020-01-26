@@ -240,29 +240,27 @@ Also, you can use the `-` character to define the IP address range:
 
 The following is a sample service definition for demonstrating the usage of the `service.citrix.com/ipam-range` annotation. In this example, the annotation is used to allocate IP address from the IP address range associated with a unique name `Dev` to the service.
 
-```yml
 
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    service.citrix.com/ipam-range: "Dev"
-  name: apache
-  labels:
-      name: apache
-spec:
-  externalTrafficPolicy: Local
-  type: LoadBalancer
-  selector:
-      name: apache
-  ports:
-    - name: http
-      port: 80
-      targetPort: http
-  selector:
-      app: apache
-      
-```
+        apiVersion: v1
+        kind: Service
+        metadata:
+          annotations:
+            service.citrix.com/ipam-range: "Dev"
+          name: apache
+          labels:
+            name: apache
+        spec:
+          externalTrafficPolicy: Local
+          type: LoadBalancer
+          selector:
+            name: apache
+          ports:
+          - name: http
+            port: 80
+            targetPort: http
+          selector:
+            app: apache
+
 
 #### VIP_NAMESPACES
 
@@ -284,33 +282,32 @@ Perform the following to deploy an `apache` application in your Kubernetes clust
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
-```yml
 
-    apiVersion: apps/v1beta2
-    kind: Deployment
-    metadata:
-      name: apache
-      labels:
-        name: apache
-    spec:
-      selector:
-        matchLabels:
-          app: apache
-      replicas: 8
-      template:
+
+        apiVersion: apps/v1beta2
+        kind: Deployment
         metadata:
+          name: apache
           labels:
-            app: apache
+           name: apache
         spec:
-          containers:
-            - name: apache
-              image: httpd:latest
-              ports:
-               - name: http
-                 containerPort: 80
-              imagePullPolicy: IfNotPresent
+          selector:
+            matchLabels:
+              app: apache
+          replicas: 8
+          template:
+            metadata:
+              labels:
+                app: apache
+            spec:
+              containers:
+              - name: apache
+                image: httpd:latest
+                ports:
+                - name: http
+                  containerPort: 80
+                imagePullPolicy: IfNotPresent
 
-```
 
 2. Deploy the `apache` application using the following command:
 
@@ -338,28 +335,28 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
 
 1. Create a file named `apache-service.yaml` with the following configuration:
 
-```yml
 
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: apache
-      labels:
-        name: apache
-    spec:
-      externalTrafficPolicy: Local
-      loadBalancerIP: "110.217.212.16"
-      type: LoadBalancer
-      selector:
-        name: apache
-      ports:
-        - name: http
-          port: 80
-          targetPort: http
-      selector:
-        app: apache
 
-```
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: apache
+          labels:
+            name: apache
+        spec:
+          externalTrafficPolicy: Local
+          loadBalancerIP: "110.217.212.16"
+          type: LoadBalancer
+          selector:
+            name: apache
+          ports:
+          - name: http
+            port: 80
+            targetPort: http
+          selector:
+            app: apache
+
+
 
 2.  Deploy the service using the following command:
 
@@ -397,14 +394,14 @@ Perform the following:
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
-```yml
-    apiVersion: apps/v1beta2
-    kind: Deployment
-    metadata:
-      name: apache
-      labels:
+
+       apiVersion: apps/v1beta2
+       kind: Deployment
+       metadata:
         name: apache
-      spec:
+        labels:
+          name: apache
+       spec:
         selector:
           matchLabels:
             app: apache
@@ -415,13 +412,13 @@ Perform the following:
               app: apache
           spec:
            containers:
-              - name: apache
-                image: httpd:latest
-                ports:
-                  - name: http
-                    containerPort: 80
-                imagePullPolicy: IfNotPresent
-```
+           - name: apache
+             image: httpd:latest
+             ports:
+             - name: http
+              containerPort: 80
+             imagePullPolicy: IfNotPresent
+    
 
 2. Deploy the `apache` application using the following command:
 
@@ -443,7 +440,9 @@ Perform the following:
         apache-7db8f797c7-vwhc8   1/1     Running   0          8s
         apache-7db8f797c7-zslwv   1/1     Running   0          8s
 
+
 4. Create a service (`apache`) of type `LoadBalancer`. Create a file name `apache-service.yaml` with the following configuration:
+
 
         apiVersion: v1
         kind: Service
@@ -463,6 +462,7 @@ Perform the following:
               targetPort: http
           selector:
             app: apache
+
 
 5. Deploy the service using the following command:
 
