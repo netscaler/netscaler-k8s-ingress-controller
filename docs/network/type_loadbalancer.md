@@ -201,7 +201,7 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
 
 The `VIP_RANGE` environment variable allows you to define the IP address range. You can either define IP address range or an IP address range associated with a unique name.
 
-##### IP address range
+**IP address range**
 
 You can define the IP address range from a subnet or multiple subnets. Also, you can use the `-` character to define the IP address range. The IPAM controller assigns the IP address from this IP address range to the service.
 
@@ -222,7 +222,7 @@ The following examples demonstrate the various ways you can define the IP addres
         - name: "VIP_RANGE"
           value: '["10.217.212.18 - 10.217.212.21",  “10.217.212.27 - 10.217.212.31",  “10.217.213.24 - 10.217.213.32" ]'
 
-##### IP address range associated with a unique name
+**IP address range associated with a unique name**
 
 You can assign a unique name to the IP address range and define the range in the `VIP_RANGE` environment variable. This way of assigning the IP address range enables you to differentiate between the IP address ranges. When you create the services of type `LoadBalancer` you can use the `service.citrix.com/ipam-range` annotation in the service definition to specify the IP address range to use for IP address allocation.
 
@@ -283,8 +283,8 @@ The IPAM controller allocates IP addresses to the services created from `default
 Deploy an `apache` application in your Kubernetes cluster.
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
-    ```yml
 
+   ```yml
     apiVersion: apps/v1beta2
     kind: Deployment
     metadata:
@@ -392,7 +392,8 @@ When you create a service of type [LoadBalancer](https://kubernetes.io/docs/conc
 
 Perform the following:
 
-1.  Deploy the `apache` application. Create a file named `apache-deployment.yaml` with the following configuration:
+1. Create a file named `apache-deployment.yaml` with the following configuration:
+   
 
     ```yml
     apiVersion: apps/v1beta2
