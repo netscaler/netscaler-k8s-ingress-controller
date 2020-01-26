@@ -233,7 +233,7 @@ The following examples demonstrate the various ways you can define the IP addres
         - name: "VIP_RANGE"
           value: '[{"Prod": ["10.1.2.0/24"]}, {"Test": ["10.1.3.0/24"]}, {"Dev": ["10.1.4.0/24", "10.1.5.0/24"]},["10.1.6.0/24"]]'
 
-Also, you can use `-` character to define the IP address range:
+Also, you can use the `-` character to define the IP address range:
 
         - name: "VIP_RANGE"
           value: '[{"Prod": ["10.1.2.0 - 10.1.2.255"]}, {"Test": ["10.1.3.0 - 10.1.3.255"]}, {"Dev": ["10.1.4.0/24", "10.1.5.0/24"]},["10.1.6.0/24"]]'
@@ -284,7 +284,7 @@ Perform the following to deploy an `apache` application in your Kubernetes clust
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
-   ```yml
+    ```yml
 
     apiVersion: apps/v1beta2
     kind: Deployment
@@ -309,6 +309,7 @@ Perform the following to deploy an `apache` application in your Kubernetes clust
                - name: http
                  containerPort: 80
               imagePullPolicy: IfNotPresent
+
     ```
 
 2. Deploy the `apache` application using the following command:
@@ -338,7 +339,6 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
 1. Create a file named `apache-service.yaml` with the following configuration:
 
     ```yml
-
     apiVersion: v1
     kind: Service
     metadata:
@@ -357,7 +357,6 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
           targetPort: http
       selector:
         app: apache
-    
     ```
 
 2.  Deploy the service using the following command:
@@ -395,10 +394,8 @@ When you create a service of type [LoadBalancer](https://kubernetes.io/docs/conc
 Perform the following:
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
-   
 
     ```yml
-
     apiVersion: apps/v1beta2
     kind: Deployment
     metadata:
@@ -422,7 +419,6 @@ Perform the following:
                   - name: http
                     containerPort: 80
                 imagePullPolicy: IfNotPresent
-          
     ```
 
 2. Deploy the `apache` application using the following command:
