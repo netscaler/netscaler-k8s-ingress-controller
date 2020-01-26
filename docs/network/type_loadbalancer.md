@@ -393,31 +393,31 @@ When you create a service of type [LoadBalancer](https://kubernetes.io/docs/conc
 Perform the following:
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
+   
 
-
-       apiVersion: apps/v1beta2
-       kind: Deployment
-       metadata:
-        name: apache
-        labels:
+        apiVersion: apps/v1beta2
+        kind: Deployment
+        metadata:
           name: apache
-       spec:
-        selector:
-          matchLabels:
-            app: apache
-        replicas: 8
-        template:
-          metadata:
-           labels:
+          labels:
+            name: apache
+        spec:
+          selector:
+            matchLabels:
               app: apache
-          spec:
-           containers:
-           - name: apache
-             image: httpd:latest
-             ports:
-             - name: http
-              containerPort: 80
-             imagePullPolicy: IfNotPresent
+          replicas: 8
+          template:
+            metadata:
+              labels:
+                app: apache
+            spec:
+              containers:
+              - name: apache
+                image: httpd:latest
+                ports:
+                - name: http
+                  containerPort: 80
+                imagePullPolicy: IfNotPresent
     
 
 2. Deploy the `apache` application using the following command:
