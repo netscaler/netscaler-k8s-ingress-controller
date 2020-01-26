@@ -280,11 +280,12 @@ The IPAM controller allocates IP addresses to the services created from `default
 
 ### Step 2: Deploy the Apache microservice application
 
-Deploy an `apache` application in your Kubernetes cluster.
+Perform the following to deploy an `apache` application in your Kubernetes cluster.
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
    ```yml
+
     apiVersion: apps/v1beta2
     kind: Deployment
     metadata:
@@ -332,7 +333,7 @@ Deploy an `apache` application in your Kubernetes cluster.
 
 ### Step 3: Expose the Apache microservice using service of type LoadBalancer
 
-Create a service (`apache`) of type `LoadBalancer`.
+Perform the following to create a service (`apache`) of type `LoadBalancer`.
 
 1. Create a file named `apache-service.yaml` with the following configuration:
 
@@ -356,6 +357,7 @@ Create a service (`apache`) of type `LoadBalancer`.
           targetPort: http
       selector:
         app: apache
+    
     ```
 
 2.  Deploy the service using the following command:
@@ -396,6 +398,7 @@ Perform the following:
    
 
     ```yml
+
     apiVersion: apps/v1beta2
     kind: Deployment
     metadata:
