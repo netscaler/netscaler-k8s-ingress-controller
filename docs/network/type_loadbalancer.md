@@ -6,15 +6,13 @@ The Citrix ingress controller supports the services of type `LoadBalancer` when 
 
 The load balancing virtual server is configured with an IP address (virtual IP address or VIP) that is obtained in one of the following ways:
 
-- By automatically assigning a virtual IP address to the service using Citrix IPAM controller. The solution is designed in such a way that you can easily integrate the solution with ExternalDNS providers such as [Infoblox](https://github.com/kubernetes-incubator/external-dns/blob/master/docs/tutorials/infoblox.md). For more information, see [Interoperability with ExternalDNS](../how-to/integrate-externaldns.md).
+- By automatically assigning a virtual IP address to the service using the IPAM controller provided by Citrix. The solution is designed in such a way that you can easily integrate the solution with ExternalDNS providers such as [Infoblox](https://github.com/kubernetes-incubator/external-dns/blob/master/docs/tutorials/infoblox.md). For more information, see [Interoperability with ExternalDNS](../how-to/integrate-externaldns.md).
 
 - By specifying an IP address using the `spec.loadBalancerIP` field in your service definition. The Citrix ingress controller uses the IP address provided in the `spec.loadBalancerIP` field as the IP address for the load balancing virtual server that corresponds to the service.  
 
 ## Expose services of type LoadBalancer with IP addresses assigned by the IPAM controller
 
-When creating a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use IPAM controller to automatically allocate an IP address to the service.
-
-Citrix provides a controller called **IPAM controller** for IP address management. You must deploy the IPAM controller as a separate pod along with the Citrix ingress controller. Once the IPAM controller is deployed, it allocates IP address to services of type `LoadBalancer` from predefined IP address ranges. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADC MPX or VPX.
+Citrix provides a controller called **IPAM controller** for IP address management. When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use the IPAM controller to automatically allocate an IP address to the service. You must deploy the IPAM controller as a separate pod along with the Citrix ingress controller. Once the IPAM controller is deployed, it allocates IP address to services of type `LoadBalancer` from predefined IP address ranges. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADC MPX or VPX.
 
 The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix.
 
@@ -26,7 +24,7 @@ In this section, you deploy the IPAM controller, create a sample Deployment, cre
 
 Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more information see, [VIP CustomResourceDefinition](../crds/vip.md).
 
-1.  Once you deploy the Citrix VIP CRD, create a file named `cic-k8s-ingress-controller.yaml` with the following configuration:
+1. Once you deploy the Citrix VIP CRD, create a file named `cic-k8s-ingress-controller.yaml` with the following configuration:
 
         kind: ClusterRole
         apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -91,45 +89,45 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
           labels:
             app: cic-k8s-ingress-controller
         spec: 
-            serviceAccountName: cic-k8s-role
-            containers:
-            - name: cic-k8s-ingress-controller
-              image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
-              env:
-                # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
-                - name: "NS_IP"
-                  value: "x.x.x.x"
+          serviceAccountName: cic-k8s-role
+          containers:
+          - name: cic-k8s-ingress-controller
+            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
+            env:
+            # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+              - name: "NS_IP"
+                value: "x.x.x.x"
                 # Set the username
-                - name: "NS_USER"
-                  valueFrom:
-                    secretKeyRef:
-                      name: nslogin
-                      key: username
+              - name: "NS_USER"
+                valueFrom:
+                  secretKeyRef:
+                    name: nslogin
+                    key: username
                 # Set user password
-                - name: "NS_PASSWORD"
-                  valueFrom:
-                    secretKeyRef:
-                      name: nslogin
-                      key: password
+              - name: "NS_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: nslogin
+                    key: password
                 # Set log level
-                - name: "EULA"
-                  value: "yes"
-                args:
-                  - --ingress-classes
-                    citrix
-                  - --feature-node-watch
-                    false
-                  - --ipam
-                    citrix-ipam-controller
-                imagePullPolicy: Always
+              - name: "EULA"
+                value: "yes"
+            args:
+              - --ingress-classes
+                citrix
+              - --feature-node-watch
+                false
+              - --ipam
+                citrix-ipam-controller
+            imagePullPolicy: Always
 
-2.  Deploy the Citrix ingress controller using the following command:
+2. Deploy the Citrix ingress controller using the following command:
 
         kubectl create -f cic-k8s-ingress-controller.yaml
 
     For more information on how to deploy the Citrix ingress controller, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
 
-3.  Create a file named `citrix-ipam-controller.yaml` with the following configuration:
+3. Create a file named `citrix-ipam-controller.yaml` with the following configuration:
 
         ---
         apiVersion: v1
