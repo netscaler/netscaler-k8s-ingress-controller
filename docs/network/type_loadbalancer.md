@@ -1,8 +1,8 @@
 # Expose services of type LoadBalancer
 
-Services of type `LoadBalancer` are natively supported in Kubernetes deployments on public clouds such as, AWS, GCP, or Azure. In cloud deployments, when you create a service of type LoadBalancer, a cloud managed load balancer is assigned to the service. The service is then exposed using the load balancer.
+Services of type `LoadBalancer` are natively supported in Kubernetes deployments on public clouds such as, AWS, GCP, or Azure. In cloud deployments, when you create a service of type LoadBalancer, a cloud managed load balancer is assigned to the service. The service is then exposed using the load balancer. For on-premises / baremetal / public cloud deployments of Kubernetes, you can use a Citrix ADC outside the cluster. The flexible IP address management available with the Citrix ingress controller allows for multi-tenancy. By allowing multiple services to be load balanced by a single ADC and by combining ingress functions, the Citrix ingress controller helps you control loadbalancer sprawl in your public cloud deployments.
 
-The Citrix ingress controller supports the services of type `LoadBalancer` when the Citrix ADC is outside the Kubernetes cluster (Tier-1). When a service of type `LoadBalancer` is created, updated, or deleted, the Citrix ingress controller configures the Citrix ADC with a load balancing virtual server.
+The Citrix ingress controller supports the services of type `LoadBalancer` when the Citrix ADC is outside the Kubernetes cluster (Tier-1). When a service of type `LoadBalancer` is created, updated, or deleted, the Citrix ingress controller configures the Citrix ADC with a load balancing virtual server. 
 
 The load balancing virtual server is configured with an IP address (virtual IP address or VIP) that is obtained in one of the following ways:
 
