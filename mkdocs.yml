@@ -1,7 +1,7 @@
 # Project information
 site_name: Citrix ingress controller for Kubernetes 
 site_title: Developer Docs
-site_description: Citrix's Kubernetes Ingress Controller automatically configures Citrix ADCs for bare metal and cloud deployments. It can also configure Service Type LoadBalancer for private cloud. 
+site_description: Ingress Controller configures Kubernetes ingress & Service Type LoadBalancer on Citrix ADCs. Supports OpenShift, Rancher on baremetal as well as AKS, GKE and EKS
 site_author:
 site_url: 
 
