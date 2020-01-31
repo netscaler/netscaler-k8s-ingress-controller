@@ -12,7 +12,7 @@ Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix
 - As a standalone pod in the Kubernetes cluster: In this mode, you can control the Citrix ADC MPX or VPX appliance deployed outside the cluster.
 - As a sidecar container alongside Citrix ADC CPX in the same pod: In this mode, Citrix ingress controller configures the Citrix ADC CPX.
 
-## Deploy Citrix ingress controller as a standalone pod in the OpenShift cluster for Citrix ADC MPX or VPX appliances
+## Deploy the Citrix ingress controller as a standalone pod in the OpenShift cluster for Citrix ADC MPX or VPX appliances
 
 Using the Citrix ingress controller Operator you can deploy the Citrix ingress controller as a standalone pod in the OpenShift cluster. The Citrix Ingress controller configures the Citrix ADC VPX or MPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology:
 
@@ -31,7 +31,7 @@ Using the Citrix ingress controller Operator you can deploy the Citrix ingress c
 
         kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
 
-#### Create System User Account for Citrix ingress controller in Citrix ADC
+#### Create a system user account for the Citrix ingress controller in Citrix ADC
 
 The Citrix ingress controller configures the Citrix ADC appliance (MPX or VPX) using a system user account of the Citrix ADC. The system user account should have certain privileges so that the Citrix ingress controller has permission to configure the following on the Citrix ADC:
 
@@ -72,7 +72,7 @@ To create the system user account, perform the following:
 
         bind system user cic cic-policy 0
 
-### Deploy Citrix ingress controller as a standalone pod using Operators
+### Deploy the Citrix ingress controller as a standalone pod using Operators
 
 Perform the following:
 
@@ -167,7 +167,7 @@ Perform the following:
         curl http://citrix-ingress-operator.com --resolve citrix-ingress-operator.com:80:<VIP>
 	    <html><body><h1>It works!</h1></body></html>
 
-## Deploy Citrix ingress controller as a sidecar with Citrix ADC CPX
+## Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX
 
 Using the Citrix ingress controller Operator you can deploy a Citrix ADC CPX with the Citrix ingress controller as a sidecar. The Citrix Ingress controller configures the Citrix ADC CPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology.
 
@@ -178,7 +178,7 @@ Using the Citrix ingress controller Operator you can deploy a Citrix ADC CPX wit
 -  Deployed [Red Hat Openshift](https://www.openshift.com) version 4.1 or later.
 -  Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 
-### Deploy Citrix ingress controller as a sidecar with Citrix ADC CPX using Operators
+### Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX using Operators
 
 Perform the following:
 

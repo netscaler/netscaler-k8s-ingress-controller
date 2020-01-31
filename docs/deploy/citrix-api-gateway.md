@@ -5,7 +5,7 @@ An API Gateway acts as the single entry point for your APIs and ensures secure a
 Citrix provides an enterprise grade API Gateway for North-South API traffic into the Kubernetes cluster.
 Citrix API Gateway integrates with Kubernetes through the Citrix ingress controller and the Citrix ADC (Citrix ADC MPX, VPX, or CPX) deployed as the Ingress Gateway for on-premises or cloud deployments.
 
-The following diagram shows a dual-tier topology for Citrix API gateway.
+The following diagram shows a dual-tier topology for Citrix API Gateway.
 
 ![API Gateway](../media/citrix-api-gateway.png)
 
@@ -35,7 +35,7 @@ Following are the key benefits of using Citrix API Gateway:
 
 ## Deploying Citrix API Gateway
 
-For more information on how to configure Citrix API Gateway features using CRDs, see the Citrix ingress controller documentation:
+For more information on how to configure Citrix API Gateway features using CRDs, see the following:
 
 - [Authentication](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/auth/)
 - [Rate limiting](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rate-limit/)
