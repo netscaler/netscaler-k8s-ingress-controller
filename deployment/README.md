@@ -16,6 +16,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Dual Tier Topology](../docs/deployment-topologies.md#dual-tier-topology)
 -  [Cloud Topology](../docs/deployment-topologies.md#cloud-topology)
 -  [Service Mesh Lite](../docs/deploy/service-mesh-lite.md)
+-  [API Gateway](../docs/deploy/citrix-api-gateway.md)
 
 ## Citrix ingress controller features
 
