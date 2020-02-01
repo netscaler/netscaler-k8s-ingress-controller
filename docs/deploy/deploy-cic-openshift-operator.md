@@ -100,7 +100,7 @@ Perform the following:
 
 1.  Navigate to **Catalog > OperatorHUB**, select the **Citrix Ingress Controller Operator**, and click **Install**.
 
-    ![Citrix ingress controller operator](../media/operatorhub.png)
+    ![Citrix ingress controller operator](../media/operator_hub.png)
 
     ![Install](../media/cic_operator_install.png)
 
@@ -206,7 +206,7 @@ Perform the following:
 
 5.  Navigate to **Catalog > OperatorHUB**, select the **Citrix ADC CPX with Ingress Controller Operator** and click **Install**.
 
-    ![Operator Hub](../media/operatorhub_cpx.png)
+    ![Operator Hub](../media/operator_hub_cpx.png)
 
     ![Operator Hub Install](../media/cpx_cic_operator_install.png)
 
