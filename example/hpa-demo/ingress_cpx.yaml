@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: guestbook-ingress
+  annotations:
+    ingress.citrix.com/insecure-port: "6080"
+    kubernetes.io/ingress.class: "builtin-hostport"
+spec:
+  rules:
+  - host: www.guestbook.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: 80
