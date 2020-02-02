@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-vpx
+  labels:
+    app: cic-vpx
+spec: 
+      serviceAccountName: citrix
+      containers:
+      - name: cic-vpx
+        image: "`CIC_IMAGE`" 
+        env:
+        # Set NetScaler Management IP
+        - name: "NS_IP"
+          value: "`VPX_IP`"
+        # Set Protocol for Nitro
+        - name: "NS_PROTOCOL"
+          value: "HTTP"
+        # Set port for Nitro
+        - name: "NS_PORT"
+          value: "80"
+        # # Set log level
+        - name: "LOGLEVEL"
+          value: "DEBUG"
+        - name: "EULA"
+          value: "yes"
+        - name: "NS_USER"
+          value: "nsroot"
+        - name: "NS_PASSWORD"
+          value: "`VPX_PASSWORD`"
+
+        imagePullPolicy: Always
+        args:
+          - --default-ssl-certificate
+            default/default-secret
+          - --ingress-classes
+            cic-vpx
+          - --ipam
+            citrix-ipam-controller
