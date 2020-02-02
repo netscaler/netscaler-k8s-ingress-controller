@@ -2,7 +2,7 @@
 
 Kubernetes service of type LoadBalancer support in the Citrix ingress controller is enhanced with the following features:
 
-- BGP RHI support
+- BGP route health injection (RHI) support
 - Advertise or recall load balancer IP addresses (VIPs) based on the availability of service’s pods in a set of nodes (zones) defined by node’s labels
   
 ## Support for automatic configuration of BGP RHI on Citrix ADC
