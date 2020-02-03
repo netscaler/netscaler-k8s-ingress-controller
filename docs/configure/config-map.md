@@ -75,7 +75,7 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
                 serviceAccountName: cic-k8s-role
                 containers:
                 - name: cic-k8s-ingress-controller
-                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.6.1"
+                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
                   env:
                   # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
                   - name: "NS_IP"
@@ -90,9 +90,10 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
                     - --configmap
                       default/cic-configmap
                   imagePullPolicy: Always
+
 4. Deploy the Citrix ingress controller as a stand-alone pod by applying the YAML.
 
-       kubectl apply -f cic.yaml
+        kubectl apply -f cic.yaml
 
 5. If you want to change the value of an environment variable, edit the values in the ConfigMap. In this example, the value of NS_HTTP2_SERVER_SIDE is changed to 'OFF'.
 
