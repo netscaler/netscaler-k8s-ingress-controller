@@ -45,25 +45,6 @@ The following steps explain the workflow specified in the diagram.
 4.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to canary and baseline versions. Citrix ADC collects the performance statistics and exports the statistics to Prometheus with the help of Citrix ADC Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
 1.	Kayenta performs a canary analysis based on the performance statistics and generates a score. Based on the score, the canary deployment is termed as success or failure and the image is rolled out or rolled back.
 
-
-
-## Limitations
-
-The following limitations exist for Citrix ADC-Integrated Canary Deployment Solution:
-
--  For an existing application which shares Ingress with other applications and requires deploying a canary, either ensure all the applications follow the same deployment strategy or change the Ingress for the application that requires canary deployment.
-
--  For canary deployment, [smart annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/#smart-annotations) are not taken into account from production to canary and baseline versions. Canary and baseline deployment versions do not inherit the properties of the production version.
-
--  The following Citrix [annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/) are not supported:
-      -  `insecure-termination`
-
-      -  `path-match-method`
-
--  For the `secure-service-type` annotation: Only SSL is supported.  
--  For the `insecure-service-type` annotation: Only HTTP is supported.
--  After the creation of a CRD class, there should be a delay of 10 seconds before creating the CRD object for the class.
-
 ## Deploy the Citrix ADC-Integrated Canary Deployment Solution in Google Cloud Platform
 
 This section contains information on setting up Spinnaker, how to create a Spinnaker pipeline, and a sample canary deployment.
