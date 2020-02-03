@@ -18,8 +18,9 @@ Perform the following steps to configure TLS client authentication.
 
 1. Enable the TLS support in Citrix ADC.
 
-   The Citrix ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Citrix ADC.
-   The following is a sample snippet of the Ingress definition:
+     The Citrix ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Citrix ADC.
+     The following is a sample snippet of the Ingress definition:
+
 
 
         spec:
@@ -28,22 +29,25 @@ Perform the following steps to configure TLS client authentication.
 
 1. Apply a CA certificate to the Kubernetes environment.
 
-   To generate a Kubernetes secret for an existing certificate, use the following kubectl command:
+    To generate a Kubernetes secret for an existing certificate, use the following kubectl command:
 
-        $ kubectl create secret generic tls-ca --from-file=tls.crt=cacerts.pem
+           $ kubectl create secret generic tls-ca --from-file=tls.crt=cacerts.pem
 
-   **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by the Citrix ingress controller while parsing a CA secret.
+     **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by the Citrix ingress controller while parsing a CA secret.
 
 1. Configure Ingress to enable client authentication.
 
-   You need to specify the following annotation to attach the generated CA secret which is used for client certificate authentication for a service deployed in Kubernetes.
+      You need to specify the following annotation to attach the generated CA secret which is used for client certificate authentication for a service deployed in Kubernetes.
 
-         ingress.citrix.com/ca-secret: '{"frontend-hotdrinks": "hotdrink-ca-secret"}' 
-   By default, client certificate authentication is set to `mandatory` but you can configure it to `optional` using the `frontend_sslprofile` annotation in the front end configuration.
+
+          ingress.citrix.com/ca-secret: '{"frontend-hotdrinks": "hotdrink-ca-secret"}' 
+   
+      By default, client certificate authentication is set to `mandatory` but you can configure it to `optional` using the `frontend_sslprofile` annotation in the front end configuration.
+
   
 
-        ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", “clientcert”: “optional”}'
+          ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", “clientcert”: “optional”}'
 
-   **Note:**
-   The `frontend_sslprofile` only supports the front end Ingress configuration. For more information, see [front end configuration](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md#front-end-configuration).
+      **Note:**
+      The `frontend_sslprofile` only supports the front end Ingress configuration. For more information, see [front end configuration](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md#front-end-configuration).
 

@@ -33,12 +33,12 @@ Perform the following steps to configure BGP RHI support based on the sample top
 
 1. Label nodes in each zone using the following command:
 
-   For zone 1:
+    For zone 1:
 
         kubectl label nodes node1 rack=rack-1
         kubectl label nodes node2 rack=rack-1
 
-   For zone 2:
+    For zone 2:
 
         kubectl label nodes node3 rack=rack-2
         kubectl label nodes node4 rack=rack-2
@@ -47,17 +47,17 @@ Perform the following steps to configure BGP RHI support based on the sample top
 
     For zone 1:
 
-       - name: "NODE_LABELS"
-        value: "rack-1"
-       - name: "BGP_ADVERTISEMENT"
-        value: "True"
+        - name: "NODE_LABELS"
+          value: "rack-1"
+        - name: "BGP_ADVERTISEMENT"
+          value: "True"
 
     For zone 2:
 
-       - name: "NODE_LABELS"
-        value: "rack-2"
-       - name: "BGP_ADVERTISEMENT"
-        value: "True"
+         - name: "NODE_LABELS"
+           value: "rack-2"
+         - name: "BGP_ADVERTISEMENT"
+           value: "True"
   
     A sample `cic.yaml` file for deploying the Citrix ingress controller on zone 1 is provided as follows:
 
@@ -71,7 +71,7 @@ Perform the following steps to configure BGP RHI support based on the sample top
           serviceAccountName: cic-k8s-role
           containers:
           - name: cic-k8s-ingress-controller
-            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
 
             env:
             # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
@@ -102,8 +102,8 @@ Perform the following steps to configure BGP RHI support based on the sample top
   
 3. Deploy the Citrix ingress controller using the following command.
    
-   **Note:**
-    You need to deploy the Citrix ingress controller on both racks (per zone).
+    **Note:**
+     You need to deploy the Citrix ingress controller on both racks (per zone).
 
         Kubectl create -f cic.yaml
 
@@ -111,7 +111,7 @@ Perform the following steps to configure BGP RHI support based on the sample top
 
        Kubectl create -f web-frontend-lb.yaml
 
-   The content of the `web-frontend-lb.yaml` is as follows:
+    The content of the `web-frontend-lb.yaml` is as follows:
 
         apiVersion: v1
         kind: Deployment
@@ -135,7 +135,7 @@ Perform the following steps to configure BGP RHI support based on the sample top
    
         Kubectl create -f web-frontend-lb-service.yaml
     
-    The content of the `web-frontend-lb-service.yaml` is as follows:
+     The content of the `web-frontend-lb-service.yaml` is as follows:
 
 
         apiVersion: v1
@@ -158,9 +158,9 @@ Perform the following steps to configure BGP RHI support based on the sample top
         show servicegroup <service-group-name>
 
 
-   Following is a sample output for the command.
+    Following is a sample output for the command.
 
-       #  show servicegroup k8s-web-frontend_default_80_svc_k8s-web-frontend_default_80_svc
+        #  show servicegroup k8s-web-frontend_default_80_svc_k8s-web-frontend_default_80_svc
        
         k8s-web-frontend_default_80_svc_k8s-web-frontend_default_80_svc - TCP
         State: ENABLED	Effective State: UP	Monitor Threshold : 0
