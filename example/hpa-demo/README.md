@@ -3,8 +3,10 @@
 * Horizontal Pod Autoscaler is a resource provided by Kubernetes which as the name implies, scales Kubernetes based resources like deployments, replica sets and replication controllers.
 * Traditionally HPA gets its metrics from metrics-server. It then periodically adjusts the number of replicas in a deployment to match the observed average metrics to the target specified by user.
 
+<p align="center">
+<img src="images/image001.png" width="10000">
 Figure 1. HPA with traditional metrics-server
-<img src="images/image001.png" width="700">
+</p>
 
 ## Why custom metrics for CPX?
 By default, the metrics-server only gives us CPU and memory metrics for a pod. Both these metrics are neither very accurate nor very user-friendly with respect to a CPX (Citrix ADC) pod. So, we had to come up with our own custom metrics-server which would help us expose metrics like "HTTP requests rate" or "Bandwidth" from a CPX. These metrics would not just be more aligned to the CPX license strategy but will also be accurate in terms of traffic and load that a CPX is handling.
@@ -16,8 +18,10 @@ Prometheus-adapter contains an implementation of the Kubernetes resource metrics
 Below, Figure 2, is a visual representation of how an HPA works. We have a 2-tier model with VPX which is load balancing the CPX deployment. The CPXs are in turn load balancing the applications. A Prometheus, Prometheus-adapter and an HPA controller for the CPX deployment are also deployed.
 The HPA controller will keep polling the Prometheus-adapter for custom metrics like HTTP requests rate or Bandwidth. Whenever the limit defined by the user in the HPA is reached, it would scale the CPX deployment and create another CPX pod to handle the load.
 
-Figure 2. Visual representation of CPX autoscaling with custom metrics from Prometheus-adapter
+<p align="center">
 <img src="images/image002.png" width="1000">
+Figure 2. Visual representation of CPX autoscaling with custom metrics from Prometheus-adapter
+</p>
 
 ## To see CPX autoscaling in action follow the following steps:
 
@@ -51,21 +55,32 @@ There are two shell scripts in the folder. One for sending traffic below the thr
 
 Run the ```16_curl.sh``` script to send 16 HTTP requests per second to the CPX. 
 
-Figure 3. Grafana dashboard when 16 HTTP requests are sent per second.
+<p align="center">
 <img src="images/image004.png" width="1000">
-Figure 4. HPA state with 16 RPS (requests per second)
+Figure 3. Grafana dashboard when 16 HTTP requests are sent per second.
+</p>
+<p align="center">
 <img src="images/image005.png" width="1000">
+Figure 4. HPA state with 16 RPS (requests per second)
+</p>
 
 Now, run the ```30_curl.sh``` script to send 30 requests per second to the CPX. In this we will see that the threshold of 20 that was set has been crossed and we will see that the CPX deployment has autoscaled from 1 pod to 2 pods. The average value of the metric "HTTP request rate" has also gone down from 30 to 15 in Figure 6 because there are 2 CPX pods now.
  
-Figure 5. State of HPA when the average target is overshoot.
+<p align="center">
 <img src="images/image006.png" width="1000">
+Figure 5. State of HPA when the average target is overshoot.
+</p>
  
-Figure 6. The number of replicas has gone up from 1 to 2 and the average is 15 RPS
+<p align="center">
 <img src="images/image007.png" width="1000">
- 
+Figure 6. The number of replicas has gone up from 1 to 2 and the average is 15 RPS
+</p>
+
+<p align="center">
+<img src="images/image008.png" alt="Figure 7. Grafana dashboard with 2 CPXs load balancing the traffic.">
 Figure 7. Grafana dashboard with 2 CPXs load balancing the traffic.
-<img src="images/image008.png" width="1000">
+</p>
+
 
 ### Step 6: Clean up
 Now that we have seen HPA in action, we can clean up by just executing the ```delete_all.sh``` file.
