@@ -90,6 +90,7 @@ nav:
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
+    - ConfigMap: configure/config-map.md
     - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
     - HTTP, TCP or SSL Profiles: configure/profiles.md
@@ -99,15 +100,18 @@ nav:
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
     - Pod to pod communication using Calico: network/calico-network.md
+    - Enhancement to services of type LoadBalancer: network/bgp-enhancement.md
   - CRDs: 
     - Authentication: crds/auth.md
     - Rate limit: crds/rate-limit.md
     - Rewrite and Responder: crds/rewrite-responder.md
     - IPAM or VIP: crds/vip.md
+    #- Content Routing: crds/content-routing.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
     - TLS certificates handling in Citrix ingress controller: certificate-management/tls-certificates.md
+    - TLS client authentication in Citrix ADC: certificate-management/client-auth-support.md
     - Install, link, and update certificates on Citrix ADC using the Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
     - Configure SSL passthrough using Kubernetes Ingress: certificate-management/ssl-passthrough.md
     - Automated certificate management with cert-manager:
