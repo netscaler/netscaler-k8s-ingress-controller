@@ -1,30 +1,29 @@
 apiVersion: "citrix.com/v1"
-#kind: continuousdeployment
-kind: continuousDeploymentCustomConfig
+kind: continuousdeployment
 metadata:
   annotations:
   name: customcd
 spec:
   #deploymentType can be based on the type of deployment strategy like
   #Kayenta : Spinnaker Canary
-  serviceName:
+  serviceNames:
   - fronthotdrinksapp
   deployment: Kayenta
   config:
    stage:
     percentage: 20
     period: 5m
-   newImageTag: 
-    version: "canary version"
-   productionImageTag:
-    version: "prod version"
+#   newImageTag: 
+#    version: "canary_version"
+#   productionImageTag:
+#    version: "prod_version"
    matchExpression: HTTP.REQ.URL.CONTAINS("citrix india")
-   #stickiness: cookie
    connectionDrain: graceful
    kayentaConfig:
      spinnaker:
       #GATE exposed IP and not DECK IP.
-      domain: 35.192.232.8
-      port: 80
-      pipelineName: Demo
-      applicationName: fronthotdrinksapp
+      - domain: 35.192.232.8
+        port: 80
+        pipelineName: Demo
+        applicationName: fronthotdrinksapp
+        serviceName: fronthotdrinksapp
