@@ -43,7 +43,7 @@ Open ```values.sh``` in the current directory and update the values on the right
 ### Step 3: Create all the resources
 After the values.sh file is set. We can create all the resources by just running the ```create_all.sh``` file. This will create all the resources like Prometheus and Grafana for monitoring, CPX deployment, CIC pod for the VPX, ingress for both CPX and VPX, guestbook application and CPX HPA for monitoring the CPX deployment. Finally, we would also be installing a helm chart for exposing the custom metrics which is getting collected in the Prometheus.
 
-Execute ```./create_all.sh.```
+Execute ```./create_all.sh```
 
 ### Step 4: Add an entry in the hosts file
 We need to add a route in the hosts file in order to point http://www.guestbook.com application to the VPX Virtual IP that we had set in the 2nd step.
