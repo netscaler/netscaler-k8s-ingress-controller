@@ -25,7 +25,7 @@ spec:
             - "--port=8888"
           imagePullPolicy: Always
         - name: cpx-ingress
-          image: "quay.io/citrix/cpx: 13.0-36.2701"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103"
           securityContext:
             privileged: true
           env:
