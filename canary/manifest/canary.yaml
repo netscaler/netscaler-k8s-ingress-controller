@@ -17,11 +17,11 @@ spec:
       labels:
         name: fronthotdrinksapp
         dep: cddep
-        version: "canary version"
+        version: "canary_version"
     spec:
       containers:
       - name: fronthotdrinksapp
-        image: "index.docker.io/application/fronthotdrinksapp:v2"
+        image: "quay.io/sample-apps/fronthotdrinksapp:v2"
         imagePullPolicy: Always
         ports:
         - name: port-8080

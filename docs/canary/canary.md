@@ -1,9 +1,6 @@
-# Deploy Citrix ADC-Integrated Canary Deployment Solution (**Beta**)
+# Deploy Citrix ADC-Integrated Canary Deployment Solution
 
->**IMPORTANT**
->This is the beta version of the solution which is still undergoing final testing before its official release.
-
-Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After user validation, the application is rolled out to the larger set of users. Citrix ADC-Integrated Canary Deployment Solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
+Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After user validation, the application is rolled out to the larger set of users. Citrix ADC-Integrated Canary Deployment solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
 
 Citrix ADC comes with a rich application-centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Citrix ADC to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Citrix ADC is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta.
 
@@ -30,9 +27,9 @@ GitHub has many utilities available for integrating with other tools that form p
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
--  Citrix ingress controller build/version: `quay.io/citrix/citrix-k8s-ingress-controller:canary-b1`.
--  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.2701` and later.
--  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:canary-exporter-b1`.
+-  Citrix ingress controller build/version: `quay.io/citrix/citrix-k8s-ingress-controller:1.7.6`.
+-  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103`.
+-  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
 
 ## Workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution
 
@@ -43,12 +40,12 @@ The following diagram explains the workflow of a Spinnaker pipeline for Citrix A
 The following steps explain the workflow specified in the diagram.
 
 1.  Developers maintain the source code in GitHub, make changes whenever required, and commit the changes to GitHub.
-1.  A webhook is configured in GitHub to listen for the source code changes. Whenever the source code is checked in to GitHub, the webhook is triggered and informs Docker Hub to build the image with the new source code. Once the docker image is created, a separate webhook configured in Docker Hub triggers a Spinnaker pipeline.
-1.  Once the Spinnaker pipeline is triggered, canary and baseline versions of the image are deployed.
-1.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to canary and baseline versions. Citrix ADC collects the performance statistics and exports the statistics to Prometheus with the help of Citrix ADC Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
+2.  A webhook is configured in GitHub to listen for the source code changes. Whenever the source code is checked in to GitHub, the webhook is triggered and informs Docker Hub to build the image with the new source code. Once the docker image is created, a separate webhook configured in Docker Hub triggers a Spinnaker pipeline.
+3.  Once the Spinnaker pipeline is triggered, canary and baseline versions of the image are deployed.
+4.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to canary and baseline versions. Citrix ADC collects the performance statistics and exports the statistics to Prometheus with the help of Citrix ADC Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
 1.	Kayenta performs a canary analysis based on the performance statistics and generates a score. Based on the score, the canary deployment is termed as success or failure and the image is rolled out or rolled back.
 
-The following diagram explains the workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution.
+
 
 ## Limitations
 
@@ -86,7 +83,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
         gcloud beta container clusters create kayenta-tutorial 
         --machine-type=n1-standard-2 --enable-stackdriver-kubernetes
 
-1.  Install the plug-in for integrating Prometheus with Stackdriver using the following command.
+2.  Install the plug-in for integrating Prometheus with Stackdriver using the following command.
 
         kubectl apply --as=admin --as-group=system:masters -f \
         https://storage.googleapis.com/stackdriver-prometheus-documentation/rbac-setup.yml
@@ -96,7 +93,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
         \sed "s/_kubernetes_location:.*/_kubernetes_location: us-central1-f/" | 
         \kubectl apply -f -
 
-1.  Deploy Spinnaker in the GKE cluster using the following steps.
+3.  Deploy Spinnaker in the GKE cluster using the following steps.
 
     1.  Download the ``quick-install.yml`` file for Spinnaker from [Spinnaker](https://www.spinnaker.io/downloads/kubernetes/quick-install.yml) website.
     2.  Update the ``quick-install.yml`` file to integrate different components starting with Docker Hub. To integrate Spinnaker with Docker Hub, update the values of address, user name, password, email, and repository under ConfigMap in ``quick-install.yml`` file.
@@ -139,7 +136,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
           >**Note:**
           >If Jenkins is installed in one of the nodes of Kubernetes, you must update the firewall rules for that node for public access.
 
-    1.  Update the following values in the ``quick-install.yml`` file for integrating Jenkins with Spinnaker.
+    4.  Update the following values in the ``quick-install.yml`` file for integrating Jenkins with Spinnaker.
 
                 data:igor.yml: |
 		        enabled: true
@@ -214,7 +211,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
     1.  To access Spinnaker, in the Cloud Shell, click the **Web Preview icon** and select **Preview on port 8080**.
 
         !!! note "Note"  
-            You can access Spinnaker securely or via HTTP. To expose Spinnaker seurely, use the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress.
+            You can access Spinnaker securely or via HTTP. To expose Spinnaker securely, use the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress.
             Once the Spinnaker application is publicly exposed, you can use the domain assigned for Spinnaker or IP address of the Ingress to access it.
 
 ### Create a Spinnaker pipeline and configure automated canary deployment
@@ -227,10 +224,9 @@ Once you deploy Spinnaker, create a Spinnaker pipeline for an application and co
 
 
 
-
 ### Deploy a sample application for canary
 
-This example shows how to run the canary deployment of a sample application using Citrix ADC-Integrated Canary Deployment solution. In this example, Citrix ADC CPX, MPX, or VPX is deployed as an Ingress device for a GKE cluster. Citrix ADC generates the performance metrics required for canary analysis.
+This example shows how to run the canary deployment of a sample application using Citrix ADC-Integrated Canary Deployment Solution. In this example, Citrix ADC CPX, MPX, or VPX is deployed as an Ingress device for a GKE cluster. Citrix ADC generates the performance metrics required for canary analysis.
 
 **Prerequisites**
 
@@ -326,7 +322,7 @@ Perform the following steps to deploy a sample application as a canary release.
 
 For troubleshooting the deployment, perform the following steps.
 
-1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Citrix ADC CPX, Citrix ADC Metrics Exporter, Citrix ingress controller and so on.
+1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Citrix ADC CPX, Citrix ADC Metrics Exporter, Citrix ingress controller.
 1.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
 1.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
 1.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
