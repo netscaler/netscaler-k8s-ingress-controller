@@ -294,7 +294,7 @@ Perform the following steps to deploy a sample application as a canary release.
     !!! note "Note"
         If you are fully automating the canary deployment, deploy canary and baseline versions using the [Deploy (Manifest) stage](https://www.spinnaker.io/guides/user/kubernetes-v2/deploy-manifest/) in Spinnaker pipeline and there is no need to perform this step.
 
-    For manually deploying canary and baseline versions, use [canary.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary.yaml) and [baseline.yaml](../../canary/manifest/baseline.yaml) files.
+    For manually deploying canary and baseline versions, use [canary.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary.yaml) and [baseline.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/baseline.yaml) files.
 
         kubectl apply -f canary.yaml
         kubectl apply -f baseline.yaml
@@ -304,11 +304,11 @@ Perform the following steps to deploy a sample application as a canary release.
 For troubleshooting the deployment, perform the following steps.
 
 1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Citrix ADC CPX, Citrix ADC Metrics Exporter, Citrix ingress controller.
-1.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
-1.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
-1.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
-1.  Check for the reason of failures during configuration.
-1.  If the failure happened because of incorrect configuration, correct the configuration.
+2.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
+3.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
+4.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
+5.  Check for the reason of failures during configuration.
+6.  If the failure happened because of incorrect configuration, correct the configuration.
 
 ## Sample JSON files
 
