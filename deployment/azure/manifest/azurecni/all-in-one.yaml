@@ -1,0 +1,195 @@
+#Using a basic apache web server as application for illustration
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: apache
+  labels:
+      name: apache
+spec:
+  selector:
+    matchLabels:
+      app: apache
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: httpd:latest
+        ports:
+        - containerPort: 80
+
+---
+#Expose the apache web server as a Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: apache
+---
+#Cluster role required by CPX
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cpx
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status"]
+    verbs: ["*"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["*"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies", "vips"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+---
+#Cluster role bindings required by CPX
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cpx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cpx
+subjects:
+- kind: ServiceAccount
+  name: cpx
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+---
+#Service account for CPX
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cpx
+  namespace: default
+---
+#Specify the ingress resource
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: citrix-ingress
+  annotations:
+   kubernetes.io/ingress.class: "citrix-ingress"
+   ingress.citrix.com/insecure-termination: "allow"
+spec:
+  tls:
+  - secretName: cert-key
+  rules:
+  - host: citrix-ingress.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: apache
+          servicePort: 80
+---
+#Deploy a standalone CPX as an ingress device
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cpx-ingress
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: cpx-ingress
+      labels:
+        app: cpx-ingress
+      annotations:
+    spec:
+      serviceAccountName: cpx
+      containers:
+        - name: cpx-ingress
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103"
+          securityContext:
+             privileged: true
+          env:
+          - name: "EULA
+            value: "yes"
+          - name: "KUBERNETES_TASK_ID"
+            value: ""
+          ports:
+          - name: http
+            containerPort: 80
+          - name: https
+            containerPort: 443
+          - name: nitro-http
+            containerPort: 9080
+          - name: nitro-https
+            containerPort: 9443
+          #This is required for Health check to succeed
+          readinessProbe:
+            tcpSocket:
+              port: 9080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            failureThreshold: 5
+            successThreshold: 1
+          imagePullPolicy: Always
+        # Add cic as a sidecar
+        - name: cic
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "NS_IP"
+            value: "127.0.0.1"
+          - name: "NS_PROTOCOL"
+            value: "HTTP"
+          - name: "NS_PORT"
+            value: "80"
+          - name: "NS_DEPLOYMENT_MODE"
+            value: "SIDECAR"
+          - name: "NS_ENABLE_MONITORING"
+            value: "YES"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          args:
+            - --ingress-classes
+              citrix-ingress
+          imagePullPolicy: Always
+
+---
+#Expose the CPX as a Load-balancer service
+kind: Service
+apiVersion: v1
+metadata:
+  name: cpx-ingress
+  labels:
+    name: cpx-ingress
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    app: cpx-ingress
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+---
