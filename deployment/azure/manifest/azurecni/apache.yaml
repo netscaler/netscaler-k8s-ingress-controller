@@ -1,0 +1,36 @@
+#Using a basic apache web server as application for illustration
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: apache
+  labels:
+      name: apache
+spec:
+  selector:
+    matchLabels:
+      app: apache
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: httpd:latest
+        ports:
+        - containerPort: 80
+
+---
+#Expose the apache web server as a Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: apache
+---
