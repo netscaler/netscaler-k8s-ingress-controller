@@ -9,7 +9,7 @@ Figure 1. HPA with traditional metrics-server
 </p>
 
 ## Why custom metrics for CPX?
-By default, the metrics-server only gives us CPU and memory metrics for a pod. Both these metrics are neither very accurate nor very user-friendly with respect to a CPX (Citrix ADC) pod. So, we had to come up with our own custom metrics-server which would help us expose metrics like "HTTP requests rate" or "Bandwidth" from a CPX. These metrics would not just be more aligned to the CPX license strategy but will also be accurate in terms of traffic and load that a CPX is handling.
+By default, the metrics-server only gives us CPU and memory metrics for a pod. Both these metrics are neither very accurate nor very user-friendly with respect to a CPX (Citrix ADC) pod. So, we had to come up with our own custom metrics-server which would help us expose metrics like "HTTP requests rate" or "Bandwidth" from a CPX. 
 
 ## What needs to be done to achieve custom metrics for CPX?
 We will be using Prometheus – which is a graduated CNCF project – to collect all the metrics from the CPX and exposing them using Prometheus-adapter which will be queried by the HPA controller to keep a check on the logs.
