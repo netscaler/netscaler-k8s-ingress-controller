@@ -27,7 +27,7 @@ spec:
             value: ""
           - name: "NS_MGMT_SERVER"
             value: "10.106.192.9"
-          - name: "NS_MGMT_FINGERPRINT"
+          - name: "NS_MGMT_FINGER_PRINT"
             value: "72:72:A7:A6:AE:72:E3:10:47:CD:2F:A1:C3:B7:82:6D:97:3D:E2:5D"
           - name: "NS_HTTP_PORT"
             value: "9080"
