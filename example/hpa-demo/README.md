@@ -8,14 +8,28 @@
 Figure 1. HPA with traditional metrics-server
 </p>
 
-## Why custom metrics for CPX?
-By default, the metrics-server only gives us CPU and memory metrics for a pod. Both these metrics are neither very accurate nor very user-friendly with respect to a CPX (Citrix ADC) pod. So, we had to come up with our own custom metrics-server which would help us expose metrics like "HTTP requests rate" or "Bandwidth" from a CPX. 
+## Why custom metrics for Citrix ADC CPX?
+By default, the metrics-server only gives CPU and memory metrics for a pod. To take a better autoscaling judgement based on rich set of counters as provided by Citrix ADC a custom metric based HPA is a better solution. So, Prometheus-Adapter is used to expose metrics like "HTTP requests rate" or "Bandwidth" from a CPX.
 
-## What needs to be done to achieve custom metrics for CPX?
-We will be using Prometheus – which is a graduated CNCF project – to collect all the metrics from the CPX and exposing them using Prometheus-adapter which will be queried by the HPA controller to keep a check on the logs.
+## Components being used:
+#### Citrix ADC VPX
+VPX is present in Tier-1 and load balancing the client requests among the CPX pods in the CPX deployment present in the cluster.
+#### Citrix ADC CPX
+CPX is acting as a load balancer in Tier-2 for the endpoint application pods.
+The CPX pod is running with CIC and Exporter in sidecar.
+#### Citrix Ingress Controller (CIC)
+CIC is an ingress controller which is built around Kubernetes Ingress and automatically configures Citrix ADC based on the Ingress resource configuration. It can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller).
+
+There are 2 types of CICs in Figure 2 below. One is used for configuring the VPX and the other one for configuring the CPX where it is running as a sidecar container.
+#### Exporter
+The Exporter is a sidecar container which is exposing the CPX's metrics. Exporter collects the metrics from CPX and exposes it in a format that Prometheus can understand.
+Citrix ADC Metrics Exporter can be found [here](https://github.com/citrix/citrix-adc-metrics-exporter).
+#### Prometheus
+Prometheus – which is a graduated CNCF project – is used to collect all the metrics from the CPX and expose them using Prometheus-adapter which will be queried by the HPA controller to keep a check on the metrics.
+#### Prometheus-adapter
 Prometheus-adapter contains an implementation of the Kubernetes resource metrics API and custom metrics API. This adapter is therefore suitable for use with the autoscaling/v2 Horizontal Pod Autoscaler in Kubernetes 1.6+. It can also replace the metrics server on clusters that already run Prometheus and collect the appropriate metrics.
 
-Below, Figure 2, is a visual representation of how an HPA works. We have a 2-tier model with VPX which is load balancing the CPX deployment. The CPXs are in turn load balancing the applications. A Prometheus, Prometheus-adapter and an HPA controller for the CPX deployment are also deployed.
+Below, Figure 2, is a visual representation of how an HPA works. A 2-tier model with VPX which is load balancing the CPX deployment is present. The CPXs are in turn load balancing the applications. A Prometheus, Prometheus-adapter and an HPA controller for the CPX deployment are also deployed.
 The HPA controller will keep polling the Prometheus-adapter for custom metrics like HTTP requests rate or Bandwidth. Whenever the limit defined by the user in the HPA is reached, it would scale the CPX deployment and create another CPX pod to handle the load.
 
 <p align="center">
@@ -38,15 +52,15 @@ After cloning, go to the examples folder with the following command.
 
 <img src="images/image003.png" width="500">
 
-Open ```values.sh``` in the current directory and update the values on the right-hand side of ```VPX_IP```, ```VPX_PASSWORD``` and ```VIRTUAL_IP_VPX```. ```VPX_IP``` will be the IP of the VPX that we will be using. ```VPX_PASSWORD``` will be the password of the "nsroot" user on VPX. Finally, ```VIRTUAL_IP_VPX``` will be the IP on which we will be accessing the guestbook application. (This is a dummy application that we will be using for demo purposes.) 
+Open ```values.sh``` in the current directory and update the values on the right-hand side of ```VPX_IP```, ```VPX_PASSWORD``` and ```VIRTUAL_IP_VPX```. ```VPX_IP``` will be the IP of the VPX that will be used. ```VPX_PASSWORD``` will be the password of the "nsroot" user on VPX. Finally, ```VIRTUAL_IP_VPX``` will be the IP on which the guesbook application(This is a dummy application that is being used for demo purposes.) will be accessced. 
 
 ### Step 3: Create all the resources
-After the values.sh file is set. We can create all the resources by just running the ```create_all.sh``` file. This will create all the resources like Prometheus and Grafana for monitoring, CPX deployment, CIC pod for the VPX, ingress for both CPX and VPX, guestbook application and CPX HPA for monitoring the CPX deployment. Finally, we would also be installing a helm chart for exposing the custom metrics which is getting collected in the Prometheus.
+After the values.sh file is set. Create all the resources by just running the ```create_all.sh``` file. This will create all the resources like Prometheus and Grafana for monitoring, CPX deployment (CPX with CIC and Exporter as sidecars), CIC pod for the VPX, ingresses for both CPX and VPX, guestbook application and CPX HPA for monitoring the CPX deployment. Finally, the Prometheus-adapter helm chart will be installed for exposing the custom metrics which is getting collected in the Prometheus.
 
 Execute ```./create_all.sh```
 
 ### Step 4: Add an entry in the hosts file
-We need to add a route in the hosts file in order to point http://www.guestbook.com application to the VPX Virtual IP that we had set in the 2nd step.
+Route needs to be added in the hosts file in order to route traffic for http://www.guestbook.com application to the VPX Virtual IP that was set in the 2nd step.
 For most Linux distros, the ```hosts``` file is present in ```/etc``` folder.
 
 ### Step 5: Send traffic and see the CPX deployment autoscale
@@ -64,7 +78,7 @@ Figure 3. Grafana dashboard when 16 HTTP requests are sent per second.
 Figure 4. HPA state with 16 RPS (requests per second)
 </p>
 
-Now, run the ```30_curl.sh``` script to send 30 requests per second to the CPX. In this we will see that the threshold of 20 that was set has been crossed and we will see that the CPX deployment has autoscaled from 1 pod to 2 pods. The average value of the metric "HTTP request rate" has also gone down from 30 to 15 in Figure 6 because there are 2 CPX pods now.
+Now, run the ```30_curl.sh``` script to send 30 requests per second to the CPX. In this the threshold of 20 that was set has been crossed and the CPX deployment has autoscaled from 1 pod to 2 pods. The average value of the metric "HTTP request rate" has also gone down from 30 to 15 in Figure 6 because there are 2 CPX pods now.
  
 <p align="center">
 <img src="images/image006.png" width="1000">
@@ -83,6 +97,6 @@ Figure 7. Grafana dashboard with 2 CPXs load balancing the traffic.
 
 
 ### Step 6: Clean up
-Now that we have seen HPA in action, we can clean up by just executing the ```delete_all.sh``` file.
+Clean up by just executing the ```delete_all.sh``` script.
 
 Execute ```./delete_all.sh```
