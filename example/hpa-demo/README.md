@@ -9,7 +9,7 @@ Figure 1. HPA with traditional metrics-server
 </p>
 
 ## Why custom metrics for Citrix ADC CPX?
-By default, the metrics-server only gives CPU and memory metrics for a pod. To take a better autoscaling judgement based on rich set of counters as provided by Citrix ADC a custom metric based HPA is a better solution. So, Prometheus-Adapter is used to expose metrics like "HTTP requests rate" or "Bandwidth" from a CPX.
+By default, the metrics-server only gives CPU and memory metrics for a pod. To take a better autoscaling judgement based on rich set of counters as provided by Citrix ADC a custom metric based HPA is a better solution like Autoscaling based upon HTTP request or SSL transactions or ADC bandwidth.
 
 ## Components being used:
 #### Citrix ADC VPX
@@ -37,7 +37,7 @@ The HPA controller will keep polling the Prometheus-adapter for custom metrics l
 Figure 2. Visual representation of CPX autoscaling with custom metrics from Prometheus-adapter
 </p>
 
-## To see CPX autoscaling in action follow the following steps:
+## Steps to deploy HPA:
 
 ### Step 1: Clone repo and change directory
 Clone the citrix-k8s-ingress-controller repository from Github using the following command.
@@ -100,3 +100,6 @@ Figure 7. Grafana dashboard with 2 CPXs load balancing the traffic.
 Clean up by just executing the ```delete_all.sh``` script.
 
 Execute ```./delete_all.sh```
+
+## NOTE
+If Tier-1 VPX is not present use [Nodeport](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) to expose the CPX service.
