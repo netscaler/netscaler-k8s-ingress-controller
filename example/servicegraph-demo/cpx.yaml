@@ -26,19 +26,19 @@ spec:
           - name: "KUBERNETES_TASK_ID"
             value: ""
           - name: "NS_MGMT_SERVER"
-            value: "10.106.192.9"
+            value: "192.168.0.1"
           - name: "NS_MGMT_FINGER_PRINT"
-            value: "72:72:A7:A6:AE:72:E3:10:47:CD:2F:A1:C3:B7:82:6D:97:3D:E2:5D"
+            value: "12:12:AB:CD:EA:72:E3:10:47:CD:AF:AG:C3:B7:82:6D:97:3D:E2:5D"
           - name: "NS_HTTP_PORT"
             value: "9080"
           - name: "NS_HTTPS_PORT"
             value: 9443"
           - name: "LOGSTREAM_COLLECTOR_IP"
-            value: "10.106.192.9"
+            value: "192.168.0.1"
           imagePullPolicy: Always
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.6.1"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
           env:
           - name: "EULA"
             value: "yes"
