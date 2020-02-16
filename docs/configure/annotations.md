@@ -45,7 +45,7 @@ metadata:
   annotations:
     ingress.citrix.com/insecure-port: "80"
     ingress.citrix.com/frontend-ip: "192.168.1.1"
-    ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", “persistenceType":"SOURCEIP"}}'
+    ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
     ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
     ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
 spec:
