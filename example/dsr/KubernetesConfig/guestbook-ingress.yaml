@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: guestbook-ingress
+  annotations:
+   kubernetes.io/ingress.class: "dsr-tier2"
+   ingress.citrix.com/frontend-ip: "10.102.169.210"
+spec:
+  backend:
+     serviceName: frontend
+     servicePort: 80
