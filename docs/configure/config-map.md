@@ -16,7 +16,7 @@ The values for the following environment variables in the Citrix ingress control
 - NS_PORT: Specifies the port to establish a session. The default value is `80`.
 
 **Note:**
-This is an initial version of the ConfigMap support and currently supports only a few parameters. Earlier, these parameters were configurable through environment variables  except the `NS_HTTP2_SERVER_SIDE` parameter.
+This is an initial version of the ConfigMap support and currently supports only a few parameters. Earlier, these parameters were configurable through environment variables except the `NS_HTTP2_SERVER_SIDE` parameter.
 
 ## Configuring ConfigMap support for the Citrix ingress controller
 
@@ -117,7 +117,7 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
     When you delete the ConfigMap, environment variable configuration falls back as per the following order of precedence:
     ConfigMap configuration > environment variable configuration > default
 
-To define all the data in a ConfigMap as environment variables for the Citrix ingress controller, use the following in the Citrix ingress controller deployment YAML file.
+(Optional) In case, you want to define all keys in a ConfigMap as environment variables in the Citrix ingress controller, use the following in the Citrix ingress controller deployment YAML file.
 
         envFrom:
                 - configMapRef: 
