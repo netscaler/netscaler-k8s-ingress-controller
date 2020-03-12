@@ -28,15 +28,15 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
 
         apiVersion: v1
         kind: ConfigMap
-          metadata:
-            name: cic-configmap
-            labels:
-              app: citrix-ingress-controller
-            data:
-              LOGLEVEL: 'info'
-              NS_PROTOCOL: 'http'
-              NS_PORT:'80'
-              NS_HTTP2_SERVER_SIDE:'ON'
+        metadata:
+          name: cic-configmap
+          labels:
+            app: citrix-ingress-controller
+        data:
+          LOGLEVEL: 'info'
+          NS_PROTOCOL: 'http'
+          NS_PORT: '80'
+          NS_HTTP2_SERVER_SIDE: 'ON'
 
 2. Deploy the `cic-configmap.yaml` using the following command.
 
@@ -67,8 +67,8 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
                 name: cic-k8s-ingress-controller
                 labels:
                   app: cic-k8s-ingress-controller
-               annotations:
-               spec: 
+              annotations:
+              spec: 
                 serviceAccountName: cic-k8s-role
                 containers:
                 - name: cic-k8s-ingress-controller
@@ -96,15 +96,15 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
 
         apiVersion: v1
         kind: ConfigMap
-          metadata:
-            name: cic-configmap
-            labels:
-              app: citrix-ingress-controller
-            data:
-              LOGLEVEL: 'info'
-              NS_PROTOCOL: 'http'
-              NS_PORT:'80'
-              NS_HTTP2_SERVER_SIDE:'OFF'
+        metadata:
+          name: cic-configmap
+          labels:
+            app: citrix-ingress-controller
+        data:
+          LOGLEVEL: 'info'
+          NS_PROTOCOL: 'http'
+          NS_PORT: '80'
+          NS_HTTP2_SERVER_SIDE: 'OFF'
 
 6. Reapply the ConfigMap using the following command.
 
