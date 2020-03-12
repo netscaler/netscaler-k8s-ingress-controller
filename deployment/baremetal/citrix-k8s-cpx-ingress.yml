@@ -4,7 +4,7 @@ metadata:
   name: cpx-ingress-k8s-role
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
