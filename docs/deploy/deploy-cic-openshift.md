@@ -410,7 +410,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 
               add route <pod_network> <netmask> <gateway>
 
-	        <B>Example:</b>
+	       <B>Example:</b>
 
 
 
@@ -421,7 +421,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 	          os.example.com  os.example.com 192.168.122.46 10.1.1.0/24
     
  
-            From the output of the `oc get hostsubnet` command:
+          From the output of the `oc get hostsubnet` command:
 
 
        
@@ -432,7 +432,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
               <gateway> = 192.168.122.46
 
 
-	         The required static route to add on Citrix ADC is as follows:
+	        The required static route to add on Citrix ADC is as follows:
 
 
               add route 10.1.1.0 255.255.255.0 192.168.122.46
