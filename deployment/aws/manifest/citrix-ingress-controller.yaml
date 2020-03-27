@@ -70,6 +70,8 @@ spec:
       containers:
       - name: cic-k8s-ingress-controller-1
         image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+        securityContext:
+           readOnlyRootFilesystem: true
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
          - name: "NS_IP"
@@ -109,6 +111,8 @@ spec:
       containers:
       - name: cic-k8s-ingress-controller-2
         image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+        securityContext:
+           readOnlyRootFilesystem: true
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
          - name: "NS_IP"
