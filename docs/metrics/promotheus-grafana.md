@@ -89,7 +89,11 @@ This topic describes how to integrate the [Citrix ADC metrics exporter](https://
 
 **Citrix ADC VPX Ingress device**:
 
-To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. The following is a sample YAML file to deploy the exporter:
+To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. To provide the login credentials to access ADC, create a secret and mount the volume at mountpath "/mnt/nslogin".
+```
+kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
+```
+The following is a sample YAML file to deploy the exporter:
 
 ```YAML
 apiVersion: v1
@@ -101,11 +105,21 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
-            imagePullPolicy: IfNotPresent
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      imagePullPolicy: IfNotPresent
       args:
-        - "--target-nsip=<IP_and_port_of_VPX>"
+        - "--target-nsip=<IP_of_VPX>"
         - "--port=8888"
+      volumeMounts:
+      - name: nslogin
+        mountPath: "/mnt/nslogin"
+        readOnly: true
+      securityContext:
+        readOnlyRootFilesystem: true
+  volumes:
+  - name: nslogin
+    secret:
+      secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -126,7 +140,11 @@ The IP address and the port of the Citrix ADC VPX device needs to be provided in
 
 **Citrix ADC CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
+To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. To provide the login credentials to access CPX from exporter, create a secret and mount the volume at mountpath "/mnt/nslogin".
+```
+kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
+```
+The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
 
 ```YAML
 ---
@@ -174,11 +192,22 @@ spec:
               containerPort: 9443
         # Adding exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           imagePullPolicy: IfNotPresent
           args:
             - "--target-nsip=192.0.0.2"
             - "--port=8888"
+            - "--secure=no"
+          volumeMounts:
+          - name: nslogin
+            mountPath: "/mnt/nslogin"
+            readOnly: true
+          securityContext:
+            readOnlyRootFilesystem: true
+      volumes:
+      - name: nslogin
+        secret:
+          secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -199,7 +228,12 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 
 **Citrix ADC CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
+To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. To provide the login credentials to access CPX from exporter, create a secret and mount the volume at mountpath "/mnt/nslogin".
+```
+kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
+```
+
+The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
 
 ```YAML
 apiVersion: extensions/v1beta1
@@ -231,11 +265,22 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           args:
-            - "--target-nsip=192.168.0.2:80"
+            - "--target-nsip=192.168.0.2"
             - "--port=8888"
+            - "--secure=no"
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: nslogin
+            mountPath: "/mnt/nslogin"
+            readOnly: true
+          securityContext:
+            readOnlyRootFilesystem: true
+      volumes:
+      - name: nslogin
+        secret:
+          secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
