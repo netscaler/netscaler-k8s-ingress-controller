@@ -20,11 +20,18 @@ spec:
       serviceAccountName: cpx 
       containers:
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           args:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
+            - "--secure=no"
           imagePullPolicy: Always
+          volumeMounts:
+          - name: nslogin
+            mountPath: "/mnt/nslogin"
+            readOnly: true
+          securityContext:
+            readOnlyRootFilesystem: true
         - name: cic-k8s-ingress-controller
           image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
           env:
@@ -73,6 +80,10 @@ spec:
             - name: nitro-https
               containerPort: 9443
           imagePullPolicy: Always
+      volumes:
+        - name: nslogin
+          secret:
+            secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
