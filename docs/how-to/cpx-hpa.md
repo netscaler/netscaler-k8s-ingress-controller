@@ -97,16 +97,16 @@ For most Linux distros, the `hosts` file is present in the `/etc` folder.
       
     The following output shows the state of HPA when the target is crossed.
 
-        ![HPA-cpx-exceeding-threshold](../media/HTTP-request-3.png)
+    ![HPA-cpx-exceeding-threshold](../media/HTTP-request-3.png)
 
     The following output shows that the number of replicas of Citrix ADC CPX have gone up to 2 and the average value of HTTP RPS comes down to 15.
 
-        ![CPX-autoscale](../media//HTTP-request-4.png)
+    ![CPX-autoscale](../media/HTTP-request-4.png)
        
 
     The following diagram shows a Grafana dashboard with two Citrix ADC CPXs load balancing the traffic.
      
-        ![HPA-grafana-dashboard](../media/HTTP-request-5.png)
+    ![HPA-grafana-dashboard](../media/HTTP-request-5.png)
 
 2. Clean up by executing the `delete_all.sh` script.
 
