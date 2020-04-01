@@ -134,6 +134,7 @@ nav:
     - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+    - Horizontal pod autoscaler: how-to/cpx-hpa.md
   
 google_analytics:
   - 'UA-59929653-12'
