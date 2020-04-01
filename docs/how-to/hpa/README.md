@@ -45,7 +45,7 @@ Perform the following steps to deploy the Citrix ADC CPX HPA solution.
 
    After cloning, change your directory to the HPA folder with the following command.
 
-        cd citrix-k8s-ingress-controller/blob/master/hpa
+        cd citrix-k8s-ingress-controller/blob/master/docs/how-to/hpa
 
 2. From the HPA directory, open and edit the `values.sh` file and set the following values for Citrix ADC VPX.
 
