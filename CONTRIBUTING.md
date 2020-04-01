@@ -6,7 +6,7 @@
 
  Not every contribution comes in the form of code. Submitting, confirming, and triaging issues is an important task for any project. This project uses GitHub to track all project issues. You can use Issues to submit feature requests.
 
- We ask you not to submit security concerns through GitHub. For details on submitting potential security issues, see [reporting security issues to Citrix](https://support.citrix.com/article/CTX0817430).
+ We ask you not to submit security concerns through GitHub. For details on submitting potential security issues, see [reporting security issues to Citrix](https://support.citrix.com/article/CTX081743).
 
 ## Code contributions
 
