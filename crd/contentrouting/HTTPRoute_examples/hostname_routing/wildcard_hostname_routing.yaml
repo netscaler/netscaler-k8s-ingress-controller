@@ -1,0 +1,14 @@
+ apiVersion: citrix.com/v1alpha1
+ kind: HTTPRoute
+ metadata:
+    name: wildcard-routing
+ spec:
+   hostname:
+   - '*.host1.com'
+   rules:
+   - name: wildcard
+     action:
+       backend:
+         kube:
+           service: app1 
+           port: 80 

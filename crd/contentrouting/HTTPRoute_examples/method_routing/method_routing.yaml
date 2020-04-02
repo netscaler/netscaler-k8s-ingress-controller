@@ -1,0 +1,25 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: method-routing
+spec:
+  hostname:
+  - host1.com
+  rules:
+  # route all GET to app1 and POST to app2
+  - name: method-get
+    match:
+    - method: GET
+    action:
+      backend:
+        kube:
+          service: app1 
+          port: 80
+  - name: method-post
+    match:
+    - method: POST
+    action:
+      backend:
+        kube:
+          service: app2 
+          port: 80

@@ -1,0 +1,15 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: hostname-routing 
+spec:
+  hostname:
+  - host1.com
+  rules:       
+  # Route all traffic to host1.com to resource service
+  - name: hostonly 
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80

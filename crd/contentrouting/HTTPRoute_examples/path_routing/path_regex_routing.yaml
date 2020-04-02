@@ -1,0 +1,18 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: path-routing 
+spec:
+  hostname:
+  - host1.com
+  rules:       
+  - name: regexpath 
+    # Match regular expression for the URL
+    match:
+    - path:
+        regex: '/foo/[A-Z0-9]{3}' 
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80

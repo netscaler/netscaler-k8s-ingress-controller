@@ -10,6 +10,17 @@ spec:
     plural: httproutes
     singular: httproute
   scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
       required: [spec] 
@@ -45,7 +56,7 @@ spec:
                     minItems: 1
                     items:
                       type: object
-                      anyof:
+                      anyOf:
                       - required: [path]
                       - required: [headers]
                       - required: [cookies]
@@ -140,11 +151,12 @@ spec:
                               not:
                                 type: boolean
                                 description: "Default False, if present, rules are inverted. I.e query if present must not match the value"
-                            oneOf:
+                            anyOf:
                             - required: [name]
-                            - required: [name, exact]
-                            - required: [name, contains]
-                            - required: [name, regex]
+                            - oneOf:
+                              - required: [name, exact]
+                              - required: [name, contains]
+                              - required: [name, regex]
                         cookies:
                           type: array
                           description: "List of Cookie params for content routing - Must match all the rules- Treated as AND condition if more than 1 rule"
@@ -168,11 +180,12 @@ spec:
                               not:
                                 type: boolean
                                 description: "Default False, if present, rules are inverted. I.e cookie if present must not match the value"
-                            oneOf:
+                            anyOf:
                             - required: [name]
-                            - required: [name, exact]
-                            - required: [name, contains]
-                            - required: [name, regex]
+                            - oneOf:
+                              - required: [name, exact]
+                              - required: [name, contains]
+                              - required: [name, regex]
                             method:
                               type: string
                               description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
@@ -241,6 +254,3 @@ spec:
                     oneOf:
                     - required: ["backend"]
                     - required: ["redirect"]
-  subresources:
-    # status enables the status subresource.
-    status: {}
