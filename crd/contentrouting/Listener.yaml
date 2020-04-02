@@ -11,6 +11,17 @@ spec:
     plural: listeners 
     singular: listener
   scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
       required: [spec]
@@ -47,7 +58,11 @@ spec:
                     properties:
                       name:
                         type: string
-                        description: "name of the Kubernetes object where Cert is located"
+                        description: "name of the Kubernetes Secret object where Cert is located"
+                        pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                      namespace:
+                        type: string
+                        description: "Namespace of the kubernetes secret object; Default is same namespace where the Listener object is located"
                         pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
                   default:
                     type: boolean
@@ -141,6 +156,3 @@ spec:
               oneOf:
               - required: ["backend"]
               - required: ["redirect"]
-  subresources:
-    # status enables the status subresource.
-    status: {}
