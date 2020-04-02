@@ -1,0 +1,17 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: policy-expression 
+spec:
+  hostname:
+  - host1.com
+  rules:       
+  - name: policy 
+    # Match based on citrix policy expression
+    match:
+    - policyExpression: HTTP.REQ.URL.PATH.GET(1).EQ("foo")
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80

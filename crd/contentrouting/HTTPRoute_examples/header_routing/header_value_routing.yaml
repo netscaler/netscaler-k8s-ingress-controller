@@ -1,0 +1,57 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: header-value 
+spec:
+  hostname:
+  - host1.com
+  rules:
+  - name: contains-match
+    match:
+    - headers:
+      - headerValue:
+          # If  header Origin has a value that contains string 'mobile'
+          name: Origin
+          contains: mobile
+    action:
+      backend:
+        kube:
+          service: mobile-app
+          port: 80
+  - name: exact-match
+    match:
+    - headers:
+      - headerValue:
+          # If header header-x has a value app1
+          name: header-x 
+          exact: app1
+    action:
+      backend:
+        kube:
+          service: app1 
+          port: 80
+  - name: regex-match
+    match:
+    - headers:
+      - headerValue:
+          # If a header named header-y matches the regular expression 
+          name: header-y 
+          regex: "[a-z]{1}"
+    action:
+      backend:
+        kube:
+          service: app2 
+          port: 80
+  - name: inversion
+    match:
+    - headers:
+      - headerValue:
+          # If header named header-z does not contain the value abc
+          name: header-z 
+          exact: abc
+          not: true
+    action:
+      backend:
+        kube:
+          service: app3 
+          port: 80
