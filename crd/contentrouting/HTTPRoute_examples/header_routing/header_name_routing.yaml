@@ -1,0 +1,53 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: header-routing
+spec:
+  hostname:
+  - host1.com
+  rules:
+  - name: contains-match
+    match:
+    - headers:
+      - headerName:
+          # If any HTTP header name contains the string mobile
+          contains: mobile
+    action:
+      backend:
+        kube:
+          service: app1 
+          port: 80
+  - name: exact-match
+    match:
+    - headers:
+      - headerName:
+          # If a HTTP header named my-header exists
+          exact: my-header 
+    action:
+      backend:
+        kube:
+          service: app2 
+          port: 80
+  - name: regex-match
+    match:
+    - headers:
+      - headerName:
+          # If any header name matches the regular expression
+          regex: "Header-[a-z]{1}"
+    action:
+      backend:
+        kube:
+          service: app3 
+          port: 80
+  - name: inversion-rule
+    match:
+    - headers:
+      - headerName:
+          # If a header named header-x doesnt exist
+          exact: header-x 
+          not: true
+    action:
+      backend:
+        kube:
+          service: app4 
+          port: 80

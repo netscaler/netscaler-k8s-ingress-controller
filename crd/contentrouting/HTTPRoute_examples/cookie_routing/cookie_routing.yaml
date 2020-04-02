@@ -1,0 +1,52 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: cookie-routing
+spec:
+  hostname:
+  - host1.com
+  rules:
+  - name: nameonly
+    match:
+    - cookies:
+        # If a cookie has a key named version
+      - name: version
+    action:
+      backend:
+        kube:
+          service: app1 
+          port: 80
+  - name: contains
+    match:
+    - cookies:
+     # If a cookie key named version has a value v1
+      - name: version
+        contains: v1
+    action:
+      backend:
+        kube:
+          service: app2 
+          port: 80
+  - name: exact
+    match:
+    - cookies:
+        # If a cookie key named version whose value contains string v2
+      - name: version
+        exact: v2
+    action:
+      backend:
+        kube:
+          service: app3 
+          port: 80
+  - name: inversion
+    match:
+    - cookies:
+        # If a cookie key named version does not have a value v2
+      - name: version
+        exact: v2
+        not: true
+    action:
+      backend:
+        kube:
+          service: app4 
+          port: 80
