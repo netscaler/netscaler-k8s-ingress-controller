@@ -1,0 +1,13 @@
+apiVersion: citrix.com/v1alpha1
+kind: Listener
+metadata:
+  annotations:
+  name: listener-redirect 
+  namespace: default
+spec:
+  port: 80 
+  protocol: http
+  # default action as redirect to https
+  defaultAction:
+    redirect:
+      httpsRedirect: true
