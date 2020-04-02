@@ -1,0 +1,19 @@
+apiVersion: citrix.com/v1alpha1
+kind: Listener
+metadata:
+  name: https-listener 
+  namespace: default
+spec:
+  vip: 10:10::10 
+  protocol: https
+  certificates:
+  - secret:
+    # Kubernetes secret name
+    name: my-secret
+  defaultAction:
+    backend:
+      kube:
+        namespace: default
+        port: 80
+        service: default-service
+
