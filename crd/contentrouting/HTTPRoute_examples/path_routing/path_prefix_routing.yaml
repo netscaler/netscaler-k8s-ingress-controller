@@ -1,0 +1,17 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: path-routing 
+spec:
+  hostname:
+  - host1.com
+  rules:       
+  - name: prefixpath 
+    match:
+    - path:
+        prefix: /resources 
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80

@@ -1,0 +1,16 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: path-routing 
+spec:
+  hostname:
+  - host1.com
+  rules:       
+  - name: exactpath 
+    # Match exact URL 
+    match:
+    - path:
+        exact: /resources 
+    action:
+      redirect:
+        targetExpression: "\"https://xyz.com/login\""
