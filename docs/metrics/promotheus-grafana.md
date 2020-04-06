@@ -140,11 +140,7 @@ The IP address and the port of the Citrix ADC VPX device needs to be provided in
 
 **Citrix ADC CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. To provide the login credentials to access CPX from exporter, create a secret and mount the volume at mountpath "/mnt/nslogin".
-```
-kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
-```
-The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
+To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX.The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
 
 ```YAML
 ---
@@ -198,16 +194,13 @@ spec:
             - "--target-nsip=192.0.0.2"
             - "--port=8888"
             - "--secure=no"
-          volumeMounts:
-          - name: nslogin
-            mountPath: "/mnt/nslogin"
-            readOnly: true
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           securityContext:
             readOnlyRootFilesystem: true
-      volumes:
-      - name: nslogin
-        secret:
-          secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -228,12 +221,7 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 
 **Citrix ADC CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. To provide the login credentials to access CPX from exporter, create a secret and mount the volume at mountpath "/mnt/nslogin".
-```
-kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
-```
-
-The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
+To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADCCPX.The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
 
 ```YAML
 apiVersion: extensions/v1beta1
@@ -270,17 +258,14 @@ spec:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
             - "--secure=no"
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: nslogin
-            mountPath: "/mnt/nslogin"
-            readOnly: true
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           securityContext:
             readOnlyRootFilesystem: true
-      volumes:
-      - name: nslogin
-        secret:
-          secretName: nslogin
+          imagePullPolicy: IfNotPresent
 ---
 kind: Service
 apiVersion: v1
