@@ -66,8 +66,14 @@ spec:
         - name: exporter
           image: "`EXPORTER`"
           args:
-            - "--target-nsip=127.0.0.1:80"
+            - "--target-nsip=127.0.0.1"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           imagePullPolicy: IfNotPresent
 ---
 kind: Service

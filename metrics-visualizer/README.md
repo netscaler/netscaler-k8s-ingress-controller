@@ -152,12 +152,7 @@ The IP and port of the VPX device needs to be filled in as the ```--target-nsip`
 <summary>CPX Ingress Device</summary>
 <br>
   
-To monitor a CPX ingress device, the exporter is added as a side-car. To provide the login credentials to access CPX via exporter, create a secret and mount the volume at mountpath "/mnt/nslogin".
-```
-kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
-```
-
-An example yaml file of a CPX ingress device with an exporter as a side car is given below;
+To monitor a CPX ingress device, the exporter is added as a side-car.An example yaml file of a CPX ingress device with an exporter as a side car is given below;
 ```
 ---
 apiVersion: extensions/v1beta1
@@ -188,10 +183,11 @@ spec:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
             - "--secure=no"
-          volumeMounts:
-          - name: nslogin
-            mountPath: "/mnt/nslogin"
-            readOnly: true
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           securityContext:
             readOnlyRootFilesystem: true
         - name: cpx-ingress
@@ -214,10 +210,6 @@ spec:
               containerPort: 443
             - name: nitro-http
               containerPort: 9080
-      volumes:
-      - name: nslogin
-        secret:
-          secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -242,11 +234,7 @@ Here, the exporter uses the ```127.0.0.1``` local IP to fetch metrics from the C
 <summary>CPX-EW Device</summary>
 <br>
 
-To monitor a CPX-EW (east-west) device, the exporter is added as a side-car.To provide the login credentials to access CPX via exporter, create a secret and mount the volume at mountpath "/mnt/nslogin".
-```
-kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
-```
-An example yaml file of a CPX-EW device with an exporter as a side car is given below;
+To monitor a CPX-EW (east-west) device, the exporter is added as a side-car. An example yaml file of a CPX-EW device with an exporter as a side car is given below;
 ```
 apiVersion: extensions/v1beta1
 kind: DaemonSet
@@ -282,17 +270,14 @@ spec:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
             - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           imagePullPolicy: Always
-          volumeMounts:
-          - name: nslogin
-            mountPath: "/mnt/nslogin"
-            readOnly: true
           securityContext:
             readOnlyRootFilesystem: true
-      volumes:
-      - name: nslogin
-        secret:
-          secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
