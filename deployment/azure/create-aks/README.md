@@ -27,7 +27,7 @@ Set the Azure Subscription that you are going to use for the deployment.
 The previous command would return a list of subscriptions. You can choose one from that.
 
 ```
-az account set --subscription "<name of the subscription>"
+az account set --subscription "<name of the subscription>" #
 ```
 
 Create an Azure Resource Group for AKS
