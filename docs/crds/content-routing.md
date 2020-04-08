@@ -29,7 +29,7 @@ The advanced content routing feature is exposed in Kubernetes with the following
 A Listener CRD object represents the end-point information like virtual IP address, port, certificates, and other front-end configurations. It also defines the default actions like sending the default traffic to a back end or redirecting the traffic. A Listener CRD object can refer to HTTPRoute CRD objects which represents HTTP routing logic for the incoming HTTP request.
 
 For the full CRD definition, see the [Listener CRD](../../crd/contentrouting/Listener.yaml).
-For complete information on all attributes of the Listener CRD, see [Listener.md](Listener.md).
+For complete information on all attributes of the Listener CRD, see [Listener CRD documentation](Listener.md).
 
 ### Deploy the Listener CRD
 
@@ -100,7 +100,7 @@ After you have defined the Listener CRD object in the YAML file, deploy the YAML
 
 An HTTPRoute CRD object represents the HTTP routing logic for the incoming HTTP requests. You can use a combination of various HTTP parameters like host name, path, headers, query parameters, and cookies to route the incoming traffic to a back-end service. An HTTPRoute object can be attached to one or more Listener objects which represent the end point information. You can have one or more rules in an HTTPRoute object, with each rule specifying an action associated with it. Order of evaluation of the rules within an HTTPRoute object is same as the order mentioned in the object. For example, if there are two rules with the order rule1 and rule2, with rule1 is written before rule2, rule1 is evaluated first before rule2.
 
-HTTPRoute CRD definition is available at [HTTPRoute.yaml](../../crd/contentrouting/HTTPRoute.yaml). For complete information on the attributes for HTTP Route CRD, see [HTTPRoute.md](HTTPRoute.md).
+HTTPRoute CRD definition is available at [HTTPRoute.yaml](../../crd/contentrouting/HTTPRoute.yaml). For complete information on the attributes for HTTP Route CRD, see [HTTPRoute CRD documentation](HTTPRoute.md).
 
 ## Deploy the HTTPRoute CRD
 
