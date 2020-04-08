@@ -107,7 +107,7 @@ nav:
     - Rate limit: crds/rate-limit.md
     - Rewrite and Responder: crds/rewrite-responder.md
     - IPAM or VIP: crds/vip.md
-    #- Content Routing: crds/content-routing.md
+    - Content Routing: crds/content-routing.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
@@ -134,6 +134,7 @@ nav:
     - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+
     - Horizontal pod autoscaler: how-to/cpx-hpa.md
   
 google_analytics:
