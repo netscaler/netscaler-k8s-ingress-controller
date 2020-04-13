@@ -50,12 +50,12 @@ For more examples, see [Listener Examples](../../crd/contentrouting/Listener_exa
 
 The `Listener.spec` attribute defines the Listener custom resource specification. The following table explains the various fields in the `Listener.spec` attribute.
 
-| Field         | Description                                                                                                            | Type             | Required |
+| Field         | Description                                                                                                            | Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             | Required |
 |---------------|------------------------------------------------------------------------------------------------------------------------|------------------|----------|
 | `protocol`      |Specifies the protocol of the load balancing content switching virtual server. Allowed values are: `http` and `https`.                            | string           | yes      |
 | `port`          | Specifies the port number of the load balancing content switching virtual server. The default port number for the HTTP protocol is 80 and the HTTPS protocol is 443.          | integer          | No       |
 | `routes`        |Specifies the list of HTTPRoute resources that is to be attached to the Listener resource. The order of evaluation is as per the order of the list. That is, if multiple entries are present first route specified in the list has highest priority and so on.   | [ ] [routes](#Listenerroutes)      | No       |
-| `certificates`  |Specifies the list of certificates for the SSL virtual server if the protocol is HTTPS. This field is required if the protocol is HTTPS.                   | [ ][certificates](#Listenercertificates)  |  No       |
+| `certificates`  |Specifies the list of certificates for the SSL virtual server if the protocol is HTTPS. This field is required if the protocol is HTTPS.                   | [ ] [certificates](#Listenercertificates)  |  No       |
 | `vip `          | Specifies the endpoint IP Address for the load balancing content switching virtual server. This address is required for Citrix ADC VPX and MPX devices, but not required for Citrix ADC CPXs present in the Kubernetes cluster. For Citrix ADC CPX, `vip` is same as the primary IP address of the Citrix ADC CPX allocated by the CNI.                                                | string           | No       |
 | `defaultAction` | Specifies the default action to take if none of the HTTPRoute resources specified in `routes` match the traffic.| action           | No       |
 
