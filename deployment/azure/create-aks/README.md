@@ -39,7 +39,7 @@ az group create --name AKS_RG --location southindia
 Create an Kubernetes cluster with just 1 node using AKS
 
 ```
-az aks create --resource-group AKS_RG --name cpx-cluster-basic-1 --node-count 1 --enable-addons monitoring --generate-ssh-keys
+az aks create --resource-group AKS_RG --name cpx-cluster-basic-1 --node-count 3 --enable-addons monitoring --generate-ssh-keys --kubernetes-version 1.17.3
 ```
 
 Login to the created Kubernetes cluster.
