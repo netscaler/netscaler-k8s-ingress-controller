@@ -48,7 +48,7 @@ This guide explains the steps to create the URL for CIC image on Azure Markerpla
      <img src="../../deployment/azure/images/image_10.png" width="500">
    - Here, image URL is shared in "Docker pull command" text.
    
-     For instance, azurecpxnew.azurecr.io/citrix/citrix-k8s-cpx-ingress-13-0:latest
+     For instance, azurecicreg.azurecr.io/citrix/citrix-k8s-cpx-ingress-13-0:latest
      
      Copy the same and replace as image in CIC yaml.
    
