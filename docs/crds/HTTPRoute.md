@@ -81,31 +81,31 @@ HTTPRoute custom resource defines a spec field which represents the HTTP routing
 
  The following table explains the various fields in the `HTTPRoute.spec` attribute.
 
-| Field         | Description                                                                                                            | Type             | Required |
-|---------------|------------------------------------------------------------------------------------------------------------------------|-----------------------------------|---------------|
-| `hostname`      | Specifies the list of host names of the server. The host name must be a valid subdomain as defined in RFC 1123, such as test.example.com. A wildcard host name in the form of `*.example.com` is also valid. In that case, any subdomain of `example.com` is considered for the matching. The default value is `*` which means to match all incoming HTTP requests.                      | string           | Yes      |
-| `rules`          |Specifies the list of rules with a matching routing criteria associated with an action.  |   [ ]  [rules](#HTTPRouterules)       | No       |
+| Field         | Description                                                                                                            |     Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    | Required |
+|---------------|---------------------------------------------------------------------------------|---------------------------------------------------|---------------|
+| `hostname`      | Specifies the list of host names of the server. The host name must be a valid subdomain as defined in RFC 1123, such as test.example.com. A wildcard host name in the form of `*.example.com` is also valid. In that case, any subdomain of `example.com` is considered for the matching. The default value is `*` which means to match all incoming HTTP requests.                      | string          | Yes      |
+| `rules`         |Specifies the list of rules with a matching routing criteria associated with an action.  | [ ]  [rules](#HTTPRouterules)       | No       |
 
 ## HTTPRoute.rules
 
  The following table explains the various fields in the `HTTPRoute.rules` attribute.
 
-| Field  | Description                                                                                                                                           | Type            | Required |
-|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|----------|
+| Field  | Description                                                                                                                                              |Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                     | Required |
+|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------| --------------------------------------------------------------------------------------------| --------------|
 | `name`  | Specifies a name to represent the rule. This field is used as an identifier in the content routing policy name in Citrix ADC.  <Br>**Note:** For each rule, the name must be unique.                  | string          | Yes      |
 | `action` |Specifies an action for the matching rule.                   | rules.action    | Yes      |
-| `match`  | List of matching routes with the same action. If more than one entry is present, this matching rule treated as an `OR` condition and the same action is chosen for any match. | [ ][rules.match](#HTTPRouterulesmatch)  | No       |
+| `match`  | List of matching routes with the same action. If more than one entry is present, this matching rule treated as an `OR` condition and the same action is chosen for any match. | [ ] [rules.match](#HTTPRouterulesmatch)  | No       |
 
 ## HTTPRoute.rules.match
 
  The following table explains the various fields in the `HTTPRoute.rules.match` attribute.
 
-| Field            | Description                                                                                                                                    | Type                                 | Required |
-|------------------|------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|----------|
+| Field            | Description                                                                                                                                    | Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                  | Required |
+|------------------|--------------------------------------------------------------------------------|   ----------------------------------------------------|----------|
 | `path`             |Specifies URL path based routing rules.                                                                                                                   | [HTTPRoute.rules.match.path](#HTTPRouterulesmatchpath)          | No       |
 | `headers`          |Specifies the list of header based matches for content routing. If there is more than one rule, this matching criteria is treated as an `AND` condition and all rules must match.                   | [ ] [HTTPRoute.rules.match.headers](#HTTPRouterulesmatchheaders)   | No       |
 | `cookies`          |Specifies the list of cookie based matches for content routing. If there is more than one rule, this matching criteria is treated as an `AND` condition and all rules must match.                    | [ ] [HTTPRoute.rules.match.cookies](#HTTPRouterulesmatchcookies)     | No       |
-| `queryParams`      |Specifies the list of query parameters for content routing. If there is more than one rule, this matching criteria is treated as an `AND` condition and all rules must match.                       | [ ] [HTTPRoute.rules.match.queryParams](#HTTPRouterulesmatchqueryParams) | No       |
+| `queryParams`      |Specifies the list of query parameters for content routing. If there is more than one rule, this matching criteria is treated as an `AND` condition and all rules must match.                    | [ ] [HTTPRoute.rules.match.queryParams](#HTTPRouterulesmatchqueryParams) | No       |
 | `method`           |Specifies HTTP method based routing rules. Possible options are: GET, POST, PUT, and so on. An action is chosen for the HTTP request with the matching method. | string                               | No       |
 | `policyExpression` |Specifies Citrix ADC policy expression based routing rules. Any custom Citrix ADC policy expression can be specified for content routing rules. The Citrix ingress controller does not check the correctness of the expression. Hence, you must check the correctness of the expression. For more information on policy expression, see [Expression Prefix](https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf). For example: `HTTP.REQ.URL.PATH.GET(1).EQ("foo")`      | string                               | No       |
 
@@ -227,7 +227,6 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.heade
          kube:
            service: example
            port: 80
-
 
 
 The following table explains the various fields in the `HTTPRoute.rules.match.headers.headerValue` attribute.
