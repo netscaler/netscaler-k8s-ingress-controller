@@ -5,13 +5,6 @@ Azure Kubernetes Engine (AKS) provides the following two modes for networking:
 -  [Kubenet (basic) networking](https://docs.microsoft.com/en-us/azure/aks/concepts-network#kubenet-basic-networking)
 -  [Azure CNI (advanced) networking](https://docs.microsoft.com/en-us/azure/aks/concepts-network#azure-cni-advanced-networking)
 
-## Prerequisites
-
-Please follow instructions as per deployment requirement 
--  [Get Citrix Ingress Controller from Azure Marketplace](../../docs/deploy/azure-cic-url.md).
--  [Get Citrix ADC CPX from Azure Marketplace](../../docs/deploy/azure-cpx-url.md).
--  [Get Citrix ADC VPX from Azure Marketplace](../../docs/deploy/azure-vpx.md).
-
 ## Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
 
 You can deploy Citrix ADC CPX as an Ingress in AKS using these modes. For detailed instructions, refer:
