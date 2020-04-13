@@ -1,4 +1,4 @@
-# Get Citrix ADC CPX Image URL on Azure Marketplace
+# Get Citrix ADC CPX from Azure Marketplace
 
 This guide explains the steps to create the URL for Citrix ADC CPX image on Azure Markerplace.
 
@@ -9,7 +9,7 @@ This guide explains the steps to create the URL for Citrix ADC CPX image on Azur
 
 ## Steps:
 
-1. Login to your Azure Marketplace Account.
+1. Login to your Azure Marketplace Account. See, [Azure Market Place](https://azuremarketplace.microsoft.com/en-us)
 2. Create a Resource Group under your subscription if the kubernetes cluster has not been created yet. Please note that the      resouce group of the cluster and the CPX registry must be same. So, if the kubernetes cluster where the CPX is to deployed    already exists, then, same resource group should be used for CPX registry. If not, then create a new resouce group and then    create cluster with this new resource group.
 
    - Enter any name in Resource group Textbox and set a region.
@@ -19,7 +19,7 @@ This guide explains the steps to create the URL for Citrix ADC CPX image on Azur
    
      <img src="../../deployment/azure/images/image_cpx_2.png" width="500">
      
-3. Select "Citrix ADC CPX" on Azure Marketplace
+3. Select "Citrix ADC CPX" on Azure Marketplace. See, [Citrix ADC CPX](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixadccpx-13-0?tab=Overview)
 
    <img src="../../deployment/azure/images/image_cpx_3.png" width="500">
    
@@ -49,4 +49,8 @@ This guide explains the steps to create the URL for Citrix ADC CPX image on Azur
    - Now, select "latest" in the new right column.
    
      <img src="../../deployment/azure/images/image_cpx_9.png" width="500">
-   - Here, image URL is shared in "Docker pull command" text. Copy the same and replace as image in CPX yaml.
+   - Here, image URL is shared in "Docker pull command" text. 
+   
+     For instance, azurecpxreg.azurecr.io/citrix/citrix-k8s-cpx-ingress-13-0:latest
+     
+     Copy the same and replace as image in CPX yaml.
