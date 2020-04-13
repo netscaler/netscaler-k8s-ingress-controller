@@ -73,7 +73,7 @@ kind: HTTPRoute
                lbmethod: ROUNDROBIN
 ```
 
-For more examples, see [HTTP Route Examples](../../crd/contentrouting/HTTPRoute_examples).
+For more examples, see [HTTP Route Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/HTTPRoute_examples).
 
 ## HTTPRoute.spec
 

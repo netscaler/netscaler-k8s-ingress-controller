@@ -28,12 +28,12 @@ The advanced content routing feature is exposed in Kubernetes with the following
 
 A Listener CRD object represents the end-point information like virtual IP address, port, certificates, and other front-end configurations. It also defines the default actions like sending the default traffic to a back end or redirecting the traffic. A Listener CRD object can refer to HTTPRoute CRD objects which represents HTTP routing logic for the incoming HTTP request.
 
-For the full CRD definition, see the [Listener CRD](../../crd/contentrouting/Listener.yaml).
+For the full CRD definition, see the [Listener CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
 For complete information on all attributes of the Listener CRD, see [Listener CRD documentation](Listener.md).
 
 ### Deploy the Listener CRD
 
-1. Download the [Listener CRD](../../crd/contentrouting/Listener.yaml).
+1. Download the [Listener CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
 
 2. Deploy the listener CRD with following command.
 
@@ -100,13 +100,13 @@ After you have defined the Listener CRD object in the YAML file, deploy the YAML
 
 An HTTPRoute CRD object represents the HTTP routing logic for the incoming HTTP requests. You can use a combination of various HTTP parameters like host name, path, headers, query parameters, and cookies to route the incoming traffic to a back-end service. An HTTPRoute object can be attached to one or more Listener objects which represent the end point information. You can have one or more rules in an HTTPRoute object, with each rule specifying an action associated with it. Order of evaluation of the rules within an HTTPRoute object is same as the order mentioned in the object. For example, if there are two rules with the order rule1 and rule2, with rule1 is written before rule2, rule1 is evaluated first before rule2.
 
-HTTPRoute CRD definition is available at [HTTPRoute.yaml](../../crd/contentrouting/HTTPRoute.yaml). For complete information on the attributes for HTTP Route CRD, see [HTTPRoute CRD documentation](HTTPRoute.md).
+HTTPRoute CRD definition is available at [HTTPRoute.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml). For complete information on the attributes for HTTP Route CRD, see [HTTPRoute CRD documentation](HTTPRoute.md).
 
 ## Deploy the HTTPRoute CRD
 
 Perform the following to deploy the HTTPRoute CRD:
 
-1. Download the [HTTPRoute.yaml](../../crd/contentrouting/HTTPRoute.yaml).
+1. Download the [HTTPRoute.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
 
 2. Apply the HTTPRoute CRD in your cluster using the following command.
 
@@ -160,7 +160,7 @@ spec:
 ```
 
 In this example, any request with a header name matching `my-header` is routed to the mobile-app service and all other traffic is routed to the default-app service.
-For detailed explanations and API specifications of HTTPRoute, see [HTTPRoute CRD](../../crd/contentrouting/HTTPRoute.yaml).
+For detailed explanations and API specifications of HTTPRoute, see [HTTPRoute CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
 
 After you have defined the HTTP routes in the YAML file, deploy the YAML file for HTTPRoute CRD object using the following command. In this example, `Route-crd.yaml` is the YAML definition.
 
