@@ -258,7 +258,7 @@ The first method is quick and simple, but if you need more customization and gra
 In this approach, you add the following two annotations to the Ingress object for which you request a certificate from the ACME server.
 
 
-    certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+    certmanager.io/cluster-issuer: "letsencrypt-staging"
 
 **Note**
     You can find all supported annotations from cert-manager for `Ingress-shim`, at [supported-annotations](https://cert-manager.readthedocs.io/en/latest/tasks/issuing-certificates/ingress-shim.html#supported-annotations).
@@ -273,8 +273,7 @@ metadata:
   name: kuard
   annotations:
     kubernetes.io/ingress.class: "citrix"
-    kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+    certmanager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   tls:
   - hosts:
@@ -326,7 +325,7 @@ Alternatively, you can deploy a certificate CRD object independent of the Ingres
 2. Deploy the `certificate.yaml` file on the Kubernetes cluster:
 
         kubectl create -f certificate.yaml
-        certificate.certmanager.k8s.io/kuard-example-tls created
+        certificate.cert-manager.io/example-com created
 
 3. Verify that certificate custom resource is created by the cert-manager which represents the certificate specified in the Ingress. After few minutes, if ACME validation goes well, certificate 'READY' status is set to true.
 
@@ -472,7 +471,7 @@ Once the issuer is successfully registered, you can get a certificate for the in
 Add the following annotation to the Ingress object along with the `spec.tls` section:
 
 ```YAML
-certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+certmanager.io/cluster-issuer: "letsencrypt-staging"
 ```
 
 ```YAML
