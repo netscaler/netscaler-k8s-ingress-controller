@@ -44,7 +44,7 @@ spec:
             clttimeout: 20
 ```
 
-For more examples, see [Listener Examples](../../crd/contentrouting/Listener_examples)
+For more examples, see [Listener Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/Listener_examples).
 
 ## Listener.spec
 
