@@ -1,4 +1,4 @@
-# Get Citrix Ingress Controller Image URL on Azure Marketplace
+# Get Citrix Ingress Controller from Azure Marketplace
 
 This guide explains the steps to create the URL for CIC image on Azure Markerplace.
 
@@ -9,7 +9,7 @@ This guide explains the steps to create the URL for CIC image on Azure Markerpla
 
 ## Steps:
 
-1. Login to your Azure Marketplace Account.
+1. Login to your Azure Marketplace Account. See, [Azure Market Place](https://azuremarketplace.microsoft.com/en-us)
 2. Create a Resource Group under your subscription if the kubernetes cluster has not been created yet. Please note that the      resouce group of the cluster and the CIC registry must be same. So, if the kubernetes cluster where the CIC is to deployed    already exists, then, same resource group should be used for CIC registry. If not, then create a new resouce group and then    create cluster with this new resource group. 
 
    - Enter any name in Resource group Textbox and set a region.
@@ -19,7 +19,7 @@ This guide explains the steps to create the URL for CIC image on Azure Markerpla
    
      <img src="../../deployment/azure/images/image_2.png" width="500">
       
-3. Select "Citrix Ingress Controller" on Azure Marketplace
+3. Select "Citrix Ingress Controller" on Azure Marketplace. See, [Citrix Ingress Controller](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixingresscontroller?tab=Overview)
    <img src="../../deployment/azure/images/image_3.png" width="500">
    - Click on "GET IT NOW"
    - Verify the details on pop-up and Click on "Continue"
@@ -46,6 +46,10 @@ This guide explains the steps to create the URL for CIC image on Azure Markerpla
    - Now, select "latest" in the new right column.
    
      <img src="../../deployment/azure/images/image_10.png" width="500">
-   - Here, image URL is shared in "Docker pull command" text. Copy the same and replace as image in CIC yaml.
+   - Here, image URL is shared in "Docker pull command" text.
+   
+     For instance, azurecpxnew.azurecr.io/citrix/citrix-k8s-cpx-ingress-13-0:latest
+     
+     Copy the same and replace as image in CIC yaml.
    
 
