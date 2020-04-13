@@ -17,7 +17,7 @@ You should complete the following tasks before performing the steps in the proce
 ## Create a Citrix ADC CPX Image URL on Azure
 
 To deploy CPX, an image registry should be created on Azure and the correponding image URL should be used to fetch the CPX image.
-For more information on how to create registery and get image URL, see[Get Citrix ADC CPX Image URL on Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cpx-url.md)
+For more information on how to create registery and get image URL, see [Get Citrix ADC CPX Image URL on Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cpx-url.md)
 
 Once registry is created, the CPX registry name should be attched to the aks cluster used for deployment.
 ```
@@ -27,7 +27,7 @@ az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-
 ## Create a Citrix Ingress Controller Image URL on Azure
 
 To deploy CIC, an image registry should be created on Azure and the correponding image URL should be used to fetch the CIC image.
-For more information on how to create registery and get image URL, see[Get Citrix Ingress Controller Image URL on Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md)
+For more information on how to create registery and get image URL, see [Get Citrix Ingress Controller Image URL on Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md)
 
 Once registry is created, the CIC registry name should be attched to the aks cluster used for deployment.
 ```
