@@ -56,9 +56,12 @@ This is required for Citrix ADC to interact with the pods inside the Kubernetes 
 add ns ip <snip-vpx-instance-private-ip> <vpx-instance-primary-ip-subnet>
 ```
 
-"<snip-vpx-instance-private-ip>" is the dynamic private ip address that got assigned while adding a SNIP during VPX instance creation. 
-"vpx-instance-primary-ip-subnet" is the subnet of the primary private IP address of the VPX instance. To verify the subnet of the private ip address. SSH into the VPX instance and do "show ip <primary-private-ip-addess>"  
+"snip-vpx-instance-private-ip" is the dynamic private ip address that got assigned while adding a SNIP during VPX instance creation.
 
+"vpx-instance-primary-ip-subnet" is the subnet of the primary private IP address of the VPX instance. To verify the subnet of the private ip address, ssh into the VPX instance and do 
+```
+show ip <primary-private-ip-addess> 
+```
 
 #### Update the Citrix ADC VPX Image URL, management IP and VIP in the Citrix Ingress controller manifest
 
@@ -83,7 +86,7 @@ Update the Citrix ADC VPX's primary IP in the `cic.yaml` in the below field with
   value: "X.X.X.X"
 ```
 
-Update the Citrix ADC VPX VIP in the `cic.yaml` in the below field with the private IP address of the VIP created during VPX azure instance.
+Update the Citrix ADC VPX VIP in the `cic.yaml` in the below field with the private IP address of the VIP assigned during VPX azure instance creation.
 
 ```
 # Set NetScaler VIP for the data traffic
@@ -93,7 +96,7 @@ Update the Citrix ADC VPX VIP in the `cic.yaml` in the below field with the priv
 
 #### Create the Citrix Ingress Controller
 
-Now that we have configure the Citrix Ingress controller with the required values, let's deploy it.
+Now that we have configured the Citrix Ingress controller with the required values, let's deploy it.
 
 ```
 kubectl create -f cic.yaml
