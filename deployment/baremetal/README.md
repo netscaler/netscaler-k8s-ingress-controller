@@ -8,24 +8,24 @@ In this deployment, the Citrix ingress controller runs as a pod that monitors th
 
 **YAML file for deployment:** ***citrix-k8s-ingress-controller.yaml***
 
-## Citrix ADC CPX with inbuilt Ingress Controller
+## Citrix ADC CPX with inbuilt Citrix ingress controller
 
 In this deployment, you deploy Citrix ADC CPX with a builtin Citrix ingress controller agent that configures the Citrix ADC CPX. Citrix ADC CPX runs as pod and does North-South load balancing.
 
 **YAML file for deployment:** ***citrix-k8s-cpx-ingress.yaml***
 
-## Deploy Citrix ADC CPX with inbuilt Ingress Controller on Kubernetes
+## Deploy Citrix ADC CPX with inbuilt ingress controller on Kubernetes
 
-Perform the followings step to deploy Citrix ADC CPX inbuilt Ingress controller.
+Perform the following step to deploy a Citrix ADC CPX along with inbuilt Ingress controller.
 
-   1. Apply the following command to deploy the Citrix ADC CPX ingress controller.
+   1. Apply the following command to deploy a Citrix ADC CPX with inbuilt ingress controller.
       ```
           kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
       ```
 
 ## Deploy Citrix ingress controller as a standalone pod
 
-Perform the following step to deploy the Citrix ingress controller as a stand alone pod.
+Perform the following steps to deploy the Citrix ingress controller as a stand alone pod.
 
 
 
@@ -162,7 +162,7 @@ Perform the following step to deploy the Citrix ingress controller as a stand al
                 
     The official Citrix ingress controller docker image is available at: <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.7.6` </span>
 
-2. Configure reachability to the pod network.
+2. Configure reachability to the pod network using one of the following.
 
     - **Static routing**:
 
