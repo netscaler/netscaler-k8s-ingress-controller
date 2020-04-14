@@ -136,7 +136,7 @@ spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: "<azure-cpx-instance-url>"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
           securityContext:
              privileged: true
           env:
@@ -169,7 +169,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "<azure-cic-image-url>"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
           env:
           - name: "EULA"
             value: "yes"

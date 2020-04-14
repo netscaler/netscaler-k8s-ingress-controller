@@ -1,12 +1,26 @@
-# Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster with advanced networking mode
+# Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster with advanced networking mode usingAzure repository images
 
 This topic explains how to deploy Citrix ADC CPX as an ingress device in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster with advanced networking mode (Azure CNI).
 
+## Get Citrix ADC CPX from Azure Marketplace
 
-## Note
+To deploy CPX, an image registry should be created on Azure and the correponding image URL should be used to fetch the CPX image.
+For more information on how to create registery and get image URL, see [Get Citrix ADC CPX from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cpx-url.md)
 
-If you wish to use Azure CPX/CIC repository images instead of the default quoy.io images, then please refer Guide:
-[Deploy Citrix ADC CPX as an Ingress device in an AKS cluster with advanced networking using Azure repository images](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-azure-image-cni.md)
+Once registry is created, the CPX registry name should be attched to the aks cluster used for deployment.
+```
+az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-acr <cpx-registry>
+```
+
+## Get Citrix Ingress Controller from Azure Marketplace
+
+To deploy CIC, an image registry should be created on Azure and the correponding image URL should be used to fetch the CIC image.
+For more information on how to create registery and get image URL, see [Get Citrix Ingress Controller from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md)
+
+Once registry is created, the CIC registry name should be attched to the aks cluster used for deployment.
+```
+az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-acr <cic-registry>
+```
 
 ## Deploy Citrix ADC CPX as an Ingress device in an AKS cluster
 
@@ -18,17 +32,39 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 
         kubectl create -f apache.yaml
 
-    >**Note:** In this example, [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/apache.yaml) is used. You should use the specific YAML file for your application.
+    >**Note:** In this example, [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/azureimages/azureimages/azurecni/apache.yaml) is used. You should use the specific YAML file for your application.
 
-2. Deploy Citrix ADC CPX as an Ingress device in the cluster using the [standalone_cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/standalone_cpx.yaml) file.
+2. Deploy Citrix ADC CPX as an Ingress device in the cluster using the following command.
 
-        kubectl create -f standalone_cpx.yaml
+```
+wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/azurecni/standalone_cpx.yaml
+```
 
-3. Create the Ingress resource using the [cpx_ingress.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/azurecni-beta/deployment/azure/manifest/cpx_ingress.yaml) following command.
+Update the Citrix CPX image with the Azure Image URL in `standalone_cpx.yaml`. 
+
+```
+- name: cpx-ingress
+  image: "<azure-cpx-instance-url>"
+```
+
+Update the Citrix CIC image with the Azure Image URL in `standalone_cpx.yaml`. 
+
+```
+- name: cic
+  image: "<azure-cic-instance-url>"
+```
+
+After update the required values, deploy it.
+
+```
+kubectl create -f standalone_cpx.yaml 
+```
+
+3. Create the Ingress resource using the [cpx_ingress.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/azurecni-beta/deployment/azure/manifest/azureimages/azurecni/cpx_ingress.yaml) following command.
 
         kubectl create -f cpx_ingress.yaml
 
-4. Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the [cpx_service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file.
+4. Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the [cpx_service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/azureimages/azurecni/cpx_service.yaml) file.
 
         kubectl create -f cpx_service.yaml
 
@@ -54,7 +90,7 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
     |cpx-ingress |LoadBalancer |10.0.37.255 | created |80:32258/TCP,443:32084/TCP |2m|
     |kubernetes |ClusterIP | 10.0.0.1 |none |  443/TCP | 22h |
 
-    >**Note:**  The health check for the cloud load-balancer is obtained from the `readinessProbe` configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. </br>
+    >**Note:**  The health check for the cloud load-balancer is obtained from the `readinessProbe` configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/azureimages/azurecni/cpx_service.yaml) file. </br>
     If the health check fails, you should check the `readinessProbe` configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 7. Access the application using the following command.
@@ -80,9 +116,31 @@ To deploy Citrix ADC CPX as an Ingress device in a standalone deployment model i
 
 Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingress device.
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
+1.  Deploy Citrix ADC CPX ingress devices for high availability in your Kubernetes cluster by using the following command.
 
-        kubectl create -f all-in-one.yaml
+```
+wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/azurecni/all-in-one.yaml
+```
+
+Update the Citrix CPX image with the Azure Image URL in `all-in-one.yaml`. 
+
+```
+- name: cpx-ingress
+  image: "<azure-cpx-instance-url>"
+```
+
+Update the Citrix CIC image with the Azure Image URL in `all-in-one.yaml`. 
+
+```
+- name: cic
+  image: "<azure-cic-instance-url>"
+```
+
+After update the required values, deploy it.
+
+```
+kubectl create -f all-in-one.yaml
+```
 
 2. Access the application using the following command.
 
@@ -101,9 +159,31 @@ In the standalone deployment of Citrix ADC CPX as the Ingress, if the Ingress de
 
 Perform the following steps to deploy two Citrix ADC CPX devices for high availability.
 
-1. Deploy Citrix ADC CPX ingress devices for high availability in your Kubernetes cluster by using the [all-in-one-ha.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one-ha.yaml) file.
+1.  Deploy Citrix ADC CPX ingress devices for high availability in your Kubernetes cluster by using the following command.
 
-        kubectl create -f all-in-one-ha.yaml
+```
+wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/azurecni/all-in-one-ha.yaml
+```
+
+Update the Citrix CPX image with the Azure Image URL in `all-in-one-ha.yaml`. 
+
+```
+- name: cpx-ingress
+  image: "<azure-cpx-instance-url>"
+```
+
+Update the Citrix CIC image with the Azure Image URL in `all-in-one-ha.yaml`. 
+
+```
+- name: cic
+  image: "<azure-cic-instance-url>"
+```
+
+After update the required values, deploy it.
+
+```
+kubectl create -f all-in-one-ha.yaml
+```
 
 2. Access the application using the following command.
 
@@ -112,7 +192,7 @@ Perform the following steps to deploy two Citrix ADC CPX devices for high availa
     >**Note:**
     >To delete the deployment, use the following command:
     </br>
-    >`kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/azurecni-beta/deployment/azure/manifest/azurecni/all-in-one-ha.yaml`
+    >`kubectl delete -f all-in-one-ha.yaml
 
 ### Deploy Citrix ADC CPX per node
 
@@ -122,9 +202,31 @@ Sometimes when cluster nodes are added and removed from the cluster, Citrix ADC 
 
 Perform the followings steps to deploy Citrix ADC CPX as an Ingress device on each node in the cluster.
 
-1. Deploy Citrix ADC CPX ingress device in each node of your Kubernetes cluster by using the [all-in-one-reliable.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/azurecni-beta/deployment/azure/manifest/azurecni/all-in-one-reliable.yaml) following command.
+1.  Deploy Citrix ADC CPX ingress device in each node of your Kubernetes cluster by using the following command.
 
-        kubectl create -f all-in-one-reliable.yaml
+```
+wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/azurecni/all-in-one-reliable.yaml
+```
+
+Update the Citrix CPX image with the Azure Image URL in `all-in-one-reliable.yaml`. 
+
+```
+- name: cpx-ingress
+  image: "<azure-cpx-instance-url>"
+```
+
+Update the Citrix CIC image with the Azure Image URL in `all-in-one-reliable.yaml`. 
+
+```
+- name: cic
+  image: "<azure-cic-instance-url>"
+```
+
+After update the required values, deploy it.
+
+```
+kubectl create -f all-in-one-reliable.yaml 
+```
 
 2. Access the application by using the following command.
 
