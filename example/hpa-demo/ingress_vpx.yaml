@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cpx-ingress-vpx
+  annotations:
+    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/frontend-ip: "`VPX_VIP`"
+    kubernetes.io/ingress.class: "cic-vpx"
+spec:
+  rules:
+  - host: www.guestbook.com
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: cpx-builtin
+          servicePort: 6080

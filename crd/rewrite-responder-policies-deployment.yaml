@@ -10,6 +10,17 @@ spec:
     plural: rewritepolicies
     singular: rewritepolicy 
   scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
       properties:
