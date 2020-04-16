@@ -15,6 +15,17 @@ spec:
       #storage: true
   # either Namespaced or Cluster
   scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
   names:
     # plural name to be used in the URL: /apis/<group>/<version>/<plural>
     plural: continuousdeployments
