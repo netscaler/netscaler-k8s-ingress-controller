@@ -97,7 +97,13 @@ This section describes how to integrate the Citrix ADC Metrics Exporter with the
 <summary>VPX Ingress Device</summary>
 <br>
 
-To monitor an ingress VPX device, the citrix-adc-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. An example yaml file to deploy such an exporter is given below:
+To monitor an ingress VPX device, the citrix-adc-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. 
+To provide the login credentials to access ADC, create a secret and mount the volume at mountpath "/mnt/nslogin".
+```
+kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
+```
+
+An example yaml file to deploy such an exporter is given below:
 
 ```
 apiVersion: v1
@@ -109,11 +115,21 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
-            imagePullPolicy: Always
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      imagePullPolicy: Always
       args:
-        - "--target-nsip=<IP_and_port_of_VPX>"
+        - "--target-nsip=<IP_of_VPX>"
         - "--port=8888"
+      volumeMounts:
+      - name: nslogin
+        mountPath: "/mnt/nslogin"
+        readOnly: true
+      securityContext:
+        readOnlyRootFilesystem: true
+  volumes:
+  - name: nslogin
+    secret:
+      secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -136,7 +152,7 @@ The IP and port of the VPX device needs to be filled in as the ```--target-nsip`
 <summary>CPX Ingress Device</summary>
 <br>
   
-To monitor a CPX ingress device, the exporter is added as a side-car. An example yaml file of a CPX ingress device with an exporter as a side car is given below;
+To monitor a CPX ingress device, the exporter is added as a side-car.An example yaml file of a CPX ingress device with an exporter as a side car is given below;
 ```
 ---
 apiVersion: extensions/v1beta1
@@ -161,11 +177,19 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
+          securityContext:
+            readOnlyRootFilesystem: true
         - name: cpx-ingress
           image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
           imagePullPolicy: Always
@@ -241,11 +265,19 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.0"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           args:
-            - "--target-nsip=192.168.0.2:80"
+            - "--target-nsip=192.168.0.2"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           imagePullPolicy: Always
+          securityContext:
+            readOnlyRootFilesystem: true
 ---
 kind: Service
 apiVersion: v1

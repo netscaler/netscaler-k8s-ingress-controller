@@ -3,7 +3,7 @@ site_name: Citrix ingress controller for Kubernetes
 site_title: Developer Docs
 site_description: Ingress Controller configures Kubernetes ingress & Service Type LoadBalancer on Citrix ADCs. Supports OpenShift, Rancher on baremetal as well as AKS, GKE and EKS
 site_author:
-site_url: 
+site_url: https://developer-docs.citrix.com
 
 # Repository
 repo_name: "Citrix Ingress Controller"
@@ -11,7 +11,7 @@ repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller"
 edit_uri: "edit/master/docs"
 
 # Copyright
-copyright: 'Copyright &copy; 1999-2019 Citrix Systems, Inc. All rights reserved. '
+copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved. '
 
 extra_css:
   - 'assets/stylesheets/extra.css'
@@ -19,7 +19,7 @@ extra_css:
 # Configuration
 theme:
   name: null
-  custom_dir: material
+  custom_dir: devdocs-theme
 
   # 404 page
   static_templates:
