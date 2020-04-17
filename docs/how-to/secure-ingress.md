@@ -6,13 +6,13 @@ The following table lists the TLS use cases with sample annotations that you can
 
 | Use cases | Sample annotations |
 | --------- | ------------------ |
-| [Enable TLSv1.3 protocol](#enable-tlsv13-protocol) | `ingress.citrix.com/frontend-sslprofile: '{"tls13":"ENABLED", "tls13sessionTicketsPerAuthContext":"1", "dheKeyExchangeWithPsk":"yes"}'`|
-| [HTTP strict transport security (HSTS)](#http-strict-transport-security-hsts) | `ingress.citrix.com/frontend-sslprofile: '{"HSTS":"ENABLED", "maxage" : "157680000", "IncludeSubdomain":"yes"}` |
+| [Enable TLSv1.3 protocol](#enable-tlsv13-protocol) | `ingress.citrix.com/frontend-sslprofile: '{"tls13":"enabled", "tls13sessionTicketsPerAuthContext":"1", "dheKeyExchangeWithPsk":"yes"}'`|
+| [HTTP strict transport security (HSTS)](#http-strict-transport-security-hsts) | `ingress.citrix.com/frontend-sslprofile: '{"HSTS":"enabled", "maxage" : "157680000", "IncludeSubdomain":"yes"}` |
 | [OCSP stapling](#ocsp-stapling) | `ingress.citrix.com/frontend-sslprofile: '{"ocspStapling":"ENABLED"}'` |
 | [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"ENABLED", "clientcert" : "Mandatory"}'`|
 | [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionTicket" : "ENABLED", "sessionTicketLifeTime : "300"}'` |
-| [SSL session reuse](#ssl-session-reuse) | `ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "ENABLED", "sesstimeout : "120"}'` |
-| [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'` |
+| [SSL session reuse](#ssl-session-reuse) | `ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "enabled", "sesstimeout : "120"}'` |
+| [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'` |
 
 ## Enable TLS v1.3 protocol
 
@@ -34,7 +34,7 @@ The Ingress Citrix ADC appliances support HTTP strict transport security (HSTS) 
 
 Using the annotations for SSL profiles, you can enable HSTS in an SSL front-end profile on the Ingress Citrix ADC. The following is a sample ingress annotation:
 
-    ingress.citrix.com/frontend-sslprofile: '{"HSTS":"ENABLED", "maxage" : "157680000", "IncludeSubdomain":"yes"}'
+    ingress.citrix.com/frontend-sslprofile: '{"HSTS":"enabled", "maxage" : "157680000", "IncludeSubdomain":"yes"}'
 
 Where:
 
