@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: fronthotdrinksapp
-        image: "index.docker.io/application/fronthotdrinksapp:v1"
+        image: "quay.io/sample-apps/fronthotdrinksapp:v1"
         imagePullPolicy: Always
         ports:
         - name: port-8080

@@ -1,16 +1,16 @@
 # View metrics of Citrix ADCs using Prometheus and Grafana
 
-You can use the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
+You can use the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
 
 ## Citrix ADC metrics exporter
 
-Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter).
+Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter).
 
 ## Launch prometheus operator
 
 The Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
 
-    git clone https://github.com/coreos/prometheus-operator.git
+    git clone https://github.com/coreos/kube-prometheus.git
 
     kubectl create -f kube-prometheus/manifests/
 
@@ -32,7 +32,7 @@ Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-opera
 
 !!! note "Note"
     The files in the `manifests` folder are interdependent and hence the order in which they are created is important. In certain scenarios the manifest files might be created out of order and this leads to an error messages from Kubernetes.
-    To resolve this scenario, re-execute the `kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/` command. Any YAML files that were not created the first time due to unmet dependencies, are created now.
+    To resolve this scenario, re-execute the `kubectl create -f kube-prometheus/manifests/` command. Any YAML files that were not created the first time due to unmet dependencies, are created now.
 
 It is recommended to expose the Prometheus and Grafana pods through NodePorts. To do so, you need to modify the `prometheus-service.yaml` and `grafana-service.yaml` files as follows:
 
@@ -85,11 +85,15 @@ After you modify the `grafana-service.yaml`file, apply the changes to the Kubern
 
 ## Configure Citrix ADC metrics exporter
 
-This topic describes how to integrate the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) with Citrix ADC VPX or CPX ingress or Citrix ADC CPX (east-west) devices.
+This topic describes how to integrate the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) with Citrix ADC VPX or CPX ingress or Citrix ADC CPX (east-west) devices.
 
 **Citrix ADC VPX Ingress device**:
 
-To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. The following is a sample YAML file to deploy the exporter:
+To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. To provide the login credentials to access ADC, create a secret and mount the volume at mountpath "/mnt/nslogin".
+```
+kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
+```
+The following is a sample YAML file to deploy the exporter:
 
 ```YAML
 apiVersion: v1
@@ -101,11 +105,21 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
-            imagePullPolicy: IfNotPresent
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      imagePullPolicy: IfNotPresent
       args:
-        - "--target-nsip=<IP_and_port_of_VPX>"
+        - "--target-nsip=<IP_of_VPX>"
         - "--port=8888"
+      volumeMounts:
+      - name: nslogin
+        mountPath: "/mnt/nslogin"
+        readOnly: true
+      securityContext:
+        readOnlyRootFilesystem: true
+  volumes:
+  - name: nslogin
+    secret:
+      secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -126,7 +140,7 @@ The IP address and the port of the Citrix ADC VPX device needs to be provided in
 
 **Citrix ADC CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
+To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX.The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
 
 ```YAML
 ---
@@ -174,11 +188,19 @@ spec:
               containerPort: 9443
         # Adding exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           imagePullPolicy: IfNotPresent
           args:
             - "--target-nsip=192.0.0.2"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
+          securityContext:
+            readOnlyRootFilesystem: true
 ---
 kind: Service
 apiVersion: v1
@@ -199,7 +221,7 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 
 **Citrix ADC CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
+To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADCCPX.The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
 
 ```YAML
 apiVersion: extensions/v1beta1
@@ -231,10 +253,18 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           args:
-            - "--target-nsip=192.168.0.2:80"
+            - "--target-nsip=192.168.0.2"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
+          securityContext:
+            readOnlyRootFilesystem: true
           imagePullPolicy: IfNotPresent
 ---
 kind: Service
@@ -319,7 +349,7 @@ To view the metrics graphically:
 
 1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_grafana_dashboard.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 

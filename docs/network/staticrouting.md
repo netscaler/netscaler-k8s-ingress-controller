@@ -19,9 +19,17 @@ Perform the following:
 
         # kubectl get nodes -o jsonpath="{range .items[*]}{'podNetwork: '}{.spec.podCIDR}{'\t'}{'gateway: '}{.status.addresses[0].address}{'\n'}{end}"
 
-        podNetwork: 10.244.0.0/24    gateway: 10.106.162.108
-        podNetwork: 10.244.2.0/24    gateway: 10.106.162.109
-        podNetwork: 10.244.1.0/24    gateway: 10.106.162.106
+          podNetwork: 10.244.0.0/24    gateway: 10.106.162.108
+          podNetwork: 10.244.2.0/24    gateway: 10.106.162.109
+          podNetwork: 10.244.1.0/24    gateway: 10.106.162.106
+
+    If you are using **Calico** CNI then use the following command to get the podCIDR:
+
+        # kubectl get nodes -o jsonpath="{range .items[*]}{'podNetwork: '}{.metadata.annotations.projectcalico\.org/IPv4IPIPTunnelAddr}{'\tgateway: '}{.metadata.annotations.projectcalico\.org/IPv4Address}{'\n'}"
+
+          podNetwork: 192.168.109.0       gateway: 10.106.162.108/24
+          podNetwork: 192.168.174.0       gateway: 10.106.162.109/24
+          podNetwork: 192.168.76.128      gateway: 10.106.162.106/24
 
 1.  Log on to the Citrix ADC instance.
 
@@ -50,7 +58,7 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
         serviceAccountName: cic-k8s-role
         containers:
         - name: cic-k8s-ingress-controller
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
         # feature-node-watch argument configures route(s) on the Ingress Citrix ADC
         # to provide connectivity to the pod network. By default, this feature is disabled.
         args:

@@ -2,7 +2,8 @@
 
 In a Kubernetes environment, an Ingress is an object that allows access to the Kubernetes services from outside the Kubernetes cluster. Standard Kubernetes Ingress resources assume that all the traffic is HTTP-based and does not cater to non-HTTP based protocols such as, TCP, TCP-SSL, and UDP. Hence, critical applications based on L7 protocols such as DNS, FTP, LDAP, and so on, cannot be exposed using standard Kubernetes Ingress.
 
-To expose TCP or UDP based applications, the only solution is to use [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) service type. However, using [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) service type is a costly proposition as you have to bring up a dedicated cloud load balancer for each service that you want to expose.
+The standard Kubernetes solution is to create a `service` of `type LoadBalancer`. You can find out more about [Service Type LoadBalancer in Citrix ADC](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/network/type_loadbalancer.md). A second option is to annotate the `Ingress` object as described below.
+
 
 Citrix ingress controller enables you to load balance TCP or UDP based Ingress traffic. It provides the following [annotations](/docs/configure/annotations.md) that you can use in your Kubernetes Ingress resource definition and load balance the TCP or UDP based Ingress traffic:
 
@@ -61,7 +62,7 @@ spec:
     name: bind
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.2.0:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.5.25:
 
 ```yml
 apiVersion: extensions/v1beta1
@@ -129,3 +130,5 @@ spec:
             serviceName: mongodb-svc
             servicePort: 80
 ```
+
+

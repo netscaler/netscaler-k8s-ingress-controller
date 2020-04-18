@@ -16,19 +16,36 @@ metadata:
   name: cic-k8s-role
 rules:
   - apiGroups: [""]
-    resources: ["services", "endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "nodes", "namespaces"]
-    verbs: ["*"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  # services/status is needed to update the loadbalancer IP in service status for integrating
+  # service of type LoadBalancer with external-dns
+  - apiGroups: [""]
+    resources: ["services/status"]
+    verbs: ["patch"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
-    verbs: ["*"]
-  - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "vips"]
-    verbs: ["*"]
-  - apiGroups: ["apps"]
-    resources: ["deployments"]
-    verbs: ["*"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    verbs: ["get", "list", "patch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["vips"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["route.openshift.io"]
+    resources: ["routes"]
     verbs: ["get", "list", "watch"]
 ---
 kind: ClusterRoleBinding
@@ -61,7 +78,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.2.0"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
         env:
         # Set NetScaler Management IP or SNIP in case of HA
         - name: "NS_IP"

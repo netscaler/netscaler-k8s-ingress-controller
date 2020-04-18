@@ -1,9 +1,9 @@
 # Project information
-site_name: Citrix ingress controller for Kubernetes
+site_name: Citrix ingress controller for Kubernetes 
 site_title: Developer Docs
-site_description: Documentation for the Citrix ingress controller for Kubernetes
+site_description: Ingress Controller configures Kubernetes ingress & Service Type LoadBalancer on Citrix ADCs. Supports OpenShift, Rancher on baremetal as well as AKS, GKE and EKS
 site_author:
-site_url: 
+site_url: https://developer-docs.citrix.com
 
 # Repository
 repo_name: "Citrix Ingress Controller"
@@ -11,7 +11,7 @@ repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller"
 edit_uri: "edit/master/docs"
 
 # Copyright
-copyright: 'Copyright &copy; 1999-2019 Citrix Systems, Inc. All rights reserved. '
+copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved. '
 
 extra_css:
   - 'assets/stylesheets/extra.css'
@@ -19,7 +19,7 @@ extra_css:
 # Configuration
 theme:
   name: null
-  custom_dir: material
+  custom_dir: devdocs-theme
 
   # 404 page
   static_templates:
@@ -64,7 +64,7 @@ markdown_extensions:
 # Page tree
 nav:
   - Overview: index.md
-  - Release notes: release-notes.md
+  - Release notes: https://github.com/citrix/citrix-k8s-ingress-controller/releases
   - Supported platforms and deployments: support-matrix.md
   - Deployment topologies: deployment-topologies.md
   - Deploy the Citrix ingress controller: 
@@ -72,14 +72,18 @@ nav:
     - Using Helm charts: deploy/deploy-cic-helm.md
     - Using Kops: deploy/deploy-cic-kops.md
     - On Rancher: deploy/deploy-cic-rancher.md
+    - On PKS: deploy/deploy-pks.md
+  - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - Deployment solutions:
     - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
+    - Deploy the Citrix ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
+    - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
-  - Citrix ADC Integrated canary deployment solution (beta): canary/canary.md
+  - Citrix ADC Integrated canary deployment solution: canary/canary.md
     #- Software Requirements: canary.md#software-requirements
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
     #- Deploy the Citrix ADC Integrated Canary Deployment Solution in Google cloud Platform:
@@ -87,19 +91,30 @@ nav:
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
+    - ConfigMap: configure/config-map.md
+    - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
+    - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
-    - Expose services of type LoadBalancer: network/type_loadbalancer.md
+    - Pod to pod communication using Calico: network/calico-network.md
+    - Enhancement to services of type LoadBalancer: network/bgp-enhancement.md
   - CRDs: 
-    - Using Rewrite and Responder policies in Kubernetes: crds/rewrite-responder.md
-    - VIP: crds/vip.md
+    - Authentication: crds/auth.md
+    - Rate limit: crds/rate-limit.md
+    - Rewrite and Responder: crds/rewrite-responder.md
+    - IPAM or VIP: crds/vip.md
+    - Content Routing: crds/content-routing.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
-    - TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
+    #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
+    - TLS certificates handling in Citrix ingress controller: certificate-management/tls-certificates.md
+    - TLS client authentication in Citrix ADC: certificate-management/client-auth-support.md
+    - Install, link, and update certificates on Citrix ADC using the Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
+    - Configure SSL passthrough using Kubernetes Ingress: certificate-management/ssl-passthrough.md
     - Automated certificate management with cert-manager:
       - Introduction: certificate-management/certificate.md
       - Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager: certificate-management/acme.md
@@ -108,9 +123,19 @@ nav:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Troubleshooting: troubleshooting.md
   - Upgrade: upgrade.md
-  - How-to:
-    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+  - Use cases:
+    - Service mesh lite: deploy/service-mesh-lite.md
+    - Securing ingress: how-to/secure-ingress.md
+    - TCP use cases: how-to/tcp-use-cases.md
+    - HTTP use cases: how-to/http-use-cases.md
+    - Session affinity: how-to/session-affinity.md
+    - Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md
+    - Interoperability with ExternalDNS: how-to/integrate-externaldns.md 
+    - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
+    - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
+
+    - Horizontal pod autoscaler: how-to/cpx-hpa.md
   
 google_analytics:
   - 'UA-59929653-12'

@@ -15,11 +15,13 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Single Tier Topology](../docs/deployment-topologies.md#single-tier-topology)
 -  [Dual Tier Topology](../docs/deployment-topologies.md#dual-tier-topology)
 -  [Cloud Topology](../docs/deployment-topologies.md#cloud-topology)
--  [Using the Ingress ADC for East-West traffic](../docs/deployment-topologies.md#using-the-ingress-adc-for-east--west-traffic)
+-  [Service Mesh Lite](../docs/deploy/service-mesh-lite.md)
+-  [API Gateway](../docs/deploy/citrix-api-gateway.md)
 
 ## Citrix ingress controller features
 
 -  [Ingress Class](../docs/configure/ingress-classes.md)
+-  [Ingress Configuration](../docs/configure/ingress-config.md)
 -  [TCP Ingress](../docs/how-to/tcp-udp-ingress.md)
 -  [Annotations](../docs/configure/annotations.md)
     -  [Smart Annotations](../docs/configure/annotations.md)
@@ -29,9 +31,13 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
     -  [Expose services using NodePort](../docs/network/nodeport.md)
     -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
--  [TLS Certificate Handling](../docs/certificate-management/tls-certificate-handling.md)
--  [Rewrite and Responder Policy Support using CRD](../docs/crds/rewrite-responder.md)
+-  [HTTP, TCP, or SSL Profiles support](../docs/configure/profiles.md)
+-  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
+-  [Install, link, and update certificates on Citrix ADC using the Citrix ingress controller](../docs/certificate-management/link-ca-certificate-chain.md)
+-  [Rewrite and Responder](../docs/crds/rewrite-responder.md)
 -  [Canary deployment support](../docs/canary/canary.md)
+-  [Rate limiting](../docs/crds/rate-limit.md)
+-  [Authentication policies](../docs/crds/auth.md)
 -  [OpenShift router plug-in](../docs/deploy/deploy-cic-openshift.md)
 -  [Openshift router sharding support](../docs/deploy/deploy-openshift-sharding.md)
 
@@ -41,3 +47,15 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 1.  [Google Cloud](../docs/deploy/deploy-gcp.md)
 1.  [Azure Cloud](../docs/deploy/deploy-azure.md)
 1.  [Rancher managed Kubernetes cluster](../docs/deploy/deploy-cic-rancher.md)
+1.  [Pivotal Container Service (PKS)](../docs/deploy/deploy-pks.md)
+
+## Use cases
+
+-  [Securing ingress](../docs/how-to/secure-ingress.md)
+-  [TCP use cases](../docs/how-to/tcp-use-cases.md)
+-  [HTTP use cases](../docs/how-to/http-use-cases.md)
+-  [Whitelisting or Blacklisting IP addresses](../docs/how-to/ip-whitelist-blacklist.md)
+-  [Interoperability with ExternalDNS](../docs/how-to/integrate-externaldns.md)
+-  [Use Citrix ADC credentials stored in Vault server](../docs/how-to/use-vault-stored-credentials-for-cic.md)
+-  [Load balance Ingress traffic to TCP or UDP based application](../docs/how-to/tcp-udp-ingress.md)
+-  [Set up dual-tier deployment](../docs/how-to/deploy-cic-dual-tier.md)

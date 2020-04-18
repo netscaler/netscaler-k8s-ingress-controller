@@ -1,0 +1,28 @@
+apiVersion: citrix.com/v1alpha1
+kind: Listener
+metadata:
+  name: test
+  namespace: default
+spec:
+  certificates:
+  - secret:
+      # Kubernetes secret name
+      name: my-secret
+  - preconfigured: second-secret
+    # preconfigured certkey name in Citrix ADC
+    default: true
+  defaultAction:
+    backend:
+      kube:
+        namespace: default
+        port: 80
+        service: default-service
+  vip: 1.1.1.1
+  port: 443
+  protocol: https
+  routes:
+    # HTTPRoute objects
+  - name: route1
+    namespace: default
+  - name: route2
+    namespace: default

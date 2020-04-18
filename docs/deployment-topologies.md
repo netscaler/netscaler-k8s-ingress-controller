@@ -6,7 +6,7 @@ In Dual-tier deployments, the second tier is within the Kubernetes Cluster (usin
 
 ## Single-Tier topology
 
-In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the (North-South) traffic from the clients to microservices inside the cluster. The Citrix ingress controller is deployed as a pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.
+In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the (North-South) traffic from the clients to microservices inside the cluster. The Citrix ingress controller is deployed as a standalone pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.
 
 ![Single-tier](media/singletopology.png)
 
@@ -26,8 +26,41 @@ Kubernetes clusters in public clouds such as [Amazon Web Services (AWS)](https:/
 **Cloud deployment with Cloud LB in tier-1:**
 ![Cloud deployment with CLB in tier-1](media/cloud-deploy-clb-tier-1.png)
 
-## Using the Ingress ADC for East-West traffic
+## Service mesh lite
 
-When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network (East-West) traffic between microservices within the cluster. For this, the target microservice needs to be deployed in [headless](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) mode to bypass [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy), so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  
+An Ingress solution (either hardware or virtualized or containerized) typically performs L7 proxy functions for north-south (N-S) traffic. The Service Mesh lite architecture uses the same Ingress solution to manage east-west traffic as well.
+
+In a standard Kubernetes deployment, east-west (E-W) traffic traverses the built-in KubeProxy deployed in each node. [Kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy) being a L4 proxy can only do TCP/UDP based load balancing without the benefits of L7 proxy.
+
+Citrix ADC (MPX, VPX, or CPX) can provide such benefits for E-W traffic such as:
+
+-  Mutual TLS or SSL offload
+-  Content based routing, allow or block traffic based on HTTP or HTTPS header parameters
+-  Advanced load balancing algorithms (for example, least connections, least response time and so on.)
+-  Observability of east-west traffic through measuring golden signals (errors, latencies, saturation, or traffic volume). [Citrix ADM’s](https://docs.citrix.com/en-us/citrix-application-delivery-management-service.html) Service Graph is an observability solution to monitor and debug microservices.
+
+For more information, see [Service mesh lite](deploy/service-mesh-lite.md).  
 
 ![Dual-tier-Hairpin-mode](media/dual-tier-topology-with-hairpin-E-W.png)
+
+## Services of type LoadBalancer
+
+Service of type `LoadBalancer` in Kubernetes enables you to directly expose services to the outside world without using an ingress resource. It’s generally made available only by cloud providers, who spin up their own native cloud load balancers and assign an external IP address through which the service is accessed. This helps you to deploy microservices easily and expose them outside the Kubernetes cluster.
+
+By default, in a bare metal Kubernetes cluster, service of type `LoadBalancer` simply exposes `NodePorts` for the service. And, it does not configure external load balancers.
+
+The Citrix ingress controller supports the services of type `LoadBalancer`. You can create a service of type `LoadBalancer` and expose it using the ingress Citrix ADC in Tier-1. The ingress Citrix ADC provisions a load balancer for the service and an external IP address is assigned to the service. The Citrix ingress controller allocates the IP address using the [Citrix IPAM controller](crds/vip.md).
+
+For more information, see [Expose services of type LoadBalancer](network/type_loadbalancer.md).
+
+![Service of type LoadBalancer](media/type-loadbalancer.png)
+
+## Services of type NodePort
+
+By default, Kubernetes services are accessible using the [cluster IP](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) address. The cluster IP address is an internal IP address that can be accessed within the Kubernetes cluster. To make the service accessible from outside of the Kubernetes cluster, you can create a service of type `NodePort`.
+
+The Citrix ingress controller supports services of type `NodePort`. Using the Ingress Citrix ADC and Citrix ingress controller, you can expose the service of type `NodePort` to the outside world.
+
+For more information, see [Expose services of type NodePort](network/nodeport.md).
+
+![Services of type Nodeport](media/type-nodeport.png)

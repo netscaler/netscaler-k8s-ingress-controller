@@ -7,13 +7,21 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:canary-exporter-b1"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
       args:
-        - "--target-nsip=x.x.x.x:80"
+        - "--target-nsip=x.x.x.x"
         - "--port=8888"
-        - "--username=nsroot"
-        - "--password=nsroot"
       imagePullPolicy: Always
+      volumeMounts:
+      - name: nslogin
+        mountPath: "/mnt/nslogin"
+        readOnly: true
+      securityContext:
+        readOnlyRootFilesystem: true
+  volumes:
+  - name: nslogin
+    secret:
+      secretName: nslogin
 ---
 apiVersion: v1
 kind: Service

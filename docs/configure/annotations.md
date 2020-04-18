@@ -2,9 +2,6 @@
 
 The following are the annotations supported by Citrix:
 
-!!! note "Note"
-    The annotation and smart annotation features are not supported for OpenShift routes. You can use OpenShift ingress to use these features.
-
 |**Annotations**|**Possible value**|**Description**|**Default**|
 |---------------|------------------|---------------|-----------|
 |ingress.citrix.com/frontend-ip| IP address | Use this annotation to customize the virtual IP address (VIP). This IP address is configured in Citrix ADC as VIP. The annotation is mandatory if you are using Citrix ADC VPX or MPX. </br>**Note:** Do not use the annotation if you want to use the Citrix ADC IP address as VIP. | Citrix ADC IP address is used as VIP. |
@@ -48,7 +45,7 @@ metadata:
   annotations:
     ingress.citrix.com/insecure-port: "80"
     ingress.citrix.com/frontend-ip: "192.168.1.1"
-    ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", “persistenceType":"SOURCEIP"}}'
+    ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
     ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
     ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
 spec:
@@ -66,6 +63,6 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 
 | Smart Annotation | Description |
 | ---------------- | ----------- |
-| `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", “persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
+| `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |

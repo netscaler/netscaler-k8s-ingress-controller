@@ -1,0 +1,18 @@
+apiVersion: citrix.com/v1alpha1
+kind: HTTPRoute
+metadata:
+   name: starhostname 
+spec:
+  hostname:
+  # Route for any hostname
+  - '*'
+  rules:       
+  - name: default-path 
+    match:
+    - path:
+        prefix: / 
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80

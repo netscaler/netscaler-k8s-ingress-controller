@@ -1,7 +1,7 @@
-Metrics Visualization of NetScaler Appliances in Kubernetes
+Metrics Visualization of Citrix ADC Appliances in Kubernetes
 ===
 
-This document describes how the [NetScaler Metrics Exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
+This document describes how the [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
 
 
 Launching Promethus-Operator
@@ -9,6 +9,7 @@ Launching Promethus-Operator
 Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
 ```
 git clone https://github.com/coreos/kube-prometheus.git
+kubectl create -f kube-prometheus/manifests/setup/
 kubectl create -f kube-prometheus/manifests/
 ```
 This creates several pods and services, of which ```prometheus-k8s-xx``` pods aggregate and timestamp metrics collected from NetScaler devices, and the ```grafana``` pod can be used for visualization. An output similar to this should be seen:
@@ -28,7 +29,7 @@ prometheus-k8s-1                       3/3       Running   1          2h
 prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
 ```
 
-**NOTE:** The files in the ```manifests/``` folder have interdependencies due to which the order in which they get created is important. At times the manifest files may get created out of order leading to ```Error``` messages from Kubernetes. To resolve this, simply re-run the ```kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/``` command. Any yaml files that had not been created the first time around due to unmet dependencies, will get created this time.
+**NOTE:** The files in the ```manifests/``` folder have interdependencies due to which the order in which they get created is important. At times the manifest files may get created out of order leading to ```Error``` messages from Kubernetes. To resolve this, simply re-run the ```kubectl create -f kube-prometheus/manifests/``` command. Any yaml files that had not been created the first time around due to unmet dependencies, will get created this time.
 
 It may be preferable to expose the Prometheus and Grafana pods via NodePorts. To do so, the prometheus-service.yaml and grafana-service.yaml files will need to be modified as follows:
 
@@ -88,15 +89,21 @@ kubectl apply -f prometheus-service.yaml
 kubectl apply -f grafana-service.yaml
 ```
 
-Configuring NetScaler Metrics Exporter
+Configuring Citrix ADC Metrics Exporter
 ---
-This section describes how to integrate the NetScaler Metrics Exporter with the VPX/CPX ingress or CPX-EW devices. 
+This section describes how to integrate the Citrix ADC Metrics Exporter with the VPX/CPX ingress or CPX-EW devices. 
 
 <details>
 <summary>VPX Ingress Device</summary>
 <br>
 
-To monitor an ingress VPX device, the netscaler-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. An example yaml file to deploy such an exporter is given below:
+To monitor an ingress VPX device, the citrix-adc-metrics-exporter will be run as a pod within the kubernetes cluster. The IP of the VPX ingress device will be provided as an argument to the exporter. 
+To provide the login credentials to access ADC, create a secret and mount the volume at mountpath "/mnt/nslogin".
+```
+kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
+```
+
+An example yaml file to deploy such an exporter is given below:
 
 ```
 apiVersion: v1
@@ -108,11 +115,21 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
-            imagePullPolicy: Always
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      imagePullPolicy: Always
       args:
-        - "--target-nsip=<IP_and_port_of_VPX>"
+        - "--target-nsip=<IP_of_VPX>"
         - "--port=8888"
+      volumeMounts:
+      - name: nslogin
+        mountPath: "/mnt/nslogin"
+        readOnly: true
+      securityContext:
+        readOnlyRootFilesystem: true
+  volumes:
+  - name: nslogin
+    secret:
+      secretName: nslogin
 ---
 kind: Service
 apiVersion: v1
@@ -135,7 +152,7 @@ The IP and port of the VPX device needs to be filled in as the ```--target-nsip`
 <summary>CPX Ingress Device</summary>
 <br>
   
-To monitor a CPX ingress device, the exporter is added as a side-car. An example yaml file of a CPX ingress device with an exporter as a side car is given below;
+To monitor a CPX ingress device, the exporter is added as a side-car.An example yaml file of a CPX ingress device with an exporter as a side car is given below;
 ```
 ---
 apiVersion: extensions/v1beta1
@@ -160,11 +177,19 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
+          securityContext:
+            readOnlyRootFilesystem: true
         - name: cpx-ingress
           image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
           imagePullPolicy: Always
@@ -240,11 +265,19 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/netscaler-metrics-exporter:1.0.9"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
           args:
-            - "--target-nsip=192.168.0.2:80"
+            - "--target-nsip=192.168.0.2"
             - "--port=8888"
+            - "--secure=no"
+          env:
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           imagePullPolicy: Always
+          securityContext:
+            readOnlyRootFilesystem: true
 ---
 kind: Service
 apiVersion: v1
@@ -268,7 +301,7 @@ Here, the exporter uses the ```192.168.0.2``` local IP to fetch metrics from the
 
 ServiceMonitors to Detect NetScalers
 ---
-Till this point, NetScaler Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
+Till this point, Citrix ADC Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
 
 The following example file will detect all the Exporter endpoints associated with Exporter services which have the label ```service-type: citrix-adc-monitor``` associated with them.
 
@@ -335,13 +368,13 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [sample services grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 
 3. A dashboard containing graphs similar to any of these following should appear
 
-<img src="images/service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
+<img src="images/k8s-service-stats-dashboard.png" width="400"> <img src="images/system-stats-dashboard.png" width="400">
 
 4. The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or demo [videos](https://www.youtube.com/watch?v=mgcJPREl3CU).
 

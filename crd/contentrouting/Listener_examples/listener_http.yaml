@@ -1,0 +1,15 @@
+apiVersion: citrix.com/v1alpha1
+kind: Listener
+metadata:
+  name: http-listener
+  namespace: default
+spec:
+  vip: 1.1.1.1
+  protocol: http
+  defaultAction:
+    # default action as kubernetes service
+    backend:
+      kube:
+        namespace: default
+        port: 80
+        service: default-service

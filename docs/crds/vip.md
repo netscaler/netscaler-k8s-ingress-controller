@@ -15,6 +15,6 @@ Deploy the VIP CRD using the following command:
 
     kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
 
-## Releate Articles
+## Related Articles
 
 -  [Expose services of type LoadBalancer using an IP address from the Citrix IPAM controller](../network/type_loadbalancer.md#expose-services-of-type-loadbalancer-using-an-ip-address-from-the-citrix-ipam-controller)
