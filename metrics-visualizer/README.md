@@ -216,8 +216,9 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
+  name: exporter-cpx-ingress
   labels:
-    name: exporter-cpx-ingress
+    app: exporter-cpx-ingress
     service-type: citrix-adc-monitor
 spec:
   selector:
@@ -284,6 +285,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
+  name: exporter-cpx-ew
   labels:
     app: exporter-cpx-ew
     service-type: citrix-adc-monitor
