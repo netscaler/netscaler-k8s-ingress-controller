@@ -131,6 +131,7 @@ spec:
     secret:
       secretName: nslogin
 ---
+apiVersion: v1
 kind: Service
 metadata:
   name: exporter-vpx-ingress
@@ -213,8 +214,8 @@ spec:
             - name: nitro-http
               containerPort: 9080
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-cpx-ingress
   labels:
@@ -282,8 +283,8 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-cpx-ew
   labels:
