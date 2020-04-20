@@ -132,18 +132,20 @@ spec:
       secretName: nslogin
 ---
 kind: Service
-apiVersion: v1
 metadata:
   name: exporter-vpx-ingress
   labels:
+    app: exporter-vpx-ingress
     service-type: citrix-adc-monitor
 spec:
-  selector:
-    name: exporter-vpx-ingress
+  type: NodePort
   ports:
     - name: exporter-port
       port: 8888
       targetPort: 8888
+  selector:
+    app: exporter-vpx-ingress
+    
 ```
 The IP and port of the VPX device needs to be filled in as the ```--target-nsip``` (Eg. ```--target-nsip=10.0.0.20```). 
 </details>
@@ -214,8 +216,8 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: exporter-cpx-ingress
   labels:
+    name: exporter-cpx-ingress
     service-type: citrix-adc-monitor
 spec:
   selector:
@@ -282,8 +284,8 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: exporter-cpx-ew
   labels:
+    app: exporter-cpx-ew
     service-type: citrix-adc-monitor
 spec:
   selector:
