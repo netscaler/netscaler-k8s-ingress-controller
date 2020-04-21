@@ -54,34 +54,34 @@ In this procedure, Apache web server is used as the sample application.
    
     1. Download the YAML file using the following command.
 
-        ```
-        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/standalone_cpx.yaml
         
-        ```
+            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/standalone_cpx.yaml
+        
 
     2. Update the Citrix ADC CPX image with the Azure image URL in `standalone_cpx.yaml` file. 
 
-        ```
-        - name: cpx-ingress
-          image: "<azure-cpx-instance-url>"
         
-        ```
+
+           - name: cpx-ingress
+             image: "<azure-cpx-instance-url>"
+        
+        
 
     3. Update the Citrix ingress controller image with the Azure Image URL in `standalone_cpx.yaml` file.
 
-        ```
-        - name: cic
-          image: "<azure-cic-instance-url>"
         
-        ```
+
+           - name: cic
+             image: "<azure-cic-instance-url>"
+
 
     4. After updating the required values, deploy the `standalone_cpx.yaml` file.
 
-        ```
-
-        kubectl create -f standalone_cpx.yaml
         
-        ```
+
+           kubectl create -f standalone_cpx.yaml
+        
+        
 
 3.  Create the ingress resource using the following command.
 
@@ -116,7 +116,7 @@ In this procedure, Apache web server is used as the sample application.
     **Note:**
     The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/azureimages/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
-1.  Access the application using the following command.
+7.  Access the application using the following command.
 
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com
 
@@ -143,39 +143,38 @@ Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingres
 
    1. Download the YAML file using the following command.
     
-      ```
+      
 
-      wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/all-in-one.yaml
+          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/all-in-one.yaml
     
-      ```
+      
 
     1. Update the Citrix ADC CPX image with the Azure image URL in `all-in-one.yaml` file.
 
-       ```
+       
 
-       - name: cpx-ingress
-         image: "<azure-cpx-instance-url>"
+           - name: cpx-ingress
+             image: "<azure-cpx-instance-url>"
 
-       ```
+       
 
     1. Update the Citrix ingress controller image with the Azure image URL in `all-in-one.yaml` file.
 
-        ```
+
          
-         - name: cic
-           image: "<azure-cic-instance-url>"
+           - name: cic
+             image: "<azure-cic-instance-url>"
+
+
+    2. After updating the required values, deploy the `all-in-one.yaml` file.
+
         
-        ```
 
-    1. After updating the required values, deploy the `all-in-one.yaml` file.
-
-        ```
-
-        kubectl create -f all-in-one.yaml 
+           kubectl create -f all-in-one.yaml 
         
-        ```
+        
 
-1.  Access the application using the following command.
+2.  Access the application using the following command.
 
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
@@ -196,33 +195,33 @@ Perform the following steps to deploy two Citrix ADC CPX devices for high availa
 
     1. Download the YAML file using the following command.
 
-       ```
        
-       wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/all-in-one-ha.yaml
+       
+            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/all-in-one-ha.yaml
 
-       ```
+      
 
     2. Update the Citrix CPX image with the Azure image URL in `all-in-one-ha.yaml`.
 
-        ```
-       - name: cpx-ingress
-         image: "<azure-cpx-instance-url>"
-        ```
+        
+            - name: cpx-ingress
+              image: "<azure-cpx-instance-url>"
+        
 
     3. Update the Citrix CIC image with the Azure image URL in `all-in-one-ha.yaml`.
 
-       ```
-       - name: cic
-         image: "<azure-cic-instance-url>"
-       ```
+       
+           - name: cic
+             image: "<azure-cic-instance-url>"
+
 
     4. After updating the required values, deploy the `all-in-one-ha.yaml` file.
 
-       ```
        
-       kubectl create -f all-in-one-ha.yaml
+       
+            kubectl create -f all-in-one-ha.yaml
       
-       ```
+
 
 2.  Access the application using the following command.
 
@@ -245,36 +244,35 @@ Perform the followings steps to deploy Citrix ADC CPX as an ingress device on ea
  
     1. Download the YAML file using the following command.
 
-       ```
-       wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/all-in-one-reliable.yaml
+
+            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azureimages/all-in-one-reliable.yaml
     
-       ```
 
-    1.  Update the Citrix CPX image with the Azure Image URL in `all-in-one-reliable.yaml`.
+    2.  Update the Citrix CPX image with the Azure Image URL in `all-in-one-reliable.yaml`.
 
-        ```
         
-        - name: cpx-ingress
-          image: "<azure-cpx-instance-url>"
         
-        ```
+            - name: cpx-ingress
+              image: "<azure-cpx-instance-url>"
+        
 
-    1. Update the Citrix ingress controller image with the Azure image URL in `all-in-one-reliable.yaml`.
 
-        ```
-          - name: cic
-            image: "<azure-cic-instance-url>"
-        ```
+    3. Update the Citrix ingress controller image with the Azure image URL in `all-in-one-reliable.yaml`.
 
-    1. After updating the required values, deploy the `all-in-one-reliable.yaml` file. 
+       
+            - name: cic
+              image: "<azure-cic-instance-url>"
 
-       ```
-       kubectl create -f all-in-one-reliable.yaml 
-       ```
 
-1.  Access the application by using the following command.
+    4. After updating the required values, deploy the `all-in-one-reliable.yaml` file. 
 
-        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com
+       
+            kubectl create -f all-in-one-reliable.yaml 
+       
+
+2.  Access the application by using the following command.
+
+            curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com
 
     **Note:**
         To delete the deployment, use the following command:
