@@ -2,10 +2,9 @@
 
 This topic explains how to deploy Citrix ADC CPX as an ingress device in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster with advanced networking mode (Azure CNI).
 
-
 **Note:**
 
-If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quoy.io images, then see
+If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quay.io images, then see
 [Deploy Citrix ADC CPX as an Ingress device in an AKS cluster with advanced networking using Azure repository images](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-azure-image-cni.md).
 
 ## Deploy Citrix ADC CPX as an Ingress device in an AKS cluster
@@ -112,7 +111,7 @@ Perform the following steps to deploy two Citrix ADC CPX devices for high availa
     >**Note:**
     >To delete the deployment, use the following command:
     </br>
-    >`kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/azurecni-beta/deployment/azure/manifest/azurecni/all-in-one-ha.yaml`
+    >`kubectl delete -f https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one-ha.yaml`
 
 ### Deploy Citrix ADC CPX per node
 
