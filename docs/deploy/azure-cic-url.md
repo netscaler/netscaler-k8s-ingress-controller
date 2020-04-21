@@ -16,27 +16,27 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
 
    - Enter a name for the Resource group and specify a region.
   
-      <img src=" ../media/azurem-image-1.png" width="500">
+      <img src="../media/azurem-image-1.png" width="500">
    
    - Click **Review+create**.
  
    - Review details and then click **Create**.
    
-     <img src=" ../media/azurem-image-2.png" width="500">
+     <img src="../media/azurem-image-2.png" width="500">
       
 3. Select [Citrix Ingress Controller](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixingresscontroller?tab=Overview) on Azure Marketplace.
 
-    <img src=" ../media/azurem-image-3.png" width="500">
+    <img src="../media/azurem-image-3.png" width="500">
    
     - Click **GET IT NOW**.
    
    - Verify the details on the pop-up window and click **Continue**.
 
-     <img src=" ../media/azurem-image-4.png" width="500">
+     <img src="../media/azurem-image-4.png" width="500">
 
 4. Create a Citrix ingress controller image registry with the resource group created in step 2.
    
-   <img src=" ../media/azurem-image-5.png" width="500">
+   <img src="../media/azurem-image-5.png" width="500">
 
    - Click **Create new** for creating an Azure Citrix ingress controller registry.
   
@@ -57,19 +57,19 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
   
    - Select the registry created in step 4.
   
-     <img src=" ../media/azurem-image-6.png" width="500">
+     <img src="../media/azurem-image-6.png" width="500">
 
    - Under `services`, click **Repositories**.
   
-     <img src=" ../media/azurem-image-8.png" width="500">
+     <img src="../media/azurem-image-8.png" width="500">
 
    - Find  `citrix/citrix-k8s-ingess-controller` under repositories and select it.
   
-     <img src=" ../media/azurem-image-9.png" width="500">
+     <img src="../media/azurem-image-9.png" width="500">
    
    - Select tag as **latest**.
    
-     <img src=" ../media/azurem-image-10.png" width="500">
+     <img src="../media/azurem-image-10.png" width="500">
    
    - Here, image URL is shared as part of the  `Docker pull ` command text.
    
