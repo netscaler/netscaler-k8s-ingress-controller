@@ -1,4 +1,4 @@
-# Get Citrix Ingress Controller from Azure Marketplace
+# Get Citrix ingress controller from Azure Marketplace
 
 This topic explains the steps to create a URL for the Citrix ingress controller image on Azure Marketplace.
 

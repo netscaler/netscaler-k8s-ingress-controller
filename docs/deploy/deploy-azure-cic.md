@@ -1,6 +1,6 @@
-# Deploy Citrix ingress controller in AKS with Citrix ADC VPX
+# Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX
 
-This topic explains how to deploy the Citrix ingress controller with Citrix ADC VPX in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy Citrix Ingress Controller with VPX.
+This topic explains how to deploy the Citrix ingress controller with Citrix ADC VPX in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy the Citrix ingress controller with Citrix ADC VPX.
 
 The procedure to deploy for both AKS and Azure VM is the same. However, if you are configuring Kubernetes on Azure VMs you need to deploy the CNI plug-in for the Kubernetes cluster.
 
