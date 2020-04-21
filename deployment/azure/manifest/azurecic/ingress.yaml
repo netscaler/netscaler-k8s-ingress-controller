@@ -1,0 +1,17 @@
+#Specify the ingress resource
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: citrix-ingress
+  annotations:
+   kubernetes.io/ingress.class: "citrix"
+spec:
+  rules:
+  - host: citrix-ingress.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: apache
+          servicePort: 80
+---

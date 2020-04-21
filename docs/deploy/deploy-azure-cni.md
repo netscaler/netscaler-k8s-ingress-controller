@@ -2,6 +2,12 @@
 
 This topic explains how to deploy Citrix ADC CPX as an ingress device in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster with advanced networking mode (Azure CNI).
 
+
+**Note:**
+
+If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quoy.io images, then see
+[Deploy Citrix ADC CPX as an Ingress device in an AKS cluster with advanced networking using Azure repository images](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-azure-image-cni.md).
+
 ## Deploy Citrix ADC CPX as an Ingress device in an AKS cluster
 
 Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an AKS cluster.
@@ -34,9 +40,9 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 
     |NAME|TYPE|CLUSTER-IP|EXTERNAL-IP|PORT(S)| AGE|
     |----|----|-----|-----|----|----|
-    |apache |ClusterIP|10.0.103.3|none|   80/TCP | 2m|
-    |cpx-ingress |LoadBalancer |10.0.37.255 | pending |80:32258/TCP,443:32084/TCP |2m|
-    |kubernetes |ClusterIP | 10.0.0.1 |none |  443/TCP | 22h |
+    |apache |ClusterIP|10.0.103.3|none|   80/TCP | 2 m|
+    |cpx-ingress |LoadBalancer |10.0.37.255 | pending |80:32258/TCP,443:32084/TCP |2 m|
+    |Kubernetes |ClusterIP | 10.0.0.1 |none |  443/TCP | 22 h |
 
 6. Once the external IP for the load-balancer is available as follows, you can access your resources using the external IP for the load balancer.
 
@@ -44,9 +50,9 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 
     |NAME|TYPE|CLUSTER-IP|EXTERNAL-IP|PORT(S)| AGE|
     |----|----|-----|-----|----|----|
-    |apache |ClusterIP|10.0.103.3|none|   80/TCP | 3m|
-    |cpx-ingress |LoadBalancer |10.0.37.255 | created |80:32258/TCP,443:32084/TCP |2m|
-    |kubernetes |ClusterIP | 10.0.0.1 |none |  443/TCP | 22h |
+    |apache |ClusterIP|10.0.103.3|none|   80/TCP | 3 m|
+    |cpx-ingress |LoadBalancer |10.0.37.255 | created |80:32258/TCP,443:32084/TCP |2 m|
+    |Kubernetes |ClusterIP | 10.0.0.1 |none |  443/TCP | 22 h |
 
     >**Note:**  The health check for the cloud load-balancer is obtained from the `readinessProbe` configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. </br>
     If the health check fails, you should check the `readinessProbe` configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
@@ -74,7 +80,7 @@ To deploy Citrix ADC CPX as an Ingress device in a standalone deployment model i
 
 Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingress device.
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
+1. Deploy a Citrix ADC CPX ingress with in-built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
 
         kubectl create -f all-in-one.yaml
 
