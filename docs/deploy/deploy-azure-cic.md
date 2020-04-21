@@ -28,7 +28,7 @@ For more information on how to create a Citrix ADC VPX instance from Azure Marke
 
 To deploy the Citrix ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the Citrix ingress controller image.
 
-For more information on how to create a registry and get image URL, see [Get Citrix Ingress Controller from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md)
+For more information on how to create a registry and get image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
 
 Once a registry is created, the Citrix ingress controller registry name should be attached to the AKS cluster used for deployment.
 
@@ -78,7 +78,7 @@ Perform the following steps to deploy the Citrix ingress controller.
 
        **Note:** If you do not have `wget` installed, you can use `fetch` or `curl` command.
 
-   1. Update the Citrix ingress controller image with the Azure Image URL in the `cic.yaml` file.
+   1. Update the Citrix ingress controller image with the Azure image URL in the `cic.yaml` file.
 
       ```
       - name: cic-k8s-ingress-controller

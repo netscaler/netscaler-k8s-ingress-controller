@@ -73,7 +73,7 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
    
    - Here, image URL is shared as part of the  `Docker pull ` command text.
    
-     For example, `azurecicreg.azurecr.io/citrix/citrix-k8s-ingress-controller:latest`
+     For example, `azurecicreg.azurecr.io/citrix/citrix-k8s-ingress-controller:latest`.
      
      Copy the image URL and replace as image in the Citrix ingress controller YAML file.
 
