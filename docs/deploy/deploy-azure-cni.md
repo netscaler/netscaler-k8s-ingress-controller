@@ -6,7 +6,7 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in an [Azu
 **Note:**
 
 If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quoy.io images, then see
-[Deploy Citrix ADC CPX as an Ingress device in an AKS cluster with advanced networking using Azure repository images](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-azure-image-cni.md)
+[Deploy Citrix ADC CPX as an Ingress device in an AKS cluster with advanced networking using Azure repository images](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-azure-image-cni.md).
 
 ## Deploy Citrix ADC CPX as an Ingress device in an AKS cluster
 
