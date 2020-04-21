@@ -17,7 +17,7 @@ You should complete the following tasks before performing the steps in the proce
 
 **Note:**
 
-If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quoy.io images, then see [Deploy Citrix ADC CPX as an Ingress device in an AKS cluster using Azure repository images](deploy-azure-image.md).
+If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quay.io images, then see [Deploy Citrix ADC CPX as an Ingress device in an AKS cluster using Azure repository images](deploy-azure-image.md).
 
 ## Deploy Citrix ADC CPX as an ingress device in an AKS cluster
 
