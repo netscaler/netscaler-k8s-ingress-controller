@@ -51,54 +51,54 @@ Perform the following steps to create a Citrix ADC VPX instance from Azure Marke
   
     - Select all the relevant `inbound ports` from drop-down menu, then click **Next**.
   
-      <img src=" ../media/azurem-image-vpx5.png" width="500">
+      <img src="../media/azurem-image-vpx5.png" width="500">
       
     - Verify the disk details and then click **Next**.
    
-      <img src=" ../media/azurem-image-vpx6.png" width="500">
+      <img src="../media/azurem-image-vpx6.png" width="500">
   
     -  Verify the `Virtual network` and `Subnet` information and make sure that they are same as the network information of the resource group and then click **Next**.
        
-       <img src=" ../media/azurem-image-vpx7.png" width="500">
+       <img src="../media/azurem-image-vpx7.png" width="500">
    
     -  Verify the management details and then click **Next**.
    
-       <img src=" ../media/azurem-image-vpx8.png" width="500">
+       <img src="../media/azurem-image-vpx8.png" width="500">
    
     - Verify any `Advanced details` if necessary and then click **Next**.
   
-      <img src=" ../media/azurem-image-vpx9.png" width="500">
+      <img src="../media/azurem-image-vpx9.png" width="500">
    
     - Specify any Tags if needed and click **Next**.
      
-      <img src=" ../media/azurem-image-vpx10.png" width="500">
+      <img src="../media/azurem-image-vpx10.png" width="500">
   
     - Review all details of the Citrix ADC VPX, and then click **Create**. Wait for some time until the deployment is complete.
-     <img src=" ../media/azurem-image-vpx11.png" width="500">
+     <img src="../media/azurem-image-vpx11.png" width="500">
 
 5. Set the Citrix ADC VPX networking configurations required as part of ingress or the Citrix ingress controller deployment in the cluster.
 
    - Go to the `Networking` section on the deployed VPX Page, and select **Network Interface** on the right.
   
-     <img src=" ../media/azurem-image-vpx12.png" width="500">
+     <img src="../media/azurem-image-vpx12.png" width="500">
    
     - Select **IP configurations** on the network interfaces page and click **+Add** for adding a new IP address.
-    <img src=" ../media/azurem-image-vpx13.png" width="500">
+    <img src="../media/azurem-image-vpx13.png" width="500">
   
     - Add an IP address for `SNIP`, specify a `name`, keep the allocation method as `Dynamic`, and set the public IP address as `Disabled`.
   
-       <img src=" ../media/azurem-image-vpx14.png" width="500">
+       <img src="../media/azurem-image-vpx14.png" width="500">
   
     -  Add an IP address for `VIP`, specify a `name`, keep the allocation method as `Dynamic`, and public IP address as `Enabled`.
   
-       <img src=" ../media/azurem-image-vpx15.png" width="500">
+       <img src="../media/azurem-image-vpx15.png" width="500">
 
      
-       <img src=" ../media/azurem-image-vpx16.png" width="500">
+       <img src="../media/azurem-image-vpx16.png" width="500">
     
     -  Verify all IP configurations and then set the IP forwarding as `Enabled`.
   
-       <img src=" ../media/azurem-image-vpx17.png" width="500">
+       <img src="../media/azurem-image-vpx17.png" width="500">
 
 6. Verify if you are able to SSH into Citrix ADC VPX using the primary public IP address and the user name and password set during the Citrix ADC VPX deployment.
   
