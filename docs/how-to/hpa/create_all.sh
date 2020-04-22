@@ -8,7 +8,7 @@ sed -i "s/\`VPX_VIP\`/$VPX_VIP/g" .temp/*.yaml
 sed -i "s,\`EXPORTER\`,$EXPORTER,g" .temp/*.yaml
 sed -i "s,\`VPX_PASSWORD\`,$VPX_PASSWORD,g" .temp/*.yaml
 kubectl create -f .temp/monitoring.yaml
-helm install prometheus-adapter/ --name cpx-prom-adapter
+helm install stable/prometheus-adapter -f values.yaml --name cpx-prom-adapter
 kubectl create -f .temp/rbac.yaml
 kubectl create -f .temp/guestbook-all-in-one.yaml
 kubectl create -f .temp/cic-vpx.yaml
