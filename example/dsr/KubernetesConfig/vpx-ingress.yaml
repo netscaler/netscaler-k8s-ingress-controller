@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cpx-ingress
+  annotations:
+   kubernetes.io/ingress.class: "dsr"
+   ingress.citrix.com/deployment: "dsr"
+   ingress.citrix.com/frontend-ip: "x.x.x.x"
+spec:
+  backend:
+     serviceName: cpx-service
+     servicePort: 80
