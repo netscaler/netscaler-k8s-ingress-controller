@@ -114,10 +114,9 @@ This section helps to create configurations required on the ingress device for D
 ## **4. Tier-1 Configurations**
    
 - ## **Download the Citrix Ingress Controller yaml**
-
-      ```
-          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
-      ```
+	```
+            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
+	```
 
 - ## **Provide following Input for Citrix Ingress Controller**
 
