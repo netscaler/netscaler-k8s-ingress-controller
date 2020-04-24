@@ -1,6 +1,6 @@
 # **Creating monitor for the Application**
 	
-	The topic covers how to create custom monitor for the application which would help to load balance the application better. Smart annnotation on Citrix Ingress Controller can be used for creating various types of Monitor for your applications. To configure monitors on a Web site, you first decide whether to use a built-in monitor or create your own monitor. If you create a monitor, you can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use smart annotation which manages the monitor lifecyle for your application. 
+The topic covers how to create custom monitor for the application which would help to load balance the application better. Smart annnotation on Citrix Ingress Controller can be used for creating various types of Monitor for your applications. To configure monitors on a Web site, you first decide whether to use a built-in monitor or create your own monitor. If you create a monitor, you can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use smart annotation which manages the monitor lifecyle for your application. 
  
 
 ## **Smart annotation for monitor**
