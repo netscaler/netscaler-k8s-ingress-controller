@@ -1,17 +1,17 @@
 # **Creating monitor for the Application**
 	
-The topic covers how to create custom monitor for the application which would help to load balance the application better. Smart annnotation on Citrix Ingress Controller can be used for creating various types of monitor for your applications. To configure monitors on a web site, you first decide whether to use a built-in monitor or create your own monitor. If you create a monitor, you can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use smart annotation which manages the monitor lifecyle for your application. 
+The topic covers how to create custom monitor for the application which would help to load balance the application better. Smart annotation on Citrix Ingress Controller can be used for creating various types of monitor for your applications. To configure monitors on a web site, you first decide whether to use a built-in monitor or create your own monitor. If you create a monitor, you can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use smart annotation which manages the monitor lifecycle for your application. 
  
 
 ## **Smart annotation for monitor**
 
-Anotation  created for monitor is ```ingress.citrix.com/monitor``` which can be used to create monitor of your choice. Citrix Ingress controller internally creates the monitor and bound to the right service.
+Annotation used for monitor is ```ingress.citrix.com/monitor``` which can be used to create monitor of your choice. Citrix Ingress controller internally creates the monitor and bound to the right service.
 
 
 
-## **Configure a builtin Monitor**
+## **Configure a built-in Monitor**
   
-The Citrix ADC appliance contains a number of built-in monitors that you can use to monitor your services. These built-in monitors handle most of the common protocols. Based on the application you can choose the builtin monitor which suits your application. 
+The Citrix ADC appliance contains a number of built-in monitors that you can use to monitor your services. These built-in monitors handle most of the common protocols. Based on the application you can choose the built-in monitor which suits your application. 
 
 Here is an example of using  HTTP-Inline monitor with the help of smart annotation.
 
@@ -19,7 +19,7 @@ Here is an example of using  HTTP-Inline monitor with the help of smart annotati
 ingress.citrix.com/monitor: '{"frontend":{"type":"htTP-iNLINE", "secure":"yes"}}'
 ```
 
-In this example,  service called ```frontend``` is configured with http inline monitor with secure type as yes. When citrix ingress controller gets this, it creates a monitor and bind with the coresponding service of frontend.
+In this example,  service called ```frontend``` is configured with http inline monitor with secure type as yes. When Citrix ingress controller gets this, it creates a monitor and bind with the corresponding service of frontend.
 
   Sample ingress.
 
