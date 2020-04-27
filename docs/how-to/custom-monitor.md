@@ -33,7 +33,7 @@ In this example, a service called ```frontend``` is configured with an HTTP moni
 
   ![HttpInlineADC](../media/HttpOutput.png)
 
-## Configure a custom monitor**
+## Configure a custom monitor
 
 In addition to built-in monitors, you can use custom monitors to check the state of your services. The Citrix ADC appliance provides several types of custom monitors based on scripts that are included with the Citrix ADC operating system. These monitors can be used to determine the state of services based on the load on the service or network traffic sent to the service. These are the inline monitors, user monitors, and load monitors. You can either use the provided functionality or you can create your own scripts and use those scripts to determine the state of the service to which the monitor is bound.
 
