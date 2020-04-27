@@ -1,59 +1,58 @@
-# **Creating monitor for the Application**
-	
-The topic covers how to create a monitor for the application which would help to load balance the application better. Citrix ADC supports two types of monitors.
+# Creating monitors for applications
 
-1. Built-in Monitors
-2. Custom Monitors
+The topic covers how to create monitors for applications which would help to load balance applications better.
 
-Smart annotation on Citrix Ingress Controller can be used for creating various types of monitor for your applications. you can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use smart annotation which manages the monitor lifecycle for your application. 
- 
+Citrix ADC supports two types of monitors.
 
-## **Smart annotation for monitor**
+1. Built-in monitors
+2. Custom monitors
 
-Annotation used for monitor is ```ingress.citrix.com/monitor``` which can be used to create monitor of your choice. Citrix Ingress controller internally creates the monitor and bound to the right service.
+A smart annotation on the Citrix ingress controller can be used for creating various types of monitors for your applications. You can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use the smart annotation to manage your application monitor lifecycle.
 
+## Smart annotation for monitor
 
+You can use the  ```ingress.citrix.com/monitor```  smart annotation which can be used to create a monitor of your choice. The Citrix Ingress controller internally creates the monitor and bounds it to the right service.
 
-## **Configure a built-in Monitor**
+## Configure a built-in monitor
   
-The Citrix ADC appliance contains a number of built-in monitors that you can use to monitor your services. These built-in monitors handle most of the common protocols. Based on the application you can choose the built-in monitor which suits your application. 
+The Citrix ADC appliance contains various built-in monitors that you can use to monitor your services. These built-in monitors handle most of the common protocols. Based on your application needs, you can choose the built-in monitor which suits your application.
 
-Here is an example of using  HTTP monitor with the help of smart annotation.
+Here is an example of using an HTTP monitor with the help of smart annotation.
 
 ```
 ingress.citrix.com/monitor: '{"frontend":{"type":"http", "httpRequest":"GET /", "respcode":"200", "retries":"2"}}'
 ```
 
-In this example,  service called ```frontend``` is configured with http monitor wicth send a GET request for which expect 200 response. When Citrix ingress controller gets this event, it creates a monitor and bind with the corresponding service of frontend.
+In this example, a service called ```frontend``` is configured with an HTTP monitor which sends a GET request and expects the HTTP response code 200. When the Citrix ingress controller gets this event, it creates a monitor and binds the monitor with the corresponding service.
 
-  Sample ingress.
+  A sample Ingress is shown as follows:
 
   ![HttpInline](../media/Http.png)
 
-  Coresponding ADC Configurations.
+  Corresponding ADC configurations are as follows:
 
   ![HttpInlineADC](../media/HttpOutput.png)
 
-## **Configure a user monitor**
+## Configure a custom monitor**
 
-In addition to built-in monitors, you can use custom monitors to check the state of your services. The NetScaler appliance provides several types of custom monitors based on scripts that are included with the NetScaler operating system that can be used to determine the state of services based on the load on the service or network traffic sent to the service. These are the inline monitors, user monitors, and load monitors. With any of these types of monitors, you can use the supplied functionality, or you can create your own scripts and use those scripts to determine the state of the service to which the monitor is bound. Following are already provided scripts.
+In addition to built-in monitors, you can use custom monitors to check the state of your services. The Citrix ADC appliance provides several types of custom monitors based on scripts that are included with the Citrix ADC operating system. These monitors can be used to determine the state of services based on the load on the service or network traffic sent to the service. These are the inline monitors, user monitors, and load monitors. You can either use the provided functionality or you can create your own scripts and use those scripts to determine the state of the service to which the monitor is bound.
+
+Following are the scripts which are provided by Citrix ADC:
 
   ![CustomMonitor](../media/CustomMonitor.png)
 
-  Here we are using a user monitor for SFTP application. Name of the service used here is sftp and type of monitor is USER. Providing the script ```nssftp.pl``` which is already available in ADC.
+  Here, we are using a user monitor for SFTP application. The name of the service used here is `sftp` and type of monitor is `USER`. Providing the script ```nssftp.pl``` which is already available in Citrix ADC.
 
   ```
     ingress.citrix.com/monitor: '{"sftp":{"type":"USER", "scriptname":"nssftp.pl", "scriptargs":"file=/sftp/incoming/test.log;user=admin;password=admin"}}'
   ```  
 
-  Sample ingress.
+  A sample Ingress is shown as follows:
 
   ![MonitorIngress](../media/Monitor_ingress.png)
   
-  When this ingress applied for the service sftp, a user monitor will be created on Citrix ADC and bound to the service.  
+  When this Ingress is applied for the service `sftp`, a user monitor is created on the Citrix ADC and bound to the service.  
  
-  Coresponding ADC Configurations.
+  Corresponding ADC configurations are shown as follows:
 
   ![MonitorConfig](../media/MonitorOutput.png)
-
-
