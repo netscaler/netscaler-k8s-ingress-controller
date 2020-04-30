@@ -27,11 +27,11 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits", "listeners", "httproutes"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
-    verbs: ["get", "list", "patch"]
+    resources: ["rewritepolicies/status", "canarycrds/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
     verbs: ["get", "list", "watch", "create", "delete"]
@@ -100,7 +100,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.46"
           env:
           - name: "EULA"
             value: "yes"
@@ -114,6 +114,16 @@ spec:
             value: "SIDECAR"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
+          - name: "NS_USER"
+            valueFrom:
+             secretKeyRef:
+              name: nslogin
+              key: username
+          - name: "NS_PASSWORD"
+            valueFrom:
+             secretKeyRef:
+              name: nslogin
+              key: password
           - name: POD_NAME
             valueFrom:
               fieldRef:
