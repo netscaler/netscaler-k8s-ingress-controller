@@ -1,4 +1,4 @@
-`# Troubleshooting the Citrix ingress controller during runtime
+# Troubleshooting the Citrix ingress controller during runtime
 
 You can debug the Citrix ingress controller using the following methods:
 
