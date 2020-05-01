@@ -31,7 +31,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
     resources: ["rewritepolicies/status", "canarycrds/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
     verbs: ["get", "list", "watch", "create", "delete"]
