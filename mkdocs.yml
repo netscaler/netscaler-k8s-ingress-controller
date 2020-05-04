@@ -20,36 +20,35 @@ extra_css:
 theme:
   name: null
   custom_dir: devdocs-theme
-
+  
   # 404 page
   static_templates:
     - 404.html
-
+  
   # Don't include MkDocs' JavaScript
   include_search_page: false
   search_index_only: true
-
+  
   # Default values, taken from mkdocs_theme.yml
   language: en
   feature:
-    tabs: false
+    - tabs: false
   palette:
     primary: white
     accent: blue
   font: false
-  favicon: /media/favicon.ico
+  favicon: https://citrix.com/favicon.ico
   logo: https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png
-
-# Customization
+  icon: fontawesome
 extra:
   social:
-    - type: youtube
+    - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UCiOupk9QF6jdk3EDKTHDykA
-    - type: github-alt
+    - icon: fontawesome/brands/github-alt
       link: https://github.com/citrix
-    - type: twitter
+    - icon: fontawesome/brands/twitter
       link: https://twitter.com/citrixdeveloper
-    - type: linkedin
+    - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/citrix/
 
 markdown_extensions:
@@ -60,6 +59,10 @@ markdown_extensions:
   - footnotes
   - meta
   - extra
+
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
 
 # Page tree
 nav:
@@ -117,11 +120,14 @@ nav:
     - Configure SSL passthrough using Kubernetes Ingress: certificate-management/ssl-passthrough.md
     - Automated certificate management with cert-manager:
       - Introduction: certificate-management/certificate.md
-      - Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager: certificate-management/acme.md
+      - Deploy HTTPs web applications on K8s with CIC and Let's Encrypt using cert-manager: certificate-management/acme.md
       - Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager: certificate-management/vault.md
+    - Enable Citrix ADC certificate validation: certificate-management/adc-certificate-validation.md
   - Metrics:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
-  - Troubleshooting: troubleshooting.md
+  - Troubleshooting: 
+    - Troubleshooting: troubleshooting/troubleshooting.md
+    - Enable troubleshooting: troubleshooting/troubleshooting-cic.md
   - Upgrade: upgrade.md
   - Use cases:
     - Service mesh lite: deploy/service-mesh-lite.md
@@ -132,12 +138,11 @@ nav:
     - Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md
     - Interoperability with ExternalDNS: how-to/integrate-externaldns.md 
     - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
+    - Use Kubernetes secrets for storing Citrix ADC credentials: how-to/secret-credentials.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
-
     - Horizontal pod autoscaler: how-to/cpx-hpa.md
-  
+
 google_analytics:
   - 'UA-59929653-12'
   - 'auto'
-  
