@@ -141,7 +141,6 @@ nav:
     - Use Kubernetes secrets for storing Citrix ADC credentials: how-to/secret-credentials.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
-    
     - Horizontal pod autoscaler: how-to/cpx-hpa.md
 
 google_analytics:
