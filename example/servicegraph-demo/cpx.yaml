@@ -38,7 +38,7 @@ spec:
           imagePullPolicy: Always
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.46"
           env:
           - name: "EULA"
             value: "yes"
@@ -50,6 +50,10 @@ spec:
             value: "80"
           - name: "NS_DEPLOYMENT_MODE"
             value: "SIDECAR"
+          - name: "NS_USER"
+            value: "nsroot"
+          - name: "NS_PASSWORD"
+            value: "nsroot"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
           - name: POD_NAME
