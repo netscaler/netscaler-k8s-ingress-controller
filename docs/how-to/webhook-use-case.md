@@ -125,20 +125,24 @@ Lets take one example of one policy of validating httpsonly policy  to understan
     kubectl get constrainttemplates.templates.gatekeeper.sh
     
 2. Apply httpsonly ConstraintTemplate
+        
         kubectl apply -f webhook/httpsonly/template.yaml
 3. Apply constraint to enforce httpsonly policy
+        
         kubectl apply -f webhook/httpsonly/constraint.yaml
 4. Verify with sample ingress which violates policy
-       kubectl apply -f webhook/httpsonly/bad-example-ingress.yaml
-   
-        This will throw error 
+       
+        kubectl apply -f webhook/httpsonly/bad-example-ingress.yaml
+
         Error from server ([denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress): error when creating "ingress.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress
 
 5. Now, apply ingress which has required TLS section in ingress
+   
         kubectl apply -f  webhook/httpsonly/good-example-ingress.yaml
         It will be applied succesfully.
         ingress.networking.k8s.io/test-ingress created
 6. Clean up once done all verfication of gatekeeper policies.
+   
         Uninstall all packages and template installed.
         kubectl delete -f webhook/httpsonly/good-example-ingress.yaml
         kubectl delete -f webhook/httpsonly/constraint.yaml
