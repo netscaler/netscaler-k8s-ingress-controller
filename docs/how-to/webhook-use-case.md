@@ -125,25 +125,25 @@ Lets take one example of one policy of validating httpsonly policy  to understan
     kubectl get constrainttemplates.templates.gatekeeper.sh
     
 2. Apply httpsonly ConstraintTemplate
-    kubectl apply -f webhook/httpsonly/template.yaml
+        kubectl apply -f webhook/httpsonly/template.yaml
 3. Apply constraint to enforce httpsonly policy
-   kubectl apply -f webhook/httpsonly/constraint.yaml
+        kubectl apply -f webhook/httpsonly/constraint.yaml
 4. Verify with sample ingress which violates policy
-   kubectl apply -f webhook/httpsonly/bad-example-ingress.yaml
+       kubectl apply -f webhook/httpsonly/bad-example-ingress.yaml
    
-   This will throw error 
-   Error from server ([denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress): error when creating "ingress.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress
+        This will throw error 
+        Error from server ([denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress): error when creating "ingress.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress
 
 5. Now, apply ingress which has required TLS section in ingress
-   kubectl apply -f  webhook/httpsonly/good-example-ingress.yaml
-   It will be applied succesfully.
-   ingress.networking.k8s.io/test-ingress created
+        kubectl apply -f  webhook/httpsonly/good-example-ingress.yaml
+        It will be applied succesfully.
+        ingress.networking.k8s.io/test-ingress created
 6. Clean up once done all verfication of gatekeeper policies.
-   Uninstall all packages and template installed.
-   kubectl delete -f webhook/httpsonly/good-example-ingress.yaml
-   kubectl delete -f webhook/httpsonly/constraint.yaml
-   kubectl delete -f webhook/httpsonly/template.yaml
-   kubectl delete -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+        Uninstall all packages and template installed.
+        kubectl delete -f webhook/httpsonly/good-example-ingress.yaml
+        kubectl delete -f webhook/httpsonly/constraint.yaml
+        kubectl delete -f webhook/httpsonly/template.yaml
+        kubectl delete -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
 
 # Sample Use Cases
 There are multiple use cases listed under webhook directory. Steps will be similar what we have done above:
