@@ -11,7 +11,7 @@ Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats an
 The Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
 
     git clone https://github.com/coreos/kube-prometheus.git
-
+    kubectl create -f kube-prometheus/manifests/setup/
     kubectl create -f kube-prometheus/manifests/
 
 Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-operator), several pods and services are deployed. From the deployed pods, the `prometheus-k8s-xx` pods are for metrics aggregation and timestamping, and the `grafana` pods are for visualization. If you view all the container images running in the cluster, you can see the following output:
@@ -105,7 +105,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
       imagePullPolicy: IfNotPresent
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -188,7 +188,7 @@ spec:
               containerPort: 9443
         # Adding exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
           imagePullPolicy: IfNotPresent
           args:
             - "--target-nsip=192.0.0.2"
@@ -253,7 +253,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
           args:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"

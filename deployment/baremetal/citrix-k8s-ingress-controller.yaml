@@ -14,6 +14,9 @@ rules:
   - apiGroups: [""]
     resources: ["services"]
     verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
     verbs: ["get", "list", "watch"]
@@ -24,10 +27,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits", "listeners", "httproutes"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    resources: ["rewritepolicies/status", "canarycrds/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -79,7 +82,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.46"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
          - name: "NS_IP"

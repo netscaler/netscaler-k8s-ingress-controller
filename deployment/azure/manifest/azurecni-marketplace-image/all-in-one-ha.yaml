@@ -1,0 +1,221 @@
+#Using a basic apache web server as application for illustration
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache
+  labels:
+      name: apache
+spec:
+  selector:
+    matchLabels:
+      app: apache
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: httpd:latest
+        ports:
+        - containerPort: 80
+
+---
+#Expose the apache web server as a Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: apache
+---
+#Cluster role required by CPX
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cpx
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
+    verbs: ["get", "list", "watch"]
+  # services/status is needed to update the loadbalancer IP in service status for integrating
+  # service of type LoadBalancer with external-dns
+  - apiGroups: [""]
+    resources: ["services/status"]
+    verbs: ["patch"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    verbs: ["get", "list", "patch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["vips"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["route.openshift.io"]
+    resources: ["routes"]
+    verbs: ["get", "list", "watch"]
+
+---
+#Cluster role bindings required by CPX
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cpx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cpx
+subjects:
+- kind: ServiceAccount
+  name: cpx
+  namespace: default
+apiVersion: rbac.authorization.k8s.io/v1
+---
+#Service account for CPX
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cpx
+  namespace: default
+---
+#Specify the ingress resource
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: citrix-ingress
+  annotations:
+   kubernetes.io/ingress.class: "citrix-ingress"
+   ingress.citrix.com/insecure-termination: "allow"
+spec:
+  tls:
+  - secretName: cert-key
+  rules:
+  - host: citrix-ingress.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: apache
+          servicePort: 80
+---
+#Deploy a standalone CPX as an ingress device
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpx-ingress
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cpx-ingress
+  template:
+    metadata:
+      name: cpx-ingress
+      labels:
+        app: cpx-ingress
+      annotations:
+    spec:
+      serviceAccountName: cpx
+      containers:
+        - name: cpx-ingress
+          image: "<azure-cpx-instance-url>"
+          securityContext:
+             privileged: true
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "KUBERNETES_TASK_ID"
+            value: ""
+          ports:
+          - name: http
+            containerPort: 80
+          - name: https
+            containerPort: 443
+          - name: nitro-http
+            containerPort: 9080
+          - name: nitro-https
+            containerPort: 9443
+          #This is required for Health check to succeed
+          readinessProbe:
+            tcpSocket:
+              port: 9080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            failureThreshold: 5
+            successThreshold: 1
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /cpx/conf/
+              name: cpx-volume1
+            - mountPath: /cpx/crash/
+              name: cpx-volume2
+        # Add cic as a sidecar
+        - name: cic
+          image: "<azure-cic-image-url>"
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "NS_IP"
+            value: "127.0.0.1"
+          - name: "NS_PROTOCOL"
+            value: "HTTP"
+          - name: "NS_PORT"
+            value: "80"
+          - name: "NS_DEPLOYMENT_MODE"
+            value: "SIDECAR"
+          - name: "NS_ENABLE_MONITORING"
+            value: "YES"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          args:
+            - --ingress-classes
+              citrix-ingress
+          imagePullPolicy: Always
+
+---
+#Expose the CPX as a Load-balancer service
+kind: Service
+apiVersion: v1
+metadata:
+  name: cpx-ingress
+  labels:
+    name: cpx-ingress
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    app: cpx-ingress
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+---

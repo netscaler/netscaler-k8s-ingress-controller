@@ -115,7 +115,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
       imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -131,19 +131,22 @@ spec:
     secret:
       secretName: nslogin
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-vpx-ingress
   labels:
+    app: exporter-vpx-ingress
     service-type: citrix-adc-monitor
 spec:
-  selector:
-    name: exporter-vpx-ingress
+  type: NodePort
   ports:
     - name: exporter-port
       port: 8888
       targetPort: 8888
+  selector:
+    app: exporter-vpx-ingress
+    
 ```
 The IP and port of the VPX device needs to be filled in as the ```--target-nsip``` (Eg. ```--target-nsip=10.0.0.20```). 
 </details>
@@ -177,7 +180,7 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
@@ -211,11 +214,12 @@ spec:
             - name: nitro-http
               containerPort: 9080
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-cpx-ingress
   labels:
+    app: exporter-cpx-ingress
     service-type: citrix-adc-monitor
 spec:
   selector:
@@ -265,7 +269,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
           args:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
@@ -279,11 +283,12 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-cpx-ew
   labels:
+    app: exporter-cpx-ew
     service-type: citrix-adc-monitor
 spec:
   selector:
