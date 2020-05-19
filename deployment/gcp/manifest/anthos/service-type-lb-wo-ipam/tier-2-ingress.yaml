@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: citrix-tier-2-ingress
+  annotations:
+   ingress.citrix.com/insecure-termination: "allow"
+   kubernetes.io/ingress.class: "citrix-tier-2"
+spec:
+  tls:
+  - secretName: anthos-citrix
+  rules:
+  - host: anthos-citrix-ingress.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: apache
+          servicePort: 80
+---
