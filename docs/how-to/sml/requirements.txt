@@ -1,0 +1,2 @@
+oyaml==0.9
+kubernetes==11.0.0

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tea-beverage
+  labels:
+      name: tea-beverage
+spec:
+  selector:
+    matchLabels:
+      name: tea-beverage
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: tea-beverage
+    spec:
+      containers:
+      - name: tea-beverage
+        image: quay.io/citrix-duke/hotdrinks:latest
+        ports:
+        - name: tea-80
+          containerPort: 80
+        - name: tea-443
+          containerPort: 443
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea-beverage
+  annotations:
+    service.citrix.com/secure_backend: '{"443-tcp": "True"}'
+    service.citrix.com/service_type: 'SSL'
+#    service.citrix.com/frontend-tcpprofile: 'nsulfd_default_profile'
+    service.citrix.com/backend-tcpprofile: '{"ws":"ENABLED", "sack" : "enabled"}'
+    service.citrix.com/frontend-tcpprofile: '{"ws":"ENABLED", "sack" : "enabled"}'
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.105.158.194
+  ports:
+  - name: tea-443
+    port: 443
+    targetPort: 443
+  selector:
+    name: tea-beverage

@@ -8,11 +8,11 @@ In a Kubernetes environment, to deploy specific layer 7 policies to handle scena
 
 Requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
 
-Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with Citrix ingress controller to automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
+Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with the Citrix ingress controller to automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
 
 The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Citrix ADCs. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
 
-Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Citrix ADC, see [Rewrite policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html) and [Responder policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html).
+Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, pat sets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Citrix ADC, see [Rewrite policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html) and [Responder policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html).
 
 !!! note "Note"
     The Rewrite and Responder CRD is not supported for OpenShift routes. You can use OpenShift ingress to use Rewrite and Responder CRD.
@@ -35,7 +35,7 @@ For example,
 
 ## Rewrite and Responder CRD attributes
 
-The **CRD** provides attributes for various options required to define the rewrite and responder policies. Also, it provides attributes for dataset, patset, string map, and audit logs to use within the rewrite and responder policies. These CRD attributes correspond to **Citrix ADC** command and attribute respectively.
+The **CRD** provides attributes for various options required to define the rewrite and responder policies. Also, it provides attributes for dataset, pat set, string map, and audit logs to use within the rewrite and responder policies. These CRD attributes correspond to **Citrix ADC** command and attribute respectively.
 
 ### Rewrite policy
 
@@ -104,6 +104,16 @@ The following table lists the **CRD** attributes for dataset that you can use wi
 | Key | Bind policy stringmap | Key |
 | Value | Bind policy stringmap | Value |
 
+### Goto-priority-expression
+
+The following table provides information about the `goto-priority-expression` attribute, which is a CRD attribute for binding a group of multiple consecutive policies to services.
+
+| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |**Supported values**|**Default value**|
+| ----------------- | ---------------------- | ------------------------ |---------------------- |---------------------- |
+| goto-priroty-expression| Bind lb vserver | gotoPriorityExpression|   NEXT and END| End|
+
+For more information on how to use the `goto-priority-expression` attribute, see the example [Modify strings and host name in the requested URL](#Modify-strings-and-hostname-in-the-requested-URL).
+
 ## How to write a policy configuration
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the policy configuration in a`.yaml` file. In the `.yaml` file, use `rewritepolicy` in the `kind` field and based on your requirement add any of the following individual sections in `spec` for policy configuration.
@@ -111,8 +121,8 @@ After you have deployed the CRD provided by Citrix in the Kubernetes cluster, yo
 -  `rewrite-policy` - To define rewrite policy configuration.
 -  `responder-policy` - To define responder policy configuration.
 -  `logpackets` - To enable audit logs.
--  `dataset` - To use dataset for extensive policy configuration.
--  `patset` - To use patset for extensive policy configuration.
+-  `dataset` - To use a data set for extensive policy configuration.
+-  `patset` - To use a pat set for extensive policy configuration.
 -  `stringmaps` - To use string maps for extensive policy configuration.
 
 In these sections, you need to use the [CRD attributes](#crd-attributes) provided for respective policy configuration (rewrite or responder) to define the policy.
@@ -126,6 +136,24 @@ After you deploy the `.yaml` file, the Citrix ingress controller applies the pol
 > -  If the CRD is associated with a [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) then, by default, the policy is applied to the services associated with the namespace. For example, if you have the same service name associated with multiple namespaces, then the policy is applied to the service that belongs to the namespace associated with the CRD.
 >
 > -  If you have defined multiple policies in a single `.yaml` file then the first policy configuration defined in the file takes priority and the subsequent policy configurations is applied as per the sequence. If you have multiple policies defined in different files then the first policy configuration defined in the file that you deployed first takes priority.
+
+> **Guidelines for the usage of Goto-priority-expression**
+
+> - The rewrite and responder policies can be combined as multiple groups using the `NEXT` keyword within the `goto-priority-expression` field.
+
+> - When `goto-priority-expression` field is `NEXT` within the current policy and if the current policy evaluates to `True`, the next policy in the group is executed and the flow moves to the next consecutive policies unless the `goto-priority-expression` field points to `END`.
+
+> - When the current policy evaluates to `FALSE`, the `goto-priority-expression` has no impact, as the policy execution stops at the current policy.
+
+> - The rewrite or responder policy group within the rewrite or responder policies begins with the policy assigned with `goto-priority-expression` as NEXT and includes all the consecutive policies until the `goto-priority-expression` field is assigned to `END`.
+
+> - When you group rewrite or responder policies using `goto-priority-expression`, the service names bound to the policies within the group should be the same.
+
+> - The last policy within the rewrite-policies or responder-policies should always have the `goto-priority-expression` as `END`.
+
+> - If the `goto-priority-expression` field is not specified for a policy, the default value of END is assigned to `goto-priority-expression`.
+
+>**Note:** For more information on how to use the `goto-priority-expression` field, see the example [Modify strings and host name in the requested URL](#Modify-strings-and-hostname-in-the-requested-URL).
 
 Consider a scenario wherein you want to define a policy in Citrix ADC to rewrite all the incoming URLs to `new-url-for-the-application` and send it to the microservices. Create a `.yaml` file called `target-url-rewrite.yaml` and use the appropriate [CRD attributes](#crd-attributes) to define the rewrite policy as follows:
 
@@ -158,26 +186,31 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
 
 After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
 
-On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the Citrix ingress controller using the following command:
+On the master node in the Kubernetes cluster, you can verify the status of created/applied rewrite policy CRD using the following command:
 
-    kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'
+    Kubectl get rewritepolicies.citrix.com targeturlrewrite
+    You can view the status as follows
+    kubectl get rewritepolicies.citrix.com targeturlrewrite 
+    NAME               STATUS    MESSAGE
+    targeturlrewrite   Success   CRD Activated
 
-You can view an entry in the logs as shown in the following image:
+If there are issues while creating or applying the CRD, the same can be debugged using the citrix-k8s-ingress-controller logs.
 
-![CIC confirmation](../media/rewrite-responder-cic-confirm.png)
+    kubectl logs citrixingresscontroller
 
-Also, you can verify if the configuration is applied on the Citrix ADC, do the following:
+Also, you can verify whether the configuration is applied on the Citrix ADC by using the following steps.
 
-1.  Log on to the Citrix ADC command-line.
+1.	Log on to the Citrix ADC command-line.
 
-1.  Use the following command to verify if the configuration is applied to the Citrix ADC:
+2.	Use the following command to verify if the configuration is applied to the Citrix ADC:
 
         show run | grep `lb vserver`
-        add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -coment "uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325"
-        bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http
-        bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http -policyname k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072 -priority 1006 -gotoPriorityExpression END -type REQUEST
+        add lb vserver k8s-citrix_default_80_k8s-citrix-svc_default_80_svc HTTP 0.0.0.0 0 -persistenceType NONE -cltTimeout 180
+        bind lb vserver k8s-citrix_default_80_k8s-citrix-svc_default_80_svc k8s-citrix_default_80_k8s-citrix-svc_default_80_svc
+        bind lb vserver k8s-citrix_default_80_k8s-citrix-svc_default_80_svc -policyName k8s_crd_rewritepolicy_rwpolicy_targeturlrewrite_0_default -priority 100300076 -gotoPriorityExpression END -type REQUEST 
+        
+      You can verify that the policy `k8s_crd_rewritepolicy_rwpolicy_targeturlrewrite_0_default` is bound to the load balancing virtual server.
 
-    You can verify that the policy `k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072` is bound to the load balancing virtual server.
 
 ## Sample policy configurations
 
@@ -343,7 +376,7 @@ Create a YAML file (`add_response_headers.yaml`) with the rewrite policy definit
 
     kubectl create -f add_response_headers.yaml
 
-You can verify the HTTP header added to the response as shown below:
+You can verify the HTTP header added to the response as follows:
 
     $ curl -vvv http://app.cic-citrix.org/citrix-app/
     *   Trying 10.102.33.176...
@@ -403,7 +436,7 @@ Create a YAML file (`add_custom_headers.yaml`) with the rewrite policy definitio
 
     kubectl create -f add_custom_headers.yaml
 
-You can verify the custom HTTP header added to the response as shown below:
+You can verify the custom HTTP header added to the response as follows:
 
     $ curl -vvv http://app.cic-citrix.org/
     * Trying 10.102.33.176...
@@ -632,7 +665,7 @@ Create a YAML file (`http_to_https_redirect.yaml`) with the responder policy def
 
     kubectl create -f http_to_https_redirect.yaml
 
-You can verify if the HTTP request is redirected to HTTPS as shown below:
+You can verify if the HTTP request is redirected to HTTPS as follows:
 
 **Example 1:**
 
@@ -672,6 +705,61 @@ You can verify if the HTTP request is redirected to HTTPS as shown below:
     < Pragma: no-cache
     <
     * Closing connection 0
+
+### Modify strings and host name in the requested URL
+
+This example shows the usage of `goto-priority-expression` attribute. The guidelines for usage of `goto-priority-expression` field can be found at [How to write a policy configuration. This example modifies the URL `http://www.citrite.org/something/simple/citrix` to `http://app.cic-citrix.org/simple/citrix`.
+
+Two rewrite policies are written to modify the URL:
+
+- Rewrite policy 1: This policy is used to modify the host name `www.citrite.org` to `app.cic-citrix.org`.
+- Rewrite Policy 2: This policy is used to modify the url `/something/simple/citrix` to `/simple/citrix`
+
+You can bind the two policies using the `goto-priority-expression` attribute as shown in the following YAML:
+
+```yml
+  apiVersion: citrix.com/v1
+  kind: rewritepolicy
+  metadata:
+    name: hostnameurlrewrite
+  spec:
+    rewrite-policies:
+      - servicenames:
+          - citrix-svc
+        goto-priority-expression: NEXT
+        rewrite-policy:
+          operation: replace_all
+          target: 'http.req.header("host")'
+          modify-expression: '"app.cic-citrix.org"'
+          multiple-occurence-modify: 'text("www.citrite.org")'
+          comment: 'HTTP header rewrite of hostname'
+          direction: REQUEST
+          rewrite-criteria: 'http.req.is_valid.and(HTTP.REQ.HOSTNAME.EQ("www.citrite.org"))'
+      - servicenames:
+          - citrix-svc
+        goto-priority-expression: END
+        rewrite-policy:
+          operation: replace_all
+          target: http.req.url
+          modify-expression: '"/"'
+          multiple-occurence-modify: 'regex(re~((^(\/something\/))|(^\/something$))~)'
+          comment: 'HTTP url replace string'
+          direction: REQUEST
+          rewrite-criteria: 'http.req.is_valid.and(HTTP.REQ.HOSTNAME.EQ("www.citrite.org"))'`
+```
+
+#### Verification
+
+You can verify whether the following curl request `http://www.citrite.org/something/simple/citrix` is modified to `http://app.cic-citrix.org/simple/citrix`.
+
+**Example:** Modifying the requested URL
+
+    curl http://www.citrite.org/something/simple/citrix
+
+Modified host name and URL for the requested URL is present in the image shown as follows:
+
+[Curl output](./media/go-to-priority-exmaple.png)
+
 
 ## Related articles
 
