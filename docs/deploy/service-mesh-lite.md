@@ -163,9 +163,9 @@ This section provides information on the details of inputs you need to provide.
 
 1. Provide one of the following while running the script:
 
-   - Provide the YAML file that contains your application deployments and services. If you are choosing this option, you can directly go to step 2.
+    - Provide the YAML file that contains your application deployments and services. If you are choosing this option, you can directly go to step 2.
 
-   - Provide all service names and the namespace in which they are already running in a Kubernetes cluster. Deployment YAMLs remain the same for running an application in SML architecture, so they can be used as it is. In this case you must provide more inputs as follows:
+    - Provide all service names and the namespace in which they are already running in a Kubernetes cluster. Deployment YAMLs remain the same for running an application in SML architecture, so they can be used as it is. In this case you must provide more inputs as follows:
 
         You can run the applications from a Kubernetes cluster where the provided services are already running or from a client. Depending on the option you need, choose `Yes` or `No`.
   
@@ -262,7 +262,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
 1. Clone the citrix-k8s-ingress-controller repository from GitHub using the following command.
 
-       git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+         git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
 
 2. Go to the repository and change your directory to `sml`
 
