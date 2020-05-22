@@ -84,6 +84,7 @@ nav:
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
+    - Deploy the Citrix ingress controller in Anthos Platform: deploy/deploy-anthos.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
   - Citrix ADC Integrated canary deployment solution: canary/canary.md
@@ -99,6 +100,8 @@ nav:
     - Ingress class: configure/ingress-classes.md
     - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
+    - COE ConfigMap: configure/config-map-coe.md
+    - TCP profile support for services of type LoadBalancer: configure/tcp-profile-type-lb.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
@@ -116,6 +119,7 @@ nav:
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
     - TLS certificates handling in Citrix ingress controller: certificate-management/tls-certificates.md
     - TLS client authentication in Citrix ADC: certificate-management/client-auth-support.md
+    - TLS server authentication in Citrix ADC: certificate-management/server-auth.md
     - Install, link, and update certificates on Citrix ADC using the Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
     - Configure SSL passthrough using Kubernetes Ingress: certificate-management/ssl-passthrough.md
     - Automated certificate management with cert-manager:
@@ -142,6 +146,7 @@ nav:
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
     - Horizontal pod autoscaler: how-to/cpx-hpa.md
+    - Direct serve return: how-to/dsr.md
 
 google_analytics:
   - 'UA-59929653-12'

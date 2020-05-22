@@ -758,8 +758,7 @@ You can verify whether the following curl request `http://www.citrite.org/someth
 
 Modified host name and URL for the requested URL is present in the image shown as follows:
 
-[Curl output](./media/go-to-priority-exmaple.png)
-
+![Curl output](../media/goto-priority-example.png)
 
 ## Related articles
 
