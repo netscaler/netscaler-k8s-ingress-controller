@@ -101,7 +101,7 @@ nav:
     - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
     - COE ConfigMap: configure/config-map-coe.md
-    - TCP profile support for services of type LoadBalancer: configure/tcp-profile-type-lb.md
+    - TCP profile support for services of type LoadBalancer: configure/TCP-profile-type-lb.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
