@@ -9,7 +9,7 @@ The Citrix ingress controller provides the following service annotations for TCP
 
 
 | Service annotation | Description|
-| ---------------- | ------------ | ----- |
+| ---------------- | ------------ |
 | `service.citrix.com/frontend-tcpprofile` | Use this annotation to create the front-end TCP profile (**Client Plane**). |
 | `service.citrix.com/backend-tcpprofile` | Use this annotation to create the back-end TCP profile (**Server Plane**). |
 
