@@ -112,7 +112,7 @@ The following table provides information about the `goto-priority-expression` at
 | ----------------- | ---------------------- | ------------------------ |---------------------- |---------------------- |
 | goto-priroty-expression| Bind lb vserver | gotoPriorityExpression|   NEXT and END| End|
 
-For more information on how to use the `goto-priority-expression` attribute, see the example [Modify strings and host name in the requested URL](#Modify-strings-and-hostname-in-the-requested-URL).
+For more information on how to use the `goto-priority-expression` attribute, see the example [Modify strings and host name in the requested URL](#Modify-strings-and-host-name-in-the-requested-URL)
 
 ## How to write a policy configuration
 
