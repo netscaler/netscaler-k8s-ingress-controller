@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.2"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.3"
       args:
         - "--target-nsip=x.x.x.x"
         - "--port=8888"
