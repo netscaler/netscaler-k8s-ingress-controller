@@ -154,3 +154,5 @@ There are multiple use cases listed under webhook directory. Steps will be simil
 1. Apply template yaml given in each usecase dir
 2. Apply Constraint yaml 
 3. Verify bad/good sample yamls to validate use case.
+
+* It is not limited to example given at webhook directory, you can also use other usecases given at [Gatekeeper library](https://github.com/open-policy-agent/gatekeeper/tree/master/library).
