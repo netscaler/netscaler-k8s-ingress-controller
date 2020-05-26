@@ -6,13 +6,14 @@ The following table lists the TLS use cases with sample annotations that you can
 
 | Use cases | Sample annotations |
 | --------- | ------------------ |
-| [Enable TLSv1.3 protocol](#enable-tlsv13-protocol) | `ingress.citrix.com/frontend-sslprofile: '{"tls13":"enabled", "tls13sessionTicketsPerAuthContext":"1", "dheKeyExchangeWithPsk":"yes"}'`|
-| [HTTP strict transport security (HSTS)](#http-strict-transport-security-hsts) | `ingress.citrix.com/frontend-sslprofile: '{"HSTS":"enabled", "maxage" : "157680000", "IncludeSubdomain":"yes"}` |
-| [OCSP stapling](#ocsp-stapling) | `ingress.citrix.com/frontend-sslprofile: '{"ocspStapling":"ENABLED"}'` |
-| [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"ENABLED", "clientcert" : "Mandatory"}'`|
-| [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionTicket" : "ENABLED", "sessionTicketLifeTime : "300"}'` |
+| [Enable TLSv1.3 protocol](#enable-tlsv13-protocol) | `ingress.citrix.com/frontend-sslprofile: '{"tls13":"enabled", "tls13sessionticketsperauthcontext":"1", "dhekeyexchangewithpsk":"yes"}'`|
+| [HTTP strict transport security (HSTS)](#http-strict-transport-security-hsts) | `ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "maxage" : "157680000", "includesubdomain":"yes"}` |
+| [OCSP stapling](#ocsp-stapling) | `ingress.citrix.com/frontend-sslprofile: '{"ocspstapling":"enabled"}'` |
+| [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"enabled", "clientcert" : "mandatory"}'`|
+| [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionticket" : "enabled", "sessionticketlifetime : "300"}'` |
 | [SSL session reuse](#ssl-session-reuse) | `ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "enabled", "sesstimeout : "120"}'` |
 | [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'` |
+| [Cipher redirect](#using-cipher-rediect) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}], "cipherredirect":"enabled", "cipherurl": "https://redirecturl"}'` |
 
 ## Enable TLS v1.3 protocol
 
@@ -124,3 +125,15 @@ The following is the syntax of the ingress annotation that you can use to bind t
     ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "SECURE", "cipherpriority" :"1"}, {"ciphername": "testgroup", "cipherpriority" :"2"}]}'
 
 The ingress annotation binds the built-in cipher group, `SECURE`, and the user-defined cipher group, `testgroup`, to the SSL profile.
+
+## Using cipher redirect 
+
+During the SSL handshake, the SSL client (usually a web browser) announces the suite of ciphers that it supports, in the configured order of cipher preference. From that list, the SSL server then selects a cipher that matches its own list of configured ciphers.
+
+If the ciphers announced by the client do not match those configured on the SSL server, the SSL handshake fails, and the failure is announced by a cryptic error message displayed in the browser. These messages rarely mention the exact cause of the error.
+
+With cipher redirection, you can configure an SSL virtual server to deliver accurate, meaningful error messages when an SSL handshake fails. When SSL handshake fails, the Citrix ADC appliance redirects the user to a previously configured URL or, if no URL is configured, displays an internally generated error page.
+
+The following is the syntax of the ingress annotation that you can use to bind cipher groups and enable cipher redirect to redirect request to <redirecturl>.
+
+| [Cipher redirect](#using-cipher-rediect) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}], "cipherredirect":"enabled", "cipherurl": "https://redirecturl"}'` |
