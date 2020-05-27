@@ -12,7 +12,7 @@
 This repository contains the Citrix ingress controller built around [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 ##### Participate:
 
-   You can discuss questions/bugs/feature requests for this project on our Slack channel. To request an invitation to participate in the [Citrix ADC Cloud Native Slack channel](citrixadccloudnative.slack.com), provide your email address using the following form:
+   You can discuss questions/bugs/feature requests for this project on our Slack channel. To request an invitation to participate in the [Citrix ADC Cloud Native Slack channel](https://citrixadccloudnative.slack.com), provide your email address using the following form:
    https://podio.com/webforms/22979270/1633242. 
    You can also report issues using the bug reporting template.
 
