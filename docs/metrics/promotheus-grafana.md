@@ -349,7 +349,7 @@ To view the metrics graphically:
 
 1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 
