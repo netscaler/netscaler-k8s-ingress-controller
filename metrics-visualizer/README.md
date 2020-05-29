@@ -6,7 +6,7 @@ This document describes how the [Citrix ADC Metrics Exporter](https://github.com
 
 Launching Promethus-Operator
 ---
-Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
+Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus).
 ```
 git clone https://github.com/coreos/kube-prometheus.git
 kubectl create -f kube-prometheus/manifests/setup/
@@ -194,7 +194,7 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
           imagePullPolicy: Always
           securityContext:
             privileged: true
@@ -257,7 +257,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
           securityContext: 
              privileged: true
           env:
@@ -373,7 +373,7 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_cic_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 
