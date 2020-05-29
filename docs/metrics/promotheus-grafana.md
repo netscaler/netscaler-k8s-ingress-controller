@@ -165,7 +165,7 @@ spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: "us.gcr.io/citrix-217108/citrix-k8s-cpx-ingress:latest"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
@@ -241,7 +241,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "in-docker-reg.eng.citrite.net/cpx-dev/cpx:12.1-48.118"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
           securityContext:
              privileged: true
           env:
@@ -349,7 +349,7 @@ To view the metrics graphically:
 
 1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_grafana_dashboard.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 
