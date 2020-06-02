@@ -69,7 +69,7 @@ You can use the following deployment solutions for deploying Citrix ADC CPX as a
 
 -  Standalone Citrix ADC CPX deployment
 -  High availability Citrix ADC CPX deployment
--  Citrix ADC CPX per node deployment
+
 
 >**Note:**
 >For the ease of deployment, the deployment models in this topic are explained with an all-in-one manifest file that combines the steps explained in the previous topic. You can modify the manifest file to suit your application and configuration.
@@ -86,11 +86,11 @@ Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingres
      
        kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot' 
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
+2. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
 
         kubectl create -f all-in-one.yaml
 
-2. Access the application using the following command.
+3. Access the application using the following command.
 
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
