@@ -1,30 +1,31 @@
 # Securing Ingress
 
-The topic covers the various ways to secure your Ingress using Citrix ADC and the annotations provided by Citrix ingress controller.
+The topic covers the various ways to secure your Ingress using Citrix ADC and the annotations provided by the Citrix ingress controller.
 
-The following table lists the TLS use cases with sample annotations that you can use to secure your Ingress using Ingress Citrix ADC and Citrix ingress controller:
+The following table lists the TLS use cases with sample annotations that you can use to secure your Ingress using the Ingress Citrix ADC and the Citrix ingress controller:
 
 | Use cases | Sample annotations |
 | --------- | ------------------ |
-| [Enable TLSv1.3 protocol](#enable-tlsv13-protocol) | `ingress.citrix.com/frontend-sslprofile: '{"tls13":"enabled", "tls13sessionTicketsPerAuthContext":"1", "dheKeyExchangeWithPsk":"yes"}'`|
-| [HTTP strict transport security (HSTS)](#http-strict-transport-security-hsts) | `ingress.citrix.com/frontend-sslprofile: '{"HSTS":"enabled", "maxage" : "157680000", "IncludeSubdomain":"yes"}` |
-| [OCSP stapling](#ocsp-stapling) | `ingress.citrix.com/frontend-sslprofile: '{"ocspStapling":"ENABLED"}'` |
-| [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"ENABLED", "clientcert" : "Mandatory"}'`|
-| [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionTicket" : "ENABLED", "sessionTicketLifeTime : "300"}'` |
+| [Enable TLSv1.3 protocol](#enable-tlsv13-protocol) | `ingress.citrix.com/frontend-sslprofile: '{"tls13":"enabled", "tls13sessionticketsperauthcontext":"1", "dhekeyexchangewithpsk":"yes"}'`|
+| [HTTP strict transport security (HSTS)](#http-strict-transport-security-hsts) | `ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "maxage" : "157680000", "includesubdomain":"yes"}` |
+| [OCSP stapling](#ocsp-stapling) | `ingress.citrix.com/frontend-sslprofile: '{"ocspstapling":"enabled"}'` |
+| [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"enabled", "clientcert" : "mandatory"}'`|
+| [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionticket" : "enabled", "sessionticketlifetime : "300"}'` |
 | [SSL session reuse](#ssl-session-reuse) | `ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "enabled", "sesstimeout : "120"}'` |
 | [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'` |
+| [Cipher redirect](#using-cipher-rediect) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}], "cipherredirect":"enabled", "cipherurl": "https://redirecturl"}'` |
 
 ## Enable TLS v1.3 protocol
 
-Using the annotations for SSL profiles, you can enable TLS 1.3 protocol support on SSL profile and set the  `tls13SessionTicketsPerAuthContext` and `dheKeyExchangeWithPsk` parameters in the SSL profile for the Ingress Citrix ADC.
+Using the annotations for SSL profiles, you can enable TLS 1.3 protocol support on the SSL profile and set the  `tls13SessionTicketsPerAuthContext` and `dheKeyExchangeWithPsk` parameters in the SSL profile for the Ingress Citrix ADC.
 
 The `tls13SessionTicketsPerAuthContext` parameter enables you to set the number of tickets the Ingress Citrix ADC issues anytime TLS 1.3 is negotiated, ticket-based resumption is enabled, and either a handshake completes or post-handhsake client authentication completes. The value can be increased to enable clients to open multiple parallel connections using a fresh ticket for each connection. The minimum value you can set is 1 and the maximum is 10. By default, the value is set to 1.
 
 >Note: No tickets are sent if resumption is disabled.
 
-The `dheKeyExchangeWithPsk` parameter allows you to specify whether the Ingress Citrix ADC requires a DHE key exchange to occur when a preshared key is accepted during a TLS 1.3 session resumption handshake. A DHE key exchange ensures forward secrecy, even if ticket keys are compromised, at the expense of extra resources required to carry out the **DHE** key exchange.
+The `dheKeyExchangeWithPsk` parameter allows you to specify whether the **Ingress Citrix ADC requires a DHE** key exchange to occur when a preshared key is accepted during a TLS 1.3 session resumption handshake. A DHE key exchange ensures forward secrecy, even if ticket keys are compromised, at the expense of extra resources required to carry out the **DHE** key exchange.
 
-The following is a sample annotation of HTTP profile to enable TLS 1.3 protocol support on SSL profile and set the  `tls13SessionTicketsPerAuthContext` and `dheKeyExchangeWithPsk` parameters in the SSL profile.
+The following is a sample annotation for the HTTP profile to enable TLS 1.3 protocol support on SSL profile and set the  `tls13SessionTicketsPerAuthContext` and `dheKeyExchangeWithPsk` parameters in the SSL profile.
 
     ingress.citrix.com/frontend-sslprofile: '{"tls13":"ENABLED", "tls13sessionTicketsPerAuthContext":"1", "dheKeyExchangeWithPsk":"yes"}'
 
@@ -46,14 +47,14 @@ Where:
 
 The Ingress Citrix ADC can send the revocation status of a server certificate to a client, at the time of the SSL handshake, after validating the certificate status from an OCSP responder. The revocation status of a server certificate is “stapled” to the response the appliance sends to the client as part of the SSL handshake. For more information on Citrix ADC implementation of CRL and OCSP reports, see [OCSP stapling](https://docs.citrix.com/en-us/citrix-adc/12-1/ssl/ssl-11-1-ocsp-stapling-solution.html).
 
-To use the OCSP stapling feature, you can enable it using SSL profile with the following ingress annotation:
+To use the OCSP stapling feature, you can enable it using an SSL profile with the following ingress annotation:
 
     ingress.citrix.com/frontend-sslprofile: '{"ocspStapling":"ENABLED"}'
 
 >**IMPORTANT:**
 >To use OCSP stapling you must add an OCSP responder on the Citrix ADC appliance.
 
-## Set Client Authentication to Mandatory
+## Set Client authentication to mandatory
 
 Using the annotations for SSL profiles, you can enable client authentication, the Ingress Citrix ADC appliance asks for the client certificate during the SSL handshake.
 
@@ -61,23 +62,23 @@ The appliance checks the certificate presented by the client for normal constrai
 
 Here are some use cases:
 
--  Require a valid Client Certificate before website content is displayed. This restricts website content to only authorized machines and users.
+-  Require a valid client certificate before website content is displayed. This restricts website content to only authorized machines and users.
 
--  Request a valid Client Certificate. If a valid Client Certificate is not provided, then prompt the user for multifactor authentication.
+-  Request a valid client certificate. If a valid client certificate is not provided, then prompt the user for multifactor authentication.
 
-Client Authentication can be set to Mandatory, or Optional.
+Client authentication can be set to mandatory, or optional.
 
--  If Mandatory, if the SSL Client does not transmit a valid Client Certificate, then the connection is dropped. Valid means: signed/issued by a specific Certificate Authority, and not expired or revoked.
--  If Optional, then NetScaler requests the client certificate, but proceeds with the SSL transaction even if the client presents an invalid certificate or no certificate. This is useful for authentication scenarios (for example require two-factor authentication if a valid Client Certificate is not provided)
+-  When it is set as mandatory, if the SSL Client does not transmit a valid Client Certificate, then the connection is dropped. Valid means: signed/issued by a specific Certificate Authority, and not expired or revoked.
+-  When it is optional, then the Citrix ADC requests the client certificate, but proceeds with the SSL transaction even if the client presents an invalid certificate or no certificate. This configuration is useful for authentication scenarios (for example require two-factor authentication if a valid Client Certificate is not provided)
 
 Using the annotations for SSL profiles, you can enable client authentication on an SSL virtual server and set client authentication as **Mandatory**.
 
-The following is a sample annotation of SSL profile:
+The following is a sample annotation of the SSL profile:
 
     ingress.citrix.com/frontend-sslprofile: '{"clientauth":"ENABLED", "clientcert" : "Mandatory"}'
 
 >**Note:**
-> Make sure that you bind client-certificate to the SSL virtual server on the Ingress Citrix ADC.
+> Make sure that you bind the client-certificate to the SSL virtual server on the Ingress Citrix ADC.
 
 ## TLS session ticket extension
 
@@ -112,8 +113,8 @@ The built-in cipher groups can be used in Tier-1 and Tier-2 Citrix ADC, and the 
 To use a user-defined cipher group, ensure that the Citrix ADC has a user-defined cipher group. Perform the following:
 
 1.  Create a user-defined cipher group. For example, `testgroup`.
-1.  Bind all the required ciphers to the user-defined cipher group.
-1.  Note down the user-defined cipher group name.
+2.  Bind all the required ciphers to the user-defined cipher group.
+3.  Note down the user-defined cipher group name.
 
 For detailed instructions, see [Configure a user-defined cipher group](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html#configure-a-user-defined-cipher-group-by-using-the-cli).
 
@@ -124,3 +125,15 @@ The following is the syntax of the ingress annotation that you can use to bind t
     ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "SECURE", "cipherpriority" :"1"}, {"ciphername": "testgroup", "cipherpriority" :"2"}]}'
 
 The ingress annotation binds the built-in cipher group, `SECURE`, and the user-defined cipher group, `testgroup`, to the SSL profile.
+
+## Using cipher redirect
+
+During the SSL handshake, the SSL client (usually a web browser) announces the suite of ciphers that it supports, in the configured order of cipher preference. From that list, the SSL server then selects a cipher that matches its own list of configured ciphers.
+
+If the ciphers announced by the client does not match those ciphers configured on the SSL server, the SSL handshake fails. The failure is announced by a cryptic error message displayed in the browser. These messages rarely mention the exact cause of the error.
+
+With cipher redirection, you can configure an SSL virtual server to deliver accurate, meaningful error messages when an SSL handshake fails. When the SSL handshake fails, the Citrix ADC appliance redirects the user to a previously configured URL or, if no URL is configured, displays an internally generated error page.
+
+The following is the syntax of the ingress annotation that you can use to bind cipher groups and enable cipher redirect to redirect the request to `redirecturl`.
+
+| [Cipher redirect](#using-cipher-rediect) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}], "cipherredirect":"enabled", "cipherurl": "https://redirecturl"}'` |
