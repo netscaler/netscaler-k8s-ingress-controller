@@ -37,7 +37,7 @@ class rbac:
         ("rules", [
            {
            "apiGroups": [""],
-           "resources": ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"],
+           "resources": ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces","configmaps"],
            "verbs": ["get", "list", "watch"],
            },
            {
@@ -49,6 +49,11 @@ class rbac:
            "apiGroups": [""],
            "resources": ["services"],
            "verbs": ["get", "list", "watch", "patch"],
+           },
+           {
+           "apiGroups": [""],
+           "resources": ["events"],
+           "verbs": ["create"],
            },
            {
            "apiGroups": ["extensions"],
@@ -67,8 +72,13 @@ class rbac:
            },
            {
            "apiGroups": ["citrix.com"],
-           "resources": ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"],
+           "resources": ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits", "listeners","httproutes"],
            "verbs": ["get", "list", "watch"],
+           },
+           {
+           "apiGroups": ["citrix.com"],
+           "resources": ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status", "listeners/status","httproutes/status"],
+           "verbs": ["get", "list", "patch"],
            },
            {
            "apiGroups": ["citrix.com"],
@@ -137,13 +147,14 @@ class cpxCic:
         self.name = cpxCicInput["name"]
         self.cicContainerName = "cic"
         self.cpxContainerName = "cpx"
-        self.cpxImage = "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.102"
-        self.cicImage = "quay.io/citrix/citrix-k8s-ingress-controller:1.6.1"
+        self.cpxImage = "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
+        self.cicImage = "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
         self.imagePullPolicy = "Always"
         self.readinessProbe = True
         self.serviceAccountName = "citrix"
         self.rbacNeeded = True # Disable this flag if you don't need RBAC
         self.exposeService = True
+        self.cpxSecretRequired = True
         self.externalTrafficPolicy = None # Set this to 'None' so that this flag is not set
         self.serviceType = None
         if "ingressClass" in cpxCicInput.keys():
@@ -155,8 +166,8 @@ class cpxCic:
         '''
 
         basicConfigIn = {
-        "kind": "Deployment",
         "apiVersion": "apps/v1",
+        "kind": "Deployment",
         "metadata": {
             "name": "%s" % (self.name),
         },
@@ -187,6 +198,9 @@ class cpxCic:
             self.serviceType = "ClusterIP"
             self.serviceManifest = self.createCpxService()
 
+        if self.cpxSecretRequired:
+            self.secretManifest = self.createCPXSecret()
+
         # Store the manifests to the Object
         self.manifest = []
         self.skeletonManifest = basicConfigIn
@@ -201,6 +215,9 @@ class cpxCic:
 
         if self.exposeService:
            self.manifest.append(self.serviceManifest)
+
+        if self.cpxSecretRequired:
+            self.manifest.append(self.secretManifest)
 
         return(self.manifest)
 
@@ -255,7 +272,10 @@ class cpxCic:
             {"name": "NS_PORT", "value": "80"},
             {"name": "NS_DEPLOYMENT_MODE", "value": "SIDECAR"},
             {"name": "NS_ENABLE_MONITORING", "value": "YES"},
-            
+            {"name": "NS_USER", "valueFrom": {"secretKeyRef": {"name": self.name, "key":"username"}}},
+            {"name": "NS_PASSWORD", "valueFrom": {"secretKeyRef": {"name": self.name, "key":"password"}}},
+            {"name": "POD_NAME", "valueFrom": {"fieldRef": {"apiVersion": "v1", "fieldPath":"metadata.name"}}},
+            {"name": "POD_NAMESPACE", "valueFrom": {"fieldRef": {"apiVersion": "v1", "fieldPath":"metadata.namespace"}}},
         ],
         "args": [],
         }
@@ -292,6 +312,26 @@ class cpxCic:
 
         self.serviceManifest = basicConfigIn
         return(self.serviceManifest)
+
+    def createCPXSecret(self):
+        '''
+           Function to create secret for CPX credentials
+        '''
+        basicConfigIn = {
+            "apiVersion": "v1",
+            "kind": "Secret",
+            "metadata": {
+                "name": self.name,
+            },
+            "type": "Opaque",
+            "data": {
+                "username": "bnNyb290",
+                "password": "bnNyb290",
+            }
+        }
+
+        self.secretManifest = basicConfigIn
+        return(self.secretManifest)
 
 class ingress:
     '''
