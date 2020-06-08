@@ -15,13 +15,14 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 
     >**Note:** In this example, [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/apache.yaml) is used. You must use the specific YAML file for your application.
 
+1. Create a Kubernetes secret for Citrix ADC CPX as shown in the following example.
+     
+       kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot' 
+
 2. Deploy Citrix ADC CPX as an Ingress device in the cluster using the [standalone_cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/standalone_cpx.yaml) file.
 
         kubectl create -f standalone_cpx.yaml
 
-1. Create a Kubernetes secret for Citrix ADC CPX as shown in the following example. 
-     
-       kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot' 
 
 2. Create the Ingress resource using the [cpx_ingress.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller//blob/master/deployment/aws/manifest/cpx_ingress.yaml) following command.
 
@@ -61,7 +62,7 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 
 6. Access the application using the following command.
 
-        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com
+        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
 ## Deployment models
 
