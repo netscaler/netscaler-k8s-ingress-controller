@@ -79,7 +79,7 @@ You can use the following deployment solutions for deploying Citrix ADC CPX as a
 
 To deploy Citrix ADC CPX as an Ingress device in a standalone deployment model in Amazon EKS, you should use the service type as LoadBalancer. This step would create a load balancer in the AWS cloud.
 
-![AWS_Standalone_CPX](AWS_standalone_cpx.png)
+![AWS_Standalone_CPX](../media/AWS_standalone_cpx.png)
 
 Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingress device.
 
@@ -104,7 +104,7 @@ Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingres
 
 In the standalone deployment of Citrix ADC CPX as the Ingress, if the Ingress device fails there would be a traffic outage for a few seconds. To avoid this traffic disruption, you can deploy two Citrix ADC CPX Ingress devices instead of deploying a single Citrix ADC CPX Ingress device. In such deployments, even if one Citrix ADC CPX fails the other Citrix ADC CPX handles the traffic until the failed Citrix ADC CPX comes up.
 
-![AWS_HA_CPX](AWS_HA_CPX.png)
+![AWS_HA_CPX](../media/AWS_HA_CPX.png)
 
 Perform the following steps to deploy two Citrix ADC CPX devices for high availability.
 
