@@ -100,30 +100,30 @@ Perform the following steps to deploy `HttpsOnly` as a sample policy using Gatek
     
 2. Apply the `httpsonly ` constraint template.
         
-        kubectl apply -f webhook/httpsonly/template.yaml
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/template.yaml
 
 3. Apply a constraint to enforce the `httpsonly` policy.
         
-        kubectl apply -f webhook/httpsonly/constraint.yaml
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/constraint.yaml
 
 4. Deploy a sample Ingress which violates the policy to verify the policy. It should display an error while creating the Ingress.
        
-        kubectl apply -f webhook/httpsonly/bad-example-ingress.yaml
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/bad-example-ingress.yaml
 
         Error from server ([denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress): error when creating "ingress.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [denied by ingress-https-only] Ingress must be https. tls configuration is required for test-ingress
 
 5. Now, deploy an Ingress which has the required TLS section in Ingress.
    
-        # kubectl apply -f  webhook/httpsonly/good-example-ingress.yaml
+        # kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/good-example-ingress.yaml
        
         ingress.networking.k8s.io/test-ingress created
 
 6. Clean up the installation using the following commands once you have finished the verification of Gatekeeper policies.
    
         Uninstall all packages and template installed.
-        kubectl delete -f webhook/httpsonly/good-example-ingress.yaml
-        kubectl delete -f webhook/httpsonly/constraint.yaml
-        kubectl delete -f webhook/httpsonly/template.yaml
+        kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/good-example-ingress.yaml
+        kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/constraint.yaml
+        kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/webhook/httpsonly/template.yaml
         kubectl delete -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
 
 ## More sample use cases
