@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-cic
+  namespace: production
+spec:
+  containers:
+    - name: test-cic
+      image: in-docker-reg.eng.citrite.net/cpx-dev/citrix-k8s-ingress-controller:latest
