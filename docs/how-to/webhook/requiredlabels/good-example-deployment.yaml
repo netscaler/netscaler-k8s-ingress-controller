@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    zone: secure
+    status: dev
+    appid: testpod
+    app: test
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 1
+  template:
+    metadata:
+      name: test
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: test
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
