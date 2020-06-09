@@ -1,0 +1,15 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredAnnotations
+metadata:
+  name: ingress-insecure-termination
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: ["extensions", "networking.k8s.io"]
+        kinds: ["Ingress"]
+  parameters:
+    message: "All ingress objects must have the annotation `ingress.citrix.com/insecure-termination: redirect`"
+    annotations:
+      - key: ingress.citrix.com/insecure-termination
+        allowedRegex: "^redirect$"

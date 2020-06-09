@@ -1,0 +1,16 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: requiredlabels
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod", "Namespace"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+  parameters:
+    labels: 
+      - "zone"
+      - "appid"
+      - "status"
