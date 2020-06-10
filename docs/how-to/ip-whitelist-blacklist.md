@@ -1,36 +1,36 @@
-# Whitelisting or Blacklisting IP addresses
+# Allowlisting or blocklisting IP addresses
 
-**Whitelisting IP addresses** allows you to create a list of trusted IP addresses or IP address ranges from which users can access your domains. It is a security feature that is often used to limit and control access only to trusted users.
+**Allowlisting IP addresses** allows you to create a list of trusted IP addresses or IP address ranges from which users can access your domains. It is a security feature that is often used to limit and control access only to trusted users.
 
-**Blacklisting IP addresses** is a basic access control mechanism. It denies access to the users accessing your domain using the IP addresses that you have blacklisted.
+**Blocklisting IP addresses** is a basic access control mechanism. It denies access to the users accessing your domain using the IP addresses that you have blocklisted.
 
 The [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) provided by Citrix enables you to define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the Ingress Citrix ADC.
 
-Using the rewrite or responder policies you can whitelist or blacklist the IP addresses/CIDR using which users can access your domain.
+Using the rewrite or responder policies you can allowlist or blocklist the IP addresses/CIDR using which users can access your domain.
 
-The following sections cover various ways you can whitelist or blacklist the IP addresses/CIDR using the rewrite or responder policies.
+The following sections cover various ways you can allowlist or blocklist the IP addresses/CIDR using the rewrite or responder policies.
 
-## Whitelist IP addresses
+## Allowlist IP addresses
 
-Using a responder policy, you can whitelist IP addresses and silently drop the requests from the clients using IP addresses different from the whitelisted IP addresses.
+Using a responder policy, you can allowlist IP addresses and silently drop the requests from the clients using IP addresses different from the allowlisted IP addresses.
 
-Create a file named `whitelist-ip.yaml` with the following rewrite policy configuration:
+Create a file named `allowlist-ip.yaml` with the following rewrite policy configuration:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: whitelistip
+  name: allowlistip
 spec:
   responder-policies:
     - servicenames:
         - frontend
       responder-policy:
         drop:
-        respond-criteria: '!client.ip.src.TYPECAST_text_t.equals_any("whitelistip")'
-        comment: 'Whitelist certain IP addresses'
+        respond-criteria: '!client.ip.src.TYPECAST_text_t.equals_any("allowlistip")'
+        comment: 'Allowlist certain IP addresses'
   patset:
-    - name: whitelistip
+    - name: allowlistip
       values:
         - '10.xxx.170.xx'
         - '10.xxx.16.xx'
@@ -42,35 +42,35 @@ You can also provide the IP addresses as a list:
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: whitelistip
+  name: allowlistip
 spec:
   responder-policies:
     - servicenames:
         - frontend
       responder-policy:
         drop:
-        respond-criteria: '!client.ip.src.TYPECAST_text_t.equals_any("whitelistip")'
-        comment: 'Whitelist certain IP addresses'
+        respond-criteria: '!client.ip.src.TYPECAST_text_t.equals_any("allowlistip")'
+        comment: 'Allowlist certain IP addresses'
   patset:
-    - name: whitelistip
+    - name: allowlistip
       values: [ '10.xxx.170.xx', '10.xxx.16.xx' ]
 ```
 
-Then, deploy the YAML file (`whitelist-ip.yaml`) using the following command:
+Then, deploy the YAML file (`allowlist-ip.yaml`) using the following command:
 
-    kubectl create -f whitelist-ip.yaml
+    kubectl create -f allowlist-ip.yaml
 
-## Whitelist IP addresses and send 403 response to the request from clients not in the whitelist
+## Allowlist IP addresses and send 403 response to the request from clients not in the allowlist
 
-Using a responder policy, you can whitelist a list of IP addresses and send `HTTP/1.1 403 Forbidden` response to the requests from the clients using IP addresses different from the whitelisted IP addresses.
+Using a responder policy, you can allowlist a list of IP addresses and send the `HTTP/1.1 403 Forbidden` response to the requests from the clients using IP addresses different from the allowlisted IP addresses.
 
-Create a file named `whitelist-ip-403.yaml` with the following rewrite policy configuration:
+Create a file named `allowlist-ip-403.yaml` with the following rewrite policy configuration:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: whitelistip
+  name: allowlistip
 spec:
   responder-policies:
     - servicenames:
@@ -78,26 +78,26 @@ spec:
       responder-policy:
         respondwith:
           http-payload-string: '"HTTP/1.1 403 Forbidden\r\n\r\n" + "Client: " + CLIENT.IP.SRC + " is not authorized to access URL:" + HTTP.REQ.URL.HTTP_URL_SAFE +"\n"'
-        respond-criteria: '!client.ip.src.TYPECAST_text_t.equals_any("whitelistip")'
-        comment: 'Whitelist a list of IP addresses'
+        respond-criteria: '!client.ip.src.TYPECAST_text_t.equals_any("allowlistip")'
+        comment: 'Allowlist a list of IP addresses'
   patset:
-    - name: whitelistip
+    - name: allowlistip
       values: [ '10.xxx.170.xx',  '10.xxx.16.xx' ]
 ```
 
-Then, deploy the YAML file (`whitelist-ip-403.yaml`) using the following command:
+Then, deploy the YAML file (`allowlist-ip-403.yaml`) using the following command:
 
-    kubectl create -f whitelist-ip-403.yaml
+    kubectl create -f allowlist-ip-403.yaml
 
-## Whitelist a CIDR
+## Allowlist a CIDR
 
-You can whitelist a CIDR using a responder policy. The following is a sample responder policy configuration to whitelist a CIDR:
+You can allowlist a CIDR using a responder policy. The following is a sample responder policy configuration to allowlist a CIDR:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: blacklistips1
+  name: blocklistips1
 spec:
   responder-policies:
     - servicenames:
@@ -106,20 +106,20 @@ spec:
         respondwith:
           http-payload-string: '"HTTP/1.1 403 Forbidden\r\n\r\n" + "Client: " + CLIENT.IP.SRC + " is not authorized to access URL:" + HTTP.REQ.URL.HTTP_URL_SAFE +"\n"'
         respond-criteria: '!client.ip.src.IN_SUBNET(10.xxx.170.xx/24)'
-        comment: 'Whitelist certain IPs'
+        comment: 'Allowlist certain IPs'
 ```
 
-## Blacklist IP addresses
+## Blocklist IP addresses
 
-Using a responder policy, you can blacklist IP addresses and silently drop the requests from the clients using the blacklisted IP addresses.
+Using a responder policy, you can blocklist IP addresses and silently drop the requests from the clients using the blocklisted IP addresses.
 
-Create a file named `blacklist-ip.yaml` with the following responder policy configuration:
+Create a file named `blocklist-ip.yaml` with the following responder policy configuration:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: blacklistips
+  name: blocklistips
 spec:
   responder-policies:
     - servicenames:
@@ -127,29 +127,29 @@ spec:
       responder-policy:
         respondwith:
         drop:
-        respond-criteria: 'client.ip.src.TYPECAST_text_t.equals_any("blacklistips")'
-        comment: 'Blacklist certain IPS'
+        respond-criteria: 'client.ip.src.TYPECAST_text_t.equals_any("blocklistips")'
+        comment: 'Blocklist certain IPS'
 
   patset:
-    - name: blacklistips
+    - name: blocklistips
       values:
         - '10.xxx.170.xx'
         - '10.xxx.16.xx'
 ```
 
-Then, deploy the YAML file (`blacklist-ip.yaml`) using the following command:
+Then, deploy the YAML file (`blocklist-ip.yaml`) using the following command:
 
-    kubectl create -f blacklist-ip.yaml
+    kubectl create -f blocklist-ip.yaml
 
-## Blacklist a CIDR
+## Blocklist a CIDR
 
-You can blacklist a CIDR using a responder policy. The following is a sample responder policy configuration to blacklist a CIDR:
+You can blocklist a CIDR using a responder policy. The following is a sample responder policy configuration to blocklist a CIDR:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: blacklistips1
+  name: blocklistips1
 spec:
   responder-policies:
     - servicenames:
@@ -158,53 +158,53 @@ spec:
         respondwith:
           http-payload-string: '"HTTP/1.1 403 Forbidden\r\n\r\n" + "Client: " + CLIENT.IP.SRC + " is not authorized to access URL:" + HTTP.REQ.URL.HTTP_URL_SAFE +"\n"'
         respond-criteria: 'client.ip.src.IN_SUBNET(10.xxx.170.xx/24)'
-        comment: 'Blacklist certain IPs'
+        comment: 'Blocklist certain IPs'
 ```
 
-## Whitelist a CIDR and blacklist IP addresses
+## Allowlist a CIDR and blocklist IP addresses
 
-You can whitelist a CIDR and also blacklist IP addresses using a responder policy. The following is a sample responder policy configuration:
+You can allowlist a CIDR and also blocklist IP addresses using a responder policy. The following is a sample responder policy configuration:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: whitelistsub
+  name: allowlistsub
 spec:
   responder-policies:
     - servicenames:
         - frontend
       responder-policy:
         drop:
-        respond-criteria: 'client.ip.src.TYPECAST_text_t.equals_any("blacklistips") || !client.ip.src.IN_SUBNET(10.xxx.170.xx/24)'
-        comment: 'Whitelist a subnet and blacklist few IP's'
+        respond-criteria: 'client.ip.src.TYPECAST_text_t.equals_any("blocklistips") || !client.ip.src.IN_SUBNET(10.xxx.170.xx/24)'
+        comment: 'Allowlist a subnet and blocklist few IP's'
 
   patset:
-    - name: blacklistips
+    - name: blocklistips
       values:
         - '10.xxx.170.xx'
 ```
 
-## Blacklist a CIDR and whitelist IP addresses
+## Blocklist a CIDR and allowlist IP addresses
 
-You can blacklist a CIDR and also whitelist IP addresses using a responder policy. The following is a sample responder policy configuration:
+You can blocklist a CIDR and also allowlist IP addresses using a responder policy. The following is a sample responder policy configuration:
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: blacklistips1
+  name: blocklistips1
 spec:
   responder-policies:
     - servicenames:
         - frontend
       responder-policy:
         drop:
-        respond-criteria: 'client.ip.src.IN_SUBNET(10.xxx.170.xx/24) && !client.ip.src.TYPECAST_text_t.equals_any("whitelistips")'
-        comment: 'Blacklist a subnet and whitelist few IP's'
+        respond-criteria: 'client.ip.src.IN_SUBNET(10.xxx.170.xx/24) && !client.ip.src.TYPECAST_text_t.equals_any("allowlistips")'
+        comment: 'Blocklist a subnet and allowlist few IP's'
 
   patset:
-    - name: whitelistips
+    - name: allowlistips
       values:
         - '10.xxx.170.xx'
         - '10.xxx.16.xx'
