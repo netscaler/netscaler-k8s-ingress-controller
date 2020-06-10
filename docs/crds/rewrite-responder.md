@@ -222,7 +222,7 @@ Also, you can verify whether the configuration is applied on the Citrix ADC by u
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: blacklisturls
+  name: blocklisturls
 spec:
   responder-policies:
     - servicenames:
@@ -230,12 +230,12 @@ spec:
       responder-policy:
         respondwith:
           http-payload-string: '"HTTP/1.1 401 Access denied"'
-        respond-criteria: 'http.req.url.equals_any("blacklistUrls")'
-        comment: 'Blacklist certain Urls'
+        respond-criteria: 'http.req.url.equals_any("blocklistUrls")'
+        comment: 'Blocklist certain Urls'
 
 
   patset:
-    - name: blacklistUrls
+    - name: blocklistUrls
       values:
         - '/app1'
         - '/app2'
@@ -246,13 +246,13 @@ In this example, if Citrix ADC receives any URL that matches the `/app1`, `/app2
 
 ### Policy with audit logs enabled
 
-**black-list-urls-audit-log.yaml:**
+**block-list-urls-audit-log.yaml:**
 
 ```yml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
-  name: blacklisturls
+  name: blocklisturls
 spec:
   responder-policies:
     - servicenames:
@@ -263,12 +263,12 @@ spec:
       responder-policy:
         respondwith:
           http-payload-string: '"HTTP/1.1 401 Access denied"'
-        respond-criteria: 'http.req.url.equals_any("blacklistUrls")'
-        comment: 'Blacklist certain Urls'
+        respond-criteria: 'http.req.url.equals_any("blocklistUrls")'
+        comment: 'Blocklist certain Urls'
 
 
   patset:
-    - name: blacklistUrls
+    - name: blocklistUrls
       values:
         - '/app1'
         - '/app2'
