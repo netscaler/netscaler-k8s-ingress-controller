@@ -37,7 +37,7 @@ Gatekeeper introduces the following functionalities
 
 - An extensible, parameterized policy library
 - Native Kubernetes CRDs for instantiating the policy library (constraints)
-- Native Kubernetes CRDs for extending the policy library (constraint templates
+- Native Kubernetes CRDs for extending the policy library (constraint templates)
 - Audit functionality
 
 ## Writing and deploying an admission controller webhook
@@ -134,3 +134,5 @@ The steps are similar to what is specified in the example and can be summarized 
 1. Apply the template YAML file given in each use case directory.
 2. Apply the constraint YAML file.
 3. Verify by applying bad or good sample YAML files to validate the use case.
+
+For further use cases, see the [Gatekeeper library](https://github.com/open-policy-agent/gatekeeper/tree/master/library).
