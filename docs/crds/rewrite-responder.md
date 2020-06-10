@@ -216,7 +216,7 @@ Also, you can verify whether the configuration is applied on the Citrix ADC by u
 
 ### Responder policy configuration
 
-**black-list-urls.yaml:**
+**block-list-urls.yaml:**
 
 ```YAML
 apiVersion: citrix.com/v1
