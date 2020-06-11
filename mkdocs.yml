@@ -139,7 +139,7 @@ nav:
     - TCP use cases: how-to/tcp-use-cases.md
     - HTTP use cases: how-to/http-use-cases.md
     - Session affinity: how-to/session-affinity.md
-    - Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md
+    - Allowlisting or blocklisting IP addresses: how-to/ip-whitelist-blacklist.md
     - Interoperability with ExternalDNS: how-to/integrate-externaldns.md 
     - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
     - Use Kubernetes secrets for storing Citrix ADC credentials: how-to/secret-credentials.md
@@ -147,6 +147,7 @@ nav:
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
     - Horizontal pod autoscaler: how-to/cpx-hpa.md
     - Direct server return: how-to/dsr.md
+    - Admission controller webhook: how-to/webhook-use-case.md
 
 google_analytics:
   - 'UA-59929653-12'
