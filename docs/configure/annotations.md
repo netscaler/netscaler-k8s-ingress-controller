@@ -1,6 +1,8 @@
 # Annotations
 
-The following are the annotations supported by Citrix:
+## Ingress annotations
+
+The following are the Ingress annotations supported by Citrix:
 
 |**Annotations**|**Possible value**|**Description**|**Default**|
 |---------------|------------------|---------------|-----------|
@@ -15,7 +17,7 @@ The following are the annotations supported by Citrix:
 | ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Citrix ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Citrix ingress controller to consider any path string as a prefix expression. | `prefix` |
 | ingress.citrix.com/deployment | `dsr` | Use this annotation to create Direct Server Return (DSR) configuration on Citrix ADC. For example, the `ingress.citrix.com/deployment: "dsr"` annotation creates DSR configuration on the Citrix ADC. |
 
-## Smart annotations
+## Smart annotations for Ingress
 
 Smart annotation is an option provided by the Citrix ingress controller to efficiently enable Citrix ADC features using the Citrix ADC entity name. The Citrix ingress controller converts the Ingress in Kubernetes to a set of Citrix ADC objects. You can efficiently control these objects using smart annotations.
 
@@ -24,7 +26,7 @@ Smart annotation is an option provided by the Citrix ingress controller to effic
 
 Smart annotation takes JSON format as input. The key and value that you pass in the JSON format must match the Citrix ADC NITRO format. For more information on the Citrix ADC NITRO API, see [Citrix ADC 12.1 REST APIs - NITRO Documentation](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/latest/).
 
-For example, if you want to enable `SRCIPDESTIPHASH` based lb method, you must use the corresponding NITRO key and value format `lbmethod`, `SRCIPDESTIPHASH` respectively.
+For example, if you want to enable the `SRCIPDESTIPHASH` based lb method, you must use the corresponding NITRO key and value format `lbmethod`, `SRCIPDESTIPHASH` respectively.
 
 The following table details the smart annotations provided by the Citrix ingress controller:
 
@@ -67,6 +69,26 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 | `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
+
+## Service annotations
+
+The following are the service annotations supported by Citrix.
+
+**Note:**
+In service annotations, `index` is the ordered index of the ports in a service specification file. For example, if there are two ports in the service specification, then the index for the first port is zero and the second one is one.
+
+|**Annotations**|**Description**|**Example**|
+|---------------|---------------|-----------|
+|`service.citrix.com/service-type-<index>`|Use this annotation to specify the service type for the Citrix ADC entities created. The acceptable values are `TCP`, `HTTP`, `SSL`,`UDP`,`ANY`, and `SSL_TCP`. | service.citrix.com/service-type-0: ‘SSL’|
+|`service.citrix.com/lbmethod-<index>`| Use this annotation to specify the method for load balancing. The accepted values are: `ROUNDROBIN`, `LEASTCONNECTION`, and `LEASTRESPONSETIME`.| service.citrix.com/lbmethod-0: ‘LEASTCONNECTION’|
+|`service.citrix.com/persistence-<index>`| Use this annotation to specify the persistence type. The accepted values are: `NONE`, `COOKIEINSERT`, `SOURCEIP`, `SRCIPDESTIP`, and `DESTIP`.| service.citrix.com/persistence-0: ‘SOURCEIP’|
+|`service.citrix.com/ssl-certificate-data-<index>`| Use this annotation to specify the server certificate value in the PEM format.|  service.citrix.com/ssl-certificate-data-0: `|` <`certificate`>|
+| `service.citrix.com/ssl-key-data-<index>`| Use this annotation to specify the server key value in the PEM format.  | service.citrix.com/ssl-key-data-0: `|` <`key`>|
+| `service.citrix.com/ssl-ca-certificate-data-<index>` | Use this annotation to specify the server CA certificate value to verify the client certificate in PEM format.| service.citrix.com/ssl-ca-certificate-data-0: `|`<`certificate`> |
+|`service.citrix.com/ssl-backend-ca-certificate-data-<index>`| Use this annotation to specify the CA certificate value to verify the server certificate of the back-end in PEM format.| service.citrix.com/ssl-backend-ca-certificate-data-0: `|`<`certificate`> |
+| `service.citrix.com/ssl-termination-<index>` | Use this annotation to specify the SSL termination. The accepted values are `EDGE` and `REENCRYPT`.  | service.citrix.com/ssl-termination-0: 'EDGE' |
+| `service.citrix.com/frontend-ip` | Use this annotation to pass the VIP for services of type `LoadBalancer`.|service.citrix.com/frontend-ip: "192.168.1.1" |
+| `service.citrix.com/ipam-range` | Use this annotation to select a particular IP address range from a set of ranges specified to the Citrix IPAM controller. This annotation is used for services of type LoadBalancer|  service.citrix.com/ipam-range: "Dev"|
 
 ## Smart annotations for services
 
