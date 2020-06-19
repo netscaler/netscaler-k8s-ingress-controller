@@ -20,7 +20,7 @@ You must perform the following prerequisites:
 
     You can download a release from the [releases page](https://github.com/citrix/terraform-provider-citrixadc/releases) and untar the binary into `~/.terraform.d/plugins/`.
 
-Perform the following steps for configuring Citrix ADC for the OpenShift control plane using Terraform.
+### Perform the following steps for configuring Citrix ADC for the OpenShift control plane using Terraform.
 
 1. Clone the `citrix-k8s-ingress-controller` repository from GitHub using the following command.
 
@@ -60,7 +60,9 @@ Perform the following steps for configuring Citrix ADC for the OpenShift control
 
         terraform apply -var citrix_adc_ip="<citrix-adc-ip>" -var citrix_adc_username="<citrix-adc-username>" -var citrix_adc_password='<citrix-adc-password>' -var lb_ip_address="<vip-of-citrix-adc>" -var 'api_backend_addresses=["1.1.1.1","1.1.1.2","1.1.1.3"]' -var 'ingress_backend_addresses=["2.2.2.1","2.2.2.2","2.2.2.3"]' -auto-approve
 
-5. (Optional) Remove the Citrix ADC configuration using the `terraform destroy` command.
+## Unconfiguring Citrix ADC (Optional)
+
+If the Citrix ADC configuration needs to be removed for some reason, you can use the `terraform destroy` command.
 
 
         terraform destroy -var citrix_adc_ip="<citrix-adc-ip>" -var citrix_adc_username="<citrix-adc-username>" -var citrix_adc_password='<citrix-adc-password>' -var lb_ip_address="<vip-of-citrix-adc>" -var 'api_backend_addresses=["1.1.1.1","1.1.1.2","1.1.1.3"]' -var 'ingress_backend_addresses=["2.2.2.1","2.2.2.2","2.2.2.3"]' -auto-approve
