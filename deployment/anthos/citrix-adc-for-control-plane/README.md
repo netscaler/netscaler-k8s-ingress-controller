@@ -20,7 +20,7 @@ You must perform the following prerequisites:
 
     You can download a release from the [releases page](https://github.com/citrix/terraform-provider-citrixadc/releases) and untar the binary into `~/.terraform.d/plugins/`.
 
-Perform the following steps for configuring Citrix ADC for the Anthos control plane using Terraform.
+### Perform the following steps for configuring Citrix ADC for the Anthos control plane using Terraform.
 
 1. Clone the `citrix-k8s-ingress-controller` repository from GitHub using the following command.
 
@@ -99,7 +99,10 @@ Perform the following steps for configuring Citrix ADC for the Anthos control pl
 
         terraform apply -auto-approve
 
-5. (Optional) Remove the Citrix ADC configuration using the `terraform destroy` command.
+## Unconfiguring Citrix ADC (Optional)
 
-        terraform destroy -auto-approve
+If the Citrix ADC configuration needs to be removed for some reason, you can use the `terraform destroy` command.
+
+
+    terraform destroy -auto-approve
 
