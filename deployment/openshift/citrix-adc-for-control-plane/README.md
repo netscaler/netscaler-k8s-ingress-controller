@@ -48,17 +48,11 @@ Perform the following steps for configuring Citrix ADC for the OpenShift control
 
    | Variable | Description |
    |-------------------------------------|--------------------------------|
-
    | `citrix_adc_ip`  | Management IP address of the Citrix ADC |
-   
    | `citrix_adc_username` | User name of the Citrix ADC |
-
    | `citrix_adc_password` | Password of the Citrix ADC |
-
    | `lb_ip_address`      | VIP for the Citrix ADC - provided in    the installer configuration file |
-   
    | `api_backend_addresses` | Kubernetes control plane node IP addresses|
-
    | `ingress_backend_addresses` | Kubernetes compute node IP addresses |
 
 4. Apply the changes using the `terraform apply` command.
