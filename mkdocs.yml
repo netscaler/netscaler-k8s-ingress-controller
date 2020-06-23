@@ -23,6 +23,7 @@ copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved.
 
 extra_css:
   - 'assets/stylesheets/extra.css'
+  - 'styles.css'
 
 # Configuration
 theme:
@@ -62,10 +63,7 @@ extra:
 
 markdown_extensions:
   - admonition
-  - pymdownx.superfences:
-      preserve_tabs: true
-  - pymdownx.highlight
-  - pymdownx.inlinehilite
+  - codehilite
   - toc:
       permalink: true
 
