@@ -24,7 +24,7 @@ copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved.
 extra_css:
   - 'assets/stylesheets/extra.css'
   - https://use.fontawesome.com/releases/v5.12.1/css/all.css
-  - https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css
+
 
 # Configuration
 theme:
