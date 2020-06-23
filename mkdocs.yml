@@ -62,8 +62,9 @@ extra:
 
 markdown_extensions:
   - admonition
-  - codehilite:
-      linenums: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
   - toc:
       permalink: true
 
