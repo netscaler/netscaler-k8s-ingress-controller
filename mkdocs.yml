@@ -62,7 +62,8 @@ extra:
 
 markdown_extensions:
   - admonition
-  - codehilite
+  - codehilite:
+      guess_lang: true
   - toc:
       permalink: true
 
