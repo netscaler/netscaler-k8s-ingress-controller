@@ -23,6 +23,8 @@ copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved.
 
 extra_css:
   - 'assets/stylesheets/extra.css'
+  - https://use.fontawesome.com/releases/v5.12.1/css/all.css
+
 
 # Configuration
 theme:
@@ -62,8 +64,7 @@ extra:
 
 markdown_extensions:
   - admonition
-  - codehilite:
-      guess_lang: true
+  - codehilite
   - toc:
       permalink: true
 
