@@ -131,8 +131,7 @@ You need to create a Role and bind the role to the service account for the Citri
 
 The following example shows a sample YAML file which defines a Role and RoleBinding for deploying a Citrix ingress controller for a specific namespace.
 
-```yml
-
+```yaml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -174,7 +173,6 @@ subjects:
   namespace: default
 
 ---
-
 ```
 
 ### Restrictions
