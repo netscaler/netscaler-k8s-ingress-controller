@@ -2,42 +2,44 @@
 
 An Ingress solution (either hardware or virtualized or containerized) typically performs L7 proxy functions for north-south (N-S) traffic. The Service Mesh lite architecture uses the same Ingress solution to manage east-west traffic as well.
 
-In a standard Kubernetes deployment, east-west (E-W) traffic traverses the built-in KubeProxy deployed in each node. KubeProxy being a L4 proxy can only do TCP/UDP based load balancing without the benefits of L7 proxy.
+In a standard Kubernetes deployment, east-west (E-W) traffic traverses the built-in kube-proxy deployed in each node. Kube-proxy being an L4 proxy can only perform TCP/UDP based load balancing and cannot provide the benefits provided by an L7 proxy.
 
-Citrix ADC (MPX, VPX, SDX, or CPX) can provide such benefits for E-W traffic such as:
+Citrix ADC (MPX, VPX, or CPX) can provide the benefits of L7 proxy for E-W traffic such as:
 
--  Mutual TLS, SSL offload
--  Content based routing, Allow/Block traffic based on HTTP, HTTPS header parameters
+-  Mutual TLS and SSL offload
+-  Content based routing, allow/block traffic based on HTTP, HTTPS header parameters
 -  Advanced load balancing algorithms (least connections, least response time)
--  Observability of east-west traffic through measuring golden signals (errors, latencies, saturation, traffic volume). Citrix ADM’s Service Graph is an observability solution to monitor and debug microservices.
+-  Observability of east-west traffic through measuring golden signals (errors, latencies, saturation, traffic volume). Citrix ADM Service Graph is an observability solution to monitor and debug microservices.
 
 A Service Mesh architecture (like Istio or LinkerD) can be complex to manage. Service Mesh lite architecture is much simpler to get started to achieve the same requirements.
 
-Let’s start by looking at how KubeProxy is configured to manage east-west traffic.
+To configure east-west communication with Citrix ADC CPX in a Service mesh lite architecture, you need to first understand how the kube-proxy is configured to manage east-west traffic.
 
-## East-west communication with KubeProxy
+## East-west communication with kube-proxy
 
 When you create a Kubernetes deployment for a microservice, Kubernetes deploys a set of pods based on the replica count. To access those pods, you create a Kubernetes service which provides an abstraction to access those pods. The abstraction is provided by assigning a Cluster IP address to the service.
 
-Kubernetes DNS gets populated with an address record that maps the service name with the Cluster IP. So, when an application lets say `tea` wants to access a microservice (let’s say) `coffee` then DNS returns the Cluster IP of `coffee` service to `tea` application. The `Tea` application initiates a connection which is then intercepted by KubeProxy to load balance it to a set of `coffee` pods.
+Kubernetes DNS gets populated with an address record that maps the service name with the Cluster IP address. So, when an application say `tea` wants to access a microservice named `coffee` then DNS returns the Cluster IP address of the `coffee` service to the `tea` application. The `tea` application initiates a connection which is then intercepted by kube-proxy to load balance it to a set of `coffee` pods.
 
-![KubeProxy](../media/coffee-service.png)
+![Kube-proxy](../media/coffee-service.png)
 
 ## East-west communication with Citrix ADC CPX in Service Mesh Lite architecture
 
-The goal is to insert the Citrix ADC CPX in the east-west path and use Ingress rules to control this traffic. The steps are:
+The goal is to insert the Citrix ADC CPX in the east-west path and use the Ingress rules to control this traffic. 
+
+Perform the following steps to configure east-west communication with Citrix ADC CPX.
 
 ### Step 1: Modify the coffee service definition to point to Citrix ADC CPX
 
-For Citrix ADC CPX to manage east-west traffic, the FQDN of the microservice (for example, `coffee` as mentioned above) should point to Citrix ADC CPX IP address instead of the Cluster IP of the target microservice (`coffee`). (This Citrix ADC CPX deployment can be the same as the Ingress Citrix ADC CPX device.) After this modification, when a pod in the Kubernetes cluster resolves the FQDN for the coffee service, the IP address of the Citrix ADC CPX is returned.
+For Citrix ADC CPX to manage east-west traffic, the FQDN of the microservice (for example, `coffee`) should point to the Citrix ADC CPX IP address instead of the Cluster IP of the target microservice (`coffee`). (This Citrix ADC CPX deployment can be the same as the Ingress Citrix ADC CPX device.) After this modification, when a pod in the Kubernetes cluster resolves the FQDN for the coffee service, the IP address of the Citrix ADC CPX is returned.
 
 ![Modify coffee service](../media/coffee-svs-cpx.png)
 
-## Step 2: Create a headless service “`coffee-headless`” for coffee microservice pods
+### Step 2: Create a headless service named  “`coffee-headless`” for coffee microservice pods
 
-Since we have modified `coffee` service to point to Citrix ADC CPX, we need to create one more service that represents coffee microservice deployment.
+Since you have modified the `coffee` service to point to Citrix ADC CPX, you need to create one more service that represents coffee microservice deployment.
 
-A sample headless service resource is given below.
+A sample headless service resource is given as follows:
 
 ```yml
 apiVersion: v1
@@ -55,29 +57,29 @@ spec:
     name: coffee-deployment
 ```
 
-### Step 3: Create an ingress resource with rules for "`coffee-headless`" service
+### Step 3: Create an Ingress resource with rules for "`coffee-headless`" service
 
-With the above changes, we are now ready to create an ingress object that configures the Citrix ADC CPX to control the east-west traffic to the coffee microservice pods.
+With the changes in the previous steps, you are now ready to create an Ingress object that configures the Citrix ADC CPX to control the east-west traffic to the coffee microservice pods.
 
-A sample ingress resource is given below.
+A sample Ingress resource is given as follows:
 
 ![Sample](../media/coffee-headless.png)
 
-Using the usual Ingress load balancing methodology with above changes, Citrix ADC CPX can now load balance east-west traffic. The following diagrams show how Citrix ADC CPX Service Mesh Lite architecture provides L7 proxying for east-west communication between `tea` and `coffee` microservices using Ingress rules:
+Using the usual Ingress load balancing methodology with these changes, Citrix ADC CPX can now load balance the east-west traffic. The following diagrams show how the Citrix ADC CPX Service Mesh Lite architecture provides L7 proxying for east-west communication between `tea` and `coffee` microservices using the Ingress rules:
 
 ![Sample](../media/coffee-micro-summary.png)
 
-## East-west communication with Citrix ADC MPX or VPX in Service Mesh Lite architecture
+## East-west communication with Citrix ADC MPX or VPX in Service Mesh lite architecture
 
-Citrix ADC MPX or VPX acting as an ingress can also load balance east-west microservice communication in a similar way as mentioned above with slight modifications. The below procedure shows how to achieve the same.
+Citrix ADC MPX or VPX acting as an Ingress can also load balance east-west microservice communication in a similar way as mentioned in the previous section with slight modifications. The following procedure shows how to achieve the same.
 
-### Step 1: Create external service resolving the coffee host name to Citrix ADC MPX/VPX IP address
+### Step 1: Create an external service resolving the coffee host name to Citrix ADC MPX/VPX IP address
 
 There are two ways to do it. You can add an external service mapping a host name or by using an IP address.
 
 #### Mapping by a host name (CNAME)
 
--  Create a domain name for ingress endpoint IP(Content Switching virtual server IP address) in Citrix ADC MPXor VPX lets say `myadc–instance1.us-east-1.mydomain.com` and update it in your DNS server.
+-  Create a domain name for the Ingress endpoint IP address(Content Switching virtual server IP address) in Citrix ADC MPX or VPX (for example, `myadc–instance1.us-east-1.mydomain.com`) and update it in your DNS server.
 -  Create a Kubernetes service for `coffee` with `externalName` as `myadc–instance1.us-east-1.mydomain.com`.
 -  Now, when any pod looks up for the `coffee` microservice a `CNAME`(`myadc–instance1.us-east-1.mydomain.com`) is returned.
 
@@ -93,7 +95,7 @@ externalName: myadc–instance1.us-east-1.mydomain.com
 
 #### Mapping a host name to an IP address
 
-When you want your application to use the host name `coffee` that will redirect to virtual IP address hosted in Citrix ADC MPX or VPX, you can create the following.
+When you want your application to use the host name `coffee` that will redirect to the virtual IP address hosted in Citrix ADC MPX or VPX, you can create the following.
 
 ```yml
 ---
@@ -125,19 +127,19 @@ subsets:
 
 ### Step 2: Create a headless service “`coffee-headless`” for the "`coffee`" microservice pods
 
-Since we have modified coffee service to point to Citrix ADC MPX, we need to create one more service that represents coffee microservice deployment.
+Since you have modified the coffee service to point to Citrix ADC MPX, you need to create one more service that represents coffee microservice deployment.
 
-### Step 3: Create an ingress resource with rules for “`coffee-headless`” service having the "`ingress.citrix.com/frontend-ip`" annotation
+### Step 3: Create an Ingress resource with rules for “`coffee-headless`” service having the "`ingress.citrix.com/frontend-ip`" annotation
   
-Create an ingress resource using `ingress.citrix.com/frontend-ip` annotation where the value matches the ingress endpoint IP address in Citrix ADC MPX or VPX.
+Create an Ingress resource using the `ingress.citrix.com/frontend-ip` annotation where the value matches the Ingress endpoint IP address in Citrix ADC MPX or VPX.
 
-With the above changes we are now ready to create an ingress object that configures the Citrix ADC MPX or VPX to control the east-west traffic to the coffee microservice pods.
+Now, you can create an Ingress object that configures the Citrix ADC MPX or VPX to control the east-west traffic to the coffee microservice pods.
 
-A sample ingress resource is given below.
+A sample ingress resource is given as follows.
 
 ![Sample](../media/coffee-headless-ingress.png)
 
-Using the usual ingress load balancing methodology with above changes Citrix ADC MPX can now load balance east-west traffic. The following diagram shows the Citrix ADC MPX or VPX configured as N-S and E-W proxy using ingress rules.
+Using the usual ingress load balancing methodology with these changes Citrix ADC MPX can now load balance east-west traffic. The following diagram shows a Citrix ADC MPX or VPX configured as the N-S and E-W proxy using the Ingress rules.
 
 ![Sample](../media/image006.png)
 
@@ -155,11 +157,16 @@ This topic provides information on how to generate all the necessary YAMLs for S
 
 **Prerequisites**
 
-You need to provide a few inputs which are explained in the following section while running the script for your microservice applications.
+- Ensure that pip3 is installed.
+- Install the required Python libraries using the following command:
+    
+      pip3 install -r https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/sml/requirements.txt
+
+- You need to provide some inputs which are explained in the following section while running the script for your microservice applications.
 
 ### Information on required inputs
 
-This section provides information on the details of inputs you need to provide.
+This section provides information on the inputs you need to provide.
 
 1. Provide one of the following while running the script:
 
@@ -171,7 +178,7 @@ This section provides information on the details of inputs you need to provide.
   
             Do you want to connect to a Remote Kubernetes Cluster? (Y/N):
         
-        If you are running script from a Kubernetes cluster where the services that you want the SML yamls for are already running then choose which `Kubeconfig` file to use.
+        If you are running the script from a Kubernetes cluster where the services that you want the SML YAML files for are already running then choose which `Kubeconfig` file to use.
 
 
         - Choose `Y` if you want to use the default `kubeconfig` file of the Kubernetes cluster.
@@ -187,7 +194,7 @@ This section provides information on the details of inputs you need to provide.
     
         If you want to run the application from a client, the remote Kubernetes cluster can be accessed either using a bearer token or the `Kubeconfig` file.
       
-        - If the remote cluster is accessed using bearer token, provide the following inputs.
+        - If the remote cluster is accessed using the bearer token, provide the following inputs.
     
         
           1. Choose `Y` if you are using a bearer token to access the remote Kubernetes Cluster:
@@ -264,7 +271,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
          git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
 
-2. Go to the repository and change your directory to `sml`
+2. Go to the repository and change your directory to `sml`.
 
          cd docs/how-to/sml
 
@@ -296,7 +303,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
     A YAML named `smlite-all-in-one.yaml`  gets created with all the YAML files of your application for Service Mesh lite architecture.
 
-    **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, `smlite-all-in-one.yaml` file which gets generated at the end of the script execution will not have deployment YAMLs of application in it. In that case, you must deploy the deployment YAMLs which are there in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
+    **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, the `smlite-all-in-one.yaml`  file will not contain the deployment YAML files of the application. In that case, you must deploy the deployment YAML files in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
 
 4. Deploy the ingress YAML file to expose Citrix ADC CPX (the Citrix ADC CPX handling front-end microservice) service to tier-1 Citrix ADC VPX or MPX and the [Citrix Ingress Controller](https://github.com/citrix/citrix-k8s-ingress-controller) to access your application from outside.
 
