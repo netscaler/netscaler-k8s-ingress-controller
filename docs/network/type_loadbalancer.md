@@ -132,67 +132,66 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
 
 3. Create a file named `citrix-ipam-controller.yaml` with the following configuration:
 
-        ---
-        apiVersion: v1
-        kind: ServiceAccount
-        metadata:
-          name: citrix-ipam-controller
-          namespace: kube-system
-        ---
-        kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1
-        metadata:
-          name: citrix-ipam-controller
-        rules:
-         - apiGroups:
-           - citrix.com
-           resources:
-           - vips
-           verbs:
-           - '*'
-        - apiGroups:
-          - apiextensions.k8s.io
-          resources:
-          - customresourcedefinitions
-          verbs:
-          - '*'
-        ---
-        kind: ClusterRoleBinding
-        apiVersion: rbac.authorization.k8s.io/v1
-        metadata:
-          name: citrix-ipam-controller
-        subjects:
-        - kind: ServiceAccount
-          name: citrix-ipam-controller
-          namespace: kube-system
-        roleRef:
-          kind: ClusterRole
-          apiGroup: rbac.authorization.k8s.io
-          name: citrix-ipam-controller
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: citrix-ipam-controller
+rules:
+  - apiGroups: ["citrix.com"]
+    resources: ["vips"]
+    verbs: ["*"]
+  # services/status is needed to update the loadbalancer IP in service status for integrating
+  # service of type LoadBalancer with external-dns
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["*"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: citrix-ipam-controller
+  namespace: default
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: citrix-ipam-controller
+subjects:
+- kind: ServiceAccount
+  name: citrix-ipam-controller
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: citrix-ipam-controller
 
-        ---
-        apiVersion: extensions/v1beta1
-        kind: Deployment
-        metadata:
-          name: citrix-ipam-controller
-          namespace: kube-system
-        spec:
-          replicas: 1
-          template:
-            metadata:
-              labels:
-                app: citrix-ipam-controller
-            spec:
-              serviceAccountName: citrix-ipam-controller
-              containers:
-              - name: citrix-ipam-controller
-                image: quay.io/citrix/citrix-ipam-controller:latest
-                env:
-                # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-              - name: "VIP_RANGE"
-                value: '["10.105.158.195/32", "10.105.158.196/31", "10.105.158.198"]'
-                # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
-                # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: citrix-ipam-controller
+spec:
+  selector:
+    matchLabels:
+      app: citrix-ipam-controller
+  replicas: 1
+  template:
+    metadata:
+      name: citrix-ipam-controller
+      labels:
+        app: citrix-ipam-controller
+    spec:
+      serviceAccountName: citrix-ipam-controller
+      containers:
+       - name: citrix-ipam-controller
+         image: quay.io/citrix/citrix-ipam-controller:latest
+         env:
+        # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
+         - name: "VIP_RANGE"
+           value: '["10.105.158.195/32", "10.105.158.196/31", "10.105.158.198"]'
+        # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
+        # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
+
 
     The manifest contains two environment variables, `VIP_RANGE` or `VIP_NAMESPACES`. For more information, see [VIP_RANGE](#viprange) and [VIP_NAMESPACES](#vipnamespaces). Update the `VIP_RANGE` or `VIP_NAMESPACES` environment variables based on your requirement.
 
