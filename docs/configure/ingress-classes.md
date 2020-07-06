@@ -53,3 +53,51 @@ metadata:
   annotations:
      kubernetes.io/ingress.class: "my-custom-class"
 ```
+
+## Updating the Ingress status for the Ingress resources with the specified IP address
+
+To update the `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Citrix ingress controller with the allocated IP addresses, specify the command line argument `—update-ingress-status yes` when you start the Citrix ingress controller. This feature is only supported for the Citrix ingress controller deployed as a stand-alone pod for managing Citrix ADC VPX or MPX. For Citrix ADC CPXs deployed as sidecars, this feature is not supported.
+
+Following is an example YAML with the  `-update-ingress-status yes` command line argument enabled.
+
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cic-k8s-ingress-controller
+spec:
+  serviceAccountName: cic-k8s-role
+  containers:
+  - name: cic-k8s-ingress-controller
+   image: "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
+env:
+    # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
+    - name: "NS_IP"
+      value: <Citrix ADC management IP>
+    # Set username for Nitro
+    - name: "NS_USER"
+      valueFrom:
+        secretKeyRef:
+          name: nslogin
+          key: username
+    # Set user password for Nitro
+    - name: "NS_PASSWORD"
+      valueFrom:
+        secretKeyRef:
+          name: nslogin
+          key: password
+    - name: "EULA"
+      value: "yes"
+args:
+    - --feature-node-watch false
+    - --ipam citrix-ipam-controller
+    - --update-ingress-status yes
+    imagePullPolicy: Always
+```
+
+
+
+
+
+
