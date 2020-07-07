@@ -105,13 +105,13 @@ Perform the following:
 
 1.  Download the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) using the following command:
 
-        wget https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
 
-1.  Deploy the `citrix-k8s-cpx-ingress.yaml` file using the following command:
+2.  Deploy the `citrix-k8s-cpx-ingress.yaml` file using the following command:
 
         kubectl create -f citrix-k8s-cpx-ingress.yaml
 
-1.  Verify if Citrix ingress controller is deployed successfully using the following command:
+3.  Verify if Citrix ingress controller is deployed successfully using the following command:
 
         kubectl get pods --all-namespaces
 
