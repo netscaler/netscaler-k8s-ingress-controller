@@ -12,7 +12,7 @@ The following table lists the TLS use cases with sample annotations that you can
 | [Set client authentication to mandatory](#set-client-authentication-to-mandatory) | `ingress.citrix.com/frontend-sslprofile: '{"clientauth":"enabled", "clientcert" : "mandatory"}'`|
 | [TLS session ticket extension](#tls-session-ticket-extension) | `ingress.citrix.com/frontend-sslprofile: '{"sessionticket" : "enabled", "sessionticketlifetime : "300"}'` |
 | [SSL session reuse](#ssl-session-reuse) | `ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "enabled", "sesstimeout : "120"}'` |
-| [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "SECURE", "cipherpriority" :"21"}]}'` |
+| [Cipher groups](#using-cipher-groups) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "secure", "cipherpriority" :"21"}]}'` |
 | [Cipher redirect](#using-cipher-rediect) | `ingress.citrix.com/frontend-sslprofile:'{"snienable": "enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}], "cipherredirect":"enabled", "cipherurl": "https://redirecturl"}'` |
 
 ## Enable TLS v1.3 protocol
@@ -27,7 +27,7 @@ The `dheKeyExchangeWithPsk` parameter allows you to specify whether the **Ingres
 
 The following is a sample annotation for the HTTP profile to enable TLS 1.3 protocol support on SSL profile and set the  `tls13SessionTicketsPerAuthContext` and `dheKeyExchangeWithPsk` parameters in the SSL profile.
 
-    ingress.citrix.com/frontend-sslprofile: '{"tls13":"ENABLED", "tls13sessionTicketsPerAuthContext":"1", "dheKeyExchangeWithPsk":"yes"}'
+    ingress.citrix.com/frontend-sslprofile: '{"tls13":"enabled", "tls13sessionticketsperauthcontext":"1", "dhekeyexchangewithpsk":"yes"}'
 
 ## HTTP strict transport security (HSTS)
 
@@ -35,7 +35,7 @@ The Ingress Citrix ADC appliances support HTTP strict transport security (HSTS) 
 
 Using the annotations for SSL profiles, you can enable HSTS in an SSL front-end profile on the Ingress Citrix ADC. The following is a sample ingress annotation:
 
-    ingress.citrix.com/frontend-sslprofile: '{"HSTS":"enabled", "maxage" : "157680000", "IncludeSubdomain":"yes"}'
+    ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "maxage" : "157680000", "includesubdomain":"yes"}'
 
 Where:
 
@@ -49,7 +49,7 @@ The Ingress Citrix ADC can send the revocation status of a server certificate to
 
 To use the OCSP stapling feature, you can enable it using an SSL profile with the following ingress annotation:
 
-    ingress.citrix.com/frontend-sslprofile: '{"ocspStapling":"ENABLED"}'
+    ingress.citrix.com/frontend-sslprofile: '{"ocspstapling":"enabled"}'
 
 >**IMPORTANT:**
 >To use OCSP stapling you must add an OCSP responder on the Citrix ADC appliance.
@@ -75,7 +75,7 @@ Using the annotations for SSL profiles, you can enable client authentication on 
 
 The following is a sample annotation of the SSL profile:
 
-    ingress.citrix.com/frontend-sslprofile: '{"clientauth":"ENABLED", "clientcert" : "Mandatory"}'
+    ingress.citrix.com/frontend-sslprofile: '{"clientauth":"enabled", "clientcert" : "mandatory"}'
 
 >**Note:**
 > Make sure that you bind the client-certificate to the SSL virtual server on the Ingress Citrix ADC.
@@ -90,7 +90,7 @@ Using the annotations for SSL profiles, you can enable the use of session ticket
 
 The following is the sample ingress annotation:
 
-    ingress.citrix.com/frontend-sslprofile: '{"sessionticket" : "ENABLED", "sessionticketlifetime : "300"}'
+    ingress.citrix.com/frontend-sslprofile: '{"sessionticket" : "enabled", "sessionticketlifetime : "300"}'
 
 ## SSL session reuse
 
@@ -100,7 +100,7 @@ Using the annotations for SSL profiles, you can enable session reuse and also se
 
 The following is the sample ingress annotation:
 
-    ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "ENABLED", "sesstimeout : "120"}'
+    ingress.citrix.com/frontend-sslprofile: '{"sessreuse" : "enabled", "sesstimeout : "120"}'
 
 By default, the session reuse option is enabled on the appliance and the timeout value for the same is set to 120 seconds. Therefore, if a client sends a request on another TCP connection and the earlier SSL session ID within 120 seconds, then the appliance performs a partial handshake.
 
@@ -122,7 +122,7 @@ Using the annotations for SSL profiles, you can bind the built-in cipher groups,
 
 The following is the syntax of the ingress annotation that you can use to bind the built-in cipher groups and a user-defined cipher group to an SSL profile:
 
-    ingress.citrix.com/frontend-sslprofile:'{"sni":"enabled", "ciphers" : [{"ciphername": "SECURE", "cipherpriority" :"1"}, {"ciphername": "testgroup", "cipherpriority" :"2"}]}'
+    ingress.citrix.com/frontend-sslprofile:'{"snienable":"enabled", "ciphers" : [{"ciphername": "secure", "cipherpriority" :"1"}, {"ciphername": "testgroup", "cipherpriority" :"2"}]}'
 
 The ingress annotation binds the built-in cipher group, `SECURE`, and the user-defined cipher group, `testgroup`, to the SSL profile.
 
