@@ -82,22 +82,9 @@ The following table lists the Citrix ingress controller features supported on th
 | [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 |
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 and later | 12.1–51.16 and later | 13.0–36.28 |
 
-## Container network interface (CNI) for Citrix ADC CPX
-
-The following table lists the Container Network Interface (CNI) supported by Citrix ADC CPX:
-
-| Container Network Interface (CNI) | Citrix ADC CPX versions |
-| --------------------------------- | ----------------------- |
-| Flannel | 12.1–51.16 and later |
-| Kubenet | 12.1–51.16 and later |
-| Calico | 13.0–36.28 |
-| Calico on GKE | 12.1–51.16 and later |
-| OVS | 13.0–36.28 |
-| Weave | 12.1–51.16 and later |
-
 ## Container network interfaces (CNIs) for Citrix ADC CPX
 
-The following table lists the Container network interfaces (CNI) supported by Citrix ADC CPX:
+The following table lists the Container network interfaces (CNIs) supported by Citrix ADC CPX:
 
 | Container network interfaces (CNI) | Citrix ADC CPX versions |
 | --------------------------------- | ----------------------- |
@@ -110,7 +97,7 @@ The following table lists the Container network interfaces (CNI) supported by Ci
 
 ## Supported container runtime interfaces for Citrix ADC CPX
 
-The following table lists the container runtime interfaces(CRIs) supported by Citrix ADC CPX. 
+The following table lists the container runtime interfaces (CRIs) supported by Citrix ADC CPX.
 
 | CRI                    | Supported versions of Citrix ADC CPX|
  ----------------------- | ----------------------- |
