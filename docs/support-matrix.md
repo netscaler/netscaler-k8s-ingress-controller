@@ -16,7 +16,7 @@ Citrix ingress controller is supported on the following platforms:
 
 ## Citrix ADC platforms
 
-The following table lists the Citrix ADC platforms supported by Citrix ingress controller:
+The following table lists the Citrix ADC platforms supported by the Citrix ingress controller:
 
 | Citrix ADC Platform | Versions |
 | ------------------- | -------- |
@@ -26,7 +26,7 @@ The following table lists the Citrix ADC platforms supported by Citrix ingress c
 
 ## Supported deployment topologies on platforms (on-premises)
 
-The following table lists the various deployment topologies supported by Citrix ingress controller on the supported Kubernetes (on-premises) platforms:
+The following table lists the various deployment topologies supported by the Citrix ingress controller on the supported Kubernetes (on-premises) platforms:
 
 | Deployment Topologies | Kubernetes | Red Hat OpenShift | PKS |
 | --------------------- | ---------- | --------------------------- | ------------------------- |
@@ -38,7 +38,7 @@ The following table lists the various deployment topologies supported by Citrix 
 
 ## Supported deployment topologies on cloud platforms
 
-The following table lists the various deployment topologies supported by Citrix ingress controller on the supported cloud platforms:
+The following table lists the various deployment topologies supported by the Citrix ingress controller on the supported cloud platforms:
 
 | Deployment Topologies | GKE | EKS | AKS (Basic mode - Kubenet) | AKS (Advanced mode - Azure CNI) |
 | --------------------- |  --------------------------- | ------------------------- | --------------- | ----------------- |
@@ -65,7 +65,7 @@ The following table lists the Citrix ingress controller features supported on va
 | [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | N/A | N/A | N/A | N/A | Yes | N/A |
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | N/A | N/A | N/A | N/A | Yes | N/A |
 
-The following table lists the Citrix ingress controller features supported on respective Citrix Ingress Controller version and Citrix ADC versions:
+The following table lists the Citrix ingress controller features supported on the respective Citrix Ingress Controller versions and Citrix ADC versions:
 
 | Citrix ingress controller features | Citrix ingress controller versions | Citrix ADC MPX or VPX versions | Citrix ADC CPX versions |
 | --------------------- | --------------------------- |--------------------------------| -------  |
@@ -94,3 +94,26 @@ The following table lists the Container Network Interface (CNI) supported by Cit
 | Calico on GKE | 12.1–51.16 and later |
 | OVS | 13.0–36.28 |
 | Weave | 12.1–51.16 and later |
+
+## Container network interfaces (CNIs) for Citrix ADC CPX
+
+The following table lists the Container network interfaces (CNI) supported by Citrix ADC CPX:
+
+| Container network interfaces (CNI) | Citrix ADC CPX versions |
+| --------------------------------- | ----------------------- |
+| Flannel | 12.1–51.16 and later |
+| Kubenet | 12.1–51.16 and later |
+| Calico | 13.0–36.28 |
+| Calico on GKE | 12.1–51.16 and later |
+| OVS | 13.0–36.28 |
+| Weave | 12.1–51.16 and later |
+
+## Supported container runtime interfaces for Citrix ADC CPX
+
+The following table lists the container runtime interfaces(CRIs) supported by Citrix ADC CPX. 
+
+| CRI                    | Supported versions of Citrix ADC CPX|
+ ----------------------- | ----------------------- |
+| Docker| 11.1 and later |
+| [CRI-O](https://cri-o.io)| 13.0–47.103 and later|
+
