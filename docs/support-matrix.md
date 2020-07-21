@@ -104,3 +104,22 @@ The following table lists the container runtime interfaces (CRIs) supported by C
 | Docker| 11.1 and later |
 | [CRI-O](https://cri-o.io)| 13.0–47.103 and later|
 
+## Support matrix for cloud native solution components
+
+The following matrix provides information on compatibility between the different components of the cloud native solution offered by Citrix.
+
+For example, the first row of this table explains the versions of Citrix ADC CPX/VPX/MPX which supports different components of the Citrix cloud native solution. In this table NA is marked if the components are not dependent on each other or when the components are the same.
+
+| Product/component| Citrix ADC CPX/VPX/MPX | [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller) | [Citrix observability exporter (COE)](https://github.com/citrix/citrix-observability-exporter) | [Citrix istio adaptor (CIA)](https://github.com/citrix/citrix-istio-adaptor) | Citrix node controller | ADM agent | ADM service | ADM on-prem | Citrix ADC metrics exporter
+| ----------------- |------------- | ------------- |--------------------------- | ------------------------- | --------------- | ----------------- | --------------------------------|--------------------------------|--------------------------------|
+| Citrix ADC CPX/VPX/MPX| NA | Citrix ingress controller version 1.1.1 onwards is supported with CPX version 12.1+ onwards and VPX/MPX 11.1+ onwards| COE version 1.0.001 onwards is supported with VPX/MPX/CPX: 13.0 onwards  | CIA version 1.0.0-alpha onwards is supported with CPX/VPX/MPX 12.1+ onwards | CPX/VPX/MPX 12.0 onwards|  CPX/VPX/MPX 13.0–47.22 onwards | CPX/VPX/MPX 13.0–47.22 onwards | CPX/VPX/MPX 11.1 onwards|CPX/VPX/MPX 12.1 onwards  |
+| Citrix ingress controller| CPX 12.1+ onwards and VPX/MPX 11.1+ onwards supports Citrix ingress controller version 1.1.1 onwards | NA  | COE version 1.0.001 and onwards is supported with Citrix ingress controller version 1.5.6 onwards  | NA |  NA | NA | NA | NA | NA |
+| Citrix observability exporter|    CPX/VPX/MPX 13.0 onwards is supported with COE version 1.0.001 onwards | Citrix ingress controller version 1.5.6 onwards is supported with COE version 1.0.001 onwards  | NA|   CIA version 1.2.0-beta onwards is supported with COE version 1.0.001 onwards   |  NA  | NA | NA | NA | NA |
+| Citrix istio adaptor (CIA)| CPX/VPX/MPX 12.1+ onwards is supported with CIA version 1.2.0-beta onwards | NA | COE version 1.0.001 is supported with CIA version 1.2.0-beta onwards| NA |  NA  | NA | NA | NA | NA |
+| Citrix node controller| CPX/VPX/MPX 12.0 onwards | NA | NA | NA | NA  | NA | NA | NA | NA|
+| ADM agent| CPX/VPX/MPX 13.0–47.22 onwards | NA |NA| NA | NA | NA | NA | NA  | NA|
+| ADM service| CPX/VPX/MPX 13.0–47.22 onwards | NA | NA | NA | NA | NA  | NA| NA|NA |
+| ADM on-prem| CPX/VPX/MPX 11.1 onwards | NA | NA | NA | NA | NA  | NA| NA| NA|
+| Citrix ADC metrics exporter |CPX/VPX/MPX 12.1 onwards |NA | NA| NA | NA | NA | NA| NA  | NA|
+
+gi
