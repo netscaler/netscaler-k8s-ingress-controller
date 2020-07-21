@@ -104,7 +104,7 @@ The following table lists the container runtime interfaces (CRIs) supported by C
 | Docker| 11.1 and later |
 | [CRI-O](https://cri-o.io)| 13.0–47.103 and later|
 
-git## Support matrix for cloud native solution components
+## Support matrix for cloud native solution components
 
 The following matrix provides information on compatibility between the different components of the cloud native solution offered by Citrix.
 
@@ -122,4 +122,4 @@ For example, the first row of this table explains the versions of Citrix ADC CPX
 | ADM on-prem| CPX/VPX/MPX 11.1 onwards | NA | NA | NA | NA | NA  | NA| NA| NA|
 | Citrix ADC metrics exporter |CPX/VPX/MPX 12.1 onwards |NA | NA| NA | NA | NA | NA| NA  | NA|
 
-gi
+**Note:** For better use case coverage, use the latest versions of the components provided in the compatibility table.
