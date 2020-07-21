@@ -104,7 +104,7 @@ The following table lists the container runtime interfaces (CRIs) supported by C
 | Docker| 11.1 and later |
 | [CRI-O](https://cri-o.io)| 13.0–47.103 and later|
 
-## Support matrix for cloud native solution components
+git## Support matrix for cloud native solution components
 
 The following matrix provides information on compatibility between the different components of the cloud native solution offered by Citrix.
 
