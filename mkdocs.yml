@@ -81,12 +81,15 @@ nav:
     - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
     - Deploy the Citrix ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
+    - Deploy the Citrix API gateway using OpenShift Operator: deploy/deploy-api-gateway-openshift.md
+    - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy the Citrix ingress controller in Anthos Platform: deploy/deploy-anthos.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
+    
   - Citrix ADC Integrated canary deployment solution: canary/canary.md
     #- Software Requirements: canary.md#software-requirements
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
