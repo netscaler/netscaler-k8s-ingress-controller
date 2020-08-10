@@ -151,7 +151,7 @@ nav:
     - Horizontal pod autoscaler: how-to/cpx-hpa.md
     - Direct server return: how-to/dsr.md
     - Admission controller webhook: how-to/webhook-use-case.md
-    - Enable GRPC support: how-to/grpc.md
+   # - Enable GRPC support: how-to/grpc.md
 
 google_analytics:
   - 'UA-59929653-12'
