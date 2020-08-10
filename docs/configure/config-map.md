@@ -18,7 +18,6 @@ The values for the following environment variables in the Citrix ingress control
 
 - NS_PORT: Specifies the port to establish a session. The default value is `80`.
 
-- NS_COOKIE_VERSION: Specifies the persistence cookie version (0 or 1). The default value is `0`.
 
 **Note:**
 This is an initial version of the ConfigMap support and currently supports only a few parameters. Earlier, these parameters were configurable through environment variables except the `NS_HTTP2_SERVER_SIDE` parameter.
@@ -41,7 +40,6 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
           LOGLEVEL: 'info'
           NS_PROTOCOL: 'http'
           NS_PORT: '80'
-          NS_COOKIE_VERSION: '0'
           NS_HTTP2_SERVER_SIDE: 'ON'
           
 
@@ -111,7 +109,6 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
           LOGLEVEL: 'info'
           NS_PROTOCOL: 'http'
           NS_PORT: '80'
-          NS_Cookie_Version: '0'
           NS_HTTP2_SERVER_SIDE: 'OFF'
           
 
