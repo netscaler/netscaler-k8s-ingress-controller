@@ -7,7 +7,7 @@ You can easily create distributed applications and services using GRPC.
 
 Perform the following steps to enable GRPC support using HTTP2.
 
-1. Create a YAML file `cic-configmap.yaml` and enable the global parameter for HTTP2 server side support using the following entry in the ConfigMap. For more information on using ConfigMap, see [ConfigMap documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/).
+1. Create a YAML file `cic-configmap.yaml` and enable the global parameter for HTTP2 server side support using the following entry in the ConfigMap. For more information on using ConfigMap, see the [ConfigMap documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/).
 
            NS_HTTP2_SERVER_SIDE: 'ON'
 
@@ -268,7 +268,7 @@ Perform the following steps to validate the Rewrite and Responder CRD.
 
        kubectl create -f rewrite-responder-policies-deployment.yaml
 
-2. Create a YAML file with the following content for the rewrite policy.
+2. Create a YAML file (rewrite-crd-object.yaml) with the following content for the rewrite policy.
 
       
         apiVersion: citrix.com/v1
