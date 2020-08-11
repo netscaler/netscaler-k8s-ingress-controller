@@ -129,9 +129,9 @@ Perform the following steps to enable GRPC support using HTTP2.
 
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=grpc.example.com/O=grpc.example.com"
        
-       kubectl create secret tls grpc-secret --key tls.key --cert tls.crt
+        kubectl create secret tls grpc-secret --key tls.key --cert tls.crt
 
-       secret "grpc-secret" created
+        secret "grpc-secret" created
 
 8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Citrix ingress controller.
 
@@ -139,7 +139,7 @@ Perform the following steps to enable GRPC support using HTTP2.
   
           kubectl apply -f frontend-ingress.yaml
   
-     The content of the `frontend-ingress.yaml` file is provided as follows:        
+     The content of the `frontend-ingress.yaml` file is provided as follows:
 
           apiVersion: extensions/v1beta1
           kind: Ingress
@@ -247,18 +247,18 @@ Perform the following steps to validate the rate limit CRD.
 
 1. Apply the YAML file using the following command.
   
-        kubectl create -f ratelimit-crd-object.yaml
+          kubectl create -f ratelimit-crd-object.yaml
 
 2. Test gRPC traffic using the `grpcurl` command.
 
 
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
 
-    The command returns the following error in response after the rate limit is reached:
+      The command returns the following error in response after the rate limit is reached:
 
-       Error invoking method "helloworld.Greeter.SayHello": failed to query for service descriptor "helloworld.Greeter": rpc error: code = Unavailable desc =
+        Error invoking method "helloworld.Greeter.SayHello": failed to query for service descriptor "helloworld.Greeter": rpc error: code = Unavailable desc =
 
-       Too Many Requests: HTTP status code 429; transport: missing content-type field
+        Too Many Requests: HTTP status code 429; transport: missing content-type field
 
 ## Validate the Rewrite and Responder CRD with gRPC
 
