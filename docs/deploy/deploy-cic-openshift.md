@@ -98,7 +98,10 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
           - apiGroups: ["route.openshift.io"]
             resources: ["routes"]
             verbs: ["get", "list", "watch"]
-
+          - apiGroups: ["network.openshift.io"]
+            resources: ["hostsubnets"]
+            verbs: ["get", "list", "watch"]
+       
         ---
         kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -302,6 +305,9 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
           - apiGroups: ["route.openshift.io"]
             resources: ["routes"]
             verbs: ["get", "list", "watch"]
+          - apiGroups: ["network.openshift.io"]
+            resources: ["hostsubnets"]
+            verbs: ["get", "list", "watch"]  
         ---
         kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -782,6 +788,3 @@ spec:
       -----END CERTIFICATE-----
 ```
 
-## Restrictions
-
-[Automatic static route configuration](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported. Instead, you can use the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller), based on your requirement.

@@ -30,6 +30,10 @@ Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix
 
 For information on deploying the Citrix ingress controller to control the OpenShift ingress, see the [Citrix ingress controller for Kubernetes](../index.md).
 
+You can use Citrix ADC for load balancing Openshift control plane (master nodes). Citrix provides a solution to automate the configuration of Citrix ADC using Terraform instead of manually configuring the Citrix ADC.
+
+For more information, see 
+
 ## Supported Citrix components on OpenShift
 
 | Citrix components | Versions |
@@ -97,6 +101,9 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
             verbs: ["get", "list", "watch", "create", "delete"]
           - apiGroups: ["route.openshift.io"]
             resources: ["routes"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["network.openshift.io"]
+            resources: ["hostsubnets"]
             verbs: ["get", "list", "watch"]
 
         ---
@@ -302,6 +309,10 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
           - apiGroups: ["route.openshift.io"]
             resources: ["routes"]
             verbs: ["get", "list", "watch"]
+          - apiGroups: ["network.openshift.io"]
+            resources: ["hostsubnets"]
+            verbs: ["get", "list", "watch"]  
+        
         ---
         kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -781,7 +792,3 @@ spec:
       awevTse0/kSJ5z2qQ22OPRtL3Q==
       -----END CERTIFICATE-----
 ```
-
-## Restrictions
-
-[Automatic static route configuration](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/network/staticrouting.md) of the associated Ingress device using `feature-node-watch` argument is not supported. Instead, you can use the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller), based on your requirement.
