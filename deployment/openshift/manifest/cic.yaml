@@ -32,6 +32,9 @@ rules:
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["network.openshift.io"]
+    resources: ["hostsubnets"]
+    verbs: ["get", "list", "watch"]
 
 ---
 kind: ClusterRoleBinding

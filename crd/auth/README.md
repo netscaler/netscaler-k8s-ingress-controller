@@ -11,6 +11,7 @@ The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth
 The following is the Auth CRD definition:
 
 ```yml
+
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -134,6 +135,7 @@ The Auth CRD provides the following attributes that you use to define the authen
 -  `servicenames`
 -  `auth_providers`
 -  `auth_policies`
+-  `authorization_policies`
 
 ### servicenames
 
@@ -186,6 +188,18 @@ The following are the attributes for policies:
 | `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
 | `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
 
+### authorization policies
+
+Authorization policies allow you to define the traffic selection criteria to apply the authorization requirements for the selected traffic.
+
+The following are the attributes for authorization policies:
+
+| Attribute | Description |
+| --------- | ----------- |
+| `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
+| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
+| `claims` | Specifies the claims required to access a specific API endpoint. `name` indicates the claim name and `values` indicate the required permissions. You can claim more than one claim. If an empty list is specified, it implies that authorization is not required. |
+
 ## Deploy the Auth CRD
 
 Perform the following to deploy the Auth CRD:
@@ -229,6 +243,7 @@ spec:
             issuer: "https://sts.windows.net/tenant1/"
             jwks_uri: "https://login.microsoftonline.com/tenant1/discovery/v2.0/keys"
             audience : ["https://vault.azure.net"]
+            claims_to_save : ["scope"]
         
         - name: "introspect-provider"
           oauth:
@@ -237,6 +252,7 @@ spec:
             audience : ["https://api.service.net"]
             client_credentials: "oauthsecret"
             introspect_url: https://10.221.35.214/oauth/idp/introspect
+            claims_to_save : ["scope"]
 
     auth_policies:
 
@@ -271,7 +287,29 @@ spec:
             path:
               -  '/customers/'
           provider: ["introspect-provider"]
- 
+    
+    authorization_policies:
+
+        - resource:
+            path:
+              - '/customers/'
+            method: [POST]
+            claims: 
+            - name: "scope"
+              values: ["read", "write"]
+
+        - resource:
+            path:
+              - '/reviews'
+            claims: 
+            - name: "scope"
+              values: ["read"]
+        - resource:
+            path:
+              - '/products/'
+            method: [GET]
+            claims: []
+    
 ```
 
 The sample authentication policy performs the following:
@@ -285,6 +323,10 @@ The sample authentication policy performs the following:
 -  The Citrix ADC performs the oAuth JWT verification as specified in the provider `jwt-auth-provider` for the requests to the **reviews** endpoint.
 
 -  The Citrix ADC performs the oAuth introspection as specified in the provider `introspect-provider` for the requests to the **customers** endpoint.
+
+-  The Citrix ADC requires the `scope` claim with `read` and `write` permissions to access the **customers** endpoint and **POST**.
+  
+-  The Citrix ADC does not need any authorization permissions to access the **products** endpoint with GET operation.  
 
 For oAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
 
