@@ -141,4 +141,3 @@ spec:
             status:
               type: object
           type: object
-```
