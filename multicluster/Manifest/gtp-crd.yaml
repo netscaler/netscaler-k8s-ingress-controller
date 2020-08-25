@@ -55,7 +55,7 @@ spec:
               type: string
           type: object
         spec:
-          required: ["serviceType","hosts","status"]
+          required: ["serviceType","hosts"]
           properties:
             ipType:
               type: string
@@ -138,6 +138,4 @@ spec:
                     type: array
                 type: object
               type: array
-            status:
-              type: object
           type: object
