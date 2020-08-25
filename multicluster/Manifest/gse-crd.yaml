@@ -1,0 +1,73 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: globalserviceentries.citrix.com
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: citrix.com
+  # list of versions supported by this CustomResourceDefinition
+  version: v1beta1
+  #    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      #      served: true
+      # One and only one version must be marked as the storage version.
+      #storage: true
+  # either Namespaced or Cluster
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: globalserviceentries
+    # singular name to be used as an alias on the CLI and for display
+    singular: globalserviceentry
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: globalserviceentry
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - gse
+ 
+  validation:
+  # openAPIV3Schema is the schema for validating custom objects.
+    openAPIV3Schema:
+      required: ["apiVersion","kind","metadata","spec"]
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          required: ["name","namespace"]
+          properties:
+            name:
+              type: string
+            namespace:
+              type: string
+          type: object
+        spec:
+          required: ["endpoint"]
+          properties:
+            endpoint:
+              required: ["monitorPort"]
+              properties:
+                ipv4address:
+                  type: string
+                  description: "ipv4 address of local cluster ingress / load balancer kind service endpoint"
+                domainName:
+                  type: string
+                  description: "domain name of local cluster ingress / load balancer kind service endpoint"
+                monitorPort:
+                  type: integer
+                  description: "listening port of local cluster ingress / load balancer kind service endpoint"
+              type: object
+          type: object
