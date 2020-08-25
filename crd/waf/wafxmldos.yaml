@@ -34,4 +34,3 @@ spec:
                 max_size: 1111
             cdata:
                 max_size: 65
-    ip_reputation: "on"

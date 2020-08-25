@@ -52,4 +52,3 @@ spec:
                 max_size: 1111
             content_type:
                 value: "crd_test"
-    ip_reputation: "on"
