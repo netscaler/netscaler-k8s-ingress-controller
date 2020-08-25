@@ -28,4 +28,3 @@ spec:
           csrf: "on"
           cookie_consistency: "on"
           fileupload_type: "on"
-    ip_reputation: "on"

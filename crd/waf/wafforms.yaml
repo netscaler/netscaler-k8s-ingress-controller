@@ -14,4 +14,3 @@ spec:
           form_field_consistency:
             action: ["log","block"]
           csrf: "on"
-    ip_reputation: "on"
