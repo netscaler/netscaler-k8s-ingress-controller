@@ -45,7 +45,7 @@ Based on the type of security checks, you can specify the metadata and use the C
  
 ## WAF CRD definition
 
-The WAF CRD is available in the Citrix ingress controller GitHub repository at [waf-crd.yaml](../../crd/waf/waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Citrix ADC.
+The WAF CRD is available in the Citrix ingress controller GitHub repository at [waf-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Citrix ADC.
 
 The following is the WAF CRD definition:
 
@@ -224,7 +224,8 @@ The following table lists the various attributes provided in the WAF CRD:
 
 Perform the following steps to deploy the WAF CRD:
 
-1. Download the CRD ([waf-crd.yaml](../../crd/waf/waf-crd.yaml)).
+1. Download the CRD ([waf-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml)).
+
 2. Deploy the WAF CRD using the following command:
 
         kubectl create -f waf-crd.yaml  
