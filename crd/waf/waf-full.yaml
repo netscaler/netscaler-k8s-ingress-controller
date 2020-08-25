@@ -1,0 +1,271 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: waffull
+spec:
+    servicenames:
+        - frontend
+    security_level: basic
+    application_type: HTML
+    signatures: "http://10.106.102.242/crd/sig.xml"
+    redirect_url: "/home.php"    #it can be external url also
+    html_error_object: "http://10.106.102.242/crd/error_page.html"
+    xml_error_object: "http://10.106.102.242/crd/error_page.xml"
+    json_error_object: "http://10.106.102.242/crd/error_page.json"
+    ip_reputation:
+        action: block
+        threat-categories:
+            - SPAM_SOURCES
+            - WINDOWS_EXPLOITS
+            - WEB_ATTACKS
+            - BOTNETS
+            - SCANNERS
+            - DOS
+            - REPUTATION
+            - PHISHING
+            - PROXY
+            - NETWORK
+            - CLOUD_PROVIDERS
+            - MOBILE_THREATS
+    target:
+        path:
+            - index.html
+            - payment.php
+            - login.php
+        method:
+            - GET
+            - POST
+        header:
+            - Host
+    security_checks:
+        common:
+          allow_url: "on"
+          block_url: "on"
+          buffer_overflow:
+            action: ["block"]
+          content_type: "on"
+          cookie_consistency: "on"
+          credit_card: "off"
+          multiple_headers:
+            action: ["log"]
+        html:
+          cross_site_scripting:
+            action: ["block"]
+          field_format: "on"
+          sql_injection: "on"
+          form_field_consistency:
+            action: ["log","block"]
+          csrf: "on"
+          fileupload_type: "on"
+        json:
+          dos: "on"
+          sql_injection:
+            action: ["block"]
+          cross_site_scripting: "on"
+        xml:
+          dos: "on"
+          sql_injection: "on"
+          cross_site_scripting: "off"
+          wsi:
+            action: ["block"]
+          validation: "on"
+          attachment: "on"
+          format:
+            action: ["block"]
+          soap_fault_filtering: "off"
+    settings:
+        common:
+          buffer_overflow:
+            max_cookie_len: 409
+            max_header_len: 4096
+            max_url_len: 1024
+          allow_url:
+            closure: "on"
+            sessionless: "on"
+          credit_card:
+            card_type: ["visa","amex"]
+            max_allowed: 5
+            card_xout: "on"
+            secure_logging: "on"
+          cookie_consistency:
+            cookie_encryption: "encryptAll"
+            cookie_proxying: "sessionOnly"
+            cookie_transform: "on"
+            add_cookie_flags: "httpOnly"
+            decode_request_cookies: "on"
+        html:
+          sql_injection:
+            check_sql_wildchars: "on"
+            transform_special_chars: "on"
+            injection_type: "SQLSplCharORKeyword"
+            parse_comments: "ansinested"
+          cross_site_scripting:
+            check_complete_urls: "on"
+            transform_unsafe_html: "on"
+          field_format:
+            default_type: "any"
+            default_min_len: 44
+            default_max_len: 4455
+          field_consistency:
+            sessionless: "on"
+        xml:
+          dos:
+            attribute:
+                max_attributes: 1024
+                max_name_len: 128
+                max_value_len: 128
+            element:
+                max_elements: 1024
+                max_children: 128
+                max_depth: 128
+            file:
+                max_size: 2123
+                min_size: 9
+            entity:
+                max_expansions: 512
+                max_expansions_depth: 9
+            namespace:
+                max_namespaces: 16
+                max_uri_len: 256
+            soaparray:
+                max_size: 1111
+            cdata:
+                max_size: 65
+          wsi:
+            checks: ["R1000","R1003"]
+          validation:
+            soap_envelope: "on"
+            validate_response: "on"
+          attachment:
+            url:
+                max_size: 1111
+            content_type:
+                value: "crd_test"
+        json:
+          dos:
+            container:
+              max_depth: 5
+            document:
+              max_len: 20000000
+            array:
+              max_len: 10000
+            key:
+              max_count: 10000
+              max_len: 128
+            string:
+              max_len: 1000000
+    relaxations:
+        html:
+          cross_site_scripting:
+            - rule:
+                field_name: password
+                url: /login.php
+                is_name_regex: true
+                enabled: false
+                comment: "user comment for relaxation rule"
+            - rule:
+                field_name: upload
+                url: test.php
+          sql_injection:
+            - rule:
+                field_name: username
+                url: login.php
+                is_name_regex: true
+                location: "header"
+                value_type: "Attribute"
+                value: "insert"
+                is_value_regex: true
+                enabled: false
+                comment: "user comment for relaxation rule"
+          sql_injection:
+            - rule:
+                field_name: username
+                url: login.php
+                is_name_regex: true
+                location: "header"
+                value_type: "SpecialString"
+                value: "insert"
+                is_value_regex: true
+                enabled: false
+                comment: "user comment for relaxation rule"
+            - rule:
+                field_name: password
+                url: login.php
+          form_field_consistency:
+            - rule:
+                field_name: query
+                url: search.php
+        json:
+          cross_site_scripting:
+            - rule:
+                url: login.php
+                enabled: true
+                comment: "json relaxation rule"
+            - rule:
+                url: test.php
+          sql_injection:
+            - rule:
+                url: login.php
+                enabled: false
+                comment: "json sql relaxation rule"
+            - rule:
+                url: logout.php
+        common:
+          allow_url:
+            urls:
+                - payment.php
+                - cover.php
+          content_type:
+            types:
+                - text/html
+                - impage/png
+          cookie_consistency:
+            cookies:
+                - session_cookie
+                - test_cookie
+          credit_card:
+            - rule:
+                card_num: 660000000000005
+                url: search.php
+        xml:
+          cross_site_scripting:
+            - rule:
+                url: /login3.php
+                is_regex: true
+                location: "ELEMENT"
+                enabled: false
+                comment: "user comment for relaxation rule"
+          sql_injection:
+            - rule:
+                url: /login3.php
+                is_regex: true
+                location: "ELEMENT"
+                enabled: false
+                comment: "user comment for relaxation rule"
+    enforcements:
+        common:
+          block_url:
+            urls:
+                - admin.php
+                - user_info.db
+          safe_object:
+            - rule:
+                name: aadhar
+                expression: '[1-9]{4,4}\s[1-9]{4,4}\s[1-9]{4,4}'
+                max_match_len: 19
+                action: ["log","block"]
+        html:
+          field_format:
+            - rule:
+                field_name: phone_num
+                url: search.php
+                field_type: integer
+                min_len: 10
+                max_len: 12
+          file_upload:
+            - rule:
+                field_name: field
+                url: upload.php
+                file_type:
+                    - pdf
+                    - msdoc
