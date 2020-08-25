@@ -1,0 +1,55 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafxml
+spec:
+    servicenames:
+        - frontend
+    application_type: XML
+    # xml_page_url: "http://10.217.14.99/crd/error_page.json" # TODO Incorrect
+    security_checks:
+        xml:
+          dos: "on"
+          sql_injection: "on"
+          cross_site_scripting: "off"
+          wsi:
+            action: ["block"]
+          validation: "on"
+          attachment: "on"
+          format:
+            action: ["block"]
+    settings:
+        xml:
+          dos:
+            attribute:
+                max_attributes: 1024
+                max_name_len: 128
+                max_value_len: 128
+            element:
+                max_elements: 1024
+                max_children: 128
+                max_depth: 128
+            file:
+                max_size: 2123
+                min_size: 9
+            entity:
+                max_expansions: 512
+                max_expansions_depth: 9
+            namespace:
+                max_namespaces: 16
+                max_uri_len: 256
+            soaparray:
+                max_size: 1111
+            cdata:
+                max_size: 65
+          wsi:
+            checks: ["R1000","R1003"]
+          validation:
+            soap_envelope: "on"
+            validate_response: "on"
+          attachment:
+            url:
+                max_size: 1111
+            content_type:
+                value: "crd_test"
+    ip_reputation: "on"

@@ -1,0 +1,37 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafxmldos
+spec:
+    servicenames:
+        - frontend
+    application_type: XML
+    # xml_page_url: "http://10.217.14.99/crd/error_page.json" # TODO Incorrect
+    security_checks:
+        xml:
+          dos: "on"
+    settings:
+        xml:
+          dos:
+            attribute:
+                max_attributes: 1024
+                max_name_len: 128
+                max_value_len: 128
+            element:
+                max_elements: 1024
+                max_children: 128
+                max_depth: 128
+            file:
+                max_size: 2123
+                min_size: 9
+            entity:
+                max_expansions: 512
+                max_expansions_depth: 9
+            namespace:
+                max_namespaces: 16
+                max_uri_len: 256
+            soaparray:
+                max_size: 1111
+            cdata:
+                max_size: 65
+    ip_reputation: "on"
