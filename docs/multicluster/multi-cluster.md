@@ -82,25 +82,25 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
 1. Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](../../multicluster/Manifest/gslb-rbac.yaml) file.
     
-       kubectl apply -f gslb-rbac.yaml
+        kubectl apply -f gslb-rbac.yaml
     
 2. Create the secrets required for the GSLB controller to connect to GSLB devices and push the configuration from the GSLB controller.
 
-       kubectl create secret generic secret1 --from-literal=username=<username> --from-literal=password=<password>
+        kubectl create secret generic secret1 --from-literal=username=<username> --from-literal=password=<password>
 
-    **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
+     **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
   
 3. Download the GSLB controller YAML file [gslb-controller.yaml](../../multicluster/Manifest/gslb-controller.yaml).
 
 4. Edit the GSLB controller YAML file and update the following values as per the requirements of each cluster.
 
-   - LOCAL_REGION and LOCAL_CLUSTER: Specify the region and cluster name where this controller is deployed.
-   - SITENAMES: Provide site names separated by commas and the configuration should be the same as the site configured on GSLB devices.
-   - IP address, region, user name, and password for each site should start with the corresponding site name.  
+    - LOCAL_REGION and LOCAL_CLUSTER: Specify the region and cluster name where this controller is deployed.
+    - SITENAMES: Provide site names separated by commas and the configuration should be the same as the site configured on GSLB devices.
+    - IP address, region, user name, and password for each site should start with the corresponding site name.  
     For example: For site1 in `SITENAMES`, fields should be `site1_ip`, `site1_region`, `site1_username`, and `site1_password`.
-   - argument section in the specification should include `--config-interface` and    `gslb-endpoint`.
+    - argument section in the specification should include `--config-interface` and    `gslb-endpoint`.
  
-    The following is a snippet of the YAML file for deploying the GSLB controller.
+     The following is a snippet of the YAML file for deploying the GSLB controller.
 
     ```yml
 
@@ -144,7 +144,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
             gslb-endpoints
     ```
    
-   **Note:** 
+    **Note:** 
      The order of the GSLB site information should be the same in all clusters. First site in the order is considered as the master site for pushing the configuration. When that master site goes down, the next site in the list will be the new master. Hence, the order of the sites should be the same in all Kubernetes clusters. For example,
      if the order of sites is `site1` followed by `site2` in cluster1 all other clusters should follow the same order.
 
@@ -164,12 +164,12 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
         kubectl create -f  gtp-example.yaml
 
-   **Note:** GTP CRD should be applied across all clusters with the same configuration for the same domain.
+    **Note:** GTP CRD should be applied across all clusters with the same configuration for the same domain.
 
-   Following is an example for a global traffic policy configuration where traffic policy is specified as local first for the domain `app2.com`. When your application prefers services local to it, you can use this option. The CIDR of the local cluster (cluster1) is specified using the `CIDR` field. The `weight` field is used to direct more client requests to any particular cluster than other clusters when the GSLB decision is taken by the Citrix ADC.
-   The load balancing method is specified using the `secLbMethod` field as round robin.
+    Following is an example for a global traffic policy configuration where traffic policy is specified as local first for the domain `app2.com`. When your application prefers services local to it, you can use this option. The CIDR of the local cluster (cluster1) is specified using the `CIDR` field. The `weight` field is used to direct more client requests to any particular cluster than other clusters when the GSLB decision is taken by the Citrix ADC.
+    The load balancing method is specified using the `secLbMethod` field as round robin.
 
-   **Note:** You can specify the load balancing method for local first, canary, and failover deployments.
+    **Note:** You can specify the load balancing method for local first, canary, and failover deployments.
 
 
     ```yml
@@ -198,7 +198,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
             respCode: 200
       status:
         {}
-    ```
+      ```
 
     For more information on other GTP deployment options like canary and failover, see [Examples: Global traffic policy deployments](#Examples-Global-traffic-policy-deployments).
 
@@ -206,11 +206,11 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
        kubectl create -f  gse-example.yaml
 
-   **Note:**  GSE CRD is applied in a specific cluster based on the cluster endpoint information. The global service entry name should be the same as the target destination name in the global traffic policy.
+    **Note:**  GSE CRD is applied in a specific cluster based on the cluster endpoint information. The global service entry name should be the same as the target destination name in the global traffic policy.
   
    Following is an example for a global service entry.
 
-   ```yml
+    ```yml
         apiVersion: "citrix.com/v1beta1"
         kind: globalserviceentry
         metadata:
@@ -220,9 +220,9 @@ Perform the following steps to deploy the Citrix global load balancing solution 
           endpoint:
             ipv4address: 10.102.217.70
             monitorPort: 33036
-   ```
+    ```
   
-  In this example, the global service entry name `app2.default.east.cluster1` is one of the target destination names in the global traffic policy created in step 8.
+    In this example, the global service entry name `app2.default.east.cluster1` is one of the target destination names in the global traffic policy created in step 8.
 
 10. Apply service YAML for GSLB of services of type LoadBalancer.
 
