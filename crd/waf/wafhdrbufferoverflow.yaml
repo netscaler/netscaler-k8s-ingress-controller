@@ -19,4 +19,3 @@ spec:
             max_cookie_len: 409
             max_header_len: 4096
             max_url_len: 1024
-    ip_reputation: "on"

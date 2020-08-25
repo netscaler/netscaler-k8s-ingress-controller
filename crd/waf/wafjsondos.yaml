@@ -24,4 +24,3 @@ spec:
               max_len: 12
             string:
               max_len: 1000000
-    ip_reputation: "on"

@@ -12,4 +12,3 @@ spec:
         html:
           cross_site_scripting: "on" 
           sql_injection: "on"
-    ip_reputation: "on"
