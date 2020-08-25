@@ -102,7 +102,6 @@ Perform the following steps to deploy the Citrix global load balancing solution 
  
      The following is a snippet of the YAML file for deploying the GSLB controller.
 
-    ```yml
 
         env:
          - name: "LOCAL_REGION"
@@ -142,9 +141,9 @@ Perform the following steps to deploy the Citrix global load balancing solution 
         args:
         - --config-interface
             gslb-endpoints
-    ```
+
    
-    **Note:** 
+     **Note:** 
      The order of the GSLB site information should be the same in all clusters. First site in the order is considered as the master site for pushing the configuration. When that master site goes down, the next site in the list will be the new master. Hence, the order of the sites should be the same in all Kubernetes clusters. For example,
      if the order of sites is `site1` followed by `site2` in cluster1 all other clusters should follow the same order.
 
@@ -154,11 +153,11 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
 6. Deploy the [GTP CRD](../../multicluster/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
 
-       kubectl create -f  gtp-crd.yaml
+        kubectl create -f  gtp-crd.yaml
 
 7. Deploy the [GSE CRD](../../multicluster/Manifest/gse-crd.yaml) definition YAML file using the following command.
 
-       kubectl create -f  gse-crd.yaml
+        kubectl create -f  gse-crd.yaml
 
 8. Define the GTPs for your domain as YAML files and apply GTP instances.
 
@@ -172,45 +171,45 @@ Perform the following steps to deploy the Citrix global load balancing solution 
     **Note:** You can specify the load balancing method for local first, canary, and failover deployments.
 
 
-    ```yml
+   
 
-    apiVersion: "citrix.com/v1beta1"
-    kind: globaltrafficpolicy
-    metadata:
-      name: gtp1
-      namespace: default
-    spec:
-      serviceType: 'HTTP'
-      hosts:
-      - host: 'app2.com'
-        policy:
-          trafficPolicy: 'LOCAL-FIRST'
-          secLbMethod: 'ROUNDROBIN'
-          targets:
-          - destination: 'app2.default.east.cluster1'
-            CIDR: '10.102.217.69/24'
-            weight: 1
-          - destination: 'app2.default.west.cluster2'
-            weight: 1
-          monitor:
-          - monType: tcp
-            uri: ''
-            respCode: 200
-      status:
-        {}
-      ```
+        apiVersion: "citrix.com/v1beta1"
+        kind: globaltrafficpolicy
+        metadata:
+          name: gtp1
+          namespace: default
+        spec:
+          serviceType: 'HTTP'
+          hosts:
+          - host: 'app2.com'
+            policy:
+              trafficPolicy: 'LOCAL-FIRST'
+              secLbMethod: 'ROUNDROBIN'
+              targets:
+              - destination: 'app2.default.east.cluster1'
+                CIDR: '10.102.217.69/24'
+                weight: 1
+              - destination: 'app2.default.west.cluster2'
+                weight: 1
+              monitor:
+              - monType: tcp
+                uri: ''
+                respCode: 200
+          status:
+            {}
+  
 
     For more information on other GTP deployment options like canary and failover, see [Examples: Global traffic policy deployments](#Examples-Global-traffic-policy-deployments).
 
 9. Apply GSE instances manually for GSLB of ingress.
 
-       kubectl create -f  gse-example.yaml
+        kubectl create -f  gse-example.yaml
 
     **Note:**  GSE CRD is applied in a specific cluster based on the cluster endpoint information. The global service entry name should be the same as the target destination name in the global traffic policy.
   
-   Following is an example for a global service entry.
+    Following is an example for a global service entry.
 
-    ```yml
+   
         apiVersion: "citrix.com/v1beta1"
         kind: globalserviceentry
         metadata:
@@ -220,13 +219,13 @@ Perform the following steps to deploy the Citrix global load balancing solution 
           endpoint:
             ipv4address: 10.102.217.70
             monitorPort: 33036
-    ```
+  
   
     In this example, the global service entry name `app2.default.east.cluster1` is one of the target destination names in the global traffic policy created in step 8.
 
 10. Apply service YAML for GSLB of services of type LoadBalancer.
 
-         kubectl create -f  service-example.yaml
+          kubectl create -f  service-example.yaml
      
      Following is a sample service.
 
