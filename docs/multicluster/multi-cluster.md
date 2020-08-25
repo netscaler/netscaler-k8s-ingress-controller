@@ -62,13 +62,13 @@ The following CRDs are introduced to support the Citrix ADC configuration for pe
 
 GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
 
-For the GTP CRD definition, see the [GTP CRD](#GTP-CRD-definition).
+For the GTP CRD definition, see the [GTP CRD](#gtp-crd-definition).
 
 ### GSE CRD
 
  GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-For the full GSE CRD definition, see the [GSE CRD](#GSE-CRD-definition).
+For the full GSE CRD definition, see the [GSE CRD](#gse-crd-definition).
 
 ## Deploy Citrix Multi-cluster ingress and load balancing solution
 
@@ -80,7 +80,7 @@ For the full GSE CRD definition, see the [GSE CRD](#GSE-CRD-definition).
 
 Perform the following steps to deploy the Citrix global load balancing solution for geographically distributed Kubernetes clusters.
 
-1. Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](../../multicluster/Manifest/gslb-rbac.yaml) file.
+1. Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-rbac.yaml) file.
     
         kubectl apply -f gslb-rbac.yaml
     
@@ -90,7 +90,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
      **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
   
-3. Download the GSLB controller YAML file [gslb-controller.yaml](../../multicluster/Manifest/gslb-controller.yaml).
+3. Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml).
 
 4. Edit the GSLB controller YAML file and update the following values as per the requirements of each cluster.
 
@@ -151,11 +151,11 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
         kubectl apply -f gslb-controller.yaml
 
-6. Deploy the [GTP CRD](../../multicluster/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
+6. Deploy the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
 
         kubectl create -f  gtp-crd.yaml
 
-7. Deploy the [GSE CRD](../../multicluster/Manifest/gse-crd.yaml) definition YAML file using the following command.
+7. Deploy the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml) definition YAML file using the following command.
 
         kubectl create -f  gse-crd.yaml
 
