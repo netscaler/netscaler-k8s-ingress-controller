@@ -30,10 +30,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "continuousdeployments", "authpolicies", "ratelimits", "listeners", "httproutes"]
+    resources: ["rewritepolicies", "continuousdeployments", "authpolicies", "ratelimits", "listeners", "httproutes", "wafs"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "continuousdeployments/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status", "wafs/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -85,7 +85,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.9.2"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:v1.9.2"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
          - name: "NS_IP"
