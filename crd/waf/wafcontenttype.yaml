@@ -16,4 +16,3 @@ spec:
             types:
                 - custom_cnt_type
                 - image/crd
-    ip_reputation: "on"

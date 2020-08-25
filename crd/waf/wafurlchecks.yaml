@@ -24,4 +24,3 @@ spec:
             urls:
                 - "^[^?]*(passwd|passwords?)([.][^/?]*)?([?].*)?$"
                 - "^[^?]*(htaccess|access_log)([.][^/?]*)?([~])?([?].*)?$"
-    ip_reputation: "on"
