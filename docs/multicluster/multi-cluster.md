@@ -195,8 +195,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
               - monType: tcp
                 uri: ''
                 respCode: 200
-          status:
-            {}
+
   
 
     For more information on other GTP deployment options like canary and failover, see [Examples: Global traffic policy deployments](#Examples-Global-traffic-policy-deployments).
@@ -446,8 +445,6 @@ spec:
                     type: array
                 type: object
               type: array
-            status:
-              type: object
           type: object
 ```
 
@@ -581,8 +578,7 @@ In this example, a stable version of an application is deployed in a cluster `cl
             - monType: http
               uri: ''
               respCode: 200
-        status:
-          {}
+
 
 ### Failover deployment
 
@@ -615,8 +611,7 @@ The following example shows a sample GTP configuration for failover. Using the `
           - monType: http
             uri: ''
             respCode: 200
-      status:
-        {}
+
   
 ### RTT deployment
 
@@ -638,8 +633,7 @@ Following is a sample global traffic policy for round trip time deployment.
           - destination: 'app1.default.west.cluster2'
           monitor:
           - monType: tcp
-      status:
-        {}
+
 
 ### Round robin deployment
 
@@ -665,8 +659,7 @@ Following is a sample traffic policy for the round robin deployment. You can use
           - monType: tcp
             uri: ''
             respCode: 200
-      status:
-            {}
+
 
 ### Static Proximity
 
@@ -691,5 +684,4 @@ Following is a sample traffic policy for the static proximity deployment.
           - monType: http
             uri: ''
             respCode: 200
-      status:
-        {}
+
