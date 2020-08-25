@@ -1,0 +1,15 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafsafeobject
+spec:
+    servicenames:
+        - frontend
+    enforcements:
+        common:
+          safe_object:
+            - rule:
+                name: credit_card
+                expression: '[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}'
+                max_match_len: 25
+                action: ["log","xout"]
