@@ -1,0 +1,30 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafhtmlcommonsig
+spec:
+    servicenames:
+        - frontend
+    application_type: HTML
+    signatures: "http://10.217.14.99/crd/sig.xml"
+    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    security_checks:
+        common:
+          allow_url: "on"
+          block_url: "on"
+          buffer_overflow:
+            action: ["block"]
+          content_type: "on"
+          multiple_headers:
+            action: ["log"]
+        html:
+          credit_card: "off"
+          cross_site_scripting: 
+            action: ["block"]
+          field_format: "on"
+          sql_injection: "on"
+          form_field_consistency:
+            action: ["log","block"]
+          csrf: "on"
+          cookie_consistency: "on"
+          fileupload_type: "on"
