@@ -112,7 +112,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
          - name: "SITENAMES"
            value: "site1,site2"
          - name: "site1_ip"
-           value: "10.102.217.148"
+           value: "x.x.x.x"
          - name: "site1_region"
            value: "east"
          - name: "site1_username"
@@ -126,7 +126,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
                name: secret-1
                key: password
          - name: "site2_ip"
-           value: "10.102.217.141"
+           value: "x.x.x.x"
          - name: "site2_region"
            value: "west"
          - name: "site2_username"
