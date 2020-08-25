@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cic-k8s-ingress-controller
+  name: gslb-k8s-ingress-controller
   namespace: default
   labels:
-    app: cic-k8s-ingress-controller
+    app: gslb-k8s-ingress-controller
 spec:
-      serviceAccountName: cic-k8s-role
+      serviceAccountName: gslb-k8s-role
       containers:
-      - name: cic-k8s-ingress-controller
-        image: us.gcr.io/gslbk8/gslbk8_cic_merge:v1
+      - name: gslb-k8s-ingress-controller
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:v1.9.2"
         imagePullPolicy: Always
         env:
         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
@@ -30,7 +30,7 @@ spec:
         - name: "SITENAMES"
           value: "site1,site2"
         - name: "site1_ip"
-          value: "10.102.217.148"
+          value: "x.x.x.x"
         - name: "site1_region"
           value: "east"
         - name: "site1_username"
@@ -44,7 +44,7 @@ spec:
               name: secret-1
               key: password
         - name: "site2_ip"
-          value: "10.102.217.141"
+          value: "x.x.x.x"
         - name: "site2_region"
           value: "west"
         - name: "site2_username"
