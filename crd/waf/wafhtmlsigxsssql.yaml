@@ -1,0 +1,15 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafhtmlsigxsssql
+spec:
+    servicenames:
+        - frontend
+    application_type: HTML
+    signatures: "http://10.217.14.99/crd/sig.xml"
+    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    security_checks:
+        html:
+          cross_site_scripting: "on" 
+          sql_injection: "on"
+    ip_reputation: "on"
