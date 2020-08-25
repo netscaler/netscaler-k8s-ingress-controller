@@ -12,8 +12,6 @@ spec:
     html_error_object: "http://10.106.102.242/crd/error_page.html"
     xml_error_object: "http://10.106.102.242/crd/error_page.xml"
     json_error_object: "http://10.106.102.242/crd/error_page.json"
-    #wsdl_url: "http://10.217.14.99/crd/wsdl.xml"
-    #xml_schema_url: "http://10.217.14.99/crd/schema.xml"
     ip_reputation:
         action: block
         threat-categories:
