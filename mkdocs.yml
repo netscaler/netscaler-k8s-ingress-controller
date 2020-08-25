@@ -89,7 +89,7 @@ nav:
     - Deploy the Citrix ingress controller in Anthos Platform: deploy/deploy-anthos.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
-    - Multi-cluster ingress and load balancing solution: mulitcluster/multi-cluster.md
+    - Multi-cluster ingress and load balancing solution: multicluster/multi-cluster.md
   - Citrix ADC Integrated canary deployment solution: canary/canary.md
     #- Software Requirements: canary.md#software-requirements
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
