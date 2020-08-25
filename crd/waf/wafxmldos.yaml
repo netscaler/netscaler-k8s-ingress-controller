@@ -6,7 +6,6 @@ spec:
     servicenames:
         - frontend
     application_type: XML
-    # xml_page_url: "http://10.217.14.99/crd/error_page.json" # TODO Incorrect
     security_checks:
         xml:
           dos: "on"
