@@ -61,7 +61,7 @@ Click [here](https://github.com/citrix/citrix-k8s-ingress-controller/releases) f
 For questions and support the following channels are available:
 
 -  [Citrix Discussion Forum](https://discussions.citrix.com/forum/1657-netscaler-cpx/)
--  [Citrix ADC CPX Slack Channel](https://citrixadccloudnative.slack.com/)
+-  [Citrix ADC Cloud Native Slack Channel](https://citrixadccloudnative.slack.com/)
 
 To request an invitation to participate in the Slack channel, provide your email address using this form: [https://podio.com/webforms/22979270/1633242](https://podio.com/webforms/22979270/1633242)
 
