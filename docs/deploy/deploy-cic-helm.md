@@ -1,16 +1,16 @@
-# Deploy Citrix ingress controller using Helm charts
+# Deploy the Citrix ingress controller using Helm charts
 
-You can deploy Citrix ingress controller in the following modes on your [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments:
+You can deploy the Citrix ingress controller in the following modes on your [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments:
 
 -  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](../deployment-topologies.md#dual-tier-topology) topologies, or [single-tier](../deployment-topologies.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX.
 
 -  As a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/) (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology)) topologies.
 
-The helm charts for Citrix ingress controller is available on [Helm Hub](https://hub.helm.sh).
+The helm charts for the Citrix ingress controller are available on [Helm Hub](https://hub.helm.sh).
 
-## Deploy Citrix ingress controller as a standalone pod in the Kubernetes cluster
+## Deploy the Citrix ingress controller as a standalone pod in the Kubernetes cluster
 
-Use the [citrix-k8s-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8s-ingress-controller) chart to run Citrix ingress controller as a pod in your Kubernetes cluster. The chart deploys Citrix ingress controller as a pod in your Kubernetes cluster and configures the Citrix ADC VPX or MPX ingress device.
+Use the [citrix-ingress-controller](https://hub.helm.sh/charts/citrix/citrix-ingress-controller) chart to run the Citrix ingress controller as a pod in your Kubernetes cluster. The chart deploys the Citrix ingress controller as a pod in your Kubernetes cluster and configures the Citrix ADC VPX or MPX ingress device.
 
 ### Prerequisites
 
@@ -22,21 +22,21 @@ Use the [citrix-k8s-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8
 
     -  (Appliances in Clustered mode) CLIP - The cluster management IP (CLIP) address for a clustered Citrix ADC deployment. For more information, see [IP addressing for a cluster](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering/cluster-overview/ip-addressing.html).
 
--  The username and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. The Citrix ADC appliance needs to have system user account (non-default) with certain privileges so that Citrix ingress controller can configure the Citrix ADC VPX or MPX appliance. For instructions to create the system user account on Citrix ADC, see[Create System User Account for Citrix ingress controller in Citrix ADC](#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+-  The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. The Citrix ADC appliance needs to have a system user account (non-default) with certain privileges so that the Citrix ingress controller can configure the Citrix ADC VPX or MPX appliance. For instructions to create the system user account on Citrix ADC, see[Create System User Account for Citrix ingress controller in Citrix ADC](#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
-    You can directly pass the username and password or use Kubernetes secrets. If you want to use Kubernetes secrets, create a secrete for the username and password using the following command:
+    You can directly pass the user name and password or use Kubernetes secrets. If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
 
         kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
 
-#### Create System User Account for Citrix ingress controller in Citrix ADC
+#### Create a system user account for the Citrix ingress controller in Citrix ADC
 
-Citrix ingress controller configures the Citrix ADC using a system user account of the Citrix ADC. The system user account should have certain privileges so that the Citrix ingress controller has permission to configure the following on the Citrix ADC:
+The Citrix ingress controller configures the Citrix ADC using a system user account of the Citrix ADC. The system user account should have certain privileges so that the Citrix ingress controller has permission to configure the following on the Citrix ADC:
 
--  Add, Delete, or View Content Switching (CS) virtual server
+-  Add, delete, or view content switching (CS) virtual server
 -  Configure CS policies and actions
 -  Configure Load Balancing (LB) virtual server
--  Configure Service groups
--  Cofigure SSl certkeys
+-  Configure service groups
+-  Cofigure SSL certkeys
 -  Configure routes
 -  Configure user monitors
 -  Add system file (for uploading SSL certkeys from Kubernetes)
@@ -63,18 +63,18 @@ Citrix ingress controller configures the Citrix ADC using a system user account 
         add cmdpolicy cic-policy ALLOW "^(?!shell)(?!sftp)(?!scp)(?!batch)(?!source)(?!.*superuser)(?!.*nsroot)(?!install)(?!show\s+system\s+(user|cmdPolicy|file))(?!(set|add|rm|create|export|kill)\s+system)(?!(unbind|bind)\s+system\s+(user|group))(?!diff\s+ns\s+config)(?!(set|unset|add|rm|bind|unbind|switch)\s+ns\s+partition).*|(^install\s*(wi|wf))|(^(add|show)\s+system\s+file)"
 
     !!! note "Note"
-        The system user account would have privileges based on the command policy that you define. The command policy mentioned in ***step 3*** is similar to the built-in `sysAdmin` command policy with additional permission to upload files.
+        The system user account would have privileges based on the command policy that you define. The command policy mentioned in ***step 3*** is similar to the built-in `sysAdmin` command policy with another permission to upload files.
 
 4.  Bind the policy to the system user account using the following command:
 
         bind system user cic cic-policy 0
 
-**To deploy Citrix ingress controller as a standalone pod:**
+**To deploy the Citrix ingress controller as a standalone pod:**
 
-To deploy Citrix ingress controller as standalone pod, follow the instructions provided in the Citrix ingress controller [Helm Hub](https://hub.helm.sh/charts/cic/citrix-k8s-ingress-controller).
+To deploy the Citrix ingress controller as standalone pod, follow the instructions provided in the Citrix ingress controller [Helm Hub](https://hub.helm.sh/charts/citrix/citrix-ingress-controller).
 
-## Deploy Citrix ingress controller as a sidecar with Citrix ADC CPX in the Kubernetes cluster
+## Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX in the Kubernetes cluster
 
-Use the [citrix-k8s-cpx-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8s-cpx-ingress-controller) chart to deploy a Citrix ADC CPX with Citrix ingress controller as a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/). The chart deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster and the sidecar Citrix ingress controller configures the Citrix ADC CPX.
+Use the [citrix-cpx-with-ingress-controller](https://hub.helm.sh/charts/citrix/citrix-cpx-with-ingress-controller) chart to deploy a Citrix ADC CPX with Citrix ingress controller as a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/). The chart deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster. The sidecar Citrix ingress controller configures the Citrix ADC CPX.
 
-To deploy Citrix ADC CPX with Citrix ingress controller as a sidecar, follow the instruction provided in the Citrix ingress controller [Helm Hub](ttps://hub.helm.sh/charts/cic/citrix-k8s-cpx-ingress-controller).
+To deploy Citrix ADC CPX with the Citrix ingress controller as a sidecar, follow the instruction provided in the Citrix ingress controller [Helm Hub](https://hub.helm.sh/charts/citrix/citrix-cpx-with-ingress-controller).
