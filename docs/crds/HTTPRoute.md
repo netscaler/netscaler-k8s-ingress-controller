@@ -12,7 +12,7 @@ Currently HTTPRoute supports routing based on the following:
 - HTTP method based routing
 - Routing using Citrix ADC policy expressions
 
-You can define one or more rules as part of an HTTPRoute object with each rule acts as a matching criteria for routing. An action is defined for each rule when the matching criteria is met for the incoming HTTP request.
+You can define one or more rules as part of an HTTPRoute object with each rule acts as a matching criteria for routing. An action is defined for each rule when the matching criteria is met for the incoming HTTP request. An action could be one of 'backend' in which the traffic is load balanced to the backend service or 'redirect' where the redirect response is sent back to the client. 'Backend' action creates Content switching policies in ADC and 'redirect' action creates responder policies in ADC.
 
 There are three different ways of matching criteria as explained in the following table:
 
@@ -123,7 +123,7 @@ Following is an example for the `HTTPRoute.rules.match.path` attribute.
          kube:
            service: resource
            port: 80
-
+---
      match:
      - path:
          regex: '/foo/[A-Z0-9]{3}'
@@ -154,7 +154,7 @@ The following table explains the various fields in the `HTTPRoute.rules.match.he
 
 ## HTTPRoute.rules.match.headers.headerName
 
-This attribute represents the header name based matching for content routing. 
+This attribute represents the header name based matching for content routing.
 
 Following example shows sample snippets for the `HTTPRoute.rules.match.headers.headerName` attribute configuration.
 
@@ -167,7 +167,7 @@ Following example shows sample snippets for the `HTTPRoute.rules.match.headers.h
         kube:
           service: mobile-service
           port: 80
-
+---
     match:
     - headers:
        - headerName:
@@ -205,7 +205,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.heade
          kube:
            service: mobile
            port: 80
-
+---
      match:
      - headers:
        - headerValue:
@@ -216,7 +216,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.heade
          kube:
            service: service1
            port: 80
-
+---
      match:
      - headers:
        - headerValue:
@@ -256,7 +256,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.cooki
          kube:
            service: v1-app
            port: 80
-
+---
      match:
      - cookies:
        - name: version
@@ -266,7 +266,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.cooki
          kube:
            service: v1-app
            port: 80
-
+---
      match:
      - cookies:
        - name: version
@@ -301,6 +301,7 @@ This attribute represents the HTTP query parameters in the URL matching for cont
         kube:
           service: v1-app
           port: 80
+---
     match:
     - queryParams:
       - name: version
@@ -310,6 +311,7 @@ This attribute represents the HTTP query parameters in the URL matching for cont
         kube:
           service: v1-app
           port: 80
+---
      match:
      - queryParams:
       - name: version
@@ -361,13 +363,13 @@ Following is an example for the `HTTPRoute.rules.action.backend.kube` attribute.
         kube:
           service: service
           namespace: default
-          port: 80        
+          port: 80
           backendConfig:
             lbConfig:
               lbmethod: ROUNDROBIN
             servicegroupConfig:
-              clttimeout: 20
- 
+              clttimeout: '20'
+
 The following table explains the various fields in the `HTTPRoute.rules.action.backend.kube` attribute.
 
 | Field         | Description                                             | Type          | Required |
@@ -387,7 +389,7 @@ Following is an example for the `BackendConfig` attribute configuration.
      lbConfig:
        lbmethod: ROUNDROBIN
      servicegroupConfig:
-       clttimeout: 20
+       clttimeout: '20'
 
 
 The following table explains the various fields in the `BackendConfig` attribute.
