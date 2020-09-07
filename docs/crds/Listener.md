@@ -41,7 +41,7 @@ spec:
           lbConfig:
             lbmethod: ROUNDROBIN
           servicegroupConfig:
-            clttimeout: 20
+            clttimeout: '20'
 ```
 
 For more examples, see [Listener Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/Listener_examples).
@@ -72,7 +72,7 @@ Following is an example for the `Listener.certificates` attribute.
            namespace: demo
           default: true
         - preconfigured: configured-secret
-  
+
 The following table explains the various fields in the `Listener.certificates` attribute.
 
 | Field         | Description                                                                                                                                     | Type                | Required |
@@ -134,13 +134,13 @@ Following is an example for the `Listener.action.backend.kube` attribute.
         kube:
           service: default-service
           namespace: default
-          port: 80        
+          port: 80
           backendConfig:
             lbConfig:
               lbmethod: ROUNDROBIN
             servicegroupConfig:
-              clttimeout: 20
- 
+              clttimeout: '20'
+
 The following table explains the various fields in the `Listener.action.backend.kube` attribute.
 
 | Field         | Description                                             | Type          | Required |
@@ -161,7 +161,7 @@ Following is an example for the `BackendConfig` attribute.
      lbConfig:
        lbmethod: ROUNDROBIN
      servicegroupConfig:
-       clttimeout: 20
+       clttimeout: '20'
 
 The following table explains the various fields in the `BackendConfig` attribute.
 
