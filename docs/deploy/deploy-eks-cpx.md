@@ -15,46 +15,42 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in [Elasti
 
 1.  Deploy Citrix ADC CPX as an ingress device in the cluster using the following command.
 
+	Citrix ADC CPX requires a Kubernetes Secret to be created for login credentials. Below command would create the required Kubernetes secret.
+	
+
+        kubectl create secret generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot'
+        
+	Deploy Citrix ADC CPX with inbuilt Citrix Ingress Controller.
+	
+	
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/standalone_cpx.yaml
 
 1.  Create the ingress resource using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/cpx_ingress.yaml
+        
+
+	An Ingress class named **citrix-ingress** is used in this example. Please see our [detailed Ingress class documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/ingress-classes.md).
 
 1.  Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/cpx_service.yaml
 
     !!! note "Note"
-        This command creates a load balancer with an external IP for receiving traffic.
+        This command creates a load balancer with an external IP/Hostname for receiving traffic.
 
-1.  Verify the service and check whether the load balancer has created an external IP. Wait for some time if the external IP is not created.
+1.  Verify the service and check whether the load balancer has created an external IP/Hostname.
 
-        kubectl  get svc
+        kubectl  get svc cpx-ingress
 
     |NAME | TYPE | CLUSTER-IP | EXTERNAL-IP | PORT(S) | AGE |
     | --- | ---| ----| ----| ----| ----|
-    |apache | ClusterIP |10.7.248.216 |none |  80/TCP | 2m |
-    |cpx-ingress |LoadBalancer | 10.7.241.6 |  pending | 80:32258/TCP,443:32084/TCP | 2m|
-    |kubernetes |ClusterIP |10.7.240.1 |none | 443/TCP | 22h|
+    |cpx-ingress |LoadBalancer | 10.7.241.6 |  EXTERNAL-HOSTNAME | 80:32258/TCP,443:32084/TCP | 2m|
 
-1.  Once the external IP for the load-balancer is available as follows, you can access your resources using the external IP for the load balancer.
-
-        kubectl  get svc
-
-    |Name | Type | Cluster-IP | External IP| Port(s) | Age |
-    |-----| -----| -------| -----| -----| ----|
-    |apache| ClusterIP|10.7.248.216|none|80/TCP |3m|
-    |cpx-ingress|LoadBalancer|10.7.241.6|EXTERNAL-IP CREATED|80:32258/TCP,443:32084/TCP|3m|
-    |kubernetes| ClusterIP| 10.7.240.1|none|443/TCP|22h|`
-
-    !!! note "Note"
-        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX service YAML](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX.
-        For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 1.  Access the application using the following command.
 
-        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
+        curl http://<External-hostname-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
         
 ## Quick Deploy
 
