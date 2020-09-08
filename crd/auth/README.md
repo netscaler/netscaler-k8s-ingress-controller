@@ -1,4 +1,4 @@
-# Define authentication policies on the Ingress Citrix ADC
+# Define authentication and authorization policies on the Ingress Citrix ADC
 
 Authentication policies are used to enforce access restrictions to the resources hosted by an application or API server.
 
@@ -11,7 +11,6 @@ The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth
 The following is the Auth CRD definition:
 
 ```yml
-
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -22,7 +21,7 @@ spec:
   names:
     kind: authpolicy
     plural: authpolicies
-    singular: authpolicy
+    singular: authpolicy 
   scope: Namespaced
   subresources:
     status: {}
@@ -37,11 +36,13 @@ spec:
       JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
+      type: object 
       properties:
         spec:
+          type: object 
           properties:
             servicenames:
-              description: 'Name of the services that needs to be binded to rewrite policy.'
+              description: 'Name of the service for which the policies applied'
               type: array
               items:
                 type: string
@@ -51,42 +52,62 @@ spec:
               type: array
               items:
                   description: " create config for a single auth provider of a particular type"
+                  type: object 
                   properties:
                     name:
                       description: 'Name for this provider, has to be unique, referenced by auth policies'
                       type: string
+                      maxLength: 127
 
                     oauth:
-                      description: 'Auth provided by external oAuth provider'
+                      description: 'Auth provided by external oAuth provider' 
+                      type: object 
                       properties:
                           issuer:
                               description: 'Identity of the server whose tokens are to be accepted'
                               type: string
+                              maxLength: 127
                           jwks_uri:
                               description: 'URL of the endpoint that contains JWKs (Json Web Key) for JWT (Json Web Token) verification'
                               type: string
+                              maxLength: 127
                           audience:
                               description: 'Audience for which token sent by Authorization server is applicable'
                               type: array
                               items:
                                 type: string
+                                maxLength: 127
                           token_in_hdr:
                               description: 'custom header name where token is present, default is Authorization header'
                               type: array
                               items:
                                 type: string
+                                maxLength: 127
+                              maxItems: 2
                           token_in_param:
                               description: 'query parameter name where token is present'
                               type: array
                               items:
                                 type: string
+                                maxLength: 127
+                              maxItems: 2
                           client_credentials:
                               description: 'secrets object that contains Client Id and secret as known to Introspection server'
                               type: string
                               maxLength: 253
                           introspect_url:
-                              description: 'URL of the introspection server'
+                              description: ' URL of the introspection server'
                               type: string
+                              maxLength: 127
+                          claims_to_save:
+                              description: 'list of claims to be saved, used to create authorization policies'
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 127
+                      anyOf:
+                          - required : [jwks_uri]
+                          - required : [introspect_url, client_credentials]
 
                     basic_local_db:
                       description: 'Basic HTTP authentication, user data in local DB'
@@ -98,9 +119,11 @@ spec:
               description: "Auth policies"
               type: array
               items:
+                type: object 
                 description: "Auth policy"
                 properties:
                   resource:
+                      type: object 
                       description: " endpoint/resource selection criteria"
                       properties:
                         path:
@@ -108,6 +131,7 @@ spec:
                           type: array
                           items:
                             type: string
+                            maxLength: 511
                         method:
                           type: array
                           items:
@@ -120,9 +144,57 @@ spec:
                     type: array
                     items:
                       type: string
+                      maxLength: 127
+                    maxItems: 1
                 required:
                   - resource
                   - provider
+
+            authorization_policies:
+              description: "Authorization policies"
+              type: array
+              items:
+                type: object 
+                description: "Authorization policy"
+                properties:
+                  resource:
+                      type: object 
+                      description: " endpoint/resource selection criteria"
+                      properties:
+                        path:
+                          description: "api resource path e.g. /products. "
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 511
+                        method:
+                          description: " http method"
+                          type: array
+                          items:
+                            type: string
+                            enum: ['GET', 'PUT', 'POST','DELETE']
+                        claims:
+                          description: " authorization scopes required for selected resource"
+                          type: array
+                          items:
+                              type: object
+                              properties:
+                                name:
+                                  description: " name of the claim/attribute to check"
+                                  type: string
+                                  maxLength: 127
+                                values:
+                                  description: " list of claim values required for the request"
+                                  type: array
+                                  items:
+                                    type: string
+                                    maxLength: 127
+                                  minItems: 1
+                              required:
+                                - name
+                                - values
+                      required:
+                        - claims
 
           required:
             - servicenames
