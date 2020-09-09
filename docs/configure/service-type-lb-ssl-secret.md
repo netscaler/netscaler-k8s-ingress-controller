@@ -1,4 +1,4 @@
-# SSL certificate for services of type LoadBalancer through Kubernetes secret resource
+# SSL certificate for services of type LoadBalancer through the Kubernetes secret resource
 
 This section provides information on how to use the SSL certificate stored as
 a Kubernetes secret with services of type LoadBalancer. The certificate is applied if the annotation `service.citrix.com/service-type` is `SSL` or `SSL_TCP`.
