@@ -105,6 +105,7 @@ nav:
     - Log levels: configure/log-levels.md
     - COE ConfigMap: configure/config-map-coe.md
     - TCP profile support for services of type LoadBalancer: configure/TCP-profile-type-lb.md
+    - SSL certificate for services of type LoadBalancer through the Kubernetes secret resource: configure/service-type-lb-ssl-secret.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
