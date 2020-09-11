@@ -1,0 +1,104 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafhtmlrelax
+spec:
+    servicenames:
+        - frontend
+    security_checks:
+        common:
+          allow_url: "on"
+          block_url: "on"
+          content_type: "on"
+          cookie_consistency: "on"
+          credit_card: "on"
+          multiple_headers:
+            action: ["log"]
+        html:
+          cross_site_scripting:
+            action: ["block"]
+          field_format: "on"
+          sql_injection: "on"
+          form_field_consistency:
+            action: ["log","block"]
+          csrf: "on"
+          fileupload_type: "on"
+    relaxations:
+        html:
+          cross_site_scripting:
+            - rule:
+                field_name: password
+                url: /login.php
+                is_name_regex: true
+                enabled: false
+                comment: "user comment for relaxation rule"
+            - rule:
+                field_name: upload
+                url: test.php
+          sql_injection:
+            - rule:
+                field_name: username
+                url: login.php
+                is_name_regex: true
+                location: "header"
+                value_type: "Attribute"
+                value: "insert"
+                is_value_regex: true
+                enabled: false
+                comment: "user comment for relaxation rule"
+          sql_injection:
+            - rule:
+                field_name: username
+                url: login.php
+                is_name_regex: true
+                location: "header"
+                value_type: "SpecialString"
+                value: "insert"
+                is_value_regex: true
+                enabled: false
+                comment: "user comment for relaxation rule"
+            - rule:
+                field_name: password
+                url: login.php
+          form_field_consistency:
+            - rule:
+                field_name: query
+                url: search.php
+        common:
+          allow_url:
+            urls:
+                - payment.php
+                - cover.php
+          content_type:
+            types:
+                - text/html
+                - impage/png
+          cookie_consistency:
+            cookies:
+                - session_cookie
+                - test_cookie
+          credit_card:
+            - rule:
+                card_num: 660000000000005
+                url: search.php
+    enforcements:
+        common:
+          block_url:
+            urls:
+                - admin.php
+                - user_info.db
+        html:
+          field_format:
+            - rule:
+                field_name: phone_num
+                url: search.php
+                field_type: integer
+                min_len: 10
+                max_len: 12
+          file_upload:
+            - rule:
+                field_name: field
+                url: upload.php
+                file_type:
+                    - pdf
+                    - msdoc
