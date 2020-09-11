@@ -46,7 +46,6 @@ spec:
                 is_value_regex: true
                 enabled: false
                 comment: "user comment for relaxation rule"
-          sql_injection:
             - rule:
                 field_name: username
                 url: login.php
