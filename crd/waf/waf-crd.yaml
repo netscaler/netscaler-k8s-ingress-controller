@@ -64,7 +64,7 @@ spec:
                             description: 'To control what traffic to be inspected by Web Application Firewall. If you do not provide the target, everything will be inspected by default'
                             type: object
                             properties:
-                                paths:
+                                path:
                                     type: array
                                     description: "List of http urls to inspect"
                                     items:
