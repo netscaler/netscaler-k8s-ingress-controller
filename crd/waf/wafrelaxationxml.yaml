@@ -1,0 +1,34 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafxmlrelax
+spec:
+    servicenames:
+        - frontend
+    application_type: XML
+    security_checks:
+        xml:
+          dos: "on"
+          sql_injection: "on"
+          cross_site_scripting: "off"
+          wsi: "on"
+          validation: "on"
+          attachment: "on"
+          format: "on"
+          soap_fault_filtering: "on"
+    relaxations:
+        xml:
+          cross_site_scripting:
+            - rule:
+                url: /login3.php
+                is_regex: true
+                location: "ELEMENT"
+                enabled: false
+                comment: "user comment for relaxation rule"
+          sql_injection:
+            - rule:
+                url: /login3.php
+                is_regex: true
+                location: "ELEMENT"
+                enabled: false
+                comment: "user comment for relaxation rule"

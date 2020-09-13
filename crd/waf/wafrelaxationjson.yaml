@@ -1,0 +1,29 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafjsonrelax
+spec:
+    servicenames:
+        - frontend
+    application_type: JSON
+    security_checks:
+        json:
+          dos: "on"
+          sql_injection: "on"
+          cross_site_scripting: "on"
+    relaxations:
+        json:
+          cross_site_scripting:
+            - rule:
+                url: login.php
+                enabled: true
+                comment: "json relaxation rule"
+            - rule:
+                url: test.php
+          sql_injection:
+            - rule:
+                url: login.php
+                enabled: false
+                comment: "json sql relaxation rule"
+            - rule:
+                url: logout.php
