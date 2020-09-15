@@ -33,8 +33,8 @@ The following table details the smart annotations provided by the Citrix ingress
 | Citrix ADC Entity Name | Smart Annotation | Example |
 | ----------------------- | ---------------- | ------- |
 | lbvserver | ingress.citrix.com/lbvserver | `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
-| servicegroup | ingress.citrix.com/servicegroup | `ingress.citrix.com/servicegroup: '{"frontend":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
-| monitor | ingress.citrix.com/monitor | `ingress.citrix.com/monitor: '{"frontend":{"type":"http"}}'` |
+| servicegroup | ingress.citrix.com/servicegroup | `ingress.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
+| monitor | ingress.citrix.com/monitor | `ingress.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
 
 ### Sample ingress YAML with smart annotations
 
