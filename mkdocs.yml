@@ -44,11 +44,11 @@ theme:
   features:
     - tabs: false
   palette:
-    primary: white
-    accent: blue
+    primary: teal
+    accent: teal
   font: false
-  favicon: https://citrix.com/favicon.ico
-  logo: https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png
+  favicon: https://docs.citrix.com/assets/images/favicon.ico
+  logo: https://developer-docs.citrix.com/_static/logo.svg
   icon: fontawesome
 
 extra:
