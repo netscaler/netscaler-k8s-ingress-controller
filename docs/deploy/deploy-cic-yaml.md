@@ -119,7 +119,7 @@ Perform the following:
 
 Earlier, when you deploy Citrix ADC CPX with the Citrix ingress controller as a sidecar without specifying the login credentials, the Citrix ingress controller considers `nsroot/nsroot` as the default credentials.
 
-With the latest Citrix ADC CPX versions (Citrix ADC CPX 13.0.64.35 and later), the default credentials are removed. So, when you deploy the Citrix ingress controller as a sidecar with the latest versions of Citrix ADC CPX, the Citrix ingress controller can get the credentials from CPX through the `/var/deviceinfo/random_id` file in Citrix ADC CPX. This file can be shared between the Citrix ADC CPX and the Citrix ingress controller through the volume mount.
+With the latest Citrix ADC CPX versions (Citrix ADC CPX 13.0.64.35 and later), the default credentials are removed. So, when you deploy the Citrix ingress controller as a sidecar with the latest versions of Citrix ADC CPX, the Citrix ingress controller can get the credentials from Citrix ADC CPX through the `/var/deviceinfo/random_id` file in the Citrix ADC CPX. This file can be shared between the Citrix ADC CPX and the Citrix ingress controller through the volume mount.
 
 Depending on whether you are using the latest Citrix ADC CPX version or an older version, you need to choose one of the following deployment YAML files. For older versions of Citrix ADC CPX, you need to specify the credentials in the YAML file.
 
