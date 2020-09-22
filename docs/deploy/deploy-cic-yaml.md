@@ -125,7 +125,7 @@ Depending on whether you are using the latest Citrix ADC CPX version or an older
 
 - For Citrix ADC CPX 13.0.64.35 and later versions, use the following YAML:
 
-  [cpx-ingress-latest.yml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/yaml-cpx-crediential-changes/cpx-cic-latest.yaml)
+  [cpx-ingress-latest.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/yaml-cpx-crediential-changes/cpx-cic-latest.yaml)
 
   As provided in the YAML, the following is a snippet of the volume mount configuration required in the YAML file both for the Citrix ingress controller and Citrix ADC CPX:
 
