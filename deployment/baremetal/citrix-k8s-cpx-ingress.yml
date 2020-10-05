@@ -89,7 +89,7 @@ spec:
     spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
-        - name: cpx
+        - name: cpx-ingress
           image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-64.35
           securityContext:
              privileged: true
