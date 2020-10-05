@@ -146,6 +146,8 @@ spec:
         emptyDir: {}
       - name: cpx-volume2
         emptyDir: {}
+        
+---
 
 apiVersion: v1
 kind: Service
