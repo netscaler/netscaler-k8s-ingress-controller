@@ -106,7 +106,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.9.9
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.9.20
           args:
           - --ingress-classes
               citrix
@@ -149,3 +149,23 @@ spec:
         emptyDir: {}
       - name: cpx-volume2
         emptyDir: {}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpx-service
+  labels:
+    app: cpx-service
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    protocol: TCP
+    name: https
+  selector:
+    app: cpx-ingress
+
