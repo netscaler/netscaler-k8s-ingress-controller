@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/citrix-k8s-ingress-controller/precache-manifest.a903df426ca914fa5d4809613d07a1b9.js"
+  "/citrix-k8s-ingress-controller/precache-manifest.d9191c1c78fed2808d8acf5903438e19.js"
 );
 
 self.addEventListener('message', (event) => {
