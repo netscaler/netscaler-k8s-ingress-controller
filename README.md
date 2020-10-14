@@ -30,6 +30,7 @@ The Citrix ingress controller can be deployed either by directly using [yamls](h
 
 Features supported by the Citrix ingress controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
 The Citrix API Gateway features can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/citrix-api-gateway.md).
+
 ## Supported platforms and deployments
 
 Click [here](docs/support-matrix.md) for detailed list of supported platforms and deployments.
@@ -77,6 +78,9 @@ Get Logs: kubectl logs citrix-k8s-ingress-controller > log_file
 
 You can report any issues using the following forum:
 `https://discussions.citrix.com/forum/1657-netscaler-cpx/`
+
+For information on how to troubleshoot some of the common issues that you may encounter while using Citrix ADC CPX, see the
+[Citrix ADC CPX documentation](https://docs.citrix.com/en-us/citrix-adc-cpx/current-release/cpx-troubleshooting.html).
 
 ## Code of Conduct
 
