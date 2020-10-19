@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/citrix-k8s-ingress-controller/static/css/main.1355a2df.chunk.css",
-    "main.js": "/citrix-k8s-ingress-controller/static/js/main.e3674658.chunk.js",
-    "main.js.map": "/citrix-k8s-ingress-controller/static/js/main.e3674658.chunk.js.map",
-    "runtime-main.js": "/citrix-k8s-ingress-controller/static/js/runtime-main.09da568c.js",
-    "runtime-main.js.map": "/citrix-k8s-ingress-controller/static/js/runtime-main.09da568c.js.map",
+    "main.js": "/citrix-k8s-ingress-controller/static/js/main.bc927a7e.chunk.js",
+    "main.js.map": "/citrix-k8s-ingress-controller/static/js/main.bc927a7e.chunk.js.map",
+    "runtime-main.js": "/citrix-k8s-ingress-controller/static/js/runtime-main.15cf2038.js",
+    "runtime-main.js.map": "/citrix-k8s-ingress-controller/static/js/runtime-main.15cf2038.js.map",
     "static/css/2.a70dd489.chunk.css": "/citrix-k8s-ingress-controller/static/css/2.a70dd489.chunk.css",
-    "static/js/2.7222473b.chunk.js": "/citrix-k8s-ingress-controller/static/js/2.7222473b.chunk.js",
-    "static/js/2.7222473b.chunk.js.map": "/citrix-k8s-ingress-controller/static/js/2.7222473b.chunk.js.map",
+    "static/js/2.6ee39bff.chunk.js": "/citrix-k8s-ingress-controller/static/js/2.6ee39bff.chunk.js",
+    "static/js/2.6ee39bff.chunk.js.map": "/citrix-k8s-ingress-controller/static/js/2.6ee39bff.chunk.js.map",
     "index.html": "/citrix-k8s-ingress-controller/index.html",
-    "precache-manifest.3106d53ae161e33248640b27ee7f3ccc.js": "/citrix-k8s-ingress-controller/precache-manifest.3106d53ae161e33248640b27ee7f3ccc.js",
+    "precache-manifest.d8e71a8539b476c75f9b7042e1b15784.js": "/citrix-k8s-ingress-controller/precache-manifest.d8e71a8539b476c75f9b7042e1b15784.js",
     "service-worker.js": "/citrix-k8s-ingress-controller/service-worker.js",
     "static/css/2.a70dd489.chunk.css.map": "/citrix-k8s-ingress-controller/static/css/2.a70dd489.chunk.css.map",
     "static/css/main.1355a2df.chunk.css.map": "/citrix-k8s-ingress-controller/static/css/main.1355a2df.chunk.css.map",
-    "static/js/2.7222473b.chunk.js.LICENSE.txt": "/citrix-k8s-ingress-controller/static/js/2.7222473b.chunk.js.LICENSE.txt",
+    "static/js/2.6ee39bff.chunk.js.LICENSE.txt": "/citrix-k8s-ingress-controller/static/js/2.6ee39bff.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/citrix-k8s-ingress-controller/static/media/outline-icons.ef60a4f6.woff",
     "static/media/dualtier.png": "/citrix-k8s-ingress-controller/static/media/dualtier.d3fbd47f.png",
     "static/media/multicluster.png": "/citrix-k8s-ingress-controller/static/media/multicluster.163e0e3b.png",
@@ -21,10 +21,10 @@
     "static/media/single.png": "/citrix-k8s-ingress-controller/static/media/single.adbb155f.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.09da568c.js",
+    "static/js/runtime-main.15cf2038.js",
     "static/css/2.a70dd489.chunk.css",
-    "static/js/2.7222473b.chunk.js",
+    "static/js/2.6ee39bff.chunk.js",
     "static/css/main.1355a2df.chunk.css",
-    "static/js/main.e3674658.chunk.js"
+    "static/js/main.bc927a7e.chunk.js"
   ]
 }
