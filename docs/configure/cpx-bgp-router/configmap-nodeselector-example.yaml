@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  labels:
+    app: cic
+data:
+  NS_BGP_CONFIG: |
+    bgpConfig:
+    - nodeSelector: datacenter=ds1
+      bgpRouter:
+        localAS: 100
+        neighbor:
+        - address: 10.102.33.44
+          remoteAS: 100
+          advertisementInterval: 30
+          ASOriginationInterval: 30
+    - nodeSelector: datacenter=ds2
+      bgpRouter:
+        localAS: 100
+        neighbor:
+        - address: 10.102.28.12
+          remoteAS: 100
+          advertisementInterval: 30
+          ASOriginationInterval: 30
+

@@ -2,7 +2,7 @@
 
 Authentication and authorization policies are used to enforce access restrictions to the resources hosted by an application or API server. While you can verify the identity using the authentication policies, authorization policies are used to verify whether a specified request has the necessary permissions to access a resource.
 
-Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
+Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
 
 ## Auth CRD definition
 
@@ -28,11 +28,11 @@ spec:
   additionalPrinterColumns:
     - name: Status
       type: string
-      description: "Current Status of the CRD"
+      description: 'Current Status of the CRD'
       JSONPath: .status.state
     - name: Message
       type: string
-      description: "Status Message"
+      description: 'Status Message'
       JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
@@ -42,33 +42,103 @@ spec:
           type: object 
           properties:
             servicenames:
-              description: 'Name of the service for which the policies applied'
+              description: |+
+                           'Name of the services for which the policies applied'
               type: array
               items:
                 type: string
-                maxLength: 127
-            auth_providers:
-              description: 'Auth Config for required auth providers, one or more of these can be created'
+                maxLength: 63
+            authentication_mechanism:
+              type: object 
+              description: |+
+                          'Authentication mechanism. Options: using forms or using request header.
+                           Default is Authentication using request header, when no option is specified'
+              properties:
+              oneOf:
+                - properties:
+                    using_request_header:
+                      description: |+
+                                   'Enable user authentication using request header. Use when the credentials
+                                    or API keys are passed in a header. For example, when using basic, digest,
+                                    bearer authentication or API keys.
+                                    When authentication using forms is provided, this is set to OFF'
+
+                      type: string
+                      enum: ['ON']
+                  required: [using_request_header]
+                - properties:
+                    using_forms:
+                      type: object
+                      description: 'Enables authentication using forms. Use with user/web authentication.'
+                      properties:
+                        authentication_host:
+                          description: |+
+                                       'Fully qualified domain name (FQDN) for authentication
+                                        FQDN to which the user must be redirected for
+                                        authentication. This FQDN should be unique and should resolve to the front-end IP of Citrix
+                                        ADC with Ingress or service type LoadBalancer'
+                          type: string
+                          maxLength: 255
+                        authentication_host_cert:
+                          description: |+
+                                       'Name of the SSL certificate to be used with authentication_host.
+                                        This certificate is mandatory while using_forms'
+                          type: object
+                          properties:
+                          oneOf:
+                          - properties:
+                              tls_secret:
+                                type: string
+                                description: 'Name of the Kubernetes Secret of type TLS referring to Certificate'
+                                pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                            required: [tls_secret]
+                          - properties:             
+                              preconfigured:
+                                type: string
+                                maxLength: 63
+                                description: |+
+                                             'Preconfigured SSL certkey name on ADC with the
+                                              certificate and key already added on ADC'
+                            required: [preconfigured]
+                      required: [authentication_host, authentication_host_cert]
+                      oneOf:
+                      - properties:
+                          cs_vip:
+                            description: |+
+                                         'Front-end IP of ingress for which the authentication 
+                                          using forms is applicable. This refers to  the front-end IP address provided 
+                                          with Ingress'
+                            type: string
+                        required: [cs_vip]
+                      - properties:
+                          lb_service_name:
+                            description: |+
+                                         'Service of type LoadBalancer for which the authentication using forms
+                                          is applicable.'
+                            type: string
+                            maxLength: 63
+                        required: [lb_service_name]
+                  required: [using_forms]
+            authentication_providers:
+              description: |+
+                           'Authentication Configuration for required authentication providers/schemes.
+                            One or more of these can be created'
               type: array
               items:
-                  description: " create config for a single auth provider of a particular type"
+                  description: 'Create config for a single authentication provider of a particular type'
                   type: object 
                   properties:
                     name:
-                      description: 'Name for this provider, has to be unique, referenced by auth policies'
+                      description: 'Name for this provider, has to be unique, referenced by authentication policies'
                       type: string
                       maxLength: 127
 
                     oauth:
-                      description: 'Auth provided by external oAuth provider' 
+                      description: 'Authentication provided by external oAuth provider'
                       type: object 
                       properties:
                           issuer:
                               description: 'Identity of the server whose tokens are to be accepted'
-                              type: string
-                              maxLength: 127
-                          jwks_uri:
-                              description: 'URL of the endpoint that contains JWKs (Json Web Key) for JWT (Json Web Token) verification'
                               type: string
                               maxLength: 127
                           audience:
@@ -78,7 +148,9 @@ spec:
                                 type: string
                                 maxLength: 127
                           token_in_hdr:
-                              description: 'custom header name where token is present, default is Authorization header'
+                              description: |+
+                                           'custom header name where token is present,
+                                            default is Authorization header'
                               type: array
                               items:
                                 type: string
@@ -91,14 +163,12 @@ spec:
                                 type: string
                                 maxLength: 127
                               maxItems: 2
-                          client_credentials:
-                              description: 'secrets object that contains Client Id and secret as known to Introspection server'
-                              type: string
-                              maxLength: 253
-                          introspect_url:
-                              description: ' URL of the introspection server'
-                              type: string
-                              maxLength: 127
+                          signature_algorithms:
+                              description: 'list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed'
+                              type: array
+                              items:
+                                type: string
+                                enum: ['HS256', 'RS256', 'RS512']
                           claims_to_save:
                               description: 'list of claims to be saved, used to create authorization policies'
                               type: array
@@ -106,28 +176,133 @@ spec:
                                 type: string
                                 maxLength: 127
                       anyOf:
-                          - required : [jwks_uri]
-                          - required : [introspect_url, client_credentials]
+                      - properties:
+                          jwks_uri:
+                              description: |+
+                                          'URL of the endpoint that contains JWKs (Json Web Key) for 
+                                           JWT (Json Web Token) verification'
+                              type: string
+                              maxLength: 127                        
+                        required : [jwks_uri]
+                      - properties:
+                          introspect_url:
+                              description: ' URL of the introspection server'
+                              type: string
+                              maxLength: 127
+                          client_credentials:
+                              description: |+
+                                           'secrets object that contains Client Id and secret as known 
+                                            to Introspection server'
+                              type: string
+                              maxLength: 253
+                        required : [introspect_url, client_credentials]
+
+                    saml:
+                      description: |+
+                                   'SAML authentication provider.
+                                    Currently SAML is supported only with authentication mechanism using forms'
+                      type: object
+                      properties:
+                          metadata_url:
+                              description: 'URL is used for obtaining saml metadata.'
+                              type: string
+                              maxLength: 255
+                          metadata_refresh_interval:
+                              description: |+
+                                           'Interval in minutes for fetching metadata from specified metadata URL.
+                                            Default is 36000'
+                              type: integer
+                              minimum: 1
+                              maximum: 4294967295
+                          signing_cert:
+                              description: 'SSL certificate to sign requests from SP to IDP'
+                              type: object
+                              properties:
+                              oneOf:
+                              - properties:
+                                  tls_secret:
+                                    type: string
+                                    description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                                required: [tls_secret]
+                              - properties:
+                                  preconfigured:
+                                    type: string
+                                    maxLength: 63
+                                    description: |+
+                                                 'Preconfigured SSL certkey name on ADC with the
+                                                  certificate and key already added on ADC'
+                                required: [preconfigured]
+                          audience:
+                              description: 'Audience for which assertion sent by IdP is applicable'
+                              type: string
+                              maxLength: 127                          
+                          issuer_name:
+                              description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
+                              type: string
+                              maxLength: 63
+                          binding:
+                              description: 'Specifies the transport mechanism of saml message. Default is POST'
+                              type: string
+                              enum: ['REDIRECT', 'POST', 'ARTIFACT']
+                          artifact_resolution_service_url:
+                              description: 'URL of the Artifact Resolution Service on IdP'
+                              type: string
+                              maxLength: 255
+                          logout_binding:
+                              description: 'Specifies the transport mechanism of saml logout.  Default is POST'
+                              type: string
+                              enum: ['REDIRECT', 'POST']
+                          reject_unsigned_assertion:
+                              description: |+
+                                           'Reject unsigned SAML assertions. ON, rejects assertion without signature.
+                                            STRICT ensure that both Response and Assertion are signed. Default is ON'
+                              type: string
+                              enum: ['ON', 'OFF', 'STRICT']                      
+                          user_field:
+                              description: 'SAML user ID, as given in the SAML assertion'
+                              type: string
+                              maxLength: 63
+                          default_authentication_group:
+                              description: |+
+                                           'This is the default group that is chosen when the authentication 
+                                            succeeds in addition to extracted groups'
+                              type: string
+                              maxLength: 63                                                  
+                          skew_time:
+                              description: |+
+                                           'Allowed clock skew in number of minutes on an incoming assertion.
+                                            Default is 5'
+                              type: integer
+                              minimum: 1
+                          attributes_to_save:
+                              description: |+
+                                           'List of attribute names separated by comma which needs to be extracted
+                                            and stored as key-value pair for the session on ADC'
+                              type: string
+                              maxLength: 2047                   
+                      required:
+                        - metadata_url
 
                     basic_local_db:
-                      description: 'Basic HTTP authentication, user data in local DB'
+                      description: 'Basic HTTP authentication, user data in local DB of ADC'
 
                   required:
                     - name
 
-            auth_policies:
-              description: "Auth policies"
+            authentication_policies:
+              description: 'Authentication policies'
               type: array
               items:
                 type: object 
-                description: "Auth policy"
+                description: 'Authentication policy'
                 properties:
                   resource:
                       type: object 
-                      description: " endpoint/resource selection criteria"
+                      description: 'endpoint/resource selection criteria'
                       properties:
                         path:
-                          description: "api resource path e.g. /products. "
+                          description: 'api resource path e.g. /products. '
                           type: array
                           items:
                             type: string
@@ -140,7 +315,7 @@ spec:
                       required:
                         - path
                   provider:
-                    description: "name of the auth provider for the policy, empty if no authentication required"
+                    description: 'name of the authentication provider for the policy, empty if no authentication required'
                     type: array
                     items:
                       type: string
@@ -151,40 +326,40 @@ spec:
                   - provider
 
             authorization_policies:
-              description: "Authorization policies"
+              description: 'Authorization policies'
               type: array
               items:
                 type: object 
-                description: "Authorization policy"
+                description: 'Authorization policy'
                 properties:
                   resource:
                       type: object 
-                      description: " endpoint/resource selection criteria"
+                      description: 'endpoint/resource selection criteria'
                       properties:
                         path:
-                          description: "api resource path e.g. /products. "
+                          description: 'api resource path e.g. /products. '
                           type: array
                           items:
                             type: string
                             maxLength: 511
                         method:
-                          description: " http method"
+                          description: ' http method'
                           type: array
                           items:
                             type: string
                             enum: ['GET', 'PUT', 'POST','DELETE']
                         claims:
-                          description: " authorization scopes required for selected resource"
+                          description: 'authorization scopes required for selected resource saved as claims or attributes'
                           type: array
                           items:
                               type: object
                               properties:
                                 name:
-                                  description: " name of the claim/attribute to check"
+                                  description: 'name of the claim/attribute to check'
                                   type: string
                                   maxLength: 127
                                 values:
-                                  description: " list of claim values required for the request"
+                                  description: 'list of claim values required for the request'
                                   type: array
                                   items:
                                     type: string
@@ -198,42 +373,57 @@ spec:
 
           required:
             - servicenames
-```
 
+```
 
 ## Auth CRD attributes
 
 The Auth CRD provides the following attributes that you use to define the authentication policies:
 
 -  `servicenames`
--  `auth_providers`
--  `auth_policies`
+-  `authentication_mechanism`
+-  `authentication_providers`
+-  `authentication_policies`
 -  `authorization_policies`
-
-### servicenames
+  
+### Servicenames
 
 The name of the services that you want to bind to the authentication policy.
 
-### auth_providers
+### Authentication mechanism
+
+The following authentication mechanisms are supported:
+
+- Using request headers:  
+Enables user authentication using the request header. You can use this mechanism when the credentials or API keys are passed in a header. For example, you can use authentication using request headers for basic, digest, bearer authentication, or API keys.
+
+- Using forms:
+Enables authentication using forms. You can use this mechanism with user or web authentication.
+
+When the authntication mechanism is not specified, the default is authentication using the request header.
+
+The following are the attributes for forms based authentication.
+
+| Attribute | Description |
+| --------- | ----------- |
+| `authentication_host` | Specifies a fully qualified domain name (FQDN) to which the user must be redirected for authentication. This FQDN should be unique and should resolve to the front-end IP address of Citrix ADC with Ingress or service type LoadBalancer.|
+| `authentication_host_cert` | Specifies the name of the SSL certificate to be used with the `authentication_host`. This certificate is mandatory while performing authentication using the form.|
+| `cs_vip` | Specifies the front-end IP address of the ingress for which the authentication using forms is applicable. This attribute refers to the `frontend-ip` provided with the Ingress.|
+| `lb_service_name`| Specifies the name of the service of type LoadBalancer for which the authentication using forms is applicable.|
+
+**Note:** While using forms, authentication can be enabled for all types of traffic. Currently, granular authentication is not supported.
+
+### Authentication providers
 
 The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. The CRD supports both *basic authentication* and *OAuth authentication*.
 
 #### Basic authentication
 
-To use basic authentication, you must create the user accounts on the ingress Citrix ADC. Any new request to the services in your Kubernetes deployment must contain the *Authentication* header with the user name and password. The request is validated with user credentials within the Citrix ADC.
-
-##### Basic authentication attributes
-
-The following are the attributes for basic authentication:
-
-| Attribute | Description |
-| --------- | ----------- |
-| `name` | The name of the provider. This name is used in the [policies](#authproviders) to refer the provider.|
-| `basic_local_db` | Specifies that local authentication is used with the HTTP basic authentication scheme. The requests should contain the authentication header with user name and password.|
+Specifies that local authentication is used with the HTTP basic authentication scheme. To use basic authentication, you must create user accounts on the ingress Citrix ADC.
 
 #### OAuth authentication
 
-The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successful then Citrix ADC grants access to the client.
+The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to a Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successful then Citrix ADC grants access to the client.
 
 ##### OAuth authentication attributes
 
@@ -244,14 +434,36 @@ The following are the attributes for OAuth authentication:
 | `Issuer` | The identity (usually a URL) of the server whose tokens need to be accepted for authentication.|
 | `jwks_uri` | The URL of the endpoint that contains JWKs (JSON Web Key) for JWT (JSON Web Token) verification.|
 | `audience` | The identity of the service or application for which the token is applicable.|
-| `token_in_hdr` | The custom header name where the token is present. The default value is `Authorization` header.</br> **Note:** You can specify more than one header.|
+| `token_in_hdr` | The custom header name where the token is present. The default value is the `Authorization` header.</br> **Note:** You can specify more than one header.|
 | `token_in_param` | The query parameter where the token is present.|
 | `introspect_url`| The URL of the introspection endpoint of the authentication server (IdP). If the access token presented is an opaque token, introspection is used for the token verification.|
 | `client_credentials`| The name of the Kubernetes secrets object that contains the client id and client secret required to authenticate with the authentication server.|
 
-### auth_policies
+#### SAML authentication
 
-The **policies** allow you to define the traffic selection criteria to apply the authentication mechanism and also to specify the provider that you want to use for the selected traffic.
+Security assertion markup language (SAML) is an XML-based open standard which enables authentication of users across products or organizations. The SAML authentication mechanism, requires an external identity provider to authenticate the client. SAML works by transferring the client identity from the identity provider to the Citrix ADC. On successful validation of the client identity, the Citrix ADC grants access to the client.
+
+The following are the attributes for SAML authentication.
+
+| Attribute | Description |
+| --------- | ----------- |
+| `metadata_url` | Specifies the URL used for obtaining SAML metadata. |
+| `metadata_refresh_interval` | Specifies the interval in minutes for fetching metadata from the specified metadata URL.|
+| `signing_cert` | Specifies the SSL certificate to sign requests from the service provider (SP) to the identity provider (IdP).|
+| `audience` | Specifies the identity of the service or application for which the token is applicable.|
+| `issuer_name` | Specifies the name used in requests sent from SP to IdP to identify the Citrix ADC.|
+| `binding` | Specifies the transport mechanism of the SAML message. The default value is `POST`.|
+| `artifact_resolution_service_url` | Specifies the URL of the artifact resolution service on IdP.|
+| `logout_binding` | Specifies the transport mechanism of the SAML logout. The default value is `POST`.|
+|`reject_unsigned_assertion`| Rejects unsigned SAML assertions. If this value is `ON`, it rejects assertion without signature.|
+|`user_field`| Specifies the SAML user ID specified in the SAML assertion|
+|`default_authentication_group`| Specifies the default group that is chosen when the authentication succeeds in addition to extracted groups.|
+|`skewtime`| Specifies the allowed clock skew time in minutes on an incoming SAML assertion.|
+|`attributes_to_save`| Specifies the list of attribute names separated by commas which needs to be extracted and stored as key-value pairs for the session on Citrix ADC.|
+
+### Authentication policies
+
+The **authentication_policies** allow you to define the traffic selection criteria to apply the authentication mechanism and also to specify the provider that you want to use for the selected traffic.
 
 The following are the attributes for policies:
 
@@ -261,7 +473,7 @@ The following are the attributes for policies:
 | `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
 | `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
 
-### authorization policies
+### Authorization policies
 
 Authorization policies allow you to define the traffic selection criteria to apply the authorization requirements for the selected traffic.
 
@@ -306,7 +518,7 @@ spec:
     servicenames:
     - frontend
 
-    auth_providers:
+    authentication_providers:
 
         - name: "local-auth-provider"
           basic-local-db:
@@ -321,13 +533,13 @@ spec:
         - name: "introspect-provider"
           oauth:
             issuer: "ns-idp"
-            jwks_uri: "https://10.221.35.214/oauth/idp/certs”
+            jwks_uri: "https://idp.aaa/oauth/idp/certs”
             audience : ["https://api.service.net"]
             client_credentials: "oauthsecret"
-            introspect_url: https://10.221.35.214/oauth/idp/introspect
+            introspect_url: https://idp.aaa/oauth/idp/introspect
             claims_to_save : ["scope"]
 
-    auth_policies:
+    authentication_policies:
 
         - resource:
             path:
@@ -402,7 +614,6 @@ The sample authentication policy performs the following:
   
 -  The Citrix ADC does not need any authorization permissions to access the **products** endpoint with GET operation.
 
-
 For oAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
 
 
@@ -437,3 +648,49 @@ You can create a secret object in a similar way as shown in the following exampl
 
 **Note:**
 Keys of the opaque secret object must be `client_id` and `client_secret`. A user can set the values for them as desired.
+
+### SAML authentication using forms
+
+The following is an example for SAML authentication using forms.
+In the example, `authhost-tls-cert-secret` and `saml-tls-cert-secret` are Kubernetes TLS secrets referring to certificate and key.
+
+```yml
+
+apiVersion: citrix.com/v1beta1
+kind: authpolicy
+metadata:
+  name: samlexample
+spec:
+    servicenames:
+    - frontend
+
+    authentication_mechanism:
+      using_forms:
+        authentication_host: "fqdn_authenticaton_host"
+        authentication_host_cert:
+          tls_secret: authhost-tls-cert-secret
+        cs_vip: "192.2.156.156"
+
+    authentication_providers:
+        - name: "saml-auth-provider"
+          saml:
+              metadata_url: "https://idp.aaa/metadata/samlidp/aaa"
+              signing_cert:
+                  tls_secret: saml-tls-cert-secret
+
+    authentication_policies:
+
+        - resource:
+            path: []
+            method: []
+          provider: ["saml-auth-provider"]
+
+    authorization_policies:
+
+        - resource:
+            path: []
+            method: []
+            claims: []
+
+```
+        
