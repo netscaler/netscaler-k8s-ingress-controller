@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+  name: cpx-ingress
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: cpx-ingress
+  template:
+    metadata:
+      labels:
+        app: cpx-ingress
+      name: cpx-ingress
+    spec:
+      containers:
+      - env:
+        - name: EULA
+          value: "yes"
+        - name: NS_NETMODE
+          value: HOST
+        - name: KUBERNETES_TASK_ID
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-64.35 
+        imagePullPolicy: Always
+        name: cpx-ingress
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - NET_ADMIN
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /cpx/conf/
+          name: cpx-volume1
+        - mountPath: /cpx/crash/
+          name: cpx-volume2
+        - mountPath: /var/deviceinfo
+          name: shared-data
+      # add Citrix Ingress Controller as sidecar to CPX
+      - name: cic
+        args:
+        #- --configmap default/config
+        #- --ipam citrix-ipam-controller
+        - --deployment-type kube-bgp-router
+        securityContext:
+          runAsUser: 0
+          capabilities:
+            add:
+            - NET_ADMIN
+        env:
+        - name: EULA
+          value: "yes"
+        - name: NS_IP
+          value: 192.168.1.2
+        - name: NS_PROTOCOL
+          value: HTTPS
+        - name: NS_PORT
+          value: "9443"
+        - name: NS_DEPLOYMENT_MODE
+          value: SIDECAR
+        - name: NS_ENABLE_MONITORING
+          value: "YES"
+        # This is IP used for ingress resources
+      # - name: NS_VIP
+      #   value: x.x.x.x 
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: "kumhn/citrix-ingress-controller:latest" 
+        imagePullPolicy: Always
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+         - mountPath: /var/deviceinfo
+           name: shared-data
+      hostNetwork: true
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      restartPolicy: Always
+      securityContext: {}
+      serviceAccount: cpx-ingress-k8s-role
+      serviceAccountName: cpx-ingress-k8s-role
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: cpx-volume1
+      - emptyDir: {}
+        name: cpx-volume2
+      - emptyDir: {}
+        name: shared-data
