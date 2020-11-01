@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  labels:
+    app: cic
+data:
+  NS_BGP_CONFIG: |
+    bgpConfig:
+    - bgpRouter:
+        localAS: 100
+        neighbor:
+        - address: 10.102.33.33
+          remoteAS: 100
+          advertisementInterval: 30
+          ASOriginationInterval: 30
