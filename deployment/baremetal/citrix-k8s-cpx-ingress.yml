@@ -128,6 +128,8 @@ spec:
             value: "SIDECAR"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
+          - name: "LOGLEVEL"
+            value: "INFO"
           - name: POD_NAME
             valueFrom:
               fieldRef:

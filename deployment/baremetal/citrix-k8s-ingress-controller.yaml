@@ -96,6 +96,8 @@ spec:
             secretKeyRef:
              name: nslogin
              key: username
+         - name: "LOGLEVEL"
+           value: "INFO"
          # Set user password for Nitro
          - name: "NS_PASSWORD"
            valueFrom:
