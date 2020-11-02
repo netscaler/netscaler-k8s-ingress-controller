@@ -44,7 +44,7 @@ Perform the following:
 
 2. Download the [citrix-k8s-cpx-ingress.yml](./cpx-bgp-router/citrix-k8s-cpx-ingress.yml) using the following command.
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/blob/docs/docs/conifgure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/conifgure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml
 
 3. Edit the `citrix-k8s-cpx-ingress.yaml` file and specify the required values.
 
@@ -279,11 +279,11 @@ For using secret resources for SSL certificates for Type LoadBalancer services, 
 By default, the Citrix ingress controller adds all the service pods as a back-end for the load balancing virtual service in Citrix ADC CPX. This step ensures better high availability and equal distribution to the service pod instances. All nodes running Citrix ADC CPX advertises the routes to the upstream server and attracts the traffic from the router. This behavior can be changed by setting the `spec.externalTrafficPolicy` of the service to `Local`. When the external traffic policy is set to `Local`, only the pods running in the same node is added as a back-end for the load balancing virtual server as shown in the following diagram. In this mode, only those nodes which have the service pods advertise the external IP address to the router and CPX sends the traffic only to the local pods.
 If you do not want the traffic hopping across the nodes for performance reasons, you can use this feature.
 
-![ExternaL-traffic-policy: Local](traffic-policy.png)
+![ExternaL-traffic-policy: Local](../media/traffic-policy.png)
 
 ### Using Ingress resources
 
-The Citrix ingress controller provides an environment variable `NS_VIP`, which is the external IP Address for all ingress resources. Whenever an ingress resource is added, Citrix ADC CPX advertises the ingress IP address to the external routers.
+The Citrix ingress controller provides an nt variable `NS_VIP`, which is the external IP Address for all ingress resources. Whenever an ingress resource is added, Citrix ADC CPX advertises the ingress IP address to the external routers.
 The Citrix ingress controller provides various annotations for ingress. For more information, see the [Ingress annotation documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/annotations/#ingress-annotations).
 
 Perform the following steps for the Ingress Configuration:
@@ -294,7 +294,7 @@ Perform the following steps for the Ingress Configuration:
 
 2.	Download the `citrix-k8s-cpx-ingress.yml`  using the following command.
    
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/blob/docs/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml  
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml  
  
 3.	Edit the `citrix-k8s-cpx-ingress.yml` file and specify the required values.
 
@@ -310,7 +310,7 @@ Perform the following steps for the Ingress Configuration:
 
 6.	Deploy a sample ingress resource as follows. This step advertises the IP address specified in the `NS_VIP` environment variable to the external router configured in ConfigMap.
 
-        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/blob/docs/docs/conifgure/cpx-bgp-router/ingress-example.yaml 
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/conifgure/cpx-bgp-router/ingress-example.yaml 
 
 7.	Access the application using `NS_VIP:<port>`. By default, Ingress uses port 80 for insecure communication and port 443 for secure communication (If TLS section is provided).
 
