@@ -25,7 +25,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-64.35 
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-67.39 
         imagePullPolicy: Always
         name: cpx-ingress
         resources: {}
@@ -71,6 +71,8 @@ spec:
         # This is IP used for ingress resources
       # - name: NS_VIP
       #   value: x.x.x.x 
+        - name: LOGLEVEL
+          value: "INFO"
         - name: NODE_NAME
           valueFrom:
             fieldRef:
@@ -86,7 +88,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: "kumhn/citrix-ingress-controller:latest" 
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.10.2"
         imagePullPolicy: Always
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
