@@ -44,7 +44,7 @@ Perform the following:
 
 2. Download the [citrix-k8s-cpx-ingress.yml](./cpx-bgp-router/citrix-k8s-cpx-ingress.yml) using the following command.
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/conifgure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml
 
 3. Edit the `citrix-k8s-cpx-ingress.yaml` file and specify the required values.
 
@@ -310,7 +310,7 @@ Perform the following steps for the Ingress Configuration:
 
 6.	Deploy a sample ingress resource as follows. This step advertises the IP address specified in the `NS_VIP` environment variable to the external router configured in ConfigMap.
 
-        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/conifgure/cpx-bgp-router/ingress-example.yaml 
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/configure/cpx-bgp-router/ingress-example.yaml 
 
 7.	Access the application using `NS_VIP:<port>`. By default, Ingress uses port 80 for insecure communication and port 443 for secure communication (If TLS section is provided).
 
