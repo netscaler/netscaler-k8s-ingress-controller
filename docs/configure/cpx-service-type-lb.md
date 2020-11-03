@@ -96,7 +96,7 @@ Perform the following:
 
      Following is an example for configuration of service of type LoadBalancer.
 
-      ```yml
+     ```yml
 
       apiVersion: v1
       kind: Service
@@ -137,7 +137,7 @@ Perform the following:
         - port: 443
           targetPort: 8443
           name: https
-      ```
+     ```
 
 8. Apply the service of type LoadBalancer.
 
