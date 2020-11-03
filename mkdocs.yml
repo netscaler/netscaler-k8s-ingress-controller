@@ -109,11 +109,13 @@ nav:
     - ConfigMap: configure/config-map.md
     - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
+    - Service class: configure/service-class.md
     - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
     - COE ConfigMap: configure/config-map-coe.md
     - TCP profile support for services of type LoadBalancer: configure/TCP-profile-type-lb.md
     - SSL certificate for services of type LoadBalancer through the Kubernetes secret resource: configure/service-type-lb-ssl-secret.md
+    - BGP advertisement for type LoadBalancer services and Ingresses using Citrix ADC CPX: configure/cpx-service-type-lb.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
