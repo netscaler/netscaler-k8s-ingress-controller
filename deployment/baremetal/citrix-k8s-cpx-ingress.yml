@@ -90,7 +90,7 @@ spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx-ingress
-          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-64.35
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-67.39
           securityContext:
              privileged: true
           env:
@@ -108,7 +108,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.9.20
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.10.2
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
@@ -128,6 +128,8 @@ spec:
             value: "SIDECAR"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
+          - name: "LOGLEVEL"
+            value: "INFO"
           - name: POD_NAME
             valueFrom:
               fieldRef:
