@@ -44,7 +44,7 @@ Perform the following:
 
 2. Download the [citrix-k8s-cpx-ingress.yml](./cpx-bgp-router/citrix-k8s-cpx-ingress.yml) using the following command.
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml
 
 3. Edit the `citrix-k8s-cpx-ingress.yaml` file and specify the required values.
 
@@ -66,26 +66,25 @@ Perform the following:
 
     Following is a sample ConfigMap with the BGP configuration.
 
-    ```yml
+    
 
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: config
-      labels:
-        app: cic
-    data:
-      NS_BGP_CONFIG: |
-        bgpConfig:
-        - bgpRouter:
-            localAS: 100
-            neighbor:
-            - address: 10.102.33.33
-              remoteAS: 100
-              advertisementInterval: 10
-              ASOriginationInterval: 10 
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: config
+          labels:
+            app: cic
+        data:
+          NS_BGP_CONFIG: |
+            bgpConfig:
+            - bgpRouter:
+                localAS: 100
+                neighbor:
+                - address: 10.102.33.33
+                  remoteAS: 100
+                  advertisementInterval: 10
+                  ASOriginationInterval: 10 
 
-    ```
 
 6. Apply the ConfigMap created in step 5 to apply the BGP configuration.
 
@@ -93,11 +92,12 @@ Perform the following:
 
 7. Create a YAML file with the required configuration for service of type LoadBalancer.
 
-   **Note:** For detailed information, see [service configuration](#Service-Configuration). The service configuration section explains different ways to get an external IP address for the service and also how to use the service annotation provided by Citrix to configure different Citrix ADC functionalities.
+    **Note:** For detailed information, see [service configuration](#Service-Configuration). The service configuration section   explains different ways to get an external IP address for the service and also how to use the service annotation provided by Citrix to configure different Citrix ADC functionalities.
 
-   Following is an example for configuration of service of type LoadBalancer.
+     Following is an example for configuration of service of type LoadBalancer.
 
       ```yml
+
       apiVersion: v1
       kind: Service
       metadata:
@@ -288,13 +288,13 @@ The Citrix ingress controller provides various annotations for ingress. For more
 
 Perform the following steps for the Ingress Configuration:
 
-1.	Download the `rbac.yaml` file and deploy the RBAC rules for Citrix ADC CPX and the Citrix ingress controller.
+1.	Download the [rbac.yaml] (./cpx-bgp-router/rbac.yaml) file and deploy the RBAC rules for Citrix ADC CPX and the Citrix ingress controller.
 
             kubectl apply -f rbac.yaml
 
-2.	Download the `citrix-k8s-cpx-ingress.yml`  using the following command.
+2.	Download the [citrix-k8s-cpx-ingress.yml] (./cpx-bgp-router/citrix-k8s-cpx-ingress.yml) using the following command.
    
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml  
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml  
  
 3.	Edit the `citrix-k8s-cpx-ingress.yml` file and specify the required values.
 
@@ -310,7 +310,7 @@ Perform the following steps for the Ingress Configuration:
 
 6.	Deploy a sample ingress resource as follows. This step advertises the IP address specified in the `NS_VIP` environment variable to the external router configured in ConfigMap.
 
-        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/docs/docs/configure/cpx-bgp-router/ingress-example.yaml 
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/configure/cpx-bgp-router/ingress-example.yaml 
 
 7.	Access the application using `NS_VIP:<port>`. By default, Ingress uses port 80 for insecure communication and port 443 for secure communication (If TLS section is provided).
 
