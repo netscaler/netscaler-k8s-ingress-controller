@@ -2,7 +2,7 @@
 
 Authentication and authorization policies are used to enforce access restrictions to the resources hosted by an application or API server. While you can verify the identity using the authentication policies, authorization policies are used to verify whether a specified request has the necessary permissions to access a resource.
 
-Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
+Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
 
 ## Auth CRD definition
 
@@ -200,6 +200,7 @@ spec:
             - servicenames
 ```
 
+
 ## Auth CRD attributes
 
 The Auth CRD provides the following attributes that you use to define the authentication policies:
@@ -367,21 +368,22 @@ spec:
               - '/customers/'
             method: [POST]
             claims: 
-            - name: "scope"
-              values: ["read", "write"]
+             - name: "scope"
+               values: ["read", "write"]
 
         - resource:
             path:
               - '/reviews'
             claims: 
-            - name: "scope"
-              values: ["read"]
+             - name: "scope"
+               values: ["read"]
         - resource:
             path:
               - '/products/'
             method: [GET]
             claims: []
-    
+
+
 ```
 
 The sample authentication policy performs the following:
@@ -395,10 +397,11 @@ The sample authentication policy performs the following:
 -  The Citrix ADC performs the oAuth JWT verification as specified in the provider `jwt-auth-provider` for the requests to the **reviews** endpoint.
 
 -  The Citrix ADC performs the oAuth introspection as specified in the provider `introspect-provider` for the requests to the **customers** endpoint.
-
+  
 -  The Citrix ADC requires the `scope` claim with `read` and `write` permissions to access the **customers** endpoint and **POST**.
   
--  The Citrix ADC does not need any authorization permissions to access the **products** endpoint with GET operation.  
+-  The Citrix ADC does not need any authorization permissions to access the **products** endpoint with GET operation.
+
 
 For oAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
 

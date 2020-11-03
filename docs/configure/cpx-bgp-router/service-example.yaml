@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuard-service
+  annotations:
+    # This uses IPAM to allocate an IP from range 'Dev'
+    # service.citrix.com/ipam-range: 'Dev'
+    service.citrix.com/frontend-ip: 172.217.163.17
+    service.citrix.com/service-type-0: 'HTTP'
+    service.citrix.com/service-type-1: 'SSL'
+    service.citrix.com/lbvserver: '{"80-tcp":{"lbmethod":"ROUNDROBIN"}}'
+    service.citrix.com/servicegroup: '{"80-tcp":{"usip":"yes"}}'
+    service.citrix.com/ssl-termination: edge
+    service.citrix.com/monitor: '{"80-tcp":{"type":"http"}}'
+    service.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "websocket" : "enabled"}'
+    service.citrix.com/backend-httpprofile: '{"dropinvalreqs":"enabled", "websocket" : "enabled"}'
+    service.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+    service.citrix.com/backend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+    service.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls12" : "enabled"}'
+    service.citrix.com/backend-sslprofile: '{"tls12" : "enabled"}
+    service.citrix.com/ssl-certificate-data-1: |
+      -----BEGIN CERTIFICATE-----
+      #redacted certificate
+      -----END CERTIFICATE-----
+    service.citrix.com/ssl-key-data-1: |
+      -----BEGIN RSA PRIVATE KEY-----
+      #redacted certificate
+      -----END RSA PRIVATE KEY-----
+spec:
+  type: LoadBalancer
+  selector:
+    app: kuard
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: http
+  - port: 443
+    targetPort: 8443
+    name: https
+
