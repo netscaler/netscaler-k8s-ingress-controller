@@ -87,6 +87,7 @@ In service annotations, `index` is the ordered index of the ports in a service s
 | `service.citrix.com/ssl-ca-certificate-data-<index>` | Use this annotation to specify the server CA certificate value to verify the client certificate in PEM format.| service.citrix.com/ssl-ca-certificate-data-0: \| <`certificate`> |
 |`service.citrix.com/ssl-backend-ca-certificate-data-<index>`| Use this annotation to specify the CA certificate value to verify the server certificate of the back-end in PEM format.| service.citrix.com/ssl-backend-ca-certificate-data-0: \| <`certificate`> |
 | `service.citrix.com/ssl-termination-<index>` | Use this annotation to specify the SSL termination. The accepted values are `EDGE` and `REENCRYPT`.  | service.citrix.com/ssl-termination-0: 'EDGE' |
+| `service.citrix.com/insecure-redirect` | Use this annotation to redirect insecure traffic to a secure port. You can either specify the secure port using {`secure-portname` : `port-number`} or {`secure-portnumber`- `secure-port-protocol` : `insecure-portnumber` } to redirect traffic from an insecure port.  | service.citrix.com/insecure-redirect: '{"port-443": 80 }'  <br> or <br> service.citrix.com/insecure-redirect: '{"443-tcp": 80 }' |
 | `service.citrix.com/frontend-ip` | Use this annotation to pass the VIP for services of type `LoadBalancer`.|service.citrix.com/frontend-ip: "192.168.1.1" |
 | `service.citrix.com/ipam-range` | Use this annotation to select a particular IP address range from a set of ranges specified to the Citrix IPAM controller. This annotation is used for services of type LoadBalancer.|service.citrix.com/ipam-range: "Dev"|
 | `service.citrix.com/secret` | Use this annotation to specify the name of the secret resource for the front-end server certificate.| service.citrix.com/secret: "hotdrink-secret" |
@@ -97,6 +98,39 @@ In service annotations, `index` is the ordered index of the ports in a service s
 | `service.citrix.com/preconfigured-ca-certkey`|Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be used as a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC. | service.citrix.com/preconfigured-backend-certkey: 'coffee-cert'|
 |`service.citrix.com/preconfigured-backend-certkey` |Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be bound to the back-end SSL service group. This certificate is sent to the server during the SSL handshake for server authentication. | service.citrix.com/preconfigured-ca-certkey: 'coffee-ca-cert'|
 |`service.citrix.com/preconfigured-backend-ca-certkey` |Use this annotation to specify the name of the preconfigured CA certificate key in the Citrix ADC to bound to the back-end SSL service group for server authentication.|service.citrix.com/preconfigured-backend-ca-certkey: 'coffee-ca-cert' |
+
+### Sample YAML with the service annotation to redirect insecure traffic
+
+This example shows how to redirect traffic from clients making requests on an insecure port 80 to the secure port 443.
+
+The following annotation is specified in the service YAML file to redirect traffic:
+
+    service.citrix.com/insecure-redirect: '{"port-443": 80}'
+
+Following is a sample service definition:
+
+```yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  annotations:
+    service.citrix.com/service-type-0: SSL
+    service.citrix.com/frontend-ip: '192.2.170.26'
+    service.citrix.com/secret: '{"port-443": "web-ingress-secret"}'
+    service.citrix.com/ssl-termination-0: "EDGE"
+    service.citrix.com/insecure-redirect: '{"port-443": 80}'
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - port: 443
+    targetPort: 80
+    name: port-443
+
+```
 
 ## Smart annotations for services
 
