@@ -1,6 +1,6 @@
 # Citrix ingress controller for Kubernetes
 
-You can deploy Citrix ingress controller in two ways:
+You can deploy the Citrix ingress controller in two ways:
 
 ## Citrix ingress controller as a standalone pod
 
@@ -8,7 +8,7 @@ In this deployment, the Citrix ingress controller runs as a pod that monitors th
 
 **YAML file for deployment:** ***citrix-k8s-ingress-controller.yaml***
 
-## Citrix ADC CPX with inbuilt Citrix ingress controller
+## Citrix ADC CPX with the inbuilt Citrix ingress controller
 
 In this deployment, you deploy Citrix ADC CPX with a builtin Citrix ingress controller agent that configures the Citrix ADC CPX. Citrix ADC CPX runs as pod and does North-South load balancing.
 
@@ -16,16 +16,16 @@ In this deployment, you deploy Citrix ADC CPX with a builtin Citrix ingress cont
 
 ## Deploy Citrix ADC CPX with inbuilt ingress controller on Kubernetes
 
-Perform the following step to deploy a Citrix ADC CPX along with inbuilt Ingress controller.
+Perform the following step to deploy a Citrix ADC CPX along with an inbuilt Ingress controller.
 
-   1. Apply the following command to deploy a Citrix ADC CPX with inbuilt ingress controller.
+   1. Apply the following command to deploy a Citrix ADC CPX with the inbuilt ingress controller.
       ```
           kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
       ```
 
 ## Deploy Citrix ingress controller as a standalone pod
 
-Perform the following steps to deploy the Citrix ingress controller as a stand alone pod.
+Perform the following steps to deploy the Citrix ingress controller as a stand-alone pod.
 
 
 
@@ -34,7 +34,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
       wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
     ```
                         
-    This YAML file has four sections, in which first three are for cluster role creation and service account creation. The
+    This YAML file has four sections, in which the first three sections are for cluster role creation and service account creation. The
     last one is for Citrix ingress controller pod creation.
 
     * Cluster roles
@@ -42,7 +42,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
     * Service account
     * Citrix ingress controller pod creation
    
-    First three sections are required for the Citrix ingress controller to monitor Kubernetes events. No changes are required for these sections. The next section defines environment variables required for the Citrix ingress controller to configure the Citrix ADC.
+    First three sections are required for the Citrix ingress controller to monitor Kubernetes events. No changes are required for these sections. The next section defines the environment variables required for the Citrix ingress controller to configure the Citrix ADC.
 
  2. Edit the YAML file and update the following environment variables.
 
@@ -85,13 +85,13 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
        <details>
        <summary>kubernetes_url</summary>
 
-          This variable is an optional field for the Citrix ingress controller to register for events. If you do not specify it explicitly, the Citrix ingress controller use internal KubeAPIServer IP address.
+          This variable is an optional field for the Citrix ingress controller to register for events. If you do not specify it explicitly, the Citrix ingress controller uses the internal Kubernetes API server IP address.
    
        </details>
        <details>
        <summary>LOGLEVEL</summary>
 
-         This variable is used for controlling the logs generated from the Citrix ingress controller. Following options are available. By default log level is DEBUG.
+         This variable is used for controlling the logs generated from the Citrix ingress controller. Following options are available. By default the log level is DEBUG.
          * CRITICAL 
          * ERROR
          * WARNING
@@ -102,7 +102,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
 
        <summary>NS_PROTOCOL and NS_PORT</summary>
                                 
-         These environment variables define protocol and port used by the Citrix ingress controller to communicate with Citrix ADC.
+         These environment variables define the protocol and port used by the Citrix ingress controller to communicate with the Citrix ADC.
 
          By default NS_PROTOCOL is HTTPs and NS_PORT is 443. Other option is to use HTTP and port 80.
        </details>
@@ -142,9 +142,9 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
 
        <summary>NS_APPS_NAME_PREFIX</summary>
 
-       The Citrix ingress controller uses the provided prefix to form the application entity name in Citrix ADC. This variable is useful in scenarios where Citrix ADC load balances applications from different clusters. Prefix allows you to segregate the Kubernetes cluster configuration.
+       The Citrix ingress controller uses the provided prefix to form the application entity name in the Citrix ADC. This variable is useful in scenarios where a Citrix ADC load balances applications from different clusters. Prefix allows you to segregate the Kubernetes cluster configuration.
 
-       By default, the Citrix ingress controller adds "**k8s**" as a prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed 8 characters. 
+       By default, the Citrix ingress controller adds **k8s** as a prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed eight characters.
        **Usage:**
 
        ```
@@ -152,7 +152,59 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
          value: "<Name of your choice>"
        ```
        </details>
+       <details>
+       
+       <summary>NS_MGMT_USER</summary>
 
+        This is a Citrix ADC CPX specific environment variable that allows you to register the Citrix ADC CPX instances, installed on a Docker host, to Citrix ADM if Citrix ADM does not have default credentials. This environment variable is supported from Citrix ADC CPX 13.0 and later releases.
+
+       </details>
+       <details>
+        
+       <summary>NS_MGMT_PASS</summary>
+
+        This is a Citrix ADC CPX specific environment variable that allows you to register the Citrix ADC CPX instances, installed on a Docker host, to Citrix ADM if Citrix ADM does not have default credentials. This environment variable is supported from Citrix ADC CPX 13.0 and later releases.
+
+       </details>
+        
+       <details>
+        
+       <summary>KUBERNETES_TASK_ID</summary>
+
+        This environment variable is used for disabling the in-built ingress controller. The value of this variable must always be “”(null string). This environment variable is deprecated now.
+          
+        </details>
+      
+       <details>
+        
+       <summary>NS_MGMT_SERVER</summary>
+
+        Specifies the Citrix ADM server or the agent IP address that manages the Citrix ADC CPX.
+        
+       </details>
+       <details>
+        
+       <summary>NS_MGMT_FINGER_PRINT</summary>
+
+        Specifies the fingerprint of the Citrix ADM server or the agent IP address that manages Citrix ADC CPX.
+       </details>
+        
+       <details>
+       <summary>NS_HTTP_PORT</summary>
+
+        Specifies the port on which the HTTP service is available in Citrix ADC CPX. It is used by Citrix ADM to trigger NITRO calls to Citrix ADC CPX.
+       </details>
+       <details>
+       <summary>NS_HTTPS_PORT</summary>
+
+        Specify the port on which HTTPS service is available in Citrix ADC CPX. It is used by Citrix ADM to trigger NITRO calls to Citrix ADC CPX.
+       </details>
+       <details>
+       <summary>LOGSTREAM_COLLECTOR_IP</summary>
+
+        Specifies the Citrix ADM IP address for collecting analytics.
+       </details>
+     
 
 1. Deploy the Citrix ingress controller using the `kubectl create` command.
         
@@ -168,8 +220,8 @@ Perform the following steps to deploy the Citrix ingress controller as a stand a
 
     - **Static routing**:
 
-      For seamless functioning of services deployed in the Kubernetes cluster, Ingress Citrix ADC device should be able to reach the underlying overlay network over which pods are running. The
-    `feature-node-watch` argument of Citrix ingress controller can be used for automatic route configuration on Citrix ADC towards the pod network.
+      For seamless functioning of services deployed in the Kubernetes cluster, the Citrix ADC ingress device should be able to reach the underlying overlay network over which pods are running. The
+    `feature-node-watch` argument of the Citrix ingress controller can be used for automatic route configuration on the Citrix ADC towards the pod network.
     See, [Network Configuration](../../docs/network/staticrouting.md) for more information. 
 
       By default, `feature-node-watch` is false. It must be explicitly set to true if auto route configuration is required.
