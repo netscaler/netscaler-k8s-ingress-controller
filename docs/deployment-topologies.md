@@ -64,3 +64,24 @@ The Citrix ingress controller supports services of type `NodePort`. Using the In
 For more information, see [Expose services of type NodePort](network/nodeport.md).
 
 ![Services of type Nodeport](media/type-nodeport.png)
+
+## Deployment using Helm charts and the Citrix deployment builder
+
+For deploying Citrix cloud native topologies, there are various options available using YAML and Helm charts. Helm charts are one of the easiest ways for deployment in a Kubernetes environment. When you deploy using the Helm charts, you can use a `values.yaml` file to specify the values of the configurable parameters instead of providing each parameter as an argument.
+
+You can generate the `values.yaml` file for Citrix cloud native deployments using the[Citrix deployment builder](https://citrix.github.io/citrix-k8s-ingress-controller/), which is a GUI.
+
+The following topologies are supported by the Citrix deployment builder:
+
+- Single-Tier
+   - Ingress
+   - Service type LoadBalancer
+
+- Dual-Tier
+   - Citrix ADC CPX as NodePort
+   - Citrix ADC CPX as service of type LoadBalancer
+   - Citrix ADC CPX as NodePort
+
+- Multi-cluster Ingress
+- Service mesh
+
