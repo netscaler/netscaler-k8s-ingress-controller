@@ -84,4 +84,3 @@ The following topologies are supported by the Citrix deployment builder:
 
 - Multi-cluster Ingress
 - Service mesh
-
