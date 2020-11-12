@@ -1,11 +1,12 @@
 # Expose services of type LoadBalancer
 
-Services of type `LoadBalancer` are natively supported in Kubernetes deployments on public clouds such as, AWS, GCP, or Azure. In cloud deployments, when you create a service of type LoadBalancer, a cloud managed load balancer is assigned to the service. The service is then exposed using the load balancer. 
+A service of type `LoadBalancer` is the simplest way to expose a service inside a Kubernetes cluster to the internet. Services of the type LoadBalancer are natively supported in Kubernetes deployments on public clouds such as, AWS, GCP, or Azure. In cloud deployments, when you create a service of type LoadBalancer, a cloud managed load balancer is assigned to the service. The service is then exposed using the load balancer.
 
-For on-premises, bare metal, or public cloud deployments of Kubernetes, you can use a Citrix ADC outside the cluster to load balance the incoming traffic. The Citrix ingress controller provides flexible IP address management that enables multitenancy for Citrix ADCs. The Citrix ingress controller allows you to load balance multiple services using a single ADC and also combines various Ingress functions. Using the Citrix ADC with the Citrix ingress controller, you can maximize the utilization of load balancer resources for your public cloud and significantly reduce your operational expenses.
+There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Citrix ingress controller and Citrix ADC.
 
-The Citrix ingress controller supports the services of type `LoadBalancer` when the Citrix ADC is outside the Kubernetes cluster (Tier-1). When a service of type `LoadBalancer` is created, updated, or deleted, the Citrix ingress controller configures the Citrix ADC with a load balancing virtual server.
+In the Citrix solution for services of type `LoadBalancer`, the Citrix ingress controller deployed inside the Kubernetes cluster configures a Citrix ADC deployed outside the cluster to load balance the incoming traffic. Using Citrix solution, you can load balance the incoming traffic to the Kubernetes cluster regardless of whether the deployment is on bare metal, on-premises, or public cloud. Since the Citrix ingress controller provides flexible IP address management that enables multi-tenancy for Citrix ADCs, you can use a single Citrix ADC to load balance multiple services as well as to perform Ingress functions. Hence, you can maximize the utilization of load balancer resources and significantly reduce your operational expenses.
 
+ When a service of type `LoadBalancer` is created, updated, or deleted, the Citrix ingress controller configures the Citrix ADC outside the Kubernetes cluster (Tier-1) with a load balancing virtual server. Custom resource definitions (CRDs) offered by Citrix also supports services of type `LoadBalancer`. That means, you can specify a service of type `LoadBalancer` as a service name when you create a CRD object and apply the CRD to the service.
 
 The load balancing virtual server is configured with an IP address (virtual IP address or VIP) that is obtained in one of the following ways:
 
@@ -377,7 +378,7 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
 
 ### Step 4: Access the service
 
-You can access the `apache` service using the IP address assigned by IPAM controller to the service. You can find the IP address in the `status.loadBalancer.ingress:` field of the service definition. Use the `curl` command to access the service:
+You can access the `apache` service using the IP address assigned by the IPAM controller to the service. You can find the IP address in the `status.loadBalancer.ingress:` field of the service definition. Use the `curl` command to access the service:
 
     curl <IP_address>
 
@@ -389,7 +390,7 @@ The response should be:
 
 Create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), in your service definition file, specify `spec.type:LoadBalancer` and specify an IP address in the `spec.loadBalancerIP` field.
 
-When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as virtual IP (VIP) in Citrix ADC.
+When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as a virtual IP (VIP) address in Citrix ADC.
 
 ### **Example:** Expose an Apache application using service of type LoadBalancer
 
@@ -487,7 +488,7 @@ This example shows how to expose microservices using services of type LoadBalanc
 
 Citrix ADC in a [dual-tier](../deployment-topologies#dual-tier-topology) deployment solution enables you to expose microservices deployed in Kubernetes to clients outside the cluster. You can deploy Citrix ADC VPX, MPX, or CPX as a load balancer in Tier-1 to manage high scale North-South traffic to the microservices. In Tier-2, you can deploy Citrix ADC CPX as an intelligent L7 microservices router for North-South and East-West traffic. In this example, a Citrix ADC VPX (service of type `LoadBalancer`) is used in Tier-1 and a Citrix ADC CPX (Ingress) is used in Tier-2.
 
-The following diagram depicts the microservice deployment used in this example. The deployment contains three services that are highlighted in blue, red, and green colors respectively. The deployment contains 12 pods running across two worker nodes. These deployments are logically categorized by Kubernetes namespace (for example, team-hotdrink namespace).
+The following diagram depicts the microservice deployment used in this example. The deployment contains three services that are highlighted in blue, red, and green colors respectively. The deployment contains 12 pods running across two worker nodes. These deployments are logically categorized using Kubernetes namespaces (for example, team-hotdrink namespace).
 
 ![Sample microservice deployment](../media/sample-deployment.png)
 
@@ -497,11 +498,11 @@ Ensure that you have:
 
 - Deployed a Kubernetes cluster. For more information, see [https://kubernetes.io/docs/setup/scratch/](https://kubernetes.io/docs/setup/scratch/).
 - Set up the Kubernetes dashboard for deploying containerized applications. For more information, see [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/).
-- The route configuration present in Tier-1 Citrix ADC so that the Ingress Citrix ADC is able to reach the Kubernetes pod network for seamless connectivity. For detailed instructions, see [manually configure a route on the Citrix ADC instance](staticrouting.md#manually-configure-route-on-the-citrix-adc-instance).
+- The route configuration present in the Tier-1 Citrix ADC so that the Ingress Citrix ADC is able to reach the Kubernetes pod network for seamless connectivity. For detailed instructions, see [manually configure a route on the Citrix ADC instance](staticrouting.md#manually-configure-route-on-the-citrix-adc-instance).
 
 ### Deploy microservices using Kubernetes service of type LoadBalancer solution
 
-1. Clone the GitHub repository to your Master node using following command:
+1. Clone the GitHub repository to your Master node using the following command:
 
         git clone https://github.com/citrix/example-cpx-vpx-for-kubernetes-2-tier-microservices.git
 
@@ -526,26 +527,26 @@ Ensure that you have:
         kubectl create -f vip.yaml
         kubectl create -f ipam_deploy.yaml
 
-5. Deploy the Citrix ADC CPX for `hotdrink`,`colddrink`, and `guestbook` microservices using following commands:
+5. Deploy the Citrix ADC CPX for `hotdrink`,`colddrink`, and `guestbook` microservices using the following commands:
 
         kubectl create -f cpx.yaml -n tier-2-adc
         kubectl create -f hotdrink-secret.yaml -n tier-2-adc
 
-6. Deploy three types of `hotdrink` beverage microservices using following commands:
+6. Deploy three types of `hotdrink` beverage microservices using the following commands:
 
         kubectl create -f team_hotdrink.yaml -n team-hotdrink
         kubectl create -f hotdrink-secret.yaml -n team-hotdrink
 
-7. Deploy the `colddrink` beverage microservice using following commands:
+7. Deploy the `colddrink` beverage microservice using the following commands:
 
         kubectl create -f team_colddrink.yaml -n team-colddrink
         kubectl create -f colddrink-secret.yaml -n team-colddrink
 
-8. Deploy the `guestbook` no SQL type microservice using following commands:
+8. Deploy the `guestbook` no SQL type microservice using the following commands:
 
         kubectl create -f team_guestbook.yaml -n team-guestbook
 
-9. Log on to Tier-1 Citrix ADC to verify if no configuration is pushed from the Citrix ingress controller before automating the Tier-1 Citrix ADC.
+9. Log on to the Tier-1 Citrix ADC to verify if no configuration is pushed from the Citrix ingress controller before automating the Tier-1 Citrix ADC.
 
 10. Deploy the Citrix ingress controller to push the Citrix ADC CPX configuration to the Tier-1 Citrix ADC automatically. In the `cic_vpx.yaml`, change the value of the NS_IP environment variable with your Citrix ADC VPX NS_IP. For more information on the Citrix ingress controller deployment, see [Deploy the Citrix ingress controller using YAML](../deploy/deploy-cic-yaml.md).
     
@@ -557,7 +558,7 @@ Ensure that you have:
 
         kubectl get svc -n tier-2-adc
 
-12. Add the following DNS entries in your local machine host files to access the microservices using Internet:
+12. Add the following DNS entries in your local machine host files to access the microservices using the Internet:
 
         <frontend-ip from ingress_vpx.yaml> hotdrink.beverages.com
         <frontend-ip from ingress_vpx.yaml> colddrink.beverages.com
