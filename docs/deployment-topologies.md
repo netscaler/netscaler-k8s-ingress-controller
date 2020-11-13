@@ -74,10 +74,12 @@ You can generate the `values.yaml` file for Citrix cloud native deployments usin
 The following topologies are supported by the Citrix deployment builder:
 
 - Single-Tier
+
    - Ingress
    - Service type LoadBalancer
 
 - Dual-Tier
+   
    - Citrix ADC CPX as NodePort
    - Citrix ADC CPX as service of type LoadBalancer
    - Citrix ADC CPX as NodePort
