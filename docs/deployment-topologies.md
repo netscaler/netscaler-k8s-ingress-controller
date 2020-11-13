@@ -45,7 +45,7 @@ For more information, see [Service mesh lite](deploy/service-mesh-lite.md).
 
 ## Services of type LoadBalancer
 
-Service of type `LoadBalancer` in Kubernetes enables you to directly expose services to the outside world without using an ingress resource. It’s generally made available only by cloud providers, who spin up their own native cloud load balancers and assign an external IP address through which the service is accessed. This helps you to deploy microservices easily and expose them outside the Kubernetes cluster.
+Services of type `LoadBalancer` in Kubernetes enables you to directly expose services to the outside world without using an ingress resource. It is made available only by cloud providers, who spin up their own native cloud load balancers and assign an external IP address through which the service is accessed. This helps you to deploy microservices easily and expose them outside the Kubernetes cluster.
 
 By default, in a bare metal Kubernetes cluster, service of type `LoadBalancer` simply exposes `NodePorts` for the service. And, it does not configure external load balancers.
 
@@ -57,13 +57,13 @@ For more information, see [Expose services of type LoadBalancer](network/type_lo
 
 ## Services of type NodePort
 
-By default, Kubernetes services are accessible using the [cluster IP](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) address. The cluster IP address is an internal IP address that can be accessed within the Kubernetes cluster. To make the service accessible from outside of the Kubernetes cluster, you can create a service of type `NodePort`.
+By default, Kubernetes services are accessible using the [cluster IP](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) address. The cluster IP address is an internal IP address that can be accessed within the Kubernetes cluster. To make the service accessible from the outside of the Kubernetes cluster, you can create a service of the type `NodePort`.
 
 The Citrix ingress controller supports services of type `NodePort`. Using the Ingress Citrix ADC and Citrix ingress controller, you can expose the service of type `NodePort` to the outside world.
 
 For more information, see [Expose services of type NodePort](network/nodeport.md).
 
-![Services of type Nodeport](media/type-nodeport.png)
+![Services of type NodePort](media/type-nodeport.png)
 
 ## Deployment using Helm charts and the Citrix deployment builder
 
@@ -73,16 +73,20 @@ You can generate the `values.yaml` file for Citrix cloud native deployments usin
 
 The following topologies are supported by the Citrix deployment builder:
 
-- Single-Tier
+-  Single-Tier
 
-   - Ingress
-   - Service type LoadBalancer
-
-- Dual-Tier
+    -  Ingress
    
-   - Citrix ADC CPX as NodePort
-   - Citrix ADC CPX as service of type LoadBalancer
-   - Citrix ADC CPX as NodePort
+    -  Service type LoadBalancer
 
-- Multi-cluster Ingress
-- Service mesh
+-  Dual-Tier
+   
+    -  Citrix ADC CPX as NodePort
+   
+    -  Citrix ADC CPX as service of type LoadBalancer
+  
+    -  Citrix ADC CPX as NodePort
+
+-  Multi-cluster Ingress
+
+-  Service mesh
