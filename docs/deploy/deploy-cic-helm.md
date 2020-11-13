@@ -8,7 +8,7 @@ You can deploy the Citrix ingress controller in the following modes on your [bar
 
 The helm charts for the Citrix ingress controller are available on [Helm Hub](https://hub.helm.sh).
 
- When you deploy using the Helm charts, you can use a `values.yaml` file to specify the values of the configurable parameters instead of providing each parameter as an argument. For ease of use, Citrix provides the [Citrix deployment builder](https://citrix.github.io/citrix-k8s-ingress-controller/)) which is a GUI for generating the `values.yaml` file for Citrix cloud native deployments.
+ When you deploy using the Helm charts, you can use a `values.yaml` file to specify the values of the configurable parameters instead of providing each parameter as an argument. For ease of use, Citrix provides the [Citrix deployment builder](https://citrix.github.io/citrix-k8s-ingress-controller/) which is a GUI for generating the `values.yaml` file for Citrix cloud native deployments.
 
 ## Deploy the Citrix ingress controller as a standalone pod in the Kubernetes cluster
 
