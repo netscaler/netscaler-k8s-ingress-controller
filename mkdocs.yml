@@ -109,7 +109,7 @@ nav:
     - ConfigMap: configure/config-map.md
     - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
-    - Service class: configure/service-class.md
+    - Service class: configure/service-classes.md
     - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
     - COE ConfigMap: configure/config-map-coe.md
