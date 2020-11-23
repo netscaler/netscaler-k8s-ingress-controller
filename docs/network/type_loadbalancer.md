@@ -12,7 +12,7 @@ The following table summarizes a comparison between the Kubernetes Ingress and s
 
 | Service of type `LoadBalancer` | Ingress |
 | -------------------            | -------- |
-| Simpler and faster way to expose a service. You just need to specify the service type as `type=LoadBalancer` in the service definition.     |  Ingress provides advanced features but implementation requires more steps. You need to write an Ingress object in addition to the service definition. Also, tha chances of making mistakes while defining the Ingress is more. |
+| Simpler and faster way to expose a service. You just need to specify the service type as `type=LoadBalancer` in the service definition.     |  Ingress provides advanced features but implementation requires more steps. You need to write an Ingress object in addition to the service definition. Also, chances of making mistakes while defining the Ingress is more. |
 | Needs a separate IP address for each service.  | Provides a way to expose multiple services using a single IP address. |
 | Forwards all kinds of traffic arriving on the specified port to the service regardless of it is HTTP, TCP, or UDP. There is no filtering or options to perform advanced routing.| Feature rich and powerful compared to services type load balancer. Ingress provides multiple routing options. For example, using ingress you can perform path-based and sub domain-based routing to back-end services. |
 
