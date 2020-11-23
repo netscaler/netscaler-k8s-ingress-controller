@@ -16,7 +16,7 @@ The following table summarizes a comparison between the Kubernetes Ingress and s
 | Needs a separate IP address for each service.  | Provides a way to expose multiple services using a single IP address. |
 | Forwards all kinds of traffic arriving on the specified port to the service regardless of it is HTTP, TCP, or UDP. There is no filtering or options to perform advanced routing.| Feature rich and powerful compared to services type load balancer. Ingress provides multiple routing options. For example, using ingress you can perform path-based and sub domain-based routing to back-end services. |
 
-## How does the Citrix solution for Services of type LoadBalancer work
+## How does the Citrix solution for services of type LoadBalancer work
 
 When a service of type `LoadBalancer` is created, updated, or deleted, the Citrix ingress controller configures the Citrix ADC outside the Kubernetes cluster (Tier-1) with a load balancing virtual server.
 
