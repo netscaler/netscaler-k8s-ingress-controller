@@ -6,7 +6,7 @@ There may be several situations where you want to deploy your Kubernetes cluster
 
 In the Citrix solution for services of type `LoadBalancer`, the Citrix ingress controller deployed inside the Kubernetes cluster configures a Citrix ADC deployed outside the cluster to load balance the incoming traffic. Using Citrix solution, you can load balance the incoming traffic to the Kubernetes cluster regardless of whether the deployment is on bare metal, on-premises, or public cloud. Since the Citrix ingress controller provides flexible IP address management that enables multi-tenancy for Citrix ADCs, you can use a single Citrix ADC to load balance multiple services as well as to perform Ingress functions. Hence, you can maximize the utilization of load balancer resources and significantly reduce your operational expenses.
 
-**Kubernetes Ingress VS services of type LoadBalancer**
+**Services of type LoadBalancer VS Kubernetes Ingress**
 
 The following table summarizes a comparison between the Kubernetes Ingress and services of type LoadBalancer that helps you to choose the right option based on your requirements:
 
