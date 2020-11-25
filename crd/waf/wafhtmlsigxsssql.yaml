@@ -6,8 +6,8 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    signatures: "http://10.217.14.99/crd/sig.xml"
-    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    signatures: "http://x.x.x.x/crd/sig.xml"
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on" 
