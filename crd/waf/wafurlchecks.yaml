@@ -6,7 +6,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_page_url: "http://10.106.102.242/crd/error_page.html"
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
     target:
         path:
             - /
