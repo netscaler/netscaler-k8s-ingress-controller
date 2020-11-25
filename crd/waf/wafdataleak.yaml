@@ -6,7 +6,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.106.102.242/crd/hipster.html"
+    html_error_object: "http://x.x.x.x/crd/hipster.html"
     security_checks:
         common:
           credit_card: "on"
