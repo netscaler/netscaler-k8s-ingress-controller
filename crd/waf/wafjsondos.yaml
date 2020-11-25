@@ -6,7 +6,7 @@ spec:
     servicenames:
         - frontend
     application_type: JSON
-    json_page_url: "http://10.217.14.99/crd/error_page.json"
+    json_page_url: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
           dos: "on"
