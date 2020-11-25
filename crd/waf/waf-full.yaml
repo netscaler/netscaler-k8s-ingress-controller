@@ -7,11 +7,11 @@ spec:
         - frontend
     security_level: basic
     application_type: HTML
-    signatures: "http://10.106.102.242/crd/sig.xml"
+    signatures: "http://x.x.x.x/crd/sig.xml"
     redirect_url: "/home.php"    #it can be external url also
-    html_error_object: "http://10.106.102.242/crd/error_page.html"
-    xml_error_object: "http://10.106.102.242/crd/error_page.xml"
-    json_error_object: "http://10.106.102.242/crd/error_page.json"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
+    xml_error_object: "http://x.x.x.x/crd/error_page.xml"
+    json_error_object: "http://x.x.x.x/crd/error_page.json"
     ip_reputation:
         action: block
         threat-categories:

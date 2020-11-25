@@ -3,7 +3,7 @@ kind: waf
 metadata:
     name: waffieldformat
 spec:
-    html_error_object: "http://10.106.102.242/crd/hipster.html"
+    html_error_object: "http://x.x.x.x/crd/hipster.html"
     servicenames:
         - frontend
     security_checks:
