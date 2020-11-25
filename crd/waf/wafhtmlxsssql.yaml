@@ -5,7 +5,7 @@ metadata:
 spec:
     servicenames:
         - frontend
-    html_error_object: "http://10.106.102.242/crd/hipster.html"
+    html_error_object: "http://x.x.x.x/crd/hipster.html"
     security_checks:
         html:
           cross_site_scripting: "on" 
