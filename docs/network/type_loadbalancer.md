@@ -4,7 +4,7 @@ A service of type `LoadBalancer` is the simplest way to expose a service inside 
 
 There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Citrix ingress controller and Citrix ADC.
 
-In the Citrix solution for services of type `LoadBalancer`, the Citrix ingress controller deployed inside the Kubernetes cluster configures a Citrix ADC deployed outside the cluster to load balance the incoming traffic. Using Citrix solution, you can load balance the incoming traffic to the Kubernetes cluster regardless of whether the deployment is on bare metal, on-premises, or public cloud. Since the Citrix ingress controller provides flexible IP address management that enables multi-tenancy for Citrix ADCs, you can use a single Citrix ADC to load balance multiple services as well as to perform Ingress functions. Hence, you can maximize the utilization of load balancer resources and significantly reduce your operational expenses.
+In the Citrix solution for services of type `LoadBalancer`, the Citrix ingress controller deployed inside the Kubernetes cluster configures a Citrix ADC deployed outside the cluster to load balance the incoming traffic. Using the Citrix solution, you can load balance the incoming traffic to the Kubernetes cluster regardless of whether the deployment is on bare metal, on-premises, or public cloud. Since the Citrix ingress controller provides flexible IP address management that enables multi-tenancy for Citrix ADCs, you can use a single Citrix ADC to load balance multiple services as well as to perform Ingress functions. Hence, you can maximize the utilization of load balancer resources and significantly reduce your operational expenses.
 
 **Services of type LoadBalancer VS Kubernetes Ingress**
 
@@ -12,7 +12,7 @@ The following table summarizes a comparison between the Kubernetes Ingress and s
 
 | Service of type `LoadBalancer` | Ingress |
 | -------------------            | -------- |
-| Simpler and faster way to expose a service. You just need to specify the service type as `type=LoadBalancer` in the service definition.     |  Ingress provides advanced features but implementation requires more steps. You need to write an Ingress object in addition to the service definition. Also, chances of making mistakes while defining the Ingress is more. |
+| Simpler and faster way to expose a service. You just need to specify the service type as `type=LoadBalancer` in the service definition.     |  Ingress provides advanced features but implementation requires more steps. You need to write an Ingress object in addition to the service definition. Also, the chances of making mistakes while defining the Ingress is more. |
 | Needs a separate IP address for each service.  | Provides a way to expose multiple services using a single IP address. |
 | Forwards all kinds of traffic arriving on the specified port to the service regardless of it is HTTP, TCP, or UDP. There is no filtering or options to perform advanced routing.| Feature rich and powerful compared to services type load balancer. Ingress provides multiple routing options. For example, using ingress you can perform path-based and sub domain-based routing to back-end services. |
 
@@ -26,18 +26,34 @@ The load balancing virtual server is configured with an IP address (virtual IP a
 
 - By specifying an IP address using the `spec.loadBalancerIP` field in your service definition. The Citrix ingress controller uses the IP address provided in the `spec.loadBalancerIP` field as the IP address for the load balancing virtual server that corresponds to the service.  
 
+### IP address management using the IPAM controller
+
+IPAM controller is a container provided by Citrix for IP address management. When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use the IPAM controller to automatically allocate an IP address to the service. For the IPAM controller to assign IP addresses to services, you must deploy the IPAM controller as a separate pod along with the Citrix ingress controller in the Kubernetes cluster. Once the IPAM controller is deployed, it allocates IP addresses to services of type `LoadBalancer` from the predefined IP address ranges. The Citrix ingress controller configures the IP address allocated to the service as a virtual IP address (VIP) in Citrix ADC MPX or VPX.
+
+The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix.
+
+The following diagram shows a deployment of service type load balancer where the IPAM controller is used to assign an IP address to a service.
+
+![Services of type LoadBalancer](../media/type-loadbalancer.png)
+
+When a new service of type `Loadbalancer` is created, the following events occur:
+
+  1. The Citrix ingress controller creates a VIP CRD object for the service whenever the `loadBalancerIP` field in the service is empty.
+  2. The IPAM controller listens for addition, deletion, or modification of the VIP CRD object and updates it with an IP address.
+  3. Once the VIP CRD object is updated with the IP address, the Citrix ingress controller automatically configures the IP address in Citrix ADC.
 
 **Note:** Custom resource definitions (CRDs) offered by Citrix also supports services of type `LoadBalancer`. That means, you can specify a service of type `LoadBalancer` as a service name when you create a CRD object and apply the CRD to the service.
 
 ## Expose services of type LoadBalancer with IP addresses assigned by the IPAM controller
 
-Citrix provides a controller called **IPAM controller** for IP address management. When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use the IPAM controller to automatically allocate an IP address to the service. You must deploy the IPAM controller as a separate pod along with the Citrix ingress controller. Once the IPAM controller is deployed, it allocates IP addresses to services of type `LoadBalancer` from predefined IP address ranges. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADC MPX or VPX.
+This topic provides information on how to expose services of type LoadBalancer with IP addresses assigned by the IPAM controller.
 
-The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix.
+To expose a service of type load balancer with an IP address from IPAM controller, perform the following steps:
 
-When a new service of type `Loadbalancer` is created, the Citrix ingress controller creates a VIP CRD object for the service whenever the `loadBalancerIP` field in the service is empty. The IPAM controller listens for addition, deletion, or modification of the VIP CRD and updates it with an IP address. Once the VIP CRD object is updated, the Citrix ingress controller automatically configures Citrix ADC.
-
-In this section, you deploy the IPAM controller, create a sample Deployment, create a service of type `LoadBalancer`, and access the service.
+  1. Deploy the IPAM controller.
+  2. Deploy a sample application.
+  3. Create a service of type `LoadBalancer` to expose the application.
+  4. Access the service.
 
 ### Step 1: Deploy the IPAM controller
 
@@ -216,88 +232,11 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
 
         kubectl create -f citrix-ipam-controller.yaml
 
-#### VIP_RANGE
-
-The `VIP_RANGE` environment variable allows you to define the IP address range. You can either define IP address range or an IP address range associated with a unique name.
-
-**IP address range**
-
-You can define the IP address range from a subnet or multiple subnets. Also, you can use the `-` character to define the IP address range. The IPAM controller assigns the IP address from this IP address range to the service.
-
-The following examples demonstrate the various ways you can define the IP address range in the `VIP_RANGE` environment variable:
-
-    To define the IP address range from a subnet:
-
-        - name: "VIP_RANGE"
-          value: '["10.xxx.xxx.18/31"]'
-
-    To define the IP address range from multiple subnets, ensure that the values are valid CIDRs for the subnets:
-
-        - name: "VIP_RANGE"
-          value: '["10.217.212.18/31",  "10.217.212.20/31", "10.217.212.16/30", "10.217.212.0/24"]'
-
-    Also, you can use dash (`-`) to define the IP address range:
-
-        - name: "VIP_RANGE"
-          value: '["10.217.212.18 - 10.217.212.21",  “10.217.212.27 - 10.217.212.31",  “10.217.213.24 - 10.217.213.32" ]'
-
-**IP address range associated with a unique name**
-
-You can assign a unique name to the IP address range and define the range in the `VIP_RANGE` environment variable. This way of assigning the IP address range enables you to differentiate between the IP address ranges. When you create the services of type `LoadBalancer` you can use the `service.citrix.com/ipam-range` annotation in the service definition to specify the IP address range to use for IP address allocation.
-
-For example, there are three domains namely, `Dev`, `Test`, and `Prod` that have dedicated workloads to manage. If each team wants a separate range of IP addresses to load balance the microservice traffic, you can assign unique names to the IP address ranges. Then, you can define the names in the `service.citrix.com/ipam-range` annotation in your service definition. The service defined with `service.citrix.com/ipam-range = 'Dev'` is allocated with an IP address from the IP address range associated with `Dev`.
-
-The following examples demonstrate the various ways you can define the IP address range associated with a unique name in the `VIP_RANGE` environment variable:
-
-        - name: "VIP_RANGE"
-          value: '[{"Prod": ["10.1.2.0/24"]}, {"Test": ["10.1.3.0/24"]}, {"Dev": ["10.1.4.0/24", "10.1.5.0/24"]},["10.1.6.0/24"]]'
-
-Also, you can use the `-` character to define the IP address range:
-
-        - name: "VIP_RANGE"
-          value: '[{"Prod": ["10.1.2.0 - 10.1.2.255"]}, {"Test": ["10.1.3.0 - 10.1.3.255"]}, {"Dev": ["10.1.4.0/24", "10.1.5.0/24"]},["10.1.6.0/24"]]'
-
-The following is a sample service definition for demonstrating the usage of the `service.citrix.com/ipam-range` annotation. In this example, the annotation is used to allocate IP address from the IP address range associated with a unique name `Dev` to the service.
-
-
-        apiVersion: v1
-        kind: Service
-        metadata:
-          annotations:
-            service.citrix.com/ipam-range: "Dev"
-          name: apache
-          labels:
-            name: apache
-        spec:
-          externalTrafficPolicy: Local
-          type: LoadBalancer
-          selector:
-            name: apache
-          ports:
-          - name: http
-            port: 80
-            targetPort: http
-          selector:
-            app: apache
-
-
-#### VIP_NAMESPACES
-
-The `VIP_NAMESPACES` environment variable enables you to define the IPAM controller to work only for a set of namespaces. The IPAM controller allocates IP addresses to the services created only from the namespaces specified in the environment variable.
-
-The following example demonstrates how you can specify the namespaces in the `VIP_NAMESPACES` environment variable:
-
-        - name: "VIP_NAMESPACES"
-          value: 'default kube-system'
-
-The IPAM controller allocates IP addresses to the services created from `default` and `kube-system` namespaces.
-
-> **Note**
-> If you do not use the `VIP_NAMESPACES` environment variable or do not set a value, then the IPAM controller allocates IP addresses to services created from all namespaces.
-
 ### Step 2: Deploy the Apache microservice application
 
 Perform the following to deploy an `apache` application in your Kubernetes cluster.
+
+**Note:** In this example an `apache` application is used. You can use the application you want. 
 
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
@@ -376,7 +315,6 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
             app: apache
 
 
-
 2.  Deploy the service using the following command:
 
         kubectl create -f apache-service.yaml
@@ -403,7 +341,13 @@ The response should be:
 
 ## Expose services of type LoadBalancer by specifying an IP address
 
-Create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), in your service definition file, specify `spec.type:LoadBalancer` and specify an IP address in the `spec.loadBalancerIP` field.
+You can also expose a service of type LoadBalancer manually by specifying an IP address in your service definition.
+
+ To expose a service of type LoadBalancer manually, you can specify the IP address in the service definition YAML file as follows.
+
+    spec:
+      type: LoadBalancer
+      loadBalancerIP: "<ip-address>"
 
 When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as a virtual IP (VIP) address in Citrix ADC.
 
@@ -443,7 +387,7 @@ Perform the following:
 
         kubectl create -f apache-deployment.yaml
 
-3. Verify if eight pods are running using the following:
+3. Verify if the pods are running using the following:
 
         kubectl get pods
 
@@ -517,11 +461,11 @@ Ensure that you have:
 
 ### Deploy microservices using Kubernetes service of type LoadBalancer solution
 
-1. Clone the GitHub repository to your Master node using the following command:
+1. Clone the GitHub repository to your master node using the following command:
 
         git clone https://github.com/citrix/example-cpx-vpx-for-kubernetes-2-tier-microservices.git
 
-2. Using the master nodes' CLI console, create namespaces using the following command:
+2. Using the CLI console of the master node, create namespaces using the following command:
 
         kubectl create -f namespace.yaml
 
@@ -542,7 +486,7 @@ Ensure that you have:
         kubectl create -f vip.yaml
         kubectl create -f ipam_deploy.yaml
 
-5. Deploy the Citrix ADC CPX for `hotdrink`,`colddrink`, and `guestbook` microservices using the following commands:
+5. Deploy the Citrix ADC CPX for `hotdrink`, `colddrink`, and `guestbook` microservices using the following commands:
 
         kubectl create -f cpx.yaml -n tier-2-adc
         kubectl create -f hotdrink-secret.yaml -n tier-2-adc
@@ -557,13 +501,13 @@ Ensure that you have:
         kubectl create -f team_colddrink.yaml -n team-colddrink
         kubectl create -f colddrink-secret.yaml -n team-colddrink
 
-8. Deploy the `guestbook` no SQL type microservice using the following commands:
+8. Deploy the `guestbook`  microservice using the following commands:
 
         kubectl create -f team_guestbook.yaml -n team-guestbook
 
-9. Log on to the Tier-1 Citrix ADC to verify if no configuration is pushed from the Citrix ingress controller before automating the Tier-1 Citrix ADC.
+9. Log on to the Tier-1 Citrix ADC to verify that configuration is not pushed from the Citrix ingress controller before automating the Tier-1 Citrix ADC.
 
-10. Deploy the Citrix ingress controller to push the Citrix ADC CPX configuration to the Tier-1 Citrix ADC automatically. In the `cic_vpx.yaml`, change the value of the NS_IP environment variable with your Citrix ADC VPX NS_IP. For more information on the Citrix ingress controller deployment, see [Deploy the Citrix ingress controller using YAML](../deploy/deploy-cic-yaml.md).
+10. Deploy the Citrix ingress controller to push the Citrix ADC CPX configuration to the Tier-1 Citrix ADC automatically. In the `cic_vpx.yaml`, change the value of the `NS_IP` environment variable with the NS IP of your Citrix ADC VPX. For more information on the Citrix ingress controller deployment, see [Deploy the Citrix ingress controller using YAML](../deploy/deploy-cic-yaml.md).
     
     After you update the `cic_vpx.yaml` file, deploy the file using the following command:
 
@@ -582,3 +526,86 @@ Ensure that you have:
 You can now access the microservices using the following URL: [https://hotdrink.beverages.com](https://hotdrink.beverages.com)
 
 ![Coffee and Tea Services](../media/coffee-and-tea-services.png)
+
+## Environment variables: IPAM controller
+
+This section provides information about the environment variables in the IPAM controller.
+
+### VIP_RANGE
+
+The `VIP_RANGE` environment variable allows you to define the IP address range. You can either define an IP address range or an IP address range associated with a unique name.
+
+**IP address range**
+
+You can define the IP address range from a subnet or multiple subnets. Also, you can use the `-` character to define the IP address range. The IPAM controller assigns the IP address from this IP address range to the service.
+
+The following examples demonstrate the various ways you can define the IP address range in the `VIP_RANGE` environment variable:
+
+    To define the IP address range from a subnet:
+
+        - name: "VIP_RANGE"
+          value: '["10.xxx.xxx.18/31"]'
+
+    To define the IP address range from multiple subnets, ensure that the values are valid CIDRs for the subnets:
+
+        - name: "VIP_RANGE"
+          value: '["10.217.212.18/31",  "10.217.212.20/31", "10.217.212.16/30", "10.217.212.0/24"]'
+
+    Also, you can use dash (`-`) to define the IP address range:
+
+        - name: "VIP_RANGE"
+          value: '["10.217.212.18 - 10.217.212.21",  “10.217.212.27 - 10.217.212.31",  “10.217.213.24 - 10.217.213.32" ]'
+
+**IP address range associated with a unique name**
+
+You can assign a unique name to the IP address range and define the range in the `VIP_RANGE` environment variable. This way of assigning the IP address range enables you to differentiate between the IP address ranges. When you create the services of type `LoadBalancer` you can use the `service.citrix.com/ipam-range` annotation in the service definition to specify the IP address range to use for IP address allocation.
+
+For example, there are three domains namely, `Dev`, `Test`, and `Prod` that have dedicated workloads to manage. If each team wants a separate range of IP addresses to load balance the microservice traffic, you can assign unique names to the IP address ranges. Then, you can define the names in the `service.citrix.com/ipam-range` annotation in your service definition. The service defined with `service.citrix.com/ipam-range = 'Dev'` is allocated with an IP address from the IP address range associated with `Dev`.
+
+The following examples demonstrate the various ways you can define the IP address range associated with a unique name in the `VIP_RANGE` environment variable:
+
+        - name: "VIP_RANGE"
+          value: '[{"Prod": ["10.1.2.0/24"]}, {"Test": ["10.1.3.0/24"]}, {"Dev": ["10.1.4.0/24", "10.1.5.0/24"]},["10.1.6.0/24"]]'
+
+Also, you can use the `-` character to define the IP address range:
+
+        - name: "VIP_RANGE"
+          value: '[{"Prod": ["10.1.2.0 - 10.1.2.255"]}, {"Test": ["10.1.3.0 - 10.1.3.255"]}, {"Dev": ["10.1.4.0/24", "10.1.5.0/24"]},["10.1.6.0/24"]]'
+
+The following is a sample service definition for demonstrating the usage of the `service.citrix.com/ipam-range` annotation. In this example, the annotation is used to allocate an IP address from the IP address range associated with a unique name `Dev` to the service.
+
+
+        apiVersion: v1
+        kind: Service
+        metadata:
+          annotations:
+            service.citrix.com/ipam-range: "Dev"
+          name: apache
+          labels:
+            name: apache
+        spec:
+          externalTrafficPolicy: Local
+          type: LoadBalancer
+          selector:
+            name: apache
+          ports:
+          - name: http
+            port: 80
+            targetPort: http
+          selector:
+            app: apache
+
+
+### VIP_NAMESPACES
+
+The `VIP_NAMESPACES` environment variable enables you to define the IPAM controller to work only for a set of namespaces. The IPAM controller allocates IP addresses to the services created only from the namespaces specified in the environment variable.
+
+The following example demonstrates how you can specify the namespaces in the `VIP_NAMESPACES` environment variable:
+
+        - name: "VIP_NAMESPACES"
+          value: 'default kube-system'
+
+The IPAM controller allocates IP addresses to the services created from `default` and `kube-system` namespaces.
+
+> **Note**
+> If you do not use the `VIP_NAMESPACES` environment variable or do not set a value, then the IPAM controller allocates IP addresses to services created from all namespaces.
