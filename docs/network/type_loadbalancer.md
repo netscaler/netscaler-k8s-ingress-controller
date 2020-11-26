@@ -598,14 +598,14 @@ The following is a sample service definition for demonstrating the usage of the 
 
 ### VIP_NAMESPACES
 
-The `VIP_NAMESPACES` environment variable enables you to define the IPAM controller to work only for a set of namespaces. The IPAM controller allocates IP addresses to the services created only from the namespaces specified in the environment variable.
+The `VIP_NAMESPACES` environment variable enables you to define the IPAM controller to work only for a set of namespaces. The IPAM controller allocates IP addresses only to services created from namespaces specified in the environment variable.
 
-The following example demonstrates how you can specify the namespaces in the `VIP_NAMESPACES` environment variable:
+The following example demonstrates how you can specify namespaces in the `VIP_NAMESPACES` environment variable:
 
         - name: "VIP_NAMESPACES"
           value: 'default kube-system'
 
-The IPAM controller allocates IP addresses to the services created from `default` and `kube-system` namespaces.
+The IPAM controller allocates IP addresses to services created from `default` and `kube-system` namespaces.
 
 > **Note**
 > If you do not use the `VIP_NAMESPACES` environment variable or do not set a value, then the IPAM controller allocates IP addresses to services created from all namespaces.
