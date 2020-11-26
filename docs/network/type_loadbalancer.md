@@ -226,7 +226,7 @@ Before you deploy the IPAM controller, deploy the Citrix VIP CRD. For more infor
                 # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
                 # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
 
-    The manifest contains two environment variables, `VIP_RANGE` or `VIP_NAMESPACES`. For more information, see [VIP_RANGE](#viprange) and [VIP_NAMESPACES](#vipnamespaces). Update the `VIP_RANGE` or `VIP_NAMESPACES` environment variables based on your requirement.
+    The manifest contains two environment variables, `VIP_RANGE` or `VIP_NAMESPACES`. For more information, see [VIP_RANGE](#vip_range) and [VIP_NAMESPACES](#vip_namespaces). Update the `VIP_RANGE` or `VIP_NAMESPACES` environment variables based on your requirement.
 
 4.  Deploy the IPAM controller using the following command:
 
