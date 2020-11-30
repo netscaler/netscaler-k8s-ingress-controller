@@ -91,6 +91,7 @@ The following table lists the Container network interfaces (CNIs) supported by C
 | Flannel | 12.1–51.16 and later |
 | Kubenet | 12.1–51.16 and later |
 | Calico | 13.0–36.28 |
+| Canal | 13.0–36.28 |
 | Calico on GKE | 12.1–51.16 and later |
 | OVS | 13.0–36.28 |
 | Weave | 12.1–51.16 and later |
