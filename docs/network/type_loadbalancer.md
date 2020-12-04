@@ -23,11 +23,7 @@ The following table summarizes a comparison between the Kubernetes Ingress and s
 
 By default, a service of type `LoadBalancer` simply exposes NodePorts for the service in a bare-metal Kubernetes cluster. It does not configure external load balancers.
 
-Citrix offers an end-to-end solution for services of type `LoadBalancer` in a bare-metal Kubernetes cluster by providing both IP management and external load balancer configuration.
-
-With the Citrix solution, when a service of type `LoadBalancer` is created in the bare-metal cluster, the Citrix ingress controller configures the Citrix ADC outside the Kubernetes cluster (Tier-1) with a load balancing virtual server.
-
-The load balancing virtual server is configured with an IP address either automatically assigned by the Citrix [IPAM controller](#ip-address-management-using-the-ipam-controller) or manually specified in the service definition using the `spec.loadBalancerIP` field. Once the IP address is configured for a service, you can use the configured IP address to access the service externally.
+Citrix offers an end-to-end solution for services of type `LoadBalancer` in a bare-metal Kubernetes cluster by providing both IP management and external load balancer configuration. With the Citrix solution, when a service of type `LoadBalancer` is created in the bare-metal cluster, the Citrix ingress controller configures the Citrix ADC outside the Kubernetes cluster (Tier-1) with a load balancing virtual server. The load balancing virtual server is configured with an IP address either automatically assigned by the Citrix [IPAM controller](#ip-address-management-using-the-ipam-controller) or manually specified in the service definition using the `spec.loadBalancerIP` field. Once the IP address is configured for a service, you can use the configured IP address to access the service externally.
 
 ### IP address management using the IPAM controller
 
@@ -94,46 +90,46 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
      **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements.
 
-      ```    
-      apiVersion: v1
-      kind: Pod
-      metadata:
-        name: cic-k8s-ingress-controller
-        labels:
-          app: cic-k8s-ingress-controller
-      spec: 
-        serviceAccountName: cic-k8s-role
-        containers:
-        - name: cic-k8s-ingress-controller
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
-          env:
-          # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
-            - name: "NS_IP"
-              value: "x.x.x.x"
-              # Set the username
-            - name: "NS_USER"
-              valueFrom:
-                secretKeyRef:
-                  name: nslogin
-                  key: username
-              # Set user password
-            - name: "NS_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: nslogin
-                  key: password
-              # Set log level
-            - name: "EULA"
-              value: "yes"
-          args:
-            - --ingress-classes
-              citrix
-            - --feature-node-watch
-              false
-            - --ipam
-              citrix-ipam-controller
-          imagePullPolicy: Always
-      ```
+        
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: cic-k8s-ingress-controller
+          labels:
+            app: cic-k8s-ingress-controller
+        spec: 
+          serviceAccountName: cic-k8s-role
+          containers:
+          - name: cic-k8s-ingress-controller
+            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.3.0"
+            env:
+            # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+              - name: "NS_IP"
+                value: "x.x.x.x"
+                # Set the username
+              - name: "NS_USER"
+                valueFrom:
+                  secretKeyRef:
+                    name: nslogin
+                    key: username
+                # Set user password
+              - name: "NS_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: nslogin
+                    key: password
+                # Set log level
+              - name: "EULA"
+                value: "yes"
+            args:
+              - --ingress-classes
+                citrix
+              - --feature-node-watch
+                false
+              - --ipam
+                citrix-ipam-controller
+            imagePullPolicy: Always
+      
 
 3. Deploy the Citrix ingress controller using the edited YAML file with the following command;
 
