@@ -288,11 +288,11 @@ The Citrix ingress controller provides various annotations for ingress. For more
 
 Perform the following steps for the Ingress Configuration:
 
-1.	Download the [rbac.yaml] (./cpx-bgp-router/rbac.yaml) file and deploy the RBAC rules for Citrix ADC CPX and the Citrix ingress controller.
+1.	Download the [rbac.yaml](./cpx-bgp-router/rbac.yaml) file and deploy the RBAC rules for Citrix ADC CPX and the Citrix ingress controller.
 
             kubectl apply -f rbac.yaml
 
-2.	Download the [citrix-k8s-cpx-ingress.yml] (./cpx-bgp-router/citrix-k8s-cpx-ingress.yml) using the following command.
+2.	Download the [citrix-k8s-cpx-ingress.yml](./cpx-bgp-router/citrix-k8s-cpx-ingress.yml) using the following command.
    
         wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/configure/cpx-bgp-router/citrix-k8s-cpx-ingress.yml  
  
