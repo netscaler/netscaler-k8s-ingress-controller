@@ -23,7 +23,7 @@ The following table summarizes a comparison between the Kubernetes Ingress and s
 
 By default, a service of type `LoadBalancer` simply exposes NodePorts for the service in a bare-metal Kubernetes cluster. It does not configure external load balancers.
 
-Citrix offers an end-to-end solution for service of type `LoadBalancer` in a bare-metal Kubernetes cluster by providing both IP management and external load balancer configuration.
+Citrix offers an end-to-end solution for services of type `LoadBalancer` in a bare-metal Kubernetes cluster by providing both IP management and external load balancer configuration.
 
 With the Citrix solution, when a service of type `LoadBalancer` is created in the bare-metal cluster, the Citrix ingress controller configures the Citrix ADC outside the Kubernetes cluster (Tier-1) with a load balancing virtual server.
 
@@ -90,9 +90,9 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
               - --ipam
                 citrix-ipam-controller
 
-   Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
+     Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
 
-   **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements.
+     **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements.
 
       ```    
       apiVersion: v1
