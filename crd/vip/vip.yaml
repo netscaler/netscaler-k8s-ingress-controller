@@ -47,3 +47,5 @@ spec:
               enum: ["service", "ingress"]
             description:
               type: string
+            range-name:
+              type: string
