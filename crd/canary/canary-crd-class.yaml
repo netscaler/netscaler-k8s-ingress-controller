@@ -32,7 +32,7 @@ spec:
     # singular name to be used as an alias on the CLI and for display
     singular: continuousdeployment
     # kind is normally the CamelCased singular type. Your resource manifests use this.
-    kind: continuousDeploymentCustomConfig
+    kind: continuousdeployment
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - crd
