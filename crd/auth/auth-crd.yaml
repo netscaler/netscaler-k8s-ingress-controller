@@ -15,11 +15,11 @@ spec:
   additionalPrinterColumns:
     - name: Status
       type: string
-      description: "Current Status of the CRD"
+      description: 'Current Status of the CRD'
       JSONPath: .status.state
     - name: Message
       type: string
-      description: "Status Message"
+      description: 'Status Message'
       JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
@@ -29,33 +29,103 @@ spec:
           type: object 
           properties:
             servicenames:
-              description: 'Name of the service for which the policies applied'
+              description: |+
+                           'Name of the services for which the policies applied'
               type: array
               items:
                 type: string
-                maxLength: 127
-            auth_providers:
-              description: 'Auth Config for required auth providers, one or more of these can be created'
+                maxLength: 63
+            authentication_mechanism:
+              type: object 
+              description: |+
+                          'Authentication mechanism. Options: using forms or using request header.
+                           Default is Authentication using request header, when no option is specified'
+              properties:
+              oneOf:
+                - properties:
+                    using_request_header:
+                      description: |+
+                                   'Enable user authentication using request header. Use when the credentials
+                                    or API keys are passed in a header. For example, when using basic, digest,
+                                    bearer authentication or API keys.
+                                    When authentication using forms is provided, this is set to OFF'
+
+                      type: string
+                      enum: ['ON']
+                  required: [using_request_header]
+                - properties:
+                    using_forms:
+                      type: object
+                      description: 'Enables authentication using forms. Use with user/web authentication.'
+                      properties:
+                        authentication_host:
+                          description: |+
+                                       'Fully qualified domain name (FQDN) for authentication
+                                        FQDN to which the user must be redirected for
+                                        authentication. This FQDN should be unique and should resolve to the front-end IP of Citrix
+                                        ADC with Ingress or service type LoadBalancer'
+                          type: string
+                          maxLength: 255
+                        authentication_host_cert:
+                          description: |+
+                                       'Name of the SSL certificate to be used with authentication_host.
+                                        This certificate is mandatory while using_forms'
+                          type: object
+                          properties:
+                          oneOf:
+                          - properties:
+                              tls_secret:
+                                type: string
+                                description: 'Name of the Kubernetes Secret of type TLS referring to Certificate'
+                                pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                            required: [tls_secret]
+                          - properties:             
+                              preconfigured:
+                                type: string
+                                maxLength: 63
+                                description: |+
+                                             'Preconfigured SSL certkey name on ADC with the
+                                              certificate and key already added on ADC'
+                            required: [preconfigured]
+                      required: [authentication_host, authentication_host_cert]
+                      oneOf:
+                      - properties:
+                          vip:
+                            description: |+
+                                         'Front-end IP of ingress for which the authentication 
+                                          using forms is applicable. This refers to  the front-end IP address provided 
+                                          with Ingress'
+                            type: string
+                        required: [vip]
+                      - properties:
+                          lb_service_name:
+                            description: |+
+                                         'Service of type LoadBalancer for which the authentication using forms
+                                          is applicable.'
+                            type: string
+                            maxLength: 63
+                        required: [lb_service_name]
+                  required: [using_forms]
+            authentication_providers:
+              description: |+
+                           'Authentication Configuration for required authentication providers/schemes.
+                            One or more of these can be created'
               type: array
               items:
-                  description: " create config for a single auth provider of a particular type"
+                  description: 'Create config for a single authentication provider of a particular type'
                   type: object 
                   properties:
                     name:
-                      description: 'Name for this provider, has to be unique, referenced by auth policies'
+                      description: 'Name for this provider, has to be unique, referenced by authentication policies'
                       type: string
                       maxLength: 127
 
                     oauth:
-                      description: 'Auth provided by external oAuth provider' 
+                      description: 'Authentication provided by external oAuth provider'
                       type: object 
                       properties:
                           issuer:
                               description: 'Identity of the server whose tokens are to be accepted'
-                              type: string
-                              maxLength: 127
-                          jwks_uri:
-                              description: 'URL of the endpoint that contains JWKs (Json Web Key) for JWT (Json Web Token) verification'
                               type: string
                               maxLength: 127
                           audience:
@@ -65,7 +135,9 @@ spec:
                                 type: string
                                 maxLength: 127
                           token_in_hdr:
-                              description: 'custom header name where token is present, default is Authorization header'
+                              description: |+
+                                           'custom header name where token is present,
+                                            default is Authorization header'
                               type: array
                               items:
                                 type: string
@@ -78,14 +150,12 @@ spec:
                                 type: string
                                 maxLength: 127
                               maxItems: 2
-                          client_credentials:
-                              description: 'secrets object that contains Client Id and secret as known to Introspection server'
-                              type: string
-                              maxLength: 253
-                          introspect_url:
-                              description: ' URL of the introspection server'
-                              type: string
-                              maxLength: 127
+                          signature_algorithms:
+                              description: 'list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed'
+                              type: array
+                              items:
+                                type: string
+                                enum: ['HS256', 'RS256', 'RS512']
                           claims_to_save:
                               description: 'list of claims to be saved, used to create authorization policies'
                               type: array
@@ -93,28 +163,133 @@ spec:
                                 type: string
                                 maxLength: 127
                       anyOf:
-                          - required : [jwks_uri]
-                          - required : [introspect_url, client_credentials]
+                      - properties:
+                          jwks_uri:
+                              description: |+
+                                          'URL of the endpoint that contains JWKs (Json Web Key) for 
+                                           JWT (Json Web Token) verification'
+                              type: string
+                              maxLength: 127                        
+                        required : [jwks_uri]
+                      - properties:
+                          introspect_url:
+                              description: ' URL of the introspection server'
+                              type: string
+                              maxLength: 127
+                          client_credentials:
+                              description: |+
+                                           'secrets object that contains Client Id and secret as known 
+                                            to Introspection server'
+                              type: string
+                              maxLength: 253
+                        required : [introspect_url, client_credentials]
+
+                    saml:
+                      description: |+
+                                   'SAML authentication provider.
+                                    Currently SAML is supported only with authentication mechanism using forms'
+                      type: object
+                      properties:
+                          metadata_url:
+                              description: 'URL is used for obtaining saml metadata.'
+                              type: string
+                              maxLength: 255
+                          metadata_refresh_interval:
+                              description: |+
+                                           'Interval in minutes for fetching metadata from specified metadata URL.
+                                            Default is 36000'
+                              type: integer
+                              minimum: 1
+                              maximum: 4294967295
+                          signing_cert:
+                              description: 'SSL certificate to sign requests from SP to IDP'
+                              type: object
+                              properties:
+                              oneOf:
+                              - properties:
+                                  tls_secret:
+                                    type: string
+                                    description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                                required: [tls_secret]
+                              - properties:
+                                  preconfigured:
+                                    type: string
+                                    maxLength: 63
+                                    description: |+
+                                                 'Preconfigured SSL certkey name on ADC with the
+                                                  certificate and key already added on ADC'
+                                required: [preconfigured]
+                          audience:
+                              description: 'Audience for which assertion sent by IdP is applicable'
+                              type: string
+                              maxLength: 127                          
+                          issuer_name:
+                              description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
+                              type: string
+                              maxLength: 63
+                          binding:
+                              description: 'Specifies the transport mechanism of saml message. Default is POST'
+                              type: string
+                              enum: ['REDIRECT', 'POST', 'ARTIFACT']
+                          artifact_resolution_service_url:
+                              description: 'URL of the Artifact Resolution Service on IdP'
+                              type: string
+                              maxLength: 255
+                          logout_binding:
+                              description: 'Specifies the transport mechanism of saml logout.  Default is POST'
+                              type: string
+                              enum: ['REDIRECT', 'POST']
+                          reject_unsigned_assertion:
+                              description: |+
+                                           'Reject unsigned SAML assertions. ON, rejects assertion without signature.
+                                            STRICT ensure that both Response and Assertion are signed. Default is ON'
+                              type: string
+                              enum: ['ON', 'OFF', 'STRICT']                      
+                          user_field:
+                              description: 'SAML user ID, as given in the SAML assertion'
+                              type: string
+                              maxLength: 63
+                          default_authentication_group:
+                              description: |+
+                                           'This is the default group that is chosen when the authentication 
+                                            succeeds in addition to extracted groups'
+                              type: string
+                              maxLength: 63                                                  
+                          skew_time:
+                              description: |+
+                                           'Allowed clock skew in number of minutes on an incoming assertion.
+                                            Default is 5'
+                              type: integer
+                              minimum: 1
+                          attributes_to_save:
+                              description: |+
+                                           'List of attribute names separated by comma which needs to be extracted
+                                            and stored as key-value pair for the session on ADC'
+                              type: string
+                              maxLength: 2047                   
+                      required:
+                        - metadata_url
 
                     basic_local_db:
-                      description: 'Basic HTTP authentication, user data in local DB'
+                      description: 'Basic HTTP authentication, user data in local DB of ADC'
 
                   required:
                     - name
 
-            auth_policies:
-              description: "Auth policies"
+            authentication_policies:
+              description: 'Authentication policies'
               type: array
               items:
                 type: object 
-                description: "Auth policy"
+                description: 'Authentication policy'
                 properties:
                   resource:
                       type: object 
-                      description: " endpoint/resource selection criteria"
+                      description: 'endpoint/resource selection criteria'
                       properties:
                         path:
-                          description: "api resource path e.g. /products. "
+                          description: 'api resource path e.g. /products. '
                           type: array
                           items:
                             type: string
@@ -127,7 +302,7 @@ spec:
                       required:
                         - path
                   provider:
-                    description: "name of the auth provider for the policy, empty if no authentication required"
+                    description: 'name of the authentication provider for the policy, empty if no authentication required'
                     type: array
                     items:
                       type: string
@@ -138,40 +313,40 @@ spec:
                   - provider
 
             authorization_policies:
-              description: "Authorization policies"
+              description: 'Authorization policies'
               type: array
               items:
                 type: object 
-                description: "Authorization policy"
+                description: 'Authorization policy'
                 properties:
                   resource:
                       type: object 
-                      description: " endpoint/resource selection criteria"
+                      description: 'endpoint/resource selection criteria'
                       properties:
                         path:
-                          description: "api resource path e.g. /products. "
+                          description: 'api resource path e.g. /products. '
                           type: array
                           items:
                             type: string
                             maxLength: 511
                         method:
-                          description: " http method"
+                          description: ' http method'
                           type: array
                           items:
                             type: string
                             enum: ['GET', 'PUT', 'POST','DELETE']
                         claims:
-                          description: " authorization scopes required for selected resource"
+                          description: 'authorization scopes required for selected resource saved as claims or attributes'
                           type: array
                           items:
                               type: object
                               properties:
                                 name:
-                                  description: " name of the claim/attribute to check"
+                                  description: 'name of the claim/attribute to check'
                                   type: string
                                   maxLength: 127
                                 values:
-                                  description: " list of claim values required for the request"
+                                  description: 'list of claim values required for the request'
                                   type: array
                                   items:
                                     type: string
@@ -185,4 +360,4 @@ spec:
 
           required:
             - servicenames
-                 
+
