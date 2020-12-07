@@ -1,0 +1,21 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: bottps
+spec:
+    servicenames:
+        - frontend
+    redirect_url: "/error_page.html"
+    security_checks:
+        tps: "ON"
+    bindings:
+        tps:
+            geolocation:
+                threshold: 101
+                percentage: 100
+            host:
+                threshold: 10
+                percentage: 100
+                action:
+                    - "log"
+                    - "mitigation"
