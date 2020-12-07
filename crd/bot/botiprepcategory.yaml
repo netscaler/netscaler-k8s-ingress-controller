@@ -1,0 +1,20 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: botiprepcategory
+spec:
+    servicenames:
+        - frontend
+    redirect_url: "/error_page.html"
+    security_checks:
+       reputation: "ON"
+    bindings:
+      reputation:
+        categories: 
+            - SPAM_SOURCES:
+                action:
+                    - "log"
+                    - "redirect"
+            - MOBILE_THREATS
+            - SPAM_SOURCES
+

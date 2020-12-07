@@ -1,0 +1,9 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: botsignatures
+spec:
+    servicenames:
+        - frontend
+    redirect_url: "/error_page.html"
+    signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
