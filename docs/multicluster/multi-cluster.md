@@ -111,7 +111,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
          - name: "SITENAMES"
            value: "site1,site2"
          - name: "site1_ip"
-           value: "10.102.217.148"
+           value: "x.x.x.x"
          - name: "site1_region"
            value: "east"
          - name: "site1_username"
@@ -125,7 +125,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
                name: secret-1
                key: password
          - name: "site2_ip"
-           value: "10.102.217.141"
+           value: "x.x.x.x"
          - name: "site2_region"
            value: "west"
          - name: "site2_username"
@@ -195,8 +195,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
               - monType: tcp
                 uri: ''
                 respCode: 200
-          status:
-            {}
+
   
 
     For more information on other GTP deployment options like canary and failover, see [Examples: Global traffic policy deployments](#Examples-Global-traffic-policy-deployments).
@@ -213,7 +212,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
         apiVersion: "citrix.com/v1beta1"
         kind: globalserviceentry
         metadata:
-          name: `app2.default.east.cluster1`
+          name: 'app2.default.east.cluster1'
           namespace: default
         spec:
           endpoint:
@@ -446,8 +445,6 @@ spec:
                     type: array
                 type: object
               type: array
-            status:
-              type: object
           type: object
 ```
 
@@ -581,8 +578,7 @@ In this example, a stable version of an application is deployed in a cluster `cl
             - monType: http
               uri: ''
               respCode: 200
-        status:
-          {}
+
 
 ### Failover deployment
 
@@ -615,8 +611,7 @@ The following example shows a sample GTP configuration for failover. Using the `
           - monType: http
             uri: ''
             respCode: 200
-      status:
-        {}
+
   
 ### RTT deployment
 
@@ -638,8 +633,7 @@ Following is a sample global traffic policy for round trip time deployment.
           - destination: 'app1.default.west.cluster2'
           monitor:
           - monType: tcp
-      status:
-        {}
+
 
 ### Round robin deployment
 
@@ -665,8 +659,7 @@ Following is a sample traffic policy for the round robin deployment. You can use
           - monType: tcp
             uri: ''
             respCode: 200
-      status:
-            {}
+
 
 ### Static Proximity
 
@@ -691,5 +684,4 @@ Following is a sample traffic policy for the static proximity deployment.
           - monType: http
             uri: ''
             respCode: 200
-      status:
-        {}
+

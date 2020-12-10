@@ -10,6 +10,7 @@ spec:
       name: my-secret
   - preconfigured: second-secret
     # preconfigured certkey name in Citrix ADC
+    # This certkey must exist before applying the Custom Resource
     default: true
   defaultAction:
     backend:

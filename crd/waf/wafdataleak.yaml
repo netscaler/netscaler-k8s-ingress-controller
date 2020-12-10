@@ -1,0 +1,27 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafdataleak
+spec:
+    servicenames:
+        - frontend
+    application_type: HTML
+    html_error_object: "http://x.x.x.x/crd/hipster.html"
+    security_checks:
+        common:
+          credit_card: "on"
+    settings:
+        common:
+          credit_card:
+            card_type: ["visa","amex"]
+            max_allowed: 1
+            card_xout: "on"
+            secure_logging: "on"
+    enforcements:
+        common:
+          safe_object:
+            - rule:
+                name: credit_card
+                expression: '[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}'
+                max_match_len: 25
+                action: ["log","xout"]

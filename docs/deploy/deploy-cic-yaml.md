@@ -125,7 +125,7 @@ Depending on whether you are using the latest Citrix ADC CPX version or an older
 
 - For Citrix ADC CPX 13.0.64.35 and later versions, use the following YAML:
 
-  [cpx-ingress-latest.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/yaml-cpx-crediential-changes/cpx-cic-latest.yaml)
+  [citrix-k8s-cpx-ingress.yml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)
 
   As provided in the YAML, the following is a snippet of the volume mount configuration required in the YAML file both for the Citrix ingress controller and Citrix ADC CPX:
 
@@ -172,8 +172,7 @@ You need to create a Role and bind the role to the service account for the Citri
 
 The following example shows a sample YAML file which defines a Role and RoleBinding for deploying a Citrix ingress controller for a specific namespace.
 
-```yml
-
+```yaml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -215,7 +214,6 @@ subjects:
   namespace: default
 
 ---
-
 ```
 
 ### Restrictions

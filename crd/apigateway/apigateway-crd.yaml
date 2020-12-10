@@ -21,3 +21,4 @@ spec:
       type: string
       description: "Status Message"
       JSONPath: .status.status_message
+

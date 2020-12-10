@@ -5,9 +5,9 @@
 > Note: Charts may require access to kube-system namespace and/or cluster wide permissions for full functionality. Install/configure helm/tiller appropriately.
 
 ###### Charts
-[citrix-k8s-cpx-ingress-controller](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-k8s-cpx-ingress-controller) - Use this chart to deploy Citrix ADC CPX with Citrix ingress controller running as [side car](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/).
+[citrix-cpx-with-ingress-controller](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cpx-with-ingress-controller) - Use this chart to deploy Citrix ADC CPX with Citrix ingress controller running as [side car](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/).
 
-[citrix-k8s-ingress-controller](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-k8s-ingress-controller) - Use this chart to deploy Citrix ingress controller configuring Citrix ADC VPX/MPX.
+[citrix-ingress-controller](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller) - Use this chart to deploy Citrix ingress controller configuring Citrix ADC VPX/MPX.
 
 ## Documentation
 Each charts README describe the functionality and values.yaml shows the default values.
