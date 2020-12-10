@@ -1,0 +1,16 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafforms
+spec:
+    servicenames:
+        - frontend
+    application_type: HTML
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    security_checks:
+        html:
+          cross_site_scripting: "on" 
+          sql_injection: "on"
+          form_field_consistency:
+            action: ["log","block"]
+          csrf: "on"

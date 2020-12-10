@@ -111,7 +111,7 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
           LOGLEVEL: 'info'
           NS_PROTOCOL: 'http'
           NS_PORT: '80'
-          NS_Cookie_Version: '0'
+          NS_COOKIE_VERSION: '0'
           NS_HTTP2_SERVER_SIDE: 'OFF'
           
 

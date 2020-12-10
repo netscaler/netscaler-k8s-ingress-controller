@@ -1,15 +1,16 @@
 apiVersion: citrix.com/v1alpha1
 kind: Listener
 metadata:
-  name: https-listener 
+  name: https-listener
   namespace: default
 spec:
-  vip: 10:10::10 
+  # VIP is Ipv4 or Ipv6 address
+  vip: 2001:4860:4860::1
   protocol: https
   certificates:
   - secret:
     # Kubernetes secret name
-    name: my-secret
+      name: my-secret
   defaultAction:
     backend:
       kube:
