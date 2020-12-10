@@ -1,0 +1,26 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafjsondos
+spec:
+    servicenames:
+        - frontend
+    application_type: JSON
+    json_page_url: "http://x.x.x.x/crd/error_page.json"
+    security_checks:
+        json:
+          dos: "on"
+    settings:
+        json:
+          dos:
+            container:
+              max_depth: 2
+            document:
+              max_len: 20000000
+            array:
+              max_len: 5
+            key:
+              max_count: 10000
+              max_len: 12
+            string:
+              max_len: 1000000

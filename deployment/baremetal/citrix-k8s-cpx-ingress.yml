@@ -14,9 +14,15 @@ rules:
   - apiGroups: [""]
     resources: ["services"]
     verbs: ["get", "list", "watch", "patch"]
-  - apiGroups: ["extensions"]
-    resources: ["ingresses", "ingresses/status"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources: ["ingresses"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources: ["ingresses/status"]
+    verbs: ["patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -24,10 +30,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -66,6 +72,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
+  labels:
+    name: cpx-ingress
+    app: cpx-ingress
 spec:
   selector:
     matchLabels:
@@ -76,12 +85,12 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations:
+      annotations: null
     spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103"
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-67.39
           securityContext:
              privileged: true
           env:
@@ -91,13 +100,21 @@ spec:
             value: ""
           imagePullPolicy: Always
           volumeMounts:
+            - mountPath: /var/deviceinfo
+              name: shared-data
             - mountPath: /cpx/conf/
               name: cpx-volume1
             - mountPath: /cpx/crash/
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.7.6"
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.11.3
+          volumeMounts:
+          - mountPath: /var/deviceinfo
+            name: shared-data
+          args:
+          - --ingress-classes
+              citrix
           env:
           - name: "EULA"
             value: "yes"
@@ -111,6 +128,8 @@ spec:
             value: "SIDECAR"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
+          - name: "LOGLEVEL"
+            value: "INFO"
           - name: POD_NAME
             valueFrom:
               fieldRef:
@@ -121,16 +140,17 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
-          args:
-            - --ingress-classes
-              citrix
           imagePullPolicy: Always
       volumes:
+      - name: shared-data
+        emptyDir: {}
       - name: cpx-volume1
         emptyDir: {}
       - name: cpx-volume2
         emptyDir: {}
+        
 ---
+
 apiVersion: v1
 kind: Service
 metadata:

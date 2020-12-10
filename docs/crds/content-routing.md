@@ -39,7 +39,7 @@ For complete information on all attributes of the Listener CRD, see [Listener CR
 
 	    Kubectl create -f  Listener.yaml
         Example:
-        root@k8smaster:# kubectl create -f Listener.yaml 
+        root@k8smaster:# kubectl create -f Listener.yaml
         customresourcedefinition.apiextensions.k8s.io/listeners.citrix.com created
 
 ## How to write Listener CRD objects
@@ -75,7 +75,7 @@ kind: Listener
            lbConfig:
              lbmethod: ROUNDROBIN
            servicegroupConfig:
-             clttimeout: 20
+             clttimeout: '20'
    vip: 192.168.0.1
    port: 443
    protocol: https
@@ -94,7 +94,7 @@ In this example, a listener is exposing an HTTPS endpoint. Under certificates se
 After you have defined the Listener CRD object in the YAML file, deploy the YAML file using the following command. In this example, `Listener-crd.yaml` is the YAML definition.
 
 
-	    Kubectl create -f  Listener-crd.yaml 
+	    Kubectl create -f  Listener-crd.yaml
 
 ## HTTPRoute CRD
 
@@ -110,10 +110,10 @@ Perform the following to deploy the HTTPRoute CRD:
 
 2. Apply the HTTPRoute CRD in your cluster using the following command.
 
-	    Kubectl apply -f  HTTPRoute.yaml 
-    
-      
-    
+	    Kubectl apply -f  HTTPRoute.yaml
+
+
+
     Example:
 
         root@k8smaster:# kubectl create -f HTTPRoute.yaml
@@ -123,7 +123,7 @@ Perform the following to deploy the HTTPRoute CRD:
 
  Once you have deployed the HTTPRoute CRD, you can define the HTTP route configuration in a YAML file. In the YAML file, use `HTTPRoute` in the kind field and in the spec section add the HTTPRoute CRD attributes based on your requirement for the HTTP route configuration.
 
-Following is a sample HTTPRoute CRD object definition named as `Route-crd.yaml`. 
+Following is a sample HTTPRoute CRD object definition named as `Route-crd.yaml`.
 
 ```yml
 apiVersion: citrix.com/v1alpha1
@@ -165,7 +165,7 @@ For detailed explanations and API specifications of HTTPRoute, see [HTTPRoute CR
 After you have defined the HTTP routes in the YAML file, deploy the YAML file for HTTPRoute CRD object using the following command. In this example, `Route-crd.yaml` is the YAML definition.
 
 
-	    Kubectl create -f  Route-crd.yaml 
+	    Kubectl create -f  Route-crd.yaml
 
 Once you deploy the YAML file, the Citrix ingress controller applies the HTTP route configuration on the Ingress Citrix ADC device.
 

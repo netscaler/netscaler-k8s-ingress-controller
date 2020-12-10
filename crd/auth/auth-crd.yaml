@@ -358,6 +358,4 @@ spec:
                         - claims
 
           required:
-            - servicenames  
-
-
+            - servicenames     
