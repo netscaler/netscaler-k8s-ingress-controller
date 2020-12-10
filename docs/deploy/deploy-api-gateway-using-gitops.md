@@ -65,7 +65,7 @@ The API Gateway deployment CRD configures the following:
 
   The following image shows the API Gateway deployment CRD binding the API specification with policy templates using the API selectors and policy mappings.
 
-  ![Open API Specification](../media/gitops/entities-constituents.png)
+  ![Open API Specification](../media/entities-constituents.png)
 
   APIs that start with the */pet* regular expression is selected with the *path regexp* pattern and APIs with */play* is selected with the *play* tag. Security definitions in the API specification document are mapped with the available authentication, authorization, and auditing configurations in the authentication CRD template.
 
@@ -146,7 +146,7 @@ It maps the authentication references in the API specification document with the
 
 Perform the following steps to deploy the API Gateway CRD:
 
-  1. Download the [API Gateway CRD](apigateway-crd.yaml).
+  1. Download the [API Gateway CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/apigateway/apigateway-crd.yaml).
 
   2. Deploy the API Gateway CRD using the following command:
 
