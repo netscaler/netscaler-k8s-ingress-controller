@@ -4,16 +4,25 @@ metadata:
   name: citrix
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "services", "pods", "secrets", "nodes", "routes", "namespaces","tokenreviews","subjectaccessreview"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces","tokenreviews","subjectaccessreview"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
   - apiGroups: [""]
     resources: ["services/status"]
     verbs: ["patch"]
-  - apiGroups: ["extensions"]
-    resources: ["ingresses", "ingresses/status"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources: ["ingresses"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources: ["ingresses/status"]
+    verbs: ["patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -21,10 +30,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    resources: ["rewritepolicies", "continuousdeployments", "authpolicies", "ratelimits", "listeners", "httproutes", "wafs"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status", "wafs/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -68,7 +77,7 @@ spec:
       serviceAccountName: citrix
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-67.39"
           securityContext: 
              privileged: true
           env:
@@ -82,9 +91,19 @@ spec:
           - containerPort: 443
             hostPort: 443
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/deviceinfo
+              name: shared-data
+            - mountPath: /cpx/conf/
+              name: cpx-volume1
+            - mountPath: /cpx/crash/
+              name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.9.2"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.11.3"
+          volumeMounts:
+          - mountPath: /var/deviceinfo
+            name: shared-data
           imagePullPolicy: Always
           env:
           - name: "EULA"
@@ -99,6 +118,8 @@ spec:
             value: "SIDECAR"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
+          - name: "LOGLEVEL"
+            value: "INFO"
           - name: POD_NAME
             valueFrom:
               fieldRef:
@@ -113,5 +134,12 @@ spec:
             - --default-ssl-certificate
               $(POD_NAMESPACE)/default-cert
           imagePullPolicy: Always
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      - name: cpx-volume1
+        emptyDir: {}
+      - name: cpx-volume2
+        emptyDir: {}
       nodeSelector:
           "node-role.kubernetes.io/infra": "true"
