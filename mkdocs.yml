@@ -85,6 +85,7 @@ nav:
     - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
+    - Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX: deploy/deploy-azure-cic.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy the Citrix ingress controller in Anthos Platform: deploy/deploy-anthos.md
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
