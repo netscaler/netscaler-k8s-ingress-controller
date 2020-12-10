@@ -6,7 +6,7 @@ This document describes how the [Citrix ADC Metrics Exporter](https://github.com
 
 Launching Promethus-Operator
 ---
-Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus) and its [manifest](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus/manifests) files.
+Prometheus Operator has an expansive method of monitoring services on Kubernetes. It makes use ServiceMonitors defined by CRDs to automatically detect services and their corresponding pod endpoints. To get started a basic working model, this guide makes use of [kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/contrib/kube-prometheus).
 ```
 git clone https://github.com/coreos/kube-prometheus.git
 kubectl create -f kube-prometheus/manifests/setup/
@@ -115,7 +115,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.6"
       imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -131,19 +131,22 @@ spec:
     secret:
       secretName: nslogin
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-vpx-ingress
   labels:
+    app: exporter-vpx-ingress
     service-type: citrix-adc-monitor
 spec:
-  selector:
-    name: exporter-vpx-ingress
+  type: NodePort
   ports:
     - name: exporter-port
       port: 8888
       targetPort: 8888
+  selector:
+    app: exporter-vpx-ingress
+    
 ```
 The IP and port of the VPX device needs to be filled in as the ```--target-nsip``` (Eg. ```--target-nsip=10.0.0.20```). 
 </details>
@@ -177,7 +180,7 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.6"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
@@ -191,7 +194,7 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
           imagePullPolicy: Always
           securityContext:
             privileged: true
@@ -211,11 +214,12 @@ spec:
             - name: nitro-http
               containerPort: 9080
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-cpx-ingress
   labels:
+    app: exporter-cpx-ingress
     service-type: citrix-adc-monitor
 spec:
   selector:
@@ -253,7 +257,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
           securityContext: 
              privileged: true
           env:
@@ -265,7 +269,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.1"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.6"
           args:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
@@ -279,11 +283,12 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: exporter-cpx-ew
   labels:
+    app: exporter-cpx-ew
     service-type: citrix-adc-monitor
 spec:
   selector:
@@ -368,7 +373,7 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_cic_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 

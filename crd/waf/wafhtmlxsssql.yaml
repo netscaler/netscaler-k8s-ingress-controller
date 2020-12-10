@@ -1,0 +1,12 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafhtmlxsssql
+spec:
+    servicenames:
+        - frontend
+    html_error_object: "http://x.x.x.x/crd/hipster.html"
+    security_checks:
+        html:
+          cross_site_scripting: "on" 
+          sql_injection: "on"

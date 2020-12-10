@@ -10,11 +10,21 @@ repo_name: "Citrix Ingress Controller"
 repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller"
 edit_uri: "edit/master/docs"
 
+# Feedback
+
+issues_uri: https://github.com/citrix/citrix-k8s-ingress-controller/issues/new
+assignees_uri:
+  - sreejithgs
+labels_uri:
+  - documentation
+
 # Copyright
-copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved. '
+copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved.'
 
 extra_css:
   - 'assets/stylesheets/extra.css'
+  - https://use.fontawesome.com/releases/v5.12.1/css/all.css
+
 
 # Configuration
 theme:
@@ -31,15 +41,16 @@ theme:
   
   # Default values, taken from mkdocs_theme.yml
   language: en
-  feature:
+  features:
     - tabs: false
   palette:
-    primary: white
-    accent: blue
+    primary: teal
+    accent: teal
   font: false
-  favicon: https://citrix.com/favicon.ico
-  logo: https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png
+  favicon: https://docs.citrix.com/assets/images/favicon.ico
+  logo: https://developer-docs.citrix.com/_static/logo.svg
   icon: fontawesome
+
 extra:
   social:
     - icon: fontawesome/brands/youtube
@@ -56,9 +67,6 @@ markdown_extensions:
   - codehilite
   - toc:
       permalink: true
-  - footnotes
-  - meta
-  - extra
 
 plugins:
   - search:

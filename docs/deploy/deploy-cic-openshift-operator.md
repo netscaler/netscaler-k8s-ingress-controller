@@ -151,7 +151,7 @@ Perform the following:
     | nodeWatch | Optional | false | Use the argument if you want to automatically configure the network route from the Ingress Citrix ADC VPX or MPX to the pods in the Kubernetes cluster. For more information, see. Automatically configure a route on the Citrix ADC instance](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/staticrouting/#automatically-configure-route-on-the-citrix-adc-instance). |
     | defaultSSLCert | Optional | N/A | Default SSL certificate that must be used as a non-SNI certificate in Citrix ADC. |
     | exporter.required | Optional | false | Use the argument, if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/citrix-adc-metrics-exporter) along with the Citrix ingress controller to pull metrics for the Citrix ADC VPX or MPX|
-    | exporter.image    | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.1` | The image of Exporter for Citrix ADC Stats. |
+    | exporter.image    | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.4.6` | The image of Exporter for Citrix ADC Stats. |
     | exporter.pullPolicy | Optional | Always | The pull policy for the Exporter for Citrix ADC Stats image. |
     | exporter.ports.containerPort | Optional | 8888 | The container port of the Exporter for Citrix ADC Stats. |
     | openshift | Optional | true | Set this argument if OpenShift environment is being used. |
@@ -252,7 +252,7 @@ Perform the following:
     | cic.required | Optional | true | Specifies this parameter to run the Citrix ingress controller as a sidecar with Citrix ADC CPX |
     | defaultSSLCert | Optional | N/A | Default SSL certificate that must be used as a non-SNI certificate in Citrix ADC. |
     | exporter.required | Optional | false | Use the argument if you want to run the [Exporter for Citrix ADC Stats ](https://github.com/citrix/citrix-adc-metrics-exporter) along with the Citrix ingress controller to pull metrics for the Citrix ADC CPX|
-    | exporter.image | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.1` | The image for the Exporter for Citrix ADC Stats. |
+    | exporter.image | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.4.6` | The image for the Exporter for Citrix ADC Stats. |
     | exporter.pullPolicy | Optional | Always | The image pull policy for the Exporter for Citrix ADC Stats  |
     | exporter.ports.containerPort | Optional | 8888 | The container port of Exporter for the Citrix ADC Stats. |
     | ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify the Citrix ingress controller to configure Citrix ADC associated with specific ingress class.|

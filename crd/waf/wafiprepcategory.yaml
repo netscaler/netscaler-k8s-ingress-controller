@@ -1,0 +1,23 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafiprepcategory
+spec:
+    application_type: HTML
+    servicenames:
+        - frontend
+    ip_reputation:
+        action: block
+        threat-categories:
+            - SPAM_SOURCES
+            - WINDOWS_EXPLOITS
+            - WEB_ATTACKS
+            - BOTNETS
+            - SCANNERS
+            - DOS
+            - REPUTATION
+            - PHISHING
+            - PROXY
+            - NETWORK
+            - CLOUD_PROVIDERS
+            - MOBILE_THREATS

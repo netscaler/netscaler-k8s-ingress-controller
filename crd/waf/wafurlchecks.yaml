@@ -1,0 +1,26 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafurlchecks
+spec:
+    servicenames:
+        - frontend
+    application_type: HTML
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    target:
+        path:
+            - /
+    security_checks:
+        common:
+          allow_url: "on"
+          block_url: "on"
+    relaxations:
+        common:
+          allow_url:
+            urls:
+                - payment.php
+                - cover.php
+          block_url:
+            urls:
+                - "^[^?]*(passwd|passwords?)([.][^/?]*)?([?].*)?$"
+                - "^[^?]*(htaccess|access_log)([.][^/?]*)?([~])?([?].*)?$"

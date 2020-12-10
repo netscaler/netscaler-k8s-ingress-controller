@@ -1,0 +1,18 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafcontenttype
+spec:
+    servicenames:
+        - frontend
+    application_type: HTML
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    security_checks:
+        common:
+          content_type: "on"
+    relaxations:
+        common:
+          content_type:
+            types:
+                - custom_cnt_type
+                - image/crd
