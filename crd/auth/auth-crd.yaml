@@ -46,10 +46,9 @@ spec:
                     using_request_header:
                       description: |+
                                    'Enable user authentication using request header. Use when the credentials
-                                    or API keys are passed in a header. For example, when using basic, digest,
-                                    bearer authentication or API keys.
+                                    or api keys are passed in a header. For example, when using Basic, Digest,
+                                    Bearer authentication or api keys.
                                     When authentication using forms is provided, this is set to OFF'
-
                       type: string
                       enum: ['ON']
                   required: [using_request_header]
@@ -62,8 +61,8 @@ spec:
                           description: |+
                                        'Fully qualified domain name (FQDN) for authentication
                                         FQDN to which the user must be redirected for
-                                        authentication. This FQDN should be unique and should resolve to the front-end IP of Citrix
-                                        ADC with Ingress or service type LoadBalancer'
+                                        authentication. This FQDN should be unique and should resolve to frontend IP of
+                                        ADC with Ingress/service type LoadBalancer'
                           type: string
                           maxLength: 255
                         authentication_host_cert:
@@ -76,7 +75,7 @@ spec:
                           - properties:
                               tls_secret:
                                 type: string
-                                description: 'Name of the Kubernetes Secret of type TLS referring to Certificate'
+                                description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
                                 pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
                             required: [tls_secret]
                           - properties:             
@@ -92,8 +91,8 @@ spec:
                       - properties:
                           vip:
                             description: |+
-                                         'Front-end IP of ingress for which the authentication 
-                                          using forms is applicable. This refers to  the front-end IP address provided 
+                                         'Frontend IP of ingress for which the authentication 
+                                          using forms is applicable. This refers to frontend-ip provided 
                                           with Ingress'
                             type: string
                         required: [vip]
@@ -121,7 +120,7 @@ spec:
                       maxLength: 127
 
                     oauth:
-                      description: 'Authentication provided by external oAuth provider'
+                      description: 'Authentication provided by external oAuth provider' 
                       type: object 
                       properties:
                           issuer:
@@ -359,5 +358,6 @@ spec:
                         - claims
 
           required:
-            - servicenames
+            - servicenames  
+
 
