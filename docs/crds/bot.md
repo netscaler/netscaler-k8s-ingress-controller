@@ -219,7 +219,7 @@ The following table lists the various attributes provided in the Bot CRD:
 
 Perform the following steps to deploy the Bot CRD:
 
-1. Download the CRD (bot-crd.yaml).
+1. Download the [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml).
 2. Deploy the Bot CRD using the following command:
 
 `kubectl create -f bot-crd.yaml`
@@ -388,7 +388,6 @@ spec:
           - "/index.html"
 	    - "/submit.php"
 	    - "/login.html"
-
 ```
 
 **Enable IP reputation to reject requests of a particular category**
