@@ -91,6 +91,7 @@ nav:
     - Deploy the Citrix ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
     - Deploy the Citrix API gateway using OpenShift Operator: deploy/deploy-api-gateway-openshift.md
     - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
+    - Deploy the Citrix API Gateway with GitOps: deploy/deploy-api-gateway-using-gitops.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
     - Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX: deploy/deploy-azure-cic.md
@@ -130,6 +131,7 @@ nav:
     - IPAM or VIP: crds/vip.md
     - Content Routing: crds/content-routing.md
     - Web application firewall: crds/waf.md
+    - Bot: crds/bot.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
