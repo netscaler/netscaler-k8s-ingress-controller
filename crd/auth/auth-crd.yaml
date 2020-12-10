@@ -49,7 +49,6 @@ spec:
                                     or api keys are passed in a header. For example, when using Basic, Digest,
                                     Bearer authentication or api keys.
                                     When authentication using forms is provided, this is set to OFF'
-
                       type: string
                       enum: ['ON']
                   required: [using_request_header]
@@ -359,4 +358,4 @@ spec:
                         - claims
 
           required:
-            - servicenames      
+            - servicenames     
