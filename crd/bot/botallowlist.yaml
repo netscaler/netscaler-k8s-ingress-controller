@@ -1,0 +1,26 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: botallowlist
+spec:
+    servicenames:
+        - frontend
+    security_checks:
+        allow_list: "ON"
+    bindings:
+        allow_list:
+            - subnet:
+                value:
+                    - 172.16.1.0/12
+                    - 172.16.2.0/12
+                    - 172.16.3.0/12
+                    - 172.16.4.0/12
+                action:
+                    - "log"
+            - ip:
+                value: 10.102.30.40
+            - expression:
+                value:  http.req.url.contains("index.html")
+                action:
+                    - "log"
+
