@@ -1,0 +1,13 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: botdfp
+spec:
+    servicenames:
+        - frontend
+    redirect_url: "/error_page.html"
+    security_checks:
+       device_fingerprint:
+           action:
+               - "log"
+               - "drop"
