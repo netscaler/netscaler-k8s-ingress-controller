@@ -1,0 +1,26 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+  name: botratelimit
+spec:
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  security_checks:
+    ratelimit: "ON"
+  bindings:
+    ratelimit:
+      - url:
+          value: index.html
+          rate: 2000
+          timeslice: 1000
+      - cookie:
+          value: citrix_bot_id
+          rate: 2000
+          timeslice: 1000
+      - ip:
+          rate: 2000
+          timeslice: 1000
+          action:
+              - "log"
+              - "reset"
