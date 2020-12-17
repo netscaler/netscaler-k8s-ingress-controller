@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8fd77d329d6e1d54c6ba5de222ee1578",
+    "revision": "744a6d4fbfac6ad85556ea3f16212bca",
     "url": "/citrix-k8s-ingress-controller/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/citrix-k8s-ingress-controller/static/css/2.a70dd489.chunk.css"
   },
   {
-    "revision": "c6fe65c7b9b61d9cef27",
+    "revision": "980c7025d1c19f8ee1c1",
     "url": "/citrix-k8s-ingress-controller/static/css/main.1355a2df.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/citrix-k8s-ingress-controller/static/js/2.4060f756.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "c6fe65c7b9b61d9cef27",
-    "url": "/citrix-k8s-ingress-controller/static/js/main.f3212400.chunk.js"
+    "revision": "980c7025d1c19f8ee1c1",
+    "url": "/citrix-k8s-ingress-controller/static/js/main.e97ad93e.chunk.js"
   },
   {
     "revision": "45867efe321b9568c465",
