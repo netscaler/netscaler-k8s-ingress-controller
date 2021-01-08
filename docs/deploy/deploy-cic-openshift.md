@@ -625,54 +625,12 @@ spec:
 
     key: |-
       -----BEGIN RSA PRIVATE KEY-----
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+            [...]
       -----END RSA PRIVATE KEY-----
 
     certificate: |-
       -----BEGIN CERTIFICATE-----
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      GbqIML4OOBN+8pwByFp7T+3xAQ==
+            [...]
       -----END CERTIFICATE-----
 
 
@@ -712,79 +670,17 @@ spec:
 
     key: |-
       -----BEGIN RSA PRIVATE KEY-----
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+            [...]
       -----END RSA PRIVATE KEY-----
 
     certificate: |-
       -----BEGIN CERTIFICATE-----
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+            [...]
       -----END CERTIFICATE-----
 
     destinationCACertificate: |-
       -----BEGIN CERTIFICATE-----
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      awevTse0/kSJ5z2qQ22OPRtL3Q==
+            [...]
       -----END CERTIFICATE-----
 ```
 
