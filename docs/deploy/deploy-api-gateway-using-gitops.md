@@ -166,8 +166,8 @@ spec:
         repository: "https://code.citrite.net/scm/cnn/cic-gitops.git"
         branch: "modify-test-branch"
         git_secret_ref: "mysecret"
-        user_name: "svcacct_gitops_hac"
-        password: "ZUa9@GEu2#BSh5%Dzz"
+        user_name: "<username>"
+        password: "<password>"
         files:
             - "test_gitwatcher/petstore.yaml"
             - "test_gitwatcher/playstore.yaml"

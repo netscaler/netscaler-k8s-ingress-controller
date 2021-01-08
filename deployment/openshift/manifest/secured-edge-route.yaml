@@ -12,53 +12,13 @@ spec:
     termination: edge
 
     key: |-                      
-      -----BEGIN RSA PRIVATE KEY-----
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      ----BEGIN RSA PRIVATE KEY-----
+          
+          [...]
       
       -----END RSA PRIVATE KEY-----
 
     certificate: |-              
       -----BEGIN CERTIFICATE-----
-      MIIDbzCCAlcCCQDVaVapF+wInzANBgkqhkiG9w0BAQsFADB6MQswCQYDVQQGEwJJ
-      TjESMBAGA1UECAwJS2FybmF0YWthMRIwEAYDVQQHDAlCYW5nYWxvcmUxDzANBgNV
-      BAoMBkNpdHJpeDEMMAoGA1UECwwDRGV2MSQwIgYDVQQDDBtjYS5vcGVuc2hpZnQu
-      Y2l0cml4LWNpYy5jb20wHhcNMTkwMzI0MTQzNjIyWhcNMjIwMTExMTQzNjIyWjB5
-      MQswCQYDVQQGEwJJTjESMBAGA1UECAwJS2FybmF0YWthMRIwEAYDVQQHDAlCYW5n
-      YWxvcmUxDzANBgNVBAoMBkNpdHJpeDEMMAoGA1UECwwDRGV2MSMwIQYDVQQDDBoq
-      Lm9wZW5zaGlmdC5jaXRyaXgtY2ljLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEP
-      ADCCAQoCggEBANYwWQyqnUmdt7yAjbkbIOCm03saADOu1ayBzuaw8vdbenVQsVPj
-      Fm2Umhe8L4MRo7/TN6S1+l9wZSWyMCQaxKprYWUn+IhtaUn2Cg8Tz72F54Tsol0+
-      fyPbJTY6F8QBHfCPMvCdye8DkWe+uXCUV9381VYYn7FSqhNfv9VhpMBdet8KfcTE
-      c7LBShqdQD2CJmERDVK/iMa+K0oq0w4JBdaQ9TbzZXPOMFy1y92mOkUqSjPwsHOC
-      pEdr3uETGybqx3w/w/cf78dT3tZGFBSfbvHcsDSUBQ62t0ylAn7S+8vJad86IDSG
-      2/HqnRpn5QTuIRMDsHHEKkAVsGo0i1Yi638CAwEAATANBgkqhkiG9w0BAQsFAAOC
-      AQEAeikL6ktcdotFwQfHLVvGOgATfFr7lSosc5QD/OXEDCn2Z1VzPkNPkgk+hCnU
-      UfpqofUEfuA7e+L669h0dfdb0NupG+XpJERuE/2zeGYt0YhH3bdz9BMNbj1j465v
-      tqzaSeAwLU+yuzRzjL9bY3slz7ItN8/jz+4/x4PGCaHNbGVQI1MaDGn7zL+3z/nt
-      WfKyrMSQv0bmTIAiKxD69DsLBdagd0W9++YG05ikWpbcDUqO9dAFNH6kh/fOoJQA
-      0xStmeEHUoMouXDvBcgHonmN4Fw+S0WR6sG/UpOmKOxH3dzC5EK0WKXDPOwn7279
-      GbqIML4OOBN+8pwByFp7T+3xAQ==
+          [...]
       -----END CERTIFICATE-----
