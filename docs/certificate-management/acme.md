@@ -428,7 +428,7 @@ Perform the following to deploy the Let's Encrypt ClusterIssuer with the DNS01 c
                 - dns01:
                     route53:
                       region: us-west-2
-                      accessKeyID: <accessKeyID>
+                      accessKeyID: <IAMKEY>
                       secretAccessKeySecretRef:
                         name: acme-route53
                         key: secret-access-key
