@@ -120,11 +120,11 @@ Perform the following:
             service.citrix.com/backend-sslprofile: '{"tls12" : "enabled"}
             service.citrix.com/ssl-certificate-data-1: |
               -----BEGIN CERTIFICATE-----
-              #redacted certificate
+                    [...]
               -----END CERTIFICATE-----
             service.citrix.com/ssl-key-data-1: |
               -----BEGIN RSA PRIVATE KEY-----
-              #redacted certificate
+                    [...]
               -----END RSA PRIVATE KEY-----
         spec:
           type: LoadBalancer
