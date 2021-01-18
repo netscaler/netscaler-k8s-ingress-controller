@@ -96,22 +96,23 @@ args:
     imagePullPolicy: Always
 ```
 
-## Ingress status update for the sidecar deployment
+## Ingress status update for sidecar deployments
 
-In typical deployments, the Ingress status is updated with a public IP address or a host name of the Ingress controller after the ingress resource is successfully created and configured by the Ingress controller. The application that is exposed through the Ingress can be accessed through the public IP address or the host name that is updated in the Ingress status.
+In Kubernetes, Ingress can be used as a single entry point for exposing multiple applications to the outside world. The Ingress would have an `Address` (`Status.LoadBalancer.IP`) field which is updated after the successful ingress creation. This field is updated with a public IP address or host name through which the Kubernetes application can be reached. In cloud deployments, this field can also be the IP address or host name of a cloud load-balancer.
 
-In cloud deployments, the Citrix ingress controller is exposed through a cloud load balancer. It is performed by creating a Kubernetes service type of `LoadBalancer`. In cloud deployments, the Ingress status is updated with the public endpoint of the cloud load balancer. The public endpoint can be an IP address or a host name depending on the public cloud.
+In cloud deployments, Citrix ADC CPX along with the ingress controller is exposed using a service of `type LoadBalancer` which in turn creates a cloud load-balancer. The cloud load balancer then exposes the Citrix ADC CPX along with the ingress controller. So, the Ingress resources exposed with the Citrix ADC CPX should be updated using the public IP address or host name of the cloud load balancer.
+
 This is applicable even on on-prem deployments. In dual-tier ingress deployments, in which the Citrix ADC CPX is exposed as service type `LoadBalancer` to the tier-1 Citrix ADC VPX ingress, the ingress resources operated by the Citrix ADC CPX is updated with the VIP address.
 
 This topic provides information about how to enable the ingress status update for Citrix ADC CPX with the Citrix ingress controller as sidecar deployments.
 
 **Note**:
 
-The Ingress status update for the sidecar feature is supported only on services of type `LoadBalancer`.
+The ingress status update for the sidecar feature is supported only on services of type `LoadBalancer`.
 
-**Sample Ingress output after an Ingress status update**
+**Sample ingress output after an ingress status update**
 
-The following is a sample Ingress output after the Ingress status update:
+The following is a sample ingress output after the ingress status update:
 
 
         $ kubectl get ingress
@@ -119,23 +120,24 @@ The following is a sample Ingress output after the Ingress status update:
         NAME             HOSTS              ADDRESS                           PORTS    AGE                                       
         sample-ingress   sample.citrix.com   sample.abc.somexampledomain.com   80      1d
 
-## Enable Ingress status update for the sidecar deployments
+## Enable ingress status update for the sidecar deployments
 
-You can enable the ingress status update feature by specifying the following argument in the Citrix ADC CPX YAML file. You must add the argument to the `args` section of Citrix ADC CPX in the deployment YAML file for Citrix ADC CPX with the Citrix ingress controller.
+You can enable the ingress status update feature for side car deployments by specifying the following argument in the Citrix ADC CPX YAML file. You must add the argument to the `args` section of Citrix ADC CPX in the deployment YAML file for Citrix ADC CPX with the Citrix ingress controller.
 
+       
 
         args:
-        - --cpx-service <namespace>/<name-of-the-service-exposing-cpx>
+        - --cpx-service <namespace>/<name-of-the-type-load-balancer-service-exposing-cpx>
 
 The following table describes the argument for the ingress update in detail
 
 | Keyword/variable       | Description |
 | ------------- |-------------|
 | `--cpx-service` | Specifies the argument for enabling this feature. |
-| `<namespace>/<name-of-the-service-exposing-cpx>`      | Specifies the format in which the argument value to be provided.      |
+| `<namespace>/<name-of-the-type-load-balancer-service-exposing-cpx>`      | Specifies the format in which the argument value to be provided.      |
 | `<namespace>` | Specifies the namespace in which the service is created. |
-| `<name-of-the-service-exposing-cpx>` | Specifies the name of the service that exposes Citrix ADC CPX. |
+| `<name-of-the-type-load-balancer-service-exposing-cpx>` | Specifies the name of the service that exposes Citrix ADC CPX. |
 
 **Note**:
 
-The Ingress status update for the sidecar feature is supported only on services of type `LoadBalancer`. The service defined in the argument `--cpx-service default/some-cpx-service` should be a Kubernetes service of type=LoadBalancer.
+The ingress status update for the sidecar feature is supported only on services of type `LoadBalancer`. The service defined in the argument `--cpx-service default/some-cpx-service` should be a Kubernetes service of `type LoadBalancer`.
