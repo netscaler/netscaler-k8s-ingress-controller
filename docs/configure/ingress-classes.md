@@ -8,20 +8,20 @@ You can specify the ingress controller that should handle the ingress resource b
 
 ## Citrix ingress controller and Ingress classes
 
-Citrix ingress controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However Ingress Controller might need to handle various ingress resources from different classes.
+The Citrix ingress controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However, the Ingress Controller might need to handle various ingress resources from different classes.
 
-You can associate Ingress Controller with multiple ingress classes using the `--ingress-classes` argument under `spec` section of the YAML file.
+You can associate the Ingress Controller with multiple ingress classes using the `--ingress-classes` argument under the `spec` section of the YAML file.
 
-If `ingress-classes` is not specified for the Ingress Controller, then it accepts all ingress resources irrespective of the presence of `kubernetes.io/ingress.class` annotation in the ingress object.
+If `ingress-classes` is not specified for the Ingress Controller, then it accepts all ingress resources irrespective of the presence of the `kubernetes.io/ingress.class` annotation in the ingress object.
 
-If `ingress-classes` is specified, then Ingress Controller accepts only those ingress resources that match the `kubernetes.io/ingress.class` annotation. Ingress resource without the `ingress.class` annotation is not handled by Ingress Controller in the given case.
+If `ingress-classes` is specified, then the Ingress Controller accepts only those ingress resources that match the `kubernetes.io/ingress.class` annotation. The Ingress controller does not process an Ingress resource without the  `ingress.class` annotation in such a case.
 
 !!! note "Note"
     Ingress class names are case-insensitive.
 
-## Sample yaml configurations with Ingress classes
+## Sample YAML configurations with Ingress classes
 
-Following is the snippet from a sample yaml file to associate `ingress-classes` with the Ingress Controller. This works in both cases where Ingress Controller runs as a standalone pod or runs as sidecar with Citrix ADC CPX. In the given yaml snippet, following ingress classes are associated with the Ingress Controller.
+Following is the snippet from a sample YAML file to associate `ingress-classes` with the Ingress Controller. This configuration works in both cases where the Ingress Controller runs as a standalone pod or runs as a sidecar with Citrix ADC CPX. In the given YAML snippet, the following ingress classes are associated with the Ingress Controller.
 
 -  `my-custom-class`
 
@@ -43,7 +43,7 @@ spec:
           my-custom-class
 ```
 
-Following is the snippet from an Ingress yaml file where the Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
+Following is the snippet from an Ingress YAML file where the Ingress class association is depicted. In the given example, an Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If the Citrix ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
 
 ```yml
 apiVersion: extensions/v1beta1
@@ -96,8 +96,48 @@ args:
     imagePullPolicy: Always
 ```
 
+## Ingress status update for sidecar deployments
+
+In Kubernetes, Ingress can be used as a single entry point for exposing multiple applications to the outside world. The Ingress would have an `Address` (`Status.LoadBalancer.IP`) field which is updated after the successful ingress creation. This field is updated with a public IP address or host name through which the Kubernetes application can be reached. In cloud deployments, this field can also be the IP address or host name of a cloud load-balancer.
+
+In cloud deployments, Citrix ADC CPX along with the ingress controller is exposed using a service of `type LoadBalancer` which in turn creates a cloud load-balancer. The cloud load balancer then exposes the Citrix ADC CPX along with the ingress controller. So, the Ingress resources exposed with the Citrix ADC CPX should be updated using the public IP address or host name of the cloud load balancer.
+
+This is applicable even on on-prem deployments. In dual-tier ingress deployments, in which the Citrix ADC CPX is exposed as service type `LoadBalancer` to the tier-1 Citrix ADC VPX ingress, the ingress resources operated by the Citrix ADC CPX is updated with the VIP address.
+
+This topic provides information about how to enable the ingress status update for Citrix ADC CPX with the Citrix ingress controller as sidecar deployments.
+
+**Note**:
+
+The ingress status update for the sidecar feature is supported only on services of type `LoadBalancer`.
+
+**Sample ingress output after an ingress status update**
+
+The following is a sample ingress output after the ingress status update:
 
 
+        $ kubectl get ingress
 
+        NAME             HOSTS              ADDRESS                           PORTS    AGE                                       
+        sample-ingress   sample.citrix.com   sample.abc.somexampledomain.com   80      1d
 
+## Enable ingress status update for the sidecar deployments
 
+You can enable the ingress status update feature for side car deployments by specifying the following argument in the Citrix ADC CPX YAML file. You must add the argument to the `args` section of Citrix ADC CPX in the deployment YAML file for Citrix ADC CPX with the Citrix ingress controller.
+
+       
+
+        args:
+        - --cpx-service <namespace>/<name-of-the-type-load-balancer-service-exposing-cpx>
+
+The following table describes the argument for the ingress update in detail
+
+| Keyword/variable       | Description |
+| ------------- |-------------|
+| `--cpx-service` | Specifies the argument for enabling this feature. |
+| `<namespace>/<name-of-the-type-load-balancer-service-exposing-cpx>`      | Specifies the format in which the argument value to be provided.      |
+| `<namespace>` | Specifies the namespace in which the service is created. |
+| `<name-of-the-type-load-balancer-service-exposing-cpx>` | Specifies the name of the service that exposes Citrix ADC CPX. |
+
+**Note**:
+
+The ingress status update for the sidecar feature is supported only on services of type `LoadBalancer`. The service defined in the argument `--cpx-service default/some-cpx-service` should be a Kubernetes service of `type LoadBalancer`.
