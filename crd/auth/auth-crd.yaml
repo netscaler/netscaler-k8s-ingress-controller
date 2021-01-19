@@ -41,18 +41,14 @@ spec:
                           'Authentication mechanism. Options: using forms or using request header.
                            Default is Authentication using request header, when no option is specified'
               properties:
-              oneOf:
-                - properties:
                     using_request_header:
                       description: |+
                                    'Enable user authentication using request header. Use when the credentials
                                     or api keys are passed in a header. For example, when using Basic, Digest,
                                     Bearer authentication or api keys.
                                     When authentication using forms is provided, this is set to OFF'
+
                       type: string
-                      enum: ['ON']
-                  required: [using_request_header]
-                - properties:
                     using_forms:
                       type: object
                       description: 'Enables authentication using forms. Use with user/web authentication.'
@@ -71,40 +67,47 @@ spec:
                                         This certificate is mandatory while using_forms'
                           type: object
                           properties:
-                          oneOf:
-                          - properties:
                               tls_secret:
                                 type: string
                                 description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
                                 pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                            required: [tls_secret]
-                          - properties:             
                               preconfigured:
                                 type: string
                                 maxLength: 63
                                 description: |+
                                              'Preconfigured SSL certkey name on ADC with the
                                               certificate and key already added on ADC'
+                          oneOf:
+                          - properties:
+                            required: [tls_secret]
+                          - properties:             
                             required: [preconfigured]
+                        vip:
+                          description: |+
+                                       'Frontend IP of ingress for which the authentication 
+                                        using forms is applicable. This refers to frontend-ip provided 
+                                        with Ingress'
+                          type: string
+                        lb_service_name:
+                          description: |+
+                                       'Service of type LoadBalancer for which the authentication using forms
+                                        is applicable.'
+                          type: string
+                          maxLength: 63
                       required: [authentication_host, authentication_host_cert]
                       oneOf:
                       - properties:
-                          vip:
-                            description: |+
-                                         'Frontend IP of ingress for which the authentication 
-                                          using forms is applicable. This refers to frontend-ip provided 
-                                          with Ingress'
-                            type: string
                         required: [vip]
                       - properties:
-                          lb_service_name:
-                            description: |+
-                                         'Service of type LoadBalancer for which the authentication using forms
-                                          is applicable.'
-                            type: string
-                            maxLength: 63
                         required: [lb_service_name]
+              oneOf:
+                - properties:
+                    using_request_header:
+                      enum: ['ON']
+                  required: [using_request_header]
+                - properties:
                   required: [using_forms]
+                  
             authentication_providers:
               description: |+
                            'Authentication Configuration for required authentication providers/schemes.
@@ -161,16 +164,12 @@ spec:
                               items:
                                 type: string
                                 maxLength: 127
-                      anyOf:
-                      - properties:
                           jwks_uri:
                               description: |+
                                           'URL of the endpoint that contains JWKs (Json Web Key) for 
                                            JWT (Json Web Token) verification'
                               type: string
-                              maxLength: 127                        
-                        required : [jwks_uri]
-                      - properties:
+                              maxLength: 127
                           introspect_url:
                               description: ' URL of the introspection server'
                               type: string
@@ -180,9 +179,103 @@ spec:
                                            'secrets object that contains Client Id and secret as known 
                                             to Introspection server'
                               type: string
-                              maxLength: 253
+                              maxLength: 253                              
+                      anyOf:
+                      - properties:
+                        required : [jwks_uri]
+                      - properties:
                         required : [introspect_url, client_credentials]
 
+                    ldap:
+                      description: 'LDAP authentication provider'
+                      type: object
+                      properties:
+                          server_ip:
+                              description: 'IP address assigned to the LDAP server'
+                              type: string
+                          server_name:
+                              description: 'LDAP server name as a FQDN'
+                              type: string
+                              maxLength: 127
+                          server_port:
+                              description: 'Port on which the LDAP server accepts connections. Default is 389'
+                              type: integer
+                              minimum: 1
+                              maximum: 65535
+                          base:
+                              description: |+
+                                           'Base (node) from which to start LDAP searches. If the LDAP server is
+                                            running locally, the default value of base is dc=netscaler, dc=com'
+                              type: string
+                              maxLength: 127
+                          server_login_credentials:
+                              description: |+
+                                           'Kubernetes secret object providing credentials to login to LDAP server,
+                                            The secret data should have username and password'
+                              type: string
+                          login_name:
+                              description: |+
+                                           'LDAP login name attribute. The Citrix ADC uses the LDAP login name
+                                            to query external LDAP servers or Active Directories'
+                              type: string
+                              maxLength: 127
+                          security_type:
+                              description: |+
+                                           'Type of security used for communications between the Citrix ADC
+                                            and the LDAP server. Default is TLS'
+                              type: string
+                              enum: ['PLAINTEXT', 'TLS', 'SSL']
+                          validate_server_cert:
+                              description: 'Validate LDAP Server certs. Default is NO'
+                              type: string
+                              enum: ['YES', 'NO']
+                          hostname:
+                              description: |+
+                                           'Hostname for the LDAP server. If validate_server_cert is ON,
+                                            this must be the host name on the certificate from the LDAP
+                                            A hostname mismatch will cause a connection failure'
+                              type: string 
+                              maxLength: 127
+                          sub_attribute_name:
+                              description: 'LDAP group sub-attribute name. Used for group extraction from the LDAP server.'
+                              type: string
+                              maxLength: 31
+                          group_attribute_name:
+                              description: 'LDAP group attribute name. Used for group extraction on the LDAP server.'
+                              type: string
+                              maxLength: 31
+                          search_filter:
+                              description: |+
+                                           'String to be combined with the default LDAP user search string to form the
+                                            search value. For example, if the search filter "vpnallowed=true" is combined
+                                            with the LDAP login name "samaccount" and the user-supplied username is "bob",
+                                            the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)"" 
+                                            (Be sure to enclose the search string in two sets of double quotation marks)'
+                              type: string
+                              maxLength: 255
+                          auth_timeout:
+                              description: |+
+                                           'Number of seconds the Citrix ADC waits for a response from the server
+                                            Default is 3'
+                              type: integer
+                              minimum: 1
+                              maximum: 4294967295
+                          password_change:
+                              description: 'Allow password change requests. Default is DISABLED'
+                              type: string
+                              enum: ['ENABLED', 'DISABLED']
+                          attributes_to_save:
+                              description: |+
+                                           'List of attribute names separated by comma which needs to be fetched
+                                            from LDAP server and stored as key-value pair for the session on ADC'
+                              type: string
+                              maxLength: 2047
+                      oneOf:
+                        - properties:
+                          required: [server_ip]
+                        - properties:
+                          required: [server_name]
+                          
                     saml:
                       description: |+
                                    'SAML authentication provider.
@@ -204,20 +297,20 @@ spec:
                               description: 'SSL certificate to sign requests from SP to IDP'
                               type: object
                               properties:
-                              oneOf:
-                              - properties:
                                   tls_secret:
                                     type: string
                                     description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
                                     pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                                required: [tls_secret]
-                              - properties:
                                   preconfigured:
                                     type: string
                                     maxLength: 63
                                     description: |+
                                                  'Preconfigured SSL certkey name on ADC with the
-                                                  certificate and key already added on ADC'
+                                                  certificate and key already added on ADC'                                    
+                              oneOf:
+                              - properties:
+                                required: [tls_secret]
+                              - properties:
                                 required: [preconfigured]
                           audience:
                               description: 'Audience for which assertion sent by IdP is applicable'
@@ -358,4 +451,5 @@ spec:
                         - claims
 
           required:
-            - servicenames     
+            - servicenames      
+
