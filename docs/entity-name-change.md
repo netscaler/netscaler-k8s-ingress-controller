@@ -6,14 +6,21 @@ Now, the naming format in the Citrix ingress controller is updated to shorten th
 
 After this update, the comments available on `lbvserver` and `servicegroup` entity names provides all the necessary details like the ingress name, ingress port, service name, service port, and the namespace of the application.
 
+**Format for comments**
+
+Ingress: `ing:<ingress-name>,ingport:<ingress-port>,ns:<k8s-namespace>,svc:<k8s-servicename>,svcport:<k8s-serviceport>`
+
+Service of `type LoadBalancer`: `lbsvc:<k8s-servicename>,svcport:<k8s-serviceport>,ns:<k8s-namespace>`
+
+
 The following table explains the entity name changes introduced with the Citrix ingress controller version 1.12.
 
 | Entity | Old naming format | New naming format | Description/Comments   |
 | ------------------------ | ---------- | --------------------------- | ------|
 | `csvserver` (ingress)|`k8s-192.2.170.67_80_http`  |`k8s-192.2.170.67_80_http`  |  no changes|
-| `csvserver` (type lb) | `k8s-apache_default_80_svc` | `k8s-apache_80_default_svc` | Now, the port is followed by a namespace |
-| `lbvserver` (type lb) | `k8s-apache_default_80_svc_k8s-apache_default_80_svc`| `k8s-apache_80_lbv_wlikeqxno5vunbthsoj4lxegk7cddh6p` Comment: `lbsvc:apache,svcport:80,ns:default`| The comment for `type LoadBalancer` is now different |
-| `servicegroup` (type lb) | `k8s-apache_default_80_svc_k8s-apache_default_80_svc` | `k8s-apache_80_sgp_wlikeqxno5vunbthsoj4lxegk7cddh6p` |The suffix `sgp` is added  |
+| `csvserver` (`type LoadBalancer`) | `k8s-apache_default_80_svc` | `k8s-apache_80_default_svc` | Now, the port is followed by a namespace |
+| `lbvserver` (`type LoadBalancer`) | `k8s-apache_default_80_svc_k8s-apache_default_80_svc`| `k8s-apache_80_lbv_wlikeqxno5vunbthsoj4lxegk7cddh6p` Comment: `lbsvc:apache,svcport:80,ns:default`| The comment for `type LoadBalancer` is now different |
+| `servicegroup` (`type LoadBalancer`) | `k8s-apache_default_80_svc_k8s-apache_default_80_svc` | `k8s-apache_80_sgp_wlikeqxno5vunbthsoj4lxegk7cddh6p` |The suffix `sgp` is added  |
 | `cspolicy` or `csaction` or `responder policy`| `k8s-web-ingress_default_443_k8s-frontend_default_80_svc` | `k8s-frontend_80_csp_267pneiak5rw6hoygvrqrzpm4k6thz2p` | Moved service-name, service-port to the beginning, added suffix of cs, hashed ingress-name, ingress-port, and namespace |
 | `lbvserver` (ingress)| `k8s-web-ingress_default_443_k8s-frontend_default_80_svc` | `k8s-frontend_80_lbv_267pneiak5rw6hoygvrqrzpm4k6thz2p` Comment: `ing:web-ingress,ingport:5080,ns:default,svc:frontend,svcport:80` | Suffix `lbv` and comment added to the entity |
 | `servicegroup` (ingress)| `k8s-web-ingress_default_443_k8s-frontend_default_80_svc` | `k8s-frontend_80_sgp_267pneiak5rw6hoygvrqrzpm4k6thz2p` | Suffix `sgp` is added. |
