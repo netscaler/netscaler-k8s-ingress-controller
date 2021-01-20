@@ -70,6 +70,52 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
 
+## Smart annotations for routes
+
+Similar to Ingress, you can also use smart annotations with OpenShift routes.
+The Citrix ingress controller converts the routes in OpenShift to a set of Citrix ADC objects.
+
+The following table details the smart annotations provided by the Citrix ingress controller:
+
+| Citrix ADC entity name | Smart annotation | Example |
+| ----------------------- | ---------------- | ------- |
+| `lbvserver` | route.citrix.com/lbvserver | `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
+| `servicegroup` | route.citrix.com/servicegroup | `route.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
+| `monitor` | route.citrix.com/monitor | `route.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
+
+### Sample route manifest with smart annotations
+
+The following is a sample route YAML file.
+
+```yml
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: citrix
+  annotations:
+    route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
+    route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
+    route.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
+spec:
+  host:  citrix.org
+  port:
+    targetPort: 80
+  to:
+    kind: Service
+    name: citrix-svc
+    weight: 100
+  wildcardPolicy: None
+```
+
+The sample route manifest includes use cases related to the service `citrix-svc` and the following table explains the smart annotations used in the sample Route:
+
+| Smart annotation | Description |
+| ---------------- | ----------- |
+| `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
+| `route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the IP address of the client for communication with the back-end pods. |
+| `route.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
+
+
 ## Service annotations
 
 The following are the service annotations supported by Citrix.
