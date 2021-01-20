@@ -70,6 +70,56 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
 
+## Smart annotations for Routes
+
+Similar to Ingress, Smart Annotations can be used with OpenShift Routes also.
+Citrix ingress controller converts the Routes in OpenShift to a set of Citrix ADC objects.
+
+!!! Info "Important"
+    To use smart annotations, you must have good understanding of Citrix ADC features and their respective entity names. For more information on Citrix ADC features and entity names, see [Citrix ADC Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1.html).
+
+Smart annotation takes JSON format as input. The key and value that you pass in the JSON format must match the Citrix ADC NITRO format. For more information on the Citrix ADC NITRO API, see [Citrix ADC 12.1 REST APIs - NITRO Documentation](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/latest/).
+
+For example, if you want to enable the `SRCIPDESTIPHASH` based lb method, you must use the corresponding NITRO key and value format `lbmethod`, `SRCIPDESTIPHASH` respectively.
+
+The following table details the smart annotations provided by the Citrix ingress controller:
+
+| Citrix ADC Entity Name | Smart Annotation | Example |
+| ----------------------- | ---------------- | ------- |
+| lbvserver | route.citrix.com/lbvserver | `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
+| servicegroup | route.citrix.com/servicegroup | `route.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
+| monitor | route.citrix.com/monitor | `route.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
+
+### Sample Route Manifest with smart annotations
+
+```yml
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: citrix
+  annotations:
+    route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
+    route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
+    route.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
+spec:
+  host:  citrix.org
+  port:
+    targetPort: 80
+  to:
+    kind: Service
+    name: citrix-svc
+    weight: 100
+  wildcardPolicy: None
+```
+
+The sample Route manifest includes use cases related to the service, `citrix-svc`, and the following table explains the smart annotations used in the sample Route:
+
+| Smart Annotation | Description |
+| ---------------- | ----------- |
+| `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
+| `route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
+| `route.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
+
 ## Service annotations
 
 The following are the service annotations supported by Citrix.
