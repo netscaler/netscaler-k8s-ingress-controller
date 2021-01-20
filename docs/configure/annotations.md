@@ -70,27 +70,22 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
 
-## Smart annotations for Routes
+## Smart annotations for routes
 
-Similar to Ingress, Smart Annotations can be used with OpenShift Routes also.
-Citrix ingress controller converts the Routes in OpenShift to a set of Citrix ADC objects.
-
-!!! Info "Important"
-    To use smart annotations, you must have good understanding of Citrix ADC features and their respective entity names. For more information on Citrix ADC features and entity names, see [Citrix ADC Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1.html).
-
-Smart annotation takes JSON format as input. The key and value that you pass in the JSON format must match the Citrix ADC NITRO format. For more information on the Citrix ADC NITRO API, see [Citrix ADC 12.1 REST APIs - NITRO Documentation](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/latest/).
-
-For example, if you want to enable the `SRCIPDESTIPHASH` based lb method, you must use the corresponding NITRO key and value format `lbmethod`, `SRCIPDESTIPHASH` respectively.
+Similar to Ingress, you can also use smart annotations with OpenShift routes.
+The Citrix ingress controller converts the routes in OpenShift to a set of Citrix ADC objects.
 
 The following table details the smart annotations provided by the Citrix ingress controller:
 
-| Citrix ADC Entity Name | Smart Annotation | Example |
+| Citrix ADC entity name | Smart annotation | Example |
 | ----------------------- | ---------------- | ------- |
-| lbvserver | route.citrix.com/lbvserver | `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
-| servicegroup | route.citrix.com/servicegroup | `route.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
-| monitor | route.citrix.com/monitor | `route.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
+| `lbvserver` | route.citrix.com/lbvserver | `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
+| `servicegroup` | route.citrix.com/servicegroup | `route.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
+| `monitor` | route.citrix.com/monitor | `route.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
 
-### Sample Route Manifest with smart annotations
+### Sample route manifest with smart annotations
+
+The following is a sample route YAML file.
 
 ```yml
 apiVersion: route.openshift.io/v1
@@ -112,13 +107,14 @@ spec:
   wildcardPolicy: None
 ```
 
-The sample Route manifest includes use cases related to the service, `citrix-svc`, and the following table explains the smart annotations used in the sample Route:
+The sample route manifest includes use cases related to the service `citrix-svc` and the following table explains the smart annotations used in the sample Route:
 
-| Smart Annotation | Description |
+| Smart annotation | Description |
 | ---------------- | ----------- |
 | `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
-| `route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
+| `route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the IP address of the client for communication with the back-end pods. |
 | `route.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
+
 
 ## Service annotations
 
