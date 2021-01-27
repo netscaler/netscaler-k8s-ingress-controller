@@ -214,5 +214,5 @@ Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix 
 
 **Sample SSL profile:**
 
-    ingress.citrix.com/frontend_sslprofile: "ssl_preconf_profile"
-    ingress.citrix.com/backend_sslprofile: '{"citrix-svc":"ssl_preconf_profile"}'
+    ingress.citrix.com/frontend-sslprofile: "ssl_preconf_profile"
+    ingress.citrix.com/backend-sslprofile: '{"citrix-svc":"ssl_preconf_profile"}'
