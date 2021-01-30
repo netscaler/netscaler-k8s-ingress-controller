@@ -1,6 +1,19 @@
 # Deploy Citrix ADC-Integrated Canary Deployment Solution
 
-Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After user validation, the application is rolled out to the larger set of users. Citrix ADC-Integrated Canary Deployment solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
+Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After the user validation, the application is rolled out to the larger set of users.
+
+Citrix provides the following options for canary deployment using the Citrix ingress controller.
+
+- [Deploy canary using the Canary CRD](#deploy-canary-using-the-canary-crd)
+- [Deploy canary using Ingress annotations](#simplified-canary-deployment-using-ingress-annotations)
+
+In a deployment using the Canary CRD, canary configuration is applied using a Kubernetes CRD. Citrix also supports a much simpler option for canary deployment using Ingress annotations.
+
+## Deploy canary using the Canary CRD
+
+This section provides information about how to perform Canary deployment using the Canary CRD.
+
+Citrix ADC-Integrated Canary Deployment solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
 
 Citrix ADC comes with a rich application-centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Citrix ADC to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Citrix ADC is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta.
 
@@ -23,7 +36,7 @@ GitHub has many utilities available for integrating with other tools that form p
 
 -  [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/): Citrix provides an Ingress Controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for bare metal and cloud deployments. The Citrix ingress controller is built around Kubernetes Ingress and automatically configures one or more Citrix ADCs based on the Ingress resource configuration.
 
-## Software Requirements
+**Software Requirements**
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
@@ -31,25 +44,25 @@ Following Citrix software versions are required for Citrix-Integrated Canary Dep
 -  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103`.
 -  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
 
-## Workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution
+### Workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution
 
 The following diagram explains the workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution.
 
-![Spinnaker_pipeline](../docs/media/spinnaker_pipeline.png)
+![Spinnaker_pipeline](../docs/media/spinnaker_pipeline.png))
 
 The following steps explain the workflow specified in the diagram.
 
 1.  Developers maintain the source code in GitHub, make changes whenever required, and commit the changes to GitHub.
 2.  A webhook is configured in GitHub to listen for the source code changes. Whenever the source code is checked in to GitHub, the webhook is triggered and informs Docker Hub to build the image with the new source code. Once the docker image is created, a separate webhook configured in Docker Hub triggers a Spinnaker pipeline.
 3.  Once the Spinnaker pipeline is triggered, canary and baseline versions of the image are deployed.
-4.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to canary and baseline versions. Citrix ADC collects the performance statistics and exports the statistics to Prometheus with the help of Citrix ADC Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
+4.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to the canary and baseline versions. Citrix ADC collects the performance statistics and exports the statistics to Prometheus with the help of Citrix ADC Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
 1.	Kayenta performs a canary analysis based on the performance statistics and generates a score. Based on the score, the canary deployment is termed as success or failure and the image is rolled out or rolled back.
 
-## Deploy the Citrix ADC-Integrated Canary Deployment Solution in Google Cloud Platform
+### Deploy the Citrix ADC-Integrated Canary Deployment Solution in Google Cloud Platform
 
 This section contains information on setting up Spinnaker, how to create a Spinnaker pipeline, and a sample canary deployment.
 
-### Deploy Spinnaker in Google Cloud Platform
+#### Deploy Spinnaker in Google Cloud Platform
 
 This topic contains information about deploying Spinnaker and how to integrate plug-ins with Spinnaker for canary deployment on Google Cloud Platform(GCP).
 
@@ -120,15 +133,15 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
     4.  Update the following values in the ``quick-install.yml`` file for integrating Jenkins with Spinnaker.
 
                 data:igor.yml: |
-		        enabled: true
-		        skipLifeCycleManagement: false
+            enabled: true
+            skipLifeCycleManagement: false
                 ci:jenkins:
-		        enabled: true
-	            masters: 
+            enabled: true
+              masters: 
             - name: master
                   address: <endpoint>
-   	            username: <username>
-	            password: <password>
+                username: <username>
+              password: <password>
 
     1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and perform the steps.
 
@@ -138,16 +151,16 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
              config: | 
               deploymentConfigurations:
                canary:
-	            enabled: true
-        	serviceIntegrations:
+              enabled: true
+          serviceIntegrations:
                 - name: prometheus
-	          enabled: true
-        	accounts: 
-	          - name: my-prometheus
-        	endpoint:
+            enabled: true
+          accounts: 
+            - name: my-prometheus
+          endpoint:
                 baseUrl: <prometheus-endpoint>
-	             supportedTypes:
-        	- METRICS_STORE
+               supportedTypes:
+          - METRICS_STORE
             data:
              config: |
               deploymentConfigurations:
@@ -156,7 +169,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
                  enabled: true
                  add_source_metalabels: true
                 stackdriver:
-	          enabled: true
+            enabled: true
                period: 30
                enabled: true
                
@@ -193,9 +206,9 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
 
         !!! note "Note"  
             You can access Spinnaker securely or via HTTP. To expose Spinnaker securely, use the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress.
-            Once the Spinnaker application is publicly exposed, you can use the domain assigned for Spinnaker or IP address of the Ingress to access it.
+            Once the Spinnaker application is publicly exposed, you can use the domain assigned for Spinnaker or the IP address of the Ingress to access it.
 
-### Create a Spinnaker pipeline and configure automated canary deployment
+#### Create a Spinnaker pipeline and configure automated canary deployment
 
 Once you deploy Spinnaker, create a Spinnaker pipeline for an application and configure the automated canary deployment.
 
@@ -204,8 +217,7 @@ Once you deploy Spinnaker, create a Spinnaker pipeline for an application and co
 3. Create an automated canary configuration in Spinnaker for [automated canary analysis](https://www.spinnaker.io/guides/user/canary/). You can use the configuration provided in the JSON file as a sample for automated canary configuration [Sample JSON files](#A-sample-JSON-file-for-automated-canary-configuration).
 
 
-
-### Deploy a sample application for canary
+#### Deploy a sample application for canary
 
 This example shows how to run the canary deployment of a sample application using Citrix ADC-Integrated Canary Deployment Solution. In this example, Citrix ADC CPX, MPX, or VPX is deployed as an Ingress device for a GKE cluster. Citrix ADC generates the performance metrics required for canary analysis.
 
@@ -237,7 +249,7 @@ Perform the following steps to deploy a sample application as a canary release.
         kubectl apply -f exporter.yaml
 
     !!! note "Note"
-        Depending on how you are deploying the Citrix ingress controller, you need to edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
+        Depending on how you are deploying the Citrix ingress controller, you must edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
 
 1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file.
 
@@ -273,48 +285,50 @@ Perform the following steps to deploy a sample application as a canary release.
 
         kubectl apply -f canary-crd-object.yaml
 
-    The following table explains fields in the canary CRD object.
+    The following table explains the fields in the canary CRD object.
 
   
       | Field               | Description                                                                                                                                                                                                                                                                                                                        |
       |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-      | serviceName         |  List of services on which this CRD has to be applied                                                                                                                                                                                                                                                                              |
+      | serviceNames         |  List of services on which this CRD has to be applied                                                                                                                                                                                                                                                                              |
       | deployment          | Specifies the deployment strategy as Kayenta.                                                                                                                                                                                                                                                                                      |
-      | percentage          | Specifies the percentage of traffic to be diverted from production to baseline and canary.                                                                                                                                                                                                                               |
-      | newImageTag (optional)        | Specifies the label(key, value pair) to be searched in deployment for checking if it is a canary deployment. If the name of the canary deployment has the string "canary", it would be taken as a canary deployment by default.                                                                                                                                                                                                                                        |
-      | productionImageTag (optional) | Specifies the label (key, value pair) to be searched in deployment for checking if it is a baseline deployment. If the name of the deployment has the string "baseline", it would be taken as a baseline deployment by default.                                                                                                                                                                                                                                   |
+      | percentage          | Specifies the percentage of traffic to be diverted from production to baseline and canary.                                                                                                                                                                                                                                         |
       | matchExpression (optional)    | Any Citrix ADC supported policy that can be used to define the subset of users to be directed to canary and baseline versions. If x percentage of traffic is configured, then from within subset of users which matches the matchExpression only x percentage of users are diverted to baseline and canary. Remaining users are diverted to production. |
-      | domain              |  IP address or domain name of the Spinnaker gate.                                                                                                                                                                                                                                                                                                  |
+      |  Spinnaker   | Specifies the Spinnaker pipeline configurations you want to apply for your services.   |
+      | domain              |  IP address or domain name of the Spinnaker gate.                                                                                        |                                                            
       | port                |  Port number of the Spinnaker gate.                                                                                                                                                                                                                                                                                                |
       | applicationName    | The name of the application in Spinnaker.                                                                                                                                                                                                                                                                                               |
       | pipelineName     |  The name of the pipeline under the Spinnaker application.                                                                                                                                                                                                                                                                        |
+      | serviceName|  Specifies the name of the service to which you want to apply the Spinnaker configuration.|
+                        
 
-1.  Deploy canary and baseline versions of the application.
+
+10. Deploy canary and baseline versions of the application.
 
     !!! note "Note"
         If you are fully automating the canary deployment, deploy canary and baseline versions using the [Deploy (Manifest) stage](https://www.spinnaker.io/guides/user/kubernetes-v2/deploy-manifest/) in Spinnaker pipeline and there is no need to perform this step.
 
-    For manually deploying canary and baseline versions, use [canary.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary.yaml) and [baseline.yaml](../../canary/manifest/baseline.yaml) files.
+    For manually deploying canary and baseline versions, use [canary.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary.yaml) and [baseline.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/baseline.yaml) files.
 
         kubectl apply -f canary.yaml
         kubectl apply -f baseline.yaml
 
-## Troubleshooting
+### Troubleshooting
 
 For troubleshooting the deployment, perform the following steps.
 
 1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Citrix ADC CPX, Citrix ADC Metrics Exporter, Citrix ingress controller.
-1.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
-1.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
-1.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
-1.  Check for the reason of failures during configuration.
-1.  If the failure happened because of incorrect configuration, correct the configuration.
+2.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
+3.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
+4.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
+5.  Check for the reason of failures during configuration.
+6.  If the failure happened because of incorrect configuration, correct the configuration.
 
-## Sample JSON files
+### Sample JSON files
 
 This topic contains sample JSON files for Spinnaker pipeline configuration and automated canary configuration. These files can be used as a reference while creating Spinnaker pipeline and automated canary configuration.
 
-### A sample JSON file for Spinnaker pipeline configuration
+**A sample JSON file for Spinnaker pipeline configuration**
 
 ```JSON
 {
@@ -717,3 +731,199 @@ Following is a sample JSON file for automated canary configuration.
 }
 ```
 
+## Simplified canary deployment using Ingress annotations
+
+This topic provides information about the simplified Canary deployment using Ingress annotations. While Citrix provides multiple options to support canary deployment, this is a simpler type of Canary deployment.
+
+Canary using Ingress annotations is a rule based canary deployment. In this approach, you need to define an additional Ingress object with specific annotations to indicate that the application request needs to be served based on the rule based canary deployment strategy. In the Citrix solution, Canary based traffic routing at the Ingress level can be achieved by defining various sets of rules as follows:
+
+- Applying the canary rules based on weight
+- Applying the canary rules based on the HTTP request header
+- Applying the canary rules based on the HTTP header value
+
+The order of precedence of the canary rules is as follows:
+
+Canary by HTTP request header value --> canary by HTTP request header --> canary by weight
+
+### Canary deployment based on weight
+
+Weight based canary deployment is a widely used canary deployment approach. In this approach, you can set the weight as a range from 0 to 100 which decides the percentage of traffic to be directed to the canary version and the production version of an application.
+
+Following is the workflow for the weight based canary deployment:
+
+- Initially the weight can be set to zero which indicates that the traffic is not forwarded to the canary version.
+
+- Once you decide to start canary deployment, change the weight to the required percentage to make sure the traffic is directed to canary version as well.
+
+- Finally, when you determine that the canary version is ready to be released, change the weight to 100 to ensure that all the traffic is being directed to the canary version.
+
+For deploying weight based canary using the Citrix ingress controller, create a new Ingress with a canary annotation `ingress.citrix.com/canary-weight:` and specify the percentage of traffic to be directed to the canary version.
+
+### Canary deployment based on the HTTP request header
+
+You can configure canary deployment based on the HTTP request header which is controlled by clients. The request header notifies the Ingress to route the request to the service specified in the canary Ingress. When the request header contains the value mentioned in the Ingress annotation `ingress.citrix.com/canary-by-header:`, the request is routed to the service specified in the canary Ingress.
+
+### Canary deployment based on the HTTP request header value
+
+You can also configure canary deployment based on the value of the HTTP request header which is an extension of canary by header. In this deployment, along with the `ingress.citrix.com/canary-by-header:` annotation, you also specify the `ingress.citrix.com/canary-by-header-value:` annotation. When the request header value matches with the value specified in the Ingress annotation `ingress.citrix.com/canary-by-header-value:` the request is routed to the service specified in the canary Ingress.  
+
+### Configure canary deployment using Ingress annotations
+
+Perform the following steps to deploy a sample application as a canary release.
+
+1. Deploy the Citrix ingress controller using the steps in [deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
+
+2. Deploy the `Guestbook` application.
+
+        kubectl apply -f guestbook.yaml
+
+    Following is the content of the `Guestbook` application.
+
+    ```yml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: guestbook
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app:  guestbook
+      template:
+        metadata:
+          labels:
+            app:  guestbook
+        spec:
+          containers:
+          - name:  guestbook
+            image:  gcr.io/heptio-images/ks-guestbook-demo:0.1
+            imagePullPolicy: Always
+            ports:
+            - containerPort: 80
+    ```
+
+3. Deploy a service to expose the `Guestbook` application
+
+        kubectl apply -f guestbook-service.yaml
+
+    Following is a sample service
+
+    ```yml
+
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name:  guestbook
+      labels:
+        app:  guestbook
+    spec:
+      ports:
+      - port: 80
+        targetPort: 80
+        protocol: TCP
+        name: http
+      selector:
+        app:  guestbook
+    ```
+
+4. Deploy the Ingress object for the `Guestbook` application.
+
+          kubectl apply -f  guesbook-ingress.yaml
+
+    ```yml
+    apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      name: guestbook
+      annotations:
+        kubernetes.io/ingress.class: "citrix"
+    spec:
+      rules:
+      - host:  webapp.com
+        http:
+          paths:
+          - path: /
+            backend:
+              serviceName: guestbook
+              servicePort: 80
+    ```
+
+5. Deploy a canary version of the `Guestbook` application.
+   
+            kubectl apply –f canary-deployment.yaml
+
+    ```yml
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: guestbook-canary
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app:  guestbook-canary
+      template:
+        metadata:
+          labels:
+            app:  guestbook-canary
+        spec:
+          containers:
+          - name:  guestbook-canary
+            image:  gcr.io/heptio-images/ks-guestbook-demo:0.2
+            imagePullPolicy: Always
+            ports:
+            - containerPort: 80
+    ```
+
+6. Deploy a service to expose the canary version of the `Guestbook` application.
+
+            kubectl apply –f canary-service.yaml       
+
+    ```yml
+
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name:  guestbook-canary
+      labels:
+        app:  guestbook-canary
+    spec:
+      ports:
+      - port: 80
+        targetPort: 80
+        protocol: TCP
+        name: http
+      selector:
+        app:  guestbook-canary
+    ```
+
+7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application.
+
+
+        kubectl apply –f canary-ingress.yaml
+
+    ```yml
+    apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      name: canary-by-weight
+      annotations:
+        kubernetes.io/ingress.class: "citrix"
+        ingress.citrix.com/canary-weight: "10"
+    spec:
+      rules:
+      - host:  webapp.com
+        http:
+          paths:
+          - path: /
+            backend:
+              serviceName: guestbook-canary
+              servicePort: 80
+    ```
+
+    Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Citrix ADC in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
+
+For deploying the HTTP header based canary using the Citrix ingress controller, replace the canary annotation `ingress.citrix.com/canary-weight:` with the `ingress.citrix.com/canary-by-header:`  annotation in the `canary-ingress.yaml` file.
+
+For deploying the HTTP header value based canary using the Citrix ingress controller, replace the `ingress.citrix.com/canary-weight:` annotation with the `ingress.citrix.com/canary-by-header:` and `ingress.citrix.com/canary-by-header-value:` annotations in the `canary-ingress.yaml` file.
