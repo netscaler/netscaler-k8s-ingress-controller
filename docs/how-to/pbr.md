@@ -5,7 +5,7 @@ When you are using a single Citrix ADC to load balance multiple Kubernetes clust
 
 Following is a sample topology where PBR is configured for two Kubernetes clusters which are load balanced using a Citrix ADC VPX or MPX.
 
-![PBR configuration](../Documents/pbr.jpg)
+![PBR configuration](../media/pbr.jpg)
 
 ## Configure PBR using the Citrix ingress controller
 
