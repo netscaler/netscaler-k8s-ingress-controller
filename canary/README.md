@@ -773,9 +773,9 @@ Perform the following steps to deploy a sample application as a canary release.
 
 1. Deploy the Citrix ingress controller using the steps in [deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
 
-2. Deploy the `Guestbook` application.
+2. Deploy the `Guestbook` application using the [guestbook-deploy.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-deploy.yaml) file.
 
-        kubectl apply -f guestbook.yaml
+        kubectl apply -f guestbook-deploy.yaml
 
     Following is the content of the `Guestbook` application.
 
@@ -802,7 +802,7 @@ Perform the following steps to deploy a sample application as a canary release.
             - containerPort: 80
     ```
 
-3. Deploy a service to expose the `Guestbook` application
+3. Deploy a service to expose the `Guestbook` application using the [guestbook-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-service.yaml) file.
 
         kubectl apply -f guestbook-service.yaml
 
@@ -826,9 +826,9 @@ Perform the following steps to deploy a sample application as a canary release.
         app:  guestbook
     ```
 
-4. Deploy the Ingress object for the `Guestbook` application.
+4. Deploy the Ingress object for the `Guestbook` application using the [guestbook-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-ingress.yaml) file.
 
-          kubectl apply -f  guesbook-ingress.yaml
+          kubectl apply -f  guestbook-ingress.yaml
 
     ```yml
     apiVersion: extensions/v1beta1
@@ -848,7 +848,7 @@ Perform the following steps to deploy a sample application as a canary release.
               servicePort: 80
     ```
 
-5. Deploy a canary version of the `Guestbook` application.
+5. Deploy a canary version of the `Guestbook` application using the [canary-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-deployment.yaml) file.
    
             kubectl apply –f canary-deployment.yaml
 
@@ -876,7 +876,7 @@ Perform the following steps to deploy a sample application as a canary release.
             - containerPort: 80
     ```
 
-6. Deploy a service to expose the canary version of the `Guestbook` application.
+6. Deploy a service to expose the canary version of the `Guestbook` application using the [canary-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-service.yaml) file.
 
             kubectl apply –f canary-service.yaml       
 
@@ -898,7 +898,7 @@ Perform the following steps to deploy a sample application as a canary release.
         app:  guestbook-canary
     ```
 
-7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application.
+7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application using the [canary-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-ingress.yaml) file.
 
 
         kubectl apply –f canary-ingress.yaml
