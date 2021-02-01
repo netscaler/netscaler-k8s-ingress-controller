@@ -19,7 +19,7 @@ Perform the following steps to deploy the Citrix ingress controller and configur
 
 2. Edit the Citrix ingress controller YAML file:
   
-    - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/) documentation.
 
 3. Deploy the Citrix ingress controller using the edited YAML file with the following command on each cluster.
 
