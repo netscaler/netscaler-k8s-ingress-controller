@@ -100,6 +100,7 @@ nav:
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
     - Multi-cluster ingress and load balancing solution: multicluster/multi-cluster.md
+    - Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters: deploy/multi-cloud-ingress-lb-solution.md 
   - Citrix ADC Integrated canary deployment solution: canary/canary.md
     #- Software Requirements: canary.md#software-requirements
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
@@ -118,6 +119,7 @@ nav:
     - TCP profile support for services of type LoadBalancer: configure/TCP-profile-type-lb.md
     - SSL certificate for services of type LoadBalancer through the Kubernetes secret resource: configure/service-type-lb-ssl-secret.md
     - BGP advertisement for type LoadBalancer services and Ingresses using Citrix ADC CPX: configure/cpx-service-type-lb.md
+    - Citrix ADC CPX integration with MetalLB in layer 2 mode for on-premises Kubernetes clusters: configure/cpx-metal-lb.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
