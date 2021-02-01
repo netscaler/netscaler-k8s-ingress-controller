@@ -61,7 +61,7 @@ Once MetalLB is installed, you should configure the MetalLB for layer 2 mode. Me
 
 Create a ConfigMap for MetalLB using the following command where [metallb-config.yaml](./metal-lb-manifests/metallb-config.yaml) is the YAML file with the MetalLB configuration.  
 
-    kubectl create –f metallb_config.yaml 
+    kubectl create –f metallb-config.yaml 
 
 Following is a sample MetalLB configuration for layer2 mode. In this example, 192.168.1.240-192.168.1.240 is specified as the IP address range.
 
