@@ -59,7 +59,7 @@ The MetalLB deployment YAML file contains the following components:
 
 Once MetalLB is installed, you should configure the MetalLB for layer 2 mode. MetalLB takes a range of IP addresses to be allocated to the type LoadBalancer services as external IP. In this deployment, a Citrix ADC CPX service acts as a front-end for all other applications. Hence, a single IP address is sufficient.
 
-Create a ConfigMap for MetalLB using the following command where `metallb_config.yaml` is the YAML file with the MetalLB configuration.  
+Create a ConfigMap for MetalLB using the following command where [metallb-config.yaml](./metal-lb-manifests/metallb-config.yaml) is the YAML file with the MetalLB configuration.  
 
     kubectl create –f metallb_config.yaml 
 
@@ -144,17 +144,17 @@ status:
 
 Perform the following steps to deploy a sample application and verify the deployment.
 
-1. Create a sample deployment using the following command.
+1. Create a sample deployment using the [sample-deployment.yaml](./metal-lb-manifests/sample-deployment.yaml) file.
 
-        kubectl create –f sample_deployment.yaml
+        kubectl create –f sample-deployment.yaml
  
-2. Expose the application with a service using the following command.
+2. Expose the application with a service using the [sample-service.yaml](./metal-lb-manifests/sample-service.yaml) file.
 
-        kubectl create –f sample_service.yaml  
+        kubectl create –f sample-service.yaml  
 
-3. Once the service is created, you can add an ingress resource.
+3. Once the service is created, you can add an ingress resource using the [sample-ingress.yaml](./metal-lb-manifests/sample-ingress.yaml).
 
-        kubectl create –f sample_ingress.yaml  
+        kubectl create –f sample-ingress.yaml  
 
 You can test the Ingress by accessing the application using a `cpx-service` external IP address as follows:
 
