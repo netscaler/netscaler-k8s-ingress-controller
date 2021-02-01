@@ -797,26 +797,28 @@ Perform the following steps to deploy a sample application as a canary release.
 7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application using the [canary-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-ingress.yaml) file.
 
 
-        kubectl apply –f canary-ingress.yaml
+            kubectl apply –f canary-ingress.yaml
+            
+            
 
-    ```yml
-    apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      name: canary-by-weight
-      annotations:
-        kubernetes.io/ingress.class: "citrix"
-        ingress.citrix.com/canary-weight: "10"
-    spec:
-      rules:
-      - host:  webapp.com
-        http:
-          paths:
-          - path: /
-            backend:
-              serviceName: guestbook-canary
-              servicePort: 80
-    ```
+              ```yml
+              apiVersion: extensions/v1beta1
+              kind: Ingress
+              metadata:
+                name: canary-by-weight
+                annotations:
+                  kubernetes.io/ingress.class: "citrix"
+                  ingress.citrix.com/canary-weight: "10"
+              spec:
+                rules:
+                - host:  webapp.com
+                  http:
+                    paths:
+                    - path: /
+                      backend:
+                        serviceName: guestbook-canary
+                        servicePort: 80
+              ```
 
     Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Citrix ADC in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
 
