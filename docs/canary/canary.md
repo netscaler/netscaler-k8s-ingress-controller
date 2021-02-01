@@ -777,150 +777,45 @@ Perform the following steps to deploy a sample application as a canary release.
 
         kubectl apply -f guestbook-deploy.yaml
 
-    Following is the content of the `Guestbook` application.
-
-    ```yml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: guestbook
-    spec:
-      replicas: 2
-      selector:
-        matchLabels:
-          app:  guestbook
-      template:
-        metadata:
-          labels:
-            app:  guestbook
-        spec:
-          containers:
-          - name:  guestbook
-            image:  gcr.io/heptio-images/ks-guestbook-demo:0.1
-            imagePullPolicy: Always
-            ports:
-            - containerPort: 80
-    ```
-
 3. Deploy a service to expose the `Guestbook` application using the [guestbook-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-service.yaml) file.
 
         kubectl apply -f guestbook-service.yaml
-
-    Following is a sample service
-
-    ```yml
-
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name:  guestbook
-      labels:
-        app:  guestbook
-    spec:
-      ports:
-      - port: 80
-        targetPort: 80
-        protocol: TCP
-        name: http
-      selector:
-        app:  guestbook
-    ```
 
 4. Deploy the Ingress object for the `Guestbook` application using the [guestbook-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-ingress.yaml) file.
 
           kubectl apply -f  guestbook-ingress.yaml
 
-    ```yml
-    apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      name: guestbook
-      annotations:
-        kubernetes.io/ingress.class: "citrix"
-    spec:
-      rules:
-      - host:  webapp.com
-        http:
-          paths:
-          - path: /
-            backend:
-              serviceName: guestbook
-              servicePort: 80
-    ```
-
 5. Deploy a canary version of the `Guestbook` application using the [canary-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-deployment.yaml) file.
    
             kubectl apply –f canary-deployment.yaml
-
-    ```yml
-
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: guestbook-canary
-    spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app:  guestbook-canary
-      template:
-        metadata:
-          labels:
-            app:  guestbook-canary
-        spec:
-          containers:
-          - name:  guestbook-canary
-            image:  gcr.io/heptio-images/ks-guestbook-demo:0.2
-            imagePullPolicy: Always
-            ports:
-            - containerPort: 80
-    ```
 
 6. Deploy a service to expose the canary version of the `Guestbook` application using the [canary-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-service.yaml) file.
 
             kubectl apply –f canary-service.yaml       
 
-    ```yml
-
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name:  guestbook-canary
-      labels:
-        app:  guestbook-canary
-    spec:
-      ports:
-      - port: 80
-        targetPort: 80
-        protocol: TCP
-        name: http
-      selector:
-        app:  guestbook-canary
-    ```
-
 7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application using the [canary-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-ingress.yaml) file.
 
 
-        kubectl apply –f canary-ingress.yaml
+            kubectl apply –f canary-ingress.yaml
 
-    ```yml
-    apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      name: canary-by-weight
-      annotations:
-        kubernetes.io/ingress.class: "citrix"
-        ingress.citrix.com/canary-weight: "10"
-    spec:
-      rules:
-      - host:  webapp.com
-        http:
-          paths:
-          - path: /
-            backend:
-              serviceName: guestbook-canary
-              servicePort: 80
-    ```
+            ```yml
+            apiVersion: extensions/v1beta1
+            kind: Ingress
+            metadata:
+              name: canary-by-weight
+              annotations:
+                kubernetes.io/ingress.class: "citrix"
+                ingress.citrix.com/canary-weight: "10"
+            spec:
+              rules:
+              - host:  webapp.com
+                http:
+                  paths:
+                  - path: /
+                    backend:
+                      serviceName: guestbook-canary
+                      servicePort: 80
+            ```
 
     Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Citrix ADC in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
 

@@ -150,6 +150,7 @@ nav:
   - Troubleshooting: 
     - Troubleshooting: troubleshooting/troubleshooting.md
     - Enable troubleshooting: troubleshooting/troubleshooting-cic.md
+    - Call Home: troubleshooting/call-home.md
   - Upgrade: upgrade.md
   - Use cases:
     - Service mesh lite: deploy/service-mesh-lite.md
@@ -167,6 +168,7 @@ nav:
     - Direct server return: how-to/dsr.md
     - Admission controller webhook: how-to/webhook-use-case.md
     - Enable GRPC support: how-to/grpc.md
+    - Policy based routing: how-to/pbr.md
   - Entity name change: entity-name-change.md
 google_analytics:
   - 'UA-59929653-12'

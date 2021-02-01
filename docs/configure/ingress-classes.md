@@ -96,27 +96,41 @@ spec:
 
 The Citrix ingress controller uses the following rules to match the Ingresses.
 
-- If the Citrix ingress controller is started without specifying the `--ingress-classes` argument 
-   - If the Kubernetes version is lesser than 1.19 (IngressClass V1 resource is supported)
+- If the Citrix ingress controller is started without specifying the `--ingress-classes` argument:
+
+  - If the Kubernetes version is lesser than 1.19 (IngressClass V1 resource is supported)
+      
       - Matches any ingress object
 
    - If the Kubernetes version is greater than or equal to 1.19 (IngressClass V1 resource is supported)
+
      - Matches any ingress object in which the `spec.ingressClassName` field is not set.
-   - Matches any ingress if the `spec.ingressClassName` field of the Ingress object is set and a `v1.IngressClass` resource exists with the same name and the `spec.controller` field of the resource is `citrix.com/ingress-controller`.
+     
+     - Matches any ingress if the `spec.ingressClassName` field of the Ingress object is set and a `v1.IngressClass` resource exists with the same name and the `spec.controller` field of the resource is `citrix.com/ingress-controller`.
 
 - If the Citrix ingress controller is started with one or more ingress classes set using the `--ingress-classes` argument.
 
   - If the Kubernetes version is lesser than 1.19 (IngressClass V1 resource is supported)
+    
     - Matches any ingress with the ingress class annotation `kubernetes.io/ingress.class `matching to that of the configured ingress classes.
   - If the Kubernetes version is greater than or equal to 1.19 (IngressClass V1 resource is supported)
+     
      - Matches any ingress in which the ingress class annotation `kubernetes.io/ingress.class` matches with the configured ingress classes. This annotation is deprecated but it has higher precedence over the `spec.IngressClassName` field to support backward compatibility.
+     
      - Matches any ingress object, if a `v1.IngressClass` resource exists with the following attributes:
+       
        - The name of the resource matches the `--ingress-classes` argument value.
+       
        - The `spec.controller` field of the resource is set as the `citrix.com/ingress-controller`.
+       
        -  The name of the resource matches with the `spec.ingressClassName` field of the Ingress object.
+     
      - Matches any ingress object where the `spec.ingressClassName` field is not set and if a `v1.IngressClass` resource exists with the following attributes: 
+       
        - The name of the resources matches the `--ingress-classes` argument value.
+       
        - The `spec.controller` field of the resource is set as `citrix.com/ingress-controller`.
+       
        - The resource is configured as the default class using the `ingressclass.kubernetes.io/is-default-class` annotation. For more information, see the [Kubernetes documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/#default-ingress-class).
 
 **Note:** If both the annotation and `spec.ingressClassName` is defined, the annotation is matched before the `spec.ingressClassName`. If the annotation does not match, the matching operation for the `spec.ingressClassName` field is not performed.
