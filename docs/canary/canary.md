@@ -799,6 +799,7 @@ Perform the following steps to deploy a sample application as a canary release.
             kubectl apply –f canary-ingress.yaml
 
 
+
               ```yml
               apiVersion: extensions/v1beta1
               kind: Ingress
