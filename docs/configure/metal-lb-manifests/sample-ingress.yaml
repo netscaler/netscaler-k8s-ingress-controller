@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    kubernetes.io/ingress.class: citrix 
+  name: sample-ingress
+spec:
+  rules:
+  - host: testdomain.com
+    http:
+      paths:
+      - backend:
+          serviceName: nginx-service
+          servicePort: 80
+        path: /
+
