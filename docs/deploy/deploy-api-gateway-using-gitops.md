@@ -98,8 +98,7 @@ The API Gateway deployment CRD configures the following:
 | ---------- | ----------- |
 | `Repository` | Specifies the Git repository URL.|
 | `Branch` | Specifies the Git branch name (By default, master). |
-| `oas_secret_ref` | Specifies the Git access secret reference as a Kubernetes secret object name. **Note**: When creating a secret, keep the *user name* and *password* as the secret field names for user name and password.
- |
+| `oas_secret_ref` | Specifies the Git access secret reference as a Kubernetes secret object name. **Note**: When creating a secret, keep the *user name* and *password* as the secret field names for user name and password.|
 | `User_name` | Specifies the Git user name. |
 | `Password` | Specifies the Git password. **Note**: Credentials can be specified as a *git_secret_ref* as mentioned before or as user name and password in plain text format. |
 | `Files` | The credentials for these OAS URLs can be accessed from the `oas_secret_ref` field or user_name and password field combinations. |
