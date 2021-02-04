@@ -109,7 +109,7 @@ To install Citrix ADC CPX using the YAML file, perform the following steps:
 
     You can see that MetalLB allocates an external IP address to the Citrix ADC CPX service as follows:
 
-```yml
+```
 apiVersion: v1 
 kind: Service 
 metadata: 
@@ -138,7 +138,7 @@ status:
   loadBalancer: 
     ingress: 
     - ip: 192.168.1.240 
- ```
+```
 
 ## Deploy a sample application
 
