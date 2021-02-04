@@ -8,6 +8,7 @@ For implementing a load balancing solution for distributed Kubernetes clusters, 
 
 Citrix provides a multi-cluster ingress and load balancing solution which globally monitors applications, collect, and share metrics across different clusters, and provides intelligent load balancing decisions. It ensures better performance and reliability for your Kubernetes services that are exposed using Ingress or using type LoadBalancer.
 
+
 ## Deployment topology
 
 The following diagram explains a deployment topology for the multi-cluster ingress and load balancing solution for Kubernetes clusters.
@@ -47,6 +48,8 @@ The following deployment types are supported:
 - Static proximity: In a static proximity deployment, an IP-address based static proximity database is used to determine the proximity between the client’s local DNS server and the GSLB sites. The requests are sent to the site that best matches the proximity criteria.
 
 - Round robin: In a round robin deployment, the GSLB device continuously rotates a list of the services that are bound to it. When it receives a request, it assigns the connection to the first service in the list, and then moves that service to the bottom of the list.
+
+
 
 **Note:** 
   Currently, IPv6 is not supported.
@@ -298,6 +301,8 @@ As shown in the example, you need to add the required configuration for your dom
 The IP address specified (`forward . 10.102.217.149`) is a DNS service configured in the Citrix GSLB ADC. You can specify the multiple IP addresses of different GSLB sites by separating them with spaces as shown as follows.
 
       forward . ip1 ip2 ip3
+
+For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Citrix ADC, see the [Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md)
 
 ## GTP CRD definition
 
