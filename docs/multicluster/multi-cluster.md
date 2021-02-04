@@ -249,6 +249,9 @@ Perform the following steps to deploy the Citrix global load balancing solution 
               ingress:
               - ip: 10.102.217.72
 
+
+For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Citrix ADC, see the [Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md).
+
 ## How to direct the DNS resolution of pods to Citrix GSLB ADC
 
 When you want the pods in a Kubernetes cluster to use the GSLB solution, the ConfigMap of the DNS provider should be updated to forward the request for a domain (for which GSLB is required) to Citrix GSLB ADC.
@@ -302,7 +305,6 @@ The IP address specified (`forward . 10.102.217.149`) is a DNS service configure
 
       forward . ip1 ip2 ip3
 
-For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Citrix ADC, see the [Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md)
 
 ## GTP CRD definition
 
