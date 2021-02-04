@@ -71,6 +71,7 @@ For high availability (HA), you can install two instances of Citrix ADC VPX in H
 
         add nameserver *nameserver IP*
 
+## Deploying Citrix ADC VPX in Azure
 
 You can run a standalone Citrix ADC VPX instance on an AKS cluster or run two Citrix ADC VPX instances in High Availability mode on the AKS cluster.
 
