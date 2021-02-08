@@ -105,7 +105,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.6"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.7"
       imagePullPolicy: IfNotPresent
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -188,7 +188,7 @@ spec:
               containerPort: 9443
         # Adding exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.6"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.7"
           imagePullPolicy: IfNotPresent
           args:
             - "--target-nsip=192.0.0.2"
@@ -253,7 +253,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.6"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.7"
           args:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
