@@ -6,13 +6,13 @@ You can deploy the Citrix ingress controller in the following modes on your [bar
 
 -  As a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/) (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology)) topologies.
 
-The helm charts for the Citrix ingress controller are available on [Helm Hub](https://hub.helm.sh).
+The helm charts for the Citrix ingress controller are available on [Artifact Hub](https://artifacthub.io/).
 
  When you deploy using the Helm charts, you can use a `values.yaml` file to specify the values of the configurable parameters instead of providing each parameter as an argument. For ease of use, Citrix provides the [Citrix deployment builder](https://citrix.github.io/citrix-k8s-ingress-controller/) which is a GUI for generating the `values.yaml` file for Citrix cloud native deployments.
 
 ## Deploy the Citrix ingress controller as a standalone pod in the Kubernetes cluster
 
-Use the [citrix-ingress-controller](https://hub.helm.sh/charts/citrix/citrix-ingress-controller) chart to run the Citrix ingress controller as a pod in your Kubernetes cluster. The chart deploys the Citrix ingress controller as a pod in your Kubernetes cluster and configures the Citrix ADC VPX or MPX ingress device.
+Use the [citrix-ingress-controller](https://artifacthub.io/packages/helm/citrix/citrix-ingress-controller) chart to run the Citrix ingress controller as a pod in your Kubernetes cluster. The chart deploys the Citrix ingress controller as a pod in your Kubernetes cluster and configures the Citrix ADC VPX or MPX ingress device.
 
 ### Prerequisites
 
@@ -73,10 +73,10 @@ The Citrix ingress controller configures the Citrix ADC using a system user acco
 
 **To deploy the Citrix ingress controller as a standalone pod:**
 
-To deploy the Citrix ingress controller as standalone pod, follow the instructions provided in the Citrix ingress controller [Helm Hub](https://hub.helm.sh/charts/citrix/citrix-ingress-controller).
+To deploy the Citrix ingress controller as standalone pod, follow the instructions provided in the Citrix ingress controller [Artifact Hub](https://artifacthub.io/packages/helm/citrix/citrix-ingress-controller).
 
 ## Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX in the Kubernetes cluster
 
-Use the [citrix-cpx-with-ingress-controller](https://hub.helm.sh/charts/citrix/citrix-cpx-with-ingress-controller) chart to deploy a Citrix ADC CPX with Citrix ingress controller as a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/). The chart deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster. The sidecar Citrix ingress controller configures the Citrix ADC CPX.
+Use the [citrix-cpx-with-ingress-controller](https://artifacthub.io/packages/helm/citrix/citrix-cpx-with-ingress-controller) chart to deploy a Citrix ADC CPX with Citrix ingress controller as a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/). The chart deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster. The sidecar Citrix ingress controller configures the Citrix ADC CPX.
 
-To deploy Citrix ADC CPX with the Citrix ingress controller as a sidecar, follow the instruction provided in the Citrix ingress controller [Helm Hub](https://hub.helm.sh/charts/citrix/citrix-cpx-with-ingress-controller).
+To deploy Citrix ADC CPX with the Citrix ingress controller as a sidecar, follow the instruction provided in the Citrix ingress controller [Helm Hub](https://artifacthub.io/packages/helm/citrix/citrix-cpx-with-ingress-controller).
