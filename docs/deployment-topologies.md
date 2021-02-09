@@ -84,9 +84,7 @@ The following topologies are supported by the Citrix deployment builder:
     -  Citrix ADC CPX as NodePort
    
     -  Citrix ADC CPX as service of type LoadBalancer
-  
-    -  Citrix ADC CPX as NodePort
-
+ 
 -  Multi-cluster Ingress
 
 -  Service mesh
