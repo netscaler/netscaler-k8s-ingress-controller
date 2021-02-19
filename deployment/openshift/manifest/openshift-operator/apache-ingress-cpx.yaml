@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cpx-ingress
+spec:
+  rules:
+  - host: citrix-ingress-operator.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: apache
+          servicePort: 80
