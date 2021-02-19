@@ -80,25 +80,25 @@ Perform the following:
 
 1.  Deploy an Apache application using the console. Perform the following:
 
-    1.  Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://code.citrite.net/users/priyankash/repos/openshift-operators/raw/manifest/apache_deployment.yaml?at=refs%2Fheads%2Fmaster) to create the deployment.
+    1.  Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
 
         ![Application Deployment](../media/application_deployment.png)
         > **NOTE:**
         >The Apache application is for the demonstration purpose only, you can modify the YAML file based on your requirement.
 
-    1.  Navigate to **Workloads > Pods** section and ensure that the Apache application pods are up and running.
+    2.  Navigate to **Workloads > Pods** section and ensure that the Apache application pods are up and running.
 
         ![Application pod](../media/application_pods.png)
 
-1.  Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache_service.yaml](https://code.citrite.net/users/priyankash/repos/openshift-operators/raw/manifest/apache_service.yaml?at=refs%2Fheads%2Fmaster) to create the service.
+2.  Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
     ![Application Service](../media/application_service.png)
 
-1.  Create an ingress for the apache application. Navigate to **Networking > Ingress > Create Ingress** and use the [apache_ingress_vpx.yaml](https://code.citrite.net/users/priyankash/repos/openshift-operators/raw/manifest/apache_ingress_vpx.yaml?at=refs%2Fheads%2Fmaster) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
+3.  Create an ingress for the apache application. Navigate to **Networking > Ingress > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
 
     ![Application Ingress](../media/application_ingress_vpx.png)
 
-1.  Navigate to **Catalog > OperatorHUB**, select the **Citrix Ingress Controller Operator**, and click **Install**.
+4.  Navigate to **Catalog > OperatorHUB**, select the **Citrix Ingress Controller Operator**, and click **Install**.
 
     ![Citrix ingress controller operator](../media/operator_hub.png)
 
@@ -117,15 +117,15 @@ Perform the following:
 
     ![Application Subscription confirmation](../media/cic_operator_subscription_2.png)
 
-2.  Navigate to **Workloads > Pods** section and verify that the `cic-operator` pod is up and running.
+5.  Navigate to **Workloads > Pods** section and verify that the `cic-operator` pod is up and running.
 
     ![Application Pod UP and Running](../media/cic_operator_pod.png)
 
-3.  Navigate to **Catalog > Installed Operators** and select the Citrix ingress controller operator.
+6.  Navigate to **Catalog > Installed Operators** and select the Citrix ingress controller operator.
 
     ![Application POD and CIC](../media/cic_installed_operators.png)
 
-4.  Click Citrix Ingress Controller and in the **Overview** tab, select **Create New** on the option to create the CRD for the Citrix ingress controller operator.
+7.  Click Citrix Ingress Controller and in the **Overview** tab, select **Create New** on the option to create the CRD for the Citrix ingress controller operator.
 
     ![Create New](../media/create_cic_instance.png)
 
@@ -158,11 +158,11 @@ Perform the following:
 
     After you have updated the values of the required parameters, click **Create**.
 
-5.  Navigate to **Workloads > Pods** section and ensure that the `citrix-ingress-controller` pod is up and running.
+8.  Navigate to **Workloads > Pods** section and ensure that the `citrix-ingress-controller` pod is up and running.
 
     ![Citrix Ingress Controller Deployment Success](../media/cic_pod.png)
 
-6.  Verify the deployment by sending traffic as shown:
+9.  Verify the deployment by sending traffic as shown:
 
         curl http://citrix-ingress-operator.com --resolve citrix-ingress-operator.com:80:<VIP>
 	    <html><body><h1>It works!</h1></body></html>
@@ -186,7 +186,7 @@ Perform the following:
 
 2.  Deploy an Apache application using the console. Perform the following:
 
-    1.  Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://code.citrite.net/users/priyankash/repos/openshift-operators/raw/manifest/apache_deployment.yaml?at=refs%2Fheads%2Fmaster) to create the deployment.
+    1.  Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
 
         ![Application Deployment](../media/application_deployment.png)
         > **NOTE:**
@@ -196,11 +196,11 @@ Perform the following:
 
         ![Application pod](../media/application_pods.png)
 
-3.  Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache_service.yaml](https://code.citrite.net/users/priyankash/repos/openshift-operators/raw/manifest/apache_service.yaml?at=refs%2Fheads%2Fmaster) to create the service.
+3.  Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache_service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
     ![Application Service](../media/application_service.png)
 
-4.  Create an Ingress for the Apache application. Navigate to **Networking > Ingress > Create Ingress** and use the [apache_ingress_cpx.yaml](https://code.citrite.net/users/priyankash/repos/openshift-operators/raw/manifest/apache_ingress_cpx.yaml?at=refs%2Fheads%2Fmaster) to create the ingress.
+4.  Create an Ingress for the Apache application. Navigate to **Networking > Ingress > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
 
     ![Application CPX Ingress](../media/application_ingress_cpx.png)
 
