@@ -196,7 +196,7 @@ Perform the following:
 
         ![Application pod](../media/application_pods.png)
 
-3.  Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache_service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
+3.  Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
     ![Application Service](../media/application_service.png)
 
