@@ -69,9 +69,14 @@ For the GTP CRD definition, see the [GTP CRD](#gtp-crd-definition).
 
 ### GSE CRD
 
- GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
+GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
 For the full GSE CRD definition, see the [GSE CRD](#gse-crd-definition).
+
+The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
+
+**Note:**
+For GSE CRD auto generation in the case of Ingress, host name should exactly match with the host name specified in the GTP CRD instance. For both Ingress and service of type `LoadBalancer`, the GSE CRD is generated only for the first port specified.
 
 ## Deploy Citrix Multi-cluster ingress and load balancing solution
 
