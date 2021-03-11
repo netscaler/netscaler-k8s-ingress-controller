@@ -95,24 +95,33 @@ spec:
                             required: [tls_secret]
                           - properties:             
                             required: [preconfigured]
-                        vip:
+                        ingress_name:
                           description: |+
-                                       'Frontend IP of ingress for which the authentication 
-                                        using forms is applicable. This refers to frontend-ip provided 
-                                        with Ingress'
+                                       'Ingress name for which the authentication using forms
+                                        is applicable.'
                           type: string
+                          maxLength: 63
                         lb_service_name:
                           description: |+
                                        'Service of type LoadBalancer for which the authentication using forms
                                         is applicable.'
                           type: string
                           maxLength: 63
+                        vip:
+                          description: |+
+                                       'Frontend IP of ingress for which the authentication 
+                                        using forms is applicable. This refers to frontend-ip provided 
+                                        with Ingress. It is suggested to use vip, if more than one Ingress
+                                        resource use the same frontend-ip'
+                          type: string
                       required: [authentication_host, authentication_host_cert]
                       oneOf:
                       - properties:
-                        required: [vip]
+                        required: [ingress_name]                      
                       - properties:
                         required: [lb_service_name]
+                      - properties:
+                        required: [vip]
               oneOf:
                 - properties:
                     using_request_header:
@@ -149,6 +158,22 @@ spec:
                               items:
                                 type: string
                                 maxLength: 127
+                          jwks_uri:
+                              description: |+
+                                          'URL of the endpoint that contains JWKs (Json Web Key) for 
+                                           JWT (Json Web Token) verification'
+                              type: string
+                              maxLength: 127
+                          introspect_url:
+                              description: ' URL of the introspection server'
+                              type: string
+                              maxLength: 127
+                          client_credentials:
+                              description: |+
+                                           'secrets object that contains Client Id and secret as known 
+                                            to Introspection server'
+                              type: string
+                              maxLength: 253
                           token_in_hdr:
                               description: |+
                                            'custom header name where token is present,
@@ -177,27 +202,46 @@ spec:
                               items:
                                 type: string
                                 maxLength: 127
-                          jwks_uri:
+                          metadata_url:
+                              description: 'URL used to get OAUTH/OIDC provider metadata'
+                              type: string
+                              maxLength: 255
+                          user_field:
                               description: |+
-                                          'URL of the endpoint that contains JWKs (Json Web Key) for 
-                                           JWT (Json Web Token) verification'
+                                           'Attribute in the token from which username should be extracted. 
+                                            by default, ADC looks at email attribute for user id'
                               type: string
                               maxLength: 127
-                          introspect_url:
-                              description: ' URL of the introspection server'
-                              type: string
-                              maxLength: 127
-                          client_credentials:
+                          default_group:
                               description: |+
-                                           'secrets object that contains Client Id and secret as known 
-                                            to Introspection server'
+                                           'group assigned to the request if authentication succeeds,
+                                            this is in addition to any extracted groups from token'
                               type: string
-                              maxLength: 253                              
+                              maxLength: 63
+                          grant_type:
+                              description: 'used to specify the type of flow to the token end point, defaults to CODE'
+                              type: array
+                              items:
+                                type: string
+                                enum: ['CODE','PASSWORD']
+                          pkce:
+                              description: 'specify whether to enable Proof Key Code Exchange, defaults to ENABLED'
+                              type: string
+                              enum: ['ENABLED', 'DISABLED']
+                          token_ep_auth_method:
+                              description: |+
+                                           'authentication method to be used with token end point, 
+                                            defaults to client_secret_post'
+                              type: string
+                              enum: ['client_secret_post', 'client_secret_jwt']
+
                       anyOf:
                       - properties:
                         required : [jwks_uri]
                       - properties:
                         required : [introspect_url, client_credentials]
+                      - properties:
+                        required : [metadata_url]
 
                     ldap:
                       description: 'LDAP authentication provider'
@@ -465,7 +509,6 @@ spec:
 
           required:
             - servicenames      
-
 ```
 
 ## Auth CRD attributes
@@ -500,8 +543,9 @@ The following are the attributes for forms based authentication.
 | --------- | ----------- |
 | `authentication_host` | Specifies a fully qualified domain name (FQDN) to which the user must be redirected for authentication. This FQDN should be unique and should resolve to the front-end IP address of Citrix ADC with Ingress or service type LoadBalancer.|
 | `authentication_host_cert` | Specifies the name of the SSL certificate to be used with the `authentication_host`. This certificate is mandatory while performing authentication using the form.|
-| `vip` | Specifies the front-end IP address of the ingress for which the authentication using forms is applicable. This attribute refers to the `frontend-ip` provided with the Ingress.|
+|`ingress_name`| Specifies the Ingress name for which the authentication using forms is applicable.|
 | `lb_service_name`| Specifies the name of the service of type LoadBalancer for which the authentication using forms is applicable.|
+| `vip` |Specifies the front-end IP address of the Ingress for which the authentication using forms is applicable. This attribute refers to the `frontend-ip` address provided with the Ingress. If there is more than one Ingress resource which uses the same frontend-ip, it is recommended to use vip.|
 
 **Note:** While using forms, authentication can be enabled for all types of traffic. Currently, granular authentication is not supported.
 
@@ -531,6 +575,18 @@ The following are the attributes for OAuth authentication:
 |`signature_algorithms`| Specifies the list of signature algorithms which are allowed. By default HS256, RS256, and RS512 algorithms are allowed.|
 | `introspect_url`| The URL of the introspection endpoint of the authentication server (IdP). If the access token presented is an opaque token, introspection is used for the token verification.|
 | `client_credentials`| The name of the Kubernetes secrets object that contains the client id and client secret required to authenticate with the authentication server.|
+| `claims_to_save`| The list of claims to be saved. Claims are used to create authorization policies.|
+
+OpenID Connect (OIDC) is a simple identity layer on top of the OAuth 2.0 protocol. OIDC allows clients to verify the identity of the end-user based on the authentication performed by an authorization server, as well as to obtain basic profile information about the end-user. In addition to the OAuth attributes, you can use the following attributes to configure OIDC.
+
+| Attribute | Description |
+| --------- | ----------- |
+| `metadata_url` | Specifies the URL that is used to get OAUTH or OIDC provider metadata.|
+| `user_field` | Specifies the attribute in the token from which the user name should be extracted. By default, Citrix ADC examines the email attribute for user ID.|
+| `default_group` | Specifies the group assigned to the request if authentication succeeds. This group is in addition to any extracted groups from the token. |
+| `grant_type` | Specifies the type of flow to the token end point. The default value is `CODE`.|
+| `pkce` | Specifies whether to enable Proof Key for Code Exchange (PKCE). The default value is `ENABLED`.|
+| `token_ep_auth_method` | Specifies the authentication method to be used with the token end point. The default value is `client_secret_post`.|
 
 #### SAML authentication
 
@@ -573,7 +629,7 @@ The following are the attributes for LDAP authentication.
 | `security_type` | Specifies the type of security used for communications between the Citrix ADC and the LDAP server. The default is TLS.|
 | `validate_server_cert` | Validates LDAP server certificates. The default value is `NO`.|
 |`hostname`|Specifies the host name for the LDAP server. If `validate_server_cert` is `ON`, this value must be the host name on the certificate from the LDAP. A host name mismatch causes a connection failure.|
-|`sub_attribute_name`| Specifies the LDAP group sub-attribute name. This attribute is used for group extraction from the LDAP server.|
+|`sub_attribute_name`| Specifies the LDAP group subattribute name. This attribute is used for group extraction from the LDAP server.|
 |`group_attribute_name`| Specifies the LDAP group attribute name. This attribute is used for group extraction on the LDAP server.|
 |`search_filter`| Specifies the string to be combined with the default LDAP user search string to form the search value. For example, if the search filter "vpnallowed=true" is combined with the LDAP login name "samaccount" and the user-supplied user name is "bob", the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)"". Enclose the search string in two sets of double quotation marks.|
 |`auth_timeout`| Specifies the number of seconds the Citrix ADC waits for a response from the server. The default value is 3.|
@@ -622,7 +678,7 @@ Perform the following to deploy the Auth CRD:
 
 ## How to write the authentication policies
 
-After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and in the `spec` section add the Auth CRD attributes based on your requirement for the policy configuration.
+After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and in the `spec` section add the **Auth CRD** attributes based on your requirement for the policy configuration.
 
 After you deploy the `.yaml` file, the Citrix ingress controller applies the authentication policy configuration on the Ingress Citrix ADC device.
 
@@ -725,15 +781,15 @@ The sample authentication policy performs the following:
   
 -  The Citrix ADC does not perform the authentication for the **products** and **GET** endpoints.
 
--  The Citrix ADC performs the oAuth JWT verification as specified in the provider `jwt-auth-provider` for the requests to the **reviews** endpoint.
+-  The Citrix ADC performs the OAuth JWT verification as specified in the provider `jwt-auth-provider` for the requests to the **reviews** endpoint.
 
--  The Citrix ADC performs the oAuth introspection as specified in the provider `introspect-provider` for the requests to the **customers** endpoint.
+-  The Citrix ADC performs the OAuth introspection as specified in the provider `introspect-provider` for the requests to the **customers** endpoint.
   
 -  The Citrix ADC requires the `scope` claim with `read` and `write` permissions to access the **customers** endpoint and **POST**.
   
 -  The Citrix ADC does not need any authorization permissions to access the **products** endpoint with GET operation.
 
-For oAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
+For OAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
 
 
           oauth:
@@ -752,7 +808,7 @@ Similarly, if the token is present in a query parameter, it can be specified usi
 
 ### Creating a secrets object with client credentials for introspection
 
-A Kubernetes secrets object is needed for configuring the oAuth introspection.
+A Kubernetes secrets object is needed for configuring the OAuth introspection.
 You can create a secret object in a similar way as shown in the following example:
 
 
@@ -816,6 +872,53 @@ spec:
             method: []
             claims: []
 
+```
+
+### OpenID Connect authentication using forms
+
+The following is an example for creating OpenID Connect authentication to configure Citrix ADC in a Relaying Party (RP) role to authenticate users for an external identity provider. The `authentication_mechanism` must be set to `using_forms` to trigger the OpenID Connect procedures.
+
+```yml
+apiVersion: citrix.com/v1beta1
+kind: authpolicy
+metadata:
+  name: authoidc
+spec:
+    servicenames:
+    - frontend
+    authentication_mechanism:
+        using_forms:
+            authentication_host: "10.221.35.213"
+            authentication_host_cert:
+                 tls_secret: "oidc-tls-secret"
+            vip: "10.221.35.213"
+
+    authentication_providers:
+
+        - name: "oidc-provider"
+          oauth:
+            audience : ["https://app1.citrix.com"]
+            client_credentials: "oidcsecret"
+            metadata_url: "https://10.221.35.214/oauth/idp/.well-known/openid-configuration"
+            default_group: "groupA"
+            user_field: "sub"
+            pkce: "ENABLED"
+            token_ep_auth_method: "client_secret_post"
+
+    authentication_policies:
+
+        - resource:
+            path: []
+            method: []
+          provider: ["oidc-provider"]
+
+    authorization_policies:
+
+        #default - no authorization requirements
+        - resource:
+            path: []
+            method: []
+            claims: []
 ```
 
 ### LDAP authentication using the request header
