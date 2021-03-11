@@ -93,7 +93,8 @@ spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx-ingress
-          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-67.39
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29
+          tty: true
           securityContext:
              privileged: true
           env:
@@ -105,13 +106,11 @@ spec:
           volumeMounts:
             - mountPath: /var/deviceinfo
               name: shared-data
-            - mountPath: /cpx/conf/
-              name: cpx-volume1
-            - mountPath: /cpx/crash/
-              name: cpx-volume2
+            - mountPath: /cpx/
+              name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.15
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.20
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
@@ -147,9 +146,7 @@ spec:
       volumes:
       - name: shared-data
         emptyDir: {}
-      - name: cpx-volume1
-        emptyDir: {}
-      - name: cpx-volume2
+      - name: cpx-volume
         emptyDir: {}
         
 ---
