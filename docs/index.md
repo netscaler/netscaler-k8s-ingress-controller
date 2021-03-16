@@ -9,7 +9,7 @@ An Ingress controller is an application deployed inside the cluster that interpr
 
 ## What is Citrix ADC ingress controller
 
-Citrix provides an implementation of the [Kubernetes Ingress Controller]((https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-controllers)) to manage and route traffic into your Kubernetes cluster using Citrix ADCs (Citrix ADC CPX, VPX, or MPX).
+Citrix provides an implementation of the [Kubernetes Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-controllers) to manage and route traffic into your Kubernetes cluster using Citrix ADCs (Citrix ADC CPX, VPX, or MPX).
 
 Using Citrix ADC ingress controller, you can configure Citrix ADC CPX, VPX, or MPX according to the Ingress rules and integrate your Citrix ADCs with the Kubernetes environment.
 
