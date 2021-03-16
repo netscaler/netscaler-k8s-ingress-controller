@@ -88,3 +88,5 @@ The following topologies are supported by the Citrix deployment builder:
 -  Multi-cluster Ingress
 
 -  Service mesh
+
+For detailed information on how to use the Citrix deployment builder, see the [Citrix deployment builder blog](https://www.citrix.com/blogs/2021/03/02/citrix-deployment-builder-simplifying-citrix-cloud-native-deployments/#).
