@@ -1,0 +1,12 @@
+cic:
+  enabled: true
+  ipam: true
+  nsIP: <nsIP-vpx>
+  adcCredentialSecret: <vpx-credentials-secret>
+  license:
+    accept: 'Yes'
+  crds:
+    install: true
+ipam:
+  enabled: true
+  vipRange: '["<vpx-vip>"]'
