@@ -1,7 +1,8 @@
+#Cluster role required by CPX
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: cpx-ingress-k8s-role
+  name: cpx
 rules:
   - apiGroups: [""]
     resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
@@ -19,7 +20,10 @@ rules:
     verbs: ["create"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -27,10 +31,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits", "listeners", "httproutes"]
-    verbs: ["get", "list", "watch"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -38,33 +42,34 @@ rules:
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
 
 ---
-
+#Cluster role bindings required by CPX
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: cpx-ingress-k8s-role
+  name: cpx
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cpx-ingress-k8s-role
+  name: cpx
 subjects:
 - kind: ServiceAccount
-  name: cpx-ingress-k8s-role
+  name: cpx
   namespace: default
 apiVersion: rbac.authorization.k8s.io/v1
-
 ---
-
+#Service account for CPX
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cpx-ingress-k8s-role
+  name: cpx
   namespace: default
-
 ---
-
+#Deploy a standalone CPX as an ingress device
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -81,10 +86,10 @@ spec:
         app: cpx-ingress
       annotations:
     spec:
-      serviceAccountName: cpx-ingress-k8s-role
+      serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29
           securityContext:
              privileged: true
           env:
@@ -111,13 +116,16 @@ spec:
             successThreshold: 1
           imagePullPolicy: Always
           volumeMounts:
-            - mountPath: /cpx/conf/
-              name: cpx-volume1
-            - mountPath: /cpx/crash/
-              name: cpx-volume2
+            - mountPath: /var/deviceinfo
+              name: shared-data
+            - mountPath: /cpx/
+              name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.20
+          volumeMounts:
+          - mountPath: /var/deviceinfo
+            name: shared-data
           env:
           - name: "EULA"
             value: "yes"
@@ -131,16 +139,6 @@ spec:
             value: "SIDECAR"
           - name: "NS_ENABLE_MONITORING"
             value: "YES"
-          - name: "NS_USER"
-            valueFrom:
-             secretKeyRef:
-              name: nslogin
-              key: username
-          - name: "NS_PASSWORD"
-            valueFrom:
-             secretKeyRef:
-              name: nslogin
-              key: password
           - name: POD_NAME
             valueFrom:
               fieldRef:
@@ -156,7 +154,8 @@ spec:
               citrix-ingress
           imagePullPolicy: Always
       volumes:
-      - name: cpx-volume1
+      - name: shared-data
         emptyDir: {}
-      - name: cpx-volume2
+      - name: cpx-volume
         emptyDir: {}
+---
