@@ -1,8 +1,3 @@
-# If using this on GKE
-# Make sure you have cluster-admin role for your account
-# kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<username of your google account>
-#
-
 #Cluster role required by CPX
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -10,16 +5,25 @@ metadata:
   name: cpx
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "services", "pods", "secrets", "nodes", "routes", "namespaces", "routes/status"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
   - apiGroups: [""]
     resources: ["services/status"]
     verbs: ["patch"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -27,10 +31,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
-    verbs: ["get", "list", "watch"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -38,6 +42,10 @@ rules:
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
+
 ---
 #Cluster role bindings required by CPX
 kind: ClusterRoleBinding
@@ -62,11 +70,14 @@ metadata:
   namespace: default
 ---
 #Deploy a standalone CPX as an ingress device
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
 spec:
+  selector:
+    matchLabels:
+      app: cpx-ingress
   replicas: 1
   template:
     metadata:
@@ -78,7 +89,7 @@ spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29
           securityContext:
              privileged: true
           env:
@@ -104,9 +115,17 @@ spec:
             failureThreshold: 5
             successThreshold: 1
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/deviceinfo
+              name: shared-data
+            - mountPath: /cpx/
+              name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.20
+          volumeMounts:
+          - mountPath: /var/deviceinfo
+            name: shared-data
           env:
           - name: "EULA"
             value: "yes"
@@ -134,5 +153,9 @@ spec:
             - --ingress-classes
               citrix-ingress
           imagePullPolicy: Always
-
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      - name: cpx-volume
+        emptyDir: {}
 ---
