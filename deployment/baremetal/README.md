@@ -62,7 +62,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <summary>NS_USER and NS_PASSWORD</summary>
 
          This variable is for authenticating with Citrix ADC if it has non-default user name and password. You can directly pass user name and password or use Kubernetes secrets.
-         For configuring a non-default Citrix ADC user name and password, see [guide.
+         For configuring a non-default Citrix ADC user name and password, see [Create a system user account for the Citrix ingress controller in Citrix ADC](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
          Given YAML uses Kubernetes secrets. The following steps help to create secrets to be used in YAML.
 
