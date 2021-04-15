@@ -22,7 +22,7 @@ Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix
 
 In this deployment, you can use the Citrix ADC CPX instance for load balancing the North-South traffic to microservices in your Kubernetes cluster. Citrix ingress controller is deployed as a sidecar alongside the Citrix ADC CPX container in the same pod using the `citrix-k8s-cpx-ingress.yaml` file.
 
-Perform the following steps to deploy the Citrix ingress controller as a standalone pod on the Rancher platform.
+Perform the following steps to deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX on the Rancher platform.
 
 1.  Download the `citrix-k8s-cpx-ingress.yaml` file using the following command.
 
@@ -54,6 +54,9 @@ Ensure that you complete all the [prerequisites](deploy-cic-yaml.md#prerequisite
         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
 1.  Edit the `citrix-k8s-ingress-controller.yaml` file and enter the values of the environment variable using the information in [Deploy Citrix ingress controller as a pod](deploy-cic-yaml.md#deploy-citrix-ingress-controller-as-a-pod).
+
+     **Note:** To update the `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Citrix ingress controller with the allocated IP addresses, you must specify the command line argument `--update-ingress-status yes` when you start the Citrix ingress controller. For more information, see [Updating the Ingress status for the Ingress resources with the specified IP address](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/ingress-classes/#updating-the-ingress-status-for-the-ingress-resources-with-the-specified-ip-address).
+
 1.  On the Rancher GUI cluster page, select Clusters from Global view.
 1.  From the Clusters page, open the cluster that you want to access.
 1.  Click `Launch kubectl` to open a terminal for interacting with your Kubernetes cluster.
