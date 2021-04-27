@@ -37,7 +37,7 @@ Perform the following steps to configure the Citrix solution for service of type
 
       1.  Add the following annotation in the service manifest:
 
-          beta.kubernetes.io/aws-load-balancer-type: "external"
+              beta.kubernetes.io/aws-load-balancer-type: "external"
 
       1.  Deploy the application and service with the modified annotation using the following command:
 
