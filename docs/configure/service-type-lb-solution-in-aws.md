@@ -10,6 +10,8 @@ When you deploy a service in AWS, a load balancer is created automatically and t
 
 Citrix IPAM controller is used to automatically allocate IP addresses to services of type LoadBalancer from a specified range of IP addresses. For more information about the Citrix solution for services of type LoadBalancer, see [Expose services of type LoadBalancer](https://github.com/citrix/citrix-k8s-ingress-controller/blob/ef929526a1bd23f30a8677d4494c600f21b7b2a8/docs/network/type_loadbalancer.md).
 
+You can deploy the Citrix solution for service of type LoadBalancer in AWS using Helm charts or YAML files.
+
 **Prerequisites**
 
  -  Ensure that the Elastic Kubernetes Service (EKS) cluster version 1.18 or later is running.
@@ -43,7 +45,7 @@ Perform the following steps to configure the Citrix solution for service of type
 
               kubectl create -f https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/guestbook-all-in-one-lb.yaml
 
-            **Note**: The `guestbook` microservice is a sample used in this procedure. You can deploy an application of your choice. Ensure that the service should be of type LoadBalancer and the service manifest should contain the annotation.
+          **Note**: The `guestbook` microservice is a sample used in this procedure. You can deploy an application of your choice. Ensure that the service should be of type LoadBalancer and the service manifest should contain the annotation.
       
       1.  Associate an elastic IP address with the VIP of Citrix ADC VPX.
 
@@ -77,7 +79,7 @@ Perform the following steps to deploy the Citrix solution for service of type Lo
 
 1. Deploy the IPAM controller. For information about deploying the IPAM controller, see [Deploy the IPAM controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/c683c72457e1be74718f72c2f26bbe57105133a2/docs/network/type_loadbalancer.md#step3-deploy-the-ipam-controller).
 
-    **Note**: Specify the list of Citrix ADC VPX VIPs in the **VIP_RANGE** field of the IPAM deployment YAML file.
+   **Note**: Specify the list of Citrix ADC VPX VIPs in the **VIP_RANGE** field of the IPAM deployment YAML file.
 
 1.  Deploy the application with service type LoadBalancer in Amazon EKS using the following steps:
 
@@ -89,7 +91,7 @@ Perform the following steps to deploy the Citrix solution for service of type Lo
 
               kubectl create -f https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/guestbook-all-in-one-lb.yaml
 
-            **Note**: The `guestbook` microservice is a sample used in this procedure. You can deploy an application of your choice. Ensure that the service should be of type LoadBalancer and the service manifest should contain the annotation.
+          **Note**: The `guestbook` microservice is a sample used in this procedure. You can deploy an application of your choice. Ensure that the service should be of type LoadBalancer and the service manifest should contain the annotation.
       
       1.  Associate an elastic IP address with the VIP of Citrix ADC VPX.
 
