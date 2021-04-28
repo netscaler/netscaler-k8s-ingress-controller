@@ -285,10 +285,7 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
             name: apache
         spec:
           externalTrafficPolicy: Local
-          loadBalancerIP: "110.217.212.16"
           type: LoadBalancer
-          selector:
-            name: apache
           ports:
           - name: http
             port: 80
@@ -332,7 +329,7 @@ You can also expose a service of type LoadBalancer manually by specifying an IP 
 
 When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as a virtual IP (VIP) address in Citrix ADC.
 
-### **Example:** Expose an Apache application using service of type LoadBalancer
+### **Example:** Expose an Apache application using service of type LoadBalancer by specifying an IP address
 
 Perform the following:
 
@@ -396,10 +393,8 @@ Perform the following:
             name: apache
         spec:
           externalTrafficPolicy: Local
-          loadBalancerIP: "110.217.212.16"
+          loadBalancerIP: "10.217.212.16"
           type: LoadBalancer
-          selector:
-            name: apache
           ports:
             - name: http
               port: 80
