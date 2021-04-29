@@ -29,8 +29,7 @@ Perform the following steps to deploy the Citrix ingress controller and configur
 
     Following is an example for a ConfigMap with the SNIP values:
 
-        ```yml
-
+        
         apiVersion: v1
         kind: ConfigMap
         metadata:
@@ -38,7 +37,7 @@ Perform the following steps to deploy the Citrix ingress controller and configur
             namespace: default
         data:
             NS_SNIPS: '["192.0.2.2", "192.0.2.1"]'
-        ```
+        
 
 5. Apply the ConfigMap.
    
@@ -47,7 +46,7 @@ Perform the following steps to deploy the Citrix ingress controller and configur
 You can also specify the SNIPs using the `NS_SNIPS` environment variable in the Citrix ingress controller deployment YAML file.
 
          - name: "NS_SNIPS"
-            value: `["192.0.2.2", "192.0.2.1"]`
+            value: '["192.0.2.2", "192.0.2.1"]'
 
 The following are the usage guidelines while using ConfigMap for configuring SNIP:
 
