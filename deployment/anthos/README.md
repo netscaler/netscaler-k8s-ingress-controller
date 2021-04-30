@@ -55,7 +55,7 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
 6.  Create a Kubernetes secret for the Tier-1 Citrix ADC.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot'
+        kubectl --kubeconfig user-cluster-1-kubeconfig create secret  generic nslogin --from-literal=username='citrix-adc-username' --from-literal=password='citrix-adc-password'
 
 7. Deploy the Citrix ingress controller as a Tier-1 ingress controller.
 
@@ -93,31 +93,31 @@ To clean up the installation, use the `kubectl --kubeconfig delete` command to d
 
 To delete the Citrix ADC CPX service deployment (CPX+CIC service) use the following command:
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f cpx-service-type-lb.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-service-type-lb.yaml
 
 To delete the Tier-2 Ingress object, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f tier-2-ingress.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f tier-2-ingress.yaml
 
 To delete the Citrix ADC CPX deployment along with the sidecar Citrix ingress controller, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f cpx-cic.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-cic.yaml
 
 To delete the stand-alone Citrix ingress controller, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f cic.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cic.yaml
 
 To delete the Apache microservice, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f apache.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f apache.yaml
 
 To delete the Kubernetes secret, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete secret anthos-citrix
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete secret anthos-citrix
 
 To delete the `nslogin` secret, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete secret nslogin
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete secret nslogin
 
 ## Dual tier Ingress deployment
 
@@ -210,32 +210,32 @@ To clean up the installation, use the `kubectl --kubeconfig delete` command to d
 
 To delete the Tier-1 Ingress object, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f tier-1-ingress.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f tier-1-ingress.yaml
 
 To delete the Tier-2 Ingress object, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f tier-2-ingress.yaml`
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f tier-2-ingress.yaml`
 
 To delete the Citrix ADC CPX deployment along with the sidecar Citrix ingress controller, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f cpx-cic.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-cic.yaml
 
 To delete the Citrix ADC CPX service deployment, use the following command:
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f cpx-service.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-service.yaml
 
 To delete the stand-alone Citrix ingress controller use the following command:
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f cic.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cic.yaml
 
 To delete the Apache microservice, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete -f apache.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete -f apache.yaml
 
 To delete the Kubernetes secret, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete secret anthos-citrix
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete secret anthos-citrix
 
 To delete the `nslogin` secret, use the following command.
 
-        kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig delete secret nslogin`
+        kubectl --kubeconfig user-cluster-1-kubeconfig delete secret nslogin`
