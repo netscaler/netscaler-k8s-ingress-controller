@@ -7,10 +7,9 @@ Azure Kubernetes Engine (AKS) provides the following two modes for networking:
 
 ## Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
 
-You can deploy Citrix ADC CPX as an Ingress in AKS using these modes. For detailed instructions, refer:
+You can deploy Citrix ADC CPX as an Ingress in AKS using any of these modes. For detailed instructions, refer:
 
 -  [Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster](../../docs/deploy/deploy-azure.md).
--  [Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster with advanced networking mode](../../docs/deploy/deploy-azure-cni.md)
 
 ## Citrix ingress controller in Azure Kubernetes Engine with Citrix ADX VPX
 
