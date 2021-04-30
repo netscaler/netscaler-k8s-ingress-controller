@@ -14,13 +14,6 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in [Elasti
         In this example, ``apache.yaml`` is used. You should use the specific YAML file for your application.
 
 1.  Deploy Citrix ADC CPX as an ingress device in the cluster using the following command.
-
-	Citrix ADC CPX requires a Kubernetes Secret to be created for login credentials. Below command would create the required Kubernetes secret.
-	
-
-        kubectl create secret generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot'
-        
-	Deploy Citrix ADC CPX with inbuilt Citrix Ingress Controller.
 	
 	
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/standalone_cpx.yaml
@@ -51,11 +44,22 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in [Elasti
 1.  Access the application using the following command.
 
         curl http://<External-hostname-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
-        
+
+
 ## Quick Deploy
 
-You can also use our [all-in-one](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/all-in-one.yaml) manifest file to deploy Citrix ADC CPX along with a sample microservice using a single command.
+For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
+
+
+1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/all-in-one.yaml
 
+2. Access the application using the following command.
 
+        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
+
+    >**Note:**
+    >To delete the deployment, use the following command:
+    </br>
+    > ` kubectl delete -f all-in-one.yaml `

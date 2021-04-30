@@ -1,2 +1,0 @@
-openssl req -subj '/CN=anthos-citrix-ingress.com/O=Citrix Systems Inc/C=IN' -new -newkey rsa:2048 -days 5794 -nodes -x509 -keyout $PWD/anthos-citrix-certificate.key -out $PWD/anthos-citrix-certificate.crt;openssl rsa -in $PWD/anthos-citrix-certificate.key -out $PWD/anthos-citrix-certificate.key
-kubectl --kubeconfig /home/ubuntu/user-cluster-1-kubeconfig create secret tls anthos-citrix --cert=$PWD/anthos-citrix-certificate.crt --key=$PWD/anthos-citrix-certificate.key
