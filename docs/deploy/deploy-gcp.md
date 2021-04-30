@@ -1,6 +1,6 @@
 # Deploy Citrix ADC CPX as an Ingress device in Google Cloud Platform
 
-This topic explains how to deploy Citrix ADC CPX as an ingress device in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) and [Google Compute Engine (GCE)](https://cloud.google.com/compute/) clusters. The procedure to deploy the Citrix ADC CPX is the same for both Google Kubernetes Engine (GKE) and Google Compute Engine (GCE). However, if you configure Kubernetes on Google Compute Engine (GCE), then you need to deploy the CNI plug-in for the Kubernetes cluster.
+This topic explains how to deploy Citrix ADC CPX as an ingress device in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/)
 
 ## Prerequisites
 
@@ -70,70 +70,20 @@ You can get your Google account details using the following command.
 
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
-## Deployment models
+## Quick Deploy
 
-You can use the following deployment solutions for deploying CPX as an ingress device in Google Cloud.
+For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
--  Standalone Citrix ADC CPX deployment
--  High availability Citrix ADC CPX deployment
--  Citrix ADC CPX per node deployment
 
-!!! note "Note"
-    For the ease of deployment, the deployment models in this topic are explained with an all-in-one manifest file that combines the steps explained in the previous topic. You can modify the manifest file to suit your application and configuration.
-
-### Deploy a standalone Citrix ADC CPX as the Ingress device
-
-To deploy Citrix ADC CPX as an Ingress in a standalone deployment model in GCP, you should use the Service Type as LoadBalancer. This step creates a load balancer in the Google cloud.
-
-![CPX-GCP-Topology-Standalone](../media/CPX-GCP-Topology-Standalone.png)
-
-1.  Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the following command.
+1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 
-1.  Access the application using the following command.
+2. Access the application using the following command.
 
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
-    !!! note "Note"
-        To delete the deployment, use the following command:
-
-            kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
-
-### Deploy Citrix ADC CPX for high availability
-
-In the standalone deployment of Citrix ADC CPX as ingress, if the ingress device fails, there would be a traffic outage for a few seconds. To avoid this traffic disruption, you can deploy two Citrix ADC CPX ingress devices instead of deploying a single Citrix ADC CPX ingress device. In such deployments, even if one Citrix ADC CPX fails the other Citrix ADC CPX is available to handle the traffic until the failed Citrix ADC CPX comes up.
-
-![CPX-GCP-HA-Solution-Topology](../media/CPX-GCP-HA-Solution-Topology.png)
-
-1.  Deploy Citrix ADC CPX ingress devices for high availability in your Kubernetes cluster by using the following command.
-
-         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml
-
-1.  Access the application using the following command.
-
-        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
-
-    !!! note "Note"
-        To delete the deployment, use the following command.
-
-            kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml
-
-### Deploy Citrix ADC CPX per node
-
-Sometimes when cluster nodes are added and removed from the cluster, CPX can also be deployed as DaemonSets. This deployment ensures that every node has a CPX ingress device in it. When the traffic is high, such a deployment is a much more reliable solution than deploying two Citrix ADC CPX devices as ingress devices.
-
-![CPX-GCP-Daemonset-Topology](../media/CPX-GCP-Daemonset-Topology.png)
-
-1.  Deploy Citrix ADC CPX ingress device in each node of your Kubernetes cluster by using the following command.
-
-        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml
-
-1.  Access the application by using the following command.
-
-        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
-
-    !!! note "Note"
-        To delete the deployment, use the following command.
-
-            kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml
+    >**Note:**
+    >To delete the deployment, use the following command:
+    </br>
+    > ` kubectl delete -f all-in-one.yaml `
