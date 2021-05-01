@@ -30,7 +30,7 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "continuousdeployments", "authpolicies", "ratelimits", "listeners", "httproutes", "wafs", "apigatewaypolicies", "bots"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
     verbs: ["get", "list", "watch", "create", "delete", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
@@ -94,7 +94,7 @@ spec:
       serviceAccount: citrix
       containers:
       - name: cic
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.13.20"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.14.17"
         securityContext:
            privileged: true
         env:

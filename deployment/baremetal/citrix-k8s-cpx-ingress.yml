@@ -110,7 +110,7 @@ spec:
               name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.20
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.14.17
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
