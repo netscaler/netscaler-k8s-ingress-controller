@@ -55,10 +55,9 @@ spec:
                       properties:
                         authentication_host:
                           description: |+
-                                       'Fully qualified domain name (FQDN) for authentication
-                                        FQDN to which the user must be redirected for
-                                        authentication. This FQDN should be unique and should resolve to frontend IP of
-                                        ADC with Ingress/service type LoadBalancer'
+                                       'Fully qualified domain name (FQDN) for authentication.
+                                        This FQDN should be unique and should resolve to frontend IP of
+                                        ADC with Ingress/service type LoadBalancer (or) vip of Listener CRD'
                           type: string
                           maxLength: 255
                         authentication_host_cert:
@@ -94,6 +93,11 @@ spec:
                                         is applicable.'
                           type: string
                           maxLength: 63
+                        listener_name:
+                          description: |+
+                                       'Listener CRD name for which the authentication using forms is applicable.'   
+                          type: string
+                          maxLength: 63
                         vip:
                           description: |+
                                        'Frontend IP of ingress for which the authentication 
@@ -107,6 +111,8 @@ spec:
                         required: [ingress_name]                      
                       - properties:
                         required: [lb_service_name]
+                      - properties:
+                        required: [listener_name]
                       - properties:
                         required: [vip]
               oneOf:
@@ -496,4 +502,3 @@ spec:
 
           required:
             - servicenames      
-

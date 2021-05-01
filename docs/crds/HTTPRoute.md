@@ -29,7 +29,7 @@ This topic contains a sample HTTPRoute CRD object and also explains the various 
 The following is a sample HTTP CRD object.
 
 ```yml
-apiVersion: citrix.com/v1alpha1
+apiVersion: citrix.com/v1
 kind: HTTPRoute
  metadata:
     name: test-route
