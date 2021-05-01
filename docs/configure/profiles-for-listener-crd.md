@@ -103,7 +103,7 @@ The command enables the default SSL profile for all the existing SSL virtual ser
 
 You can specify `spec.policies.sslprofile` to customize the SSL profile. When specified, Citrix ingress controller creates an SSL profile derived from the default SSL front-end profile: `ns_default_ssl_profile_frontend`.
 
-For information about key-value pairs supported in the SSL profile, see [SSL profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ssl/ssl/).
+For information about key-value pairs supported in the SSL profile, see [SSL profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ssl/sslprofile/).
 
 **Note:** The ‘name’ is auto-generated.
 
