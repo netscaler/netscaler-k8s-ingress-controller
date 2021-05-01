@@ -28,12 +28,16 @@ The advanced content routing feature is exposed in Kubernetes with the following
 
 A Listener CRD object represents the end-point information like virtual IP address, port, certificates, and other front-end configurations. It also defines the default actions like sending the default traffic to a back end or redirecting the traffic. A Listener CRD object can refer to HTTPRoute CRD objects which represents HTTP routing logic for the incoming HTTP request.
 
-For the full CRD definition, see the [Listener CRD](Listener.yaml).
-For complete information on all attributes of the Listener CRD, see [Listener CRD documentation](../../docs/crds/Listener.md).
+For the full CRD definition, see the [Listener CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
+For complete information on all attributes of the Listener CRD, see [Listener CRD documentation](Listener.md).
+
+Listener CRD supports HTTP, SSL, and TCP profiles. Using these profiles, you can customize the default protocol behavior. Listener CRD also supports the analytics profile which enables Citrix ADC to export the type of transactions or data to different endpoints.
+For more information about profile support for Listener CRD, see the [Profile support for the Listener CRD](../../docs/configure/profiles-for-listener-crd.md).
+
 
 ### Deploy the Listener CRD
 
-1. Download the [Listener CRD](Listener.yaml).
+1. Download the [Listener CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
 
 2. Deploy the listener CRD with following command.
 
@@ -50,46 +54,77 @@ After you deploy the YAML file, the Citrix ingress controller applies the listen
 Following is a sample Listener CRD object definition named as `Listener-crd.yaml`.
 
 ```yml
-
-apiVersion: citrix.com/v1alpha1
+apiVersion: citrix.com/v1
 kind: Listener
- metadata:
-   name: test-listener
-   namespace: default
- spec:
-   certificates:
-   - secret:
-       name: secret1
-   - secret:
-       name: secret2
-       namespace: demo
-   - default: true
-     preconfigured: secret3
-   defaultAction:
-     backend:
-       kube:
-         namespace: default
-         port: 80
-         service: default-service
-         backendConfig:
-           lbConfig:
-             lbmethod: ROUNDROBIN
-           servicegroupConfig:
-             clttimeout: '20'
-   vip: 192.168.0.1
-   port: 443
-   protocol: https
-   routes:
-   - labelSelector:
-       team: team1
-   - name: domain-1
-     namespace: default
-   - name: domain-2
-     namespace: default
-
+metadata:
+  name: my-listener 
+  namespace: default
+spec:
+  certificates:
+  - secret:
+      name: my-secret
+    # Secret named 'my-secret' in current namespace bound as default certificate
+    default: true
+  - secret:
+      # Secret 'other-secret' in demo namespace bound as SNI certificate
+      name: other-secret
+      namespace: demo
+  - preconfigured: second-secret
+    # preconfigured certkey name in ADC
+  vip: '192.168.0.1' # Virtual IP address to be used, not required when CPX is used as ingress device
+  port: 443 
+  protocol: https
+  redirectPort: 80
+  secondaryVips:
+  - "10.0.0.1"
+  - "1.1.1.1"
+  policies:
+    httpprofile:
+      config:
+        websocket: "ENABLED"
+    tcpprofile:
+      config:
+        sack: "ENABLED"
+    sslprofile:
+      config:
+        ssl3: "ENABLED"
+    sslciphers:
+    - SECURE
+    - MEDIUM
+    analyticsprofile:
+      config:
+      - type: webinsight
+        parameters:
+           allhttpheaders: "ENABLED"
+    csvserverConfig:
+      rhistate: 'ACTIVE'
+  routes:
+    # Attach the policies from the below Routes
+  - name: domain1-route 
+    namespace: default
+  - name: domain2-route
+    namespace: default
+  - labelSelector:
+      # Attach all HTTPRoutes with label route=my-route
+      route: my-route
+  # Default action when traffic matches none of the policies in the HTTPRoute
+  defaultAction:
+    backend:
+      kube:
+        namespace: default
+        port: 80
+        service: default-service
+        backendConfig:
+          lbConfig:
+            # Use round robin LB method for default service
+            lbmethod: ROUNDROBIN
+          servicegroupConfig:
+            # Client timeout of 20 seconds
+            clttimeout: "20"
 ```
 
-In this example, a listener is exposing an HTTPS endpoint. Under certificates section, SSL certificates for the endpoint are configured using Kubernetes secrets named `secret1` and `sercret2` and a default ADC preconfigured certificate with certkey named `secret3`. The default action for the listener is configured as a Kubernetes service. Routes are attached with the listener using both label selectors and individual route references using name and namespace.
+
+In this example, a listener is exposing an HTTPS endpoint. Under certificates section, SSL certificates for the endpoint are configured using Kubernetes secrets named `my-secret` and `other-secret` and a default ADC preconfigured certificate with certkey named `second-secret`. The default action for the listener is configured as a Kubernetes service. Routes are attached with the listener using both label selectors and individual route references using name and namespace.
 
 After you have defined the Listener CRD object in the YAML file, deploy the YAML file using the following command. In this example, `Listener-crd.yaml` is the YAML definition.
 
@@ -100,13 +135,15 @@ After you have defined the Listener CRD object in the YAML file, deploy the YAML
 
 An HTTPRoute CRD object represents the HTTP routing logic for the incoming HTTP requests. You can use a combination of various HTTP parameters like host name, path, headers, query parameters, and cookies to route the incoming traffic to a back-end service. An HTTPRoute object can be attached to one or more Listener objects which represent the end point information. You can have one or more rules in an HTTPRoute object, with each rule specifying an action associated with it. Order of evaluation of the rules within an HTTPRoute object is same as the order mentioned in the object. For example, if there are two rules with the order rule1 and rule2, with rule1 is written before rule2, rule1 is evaluated first before rule2.
 
-HTTPRoute CRD definition is available at [HTTPRoute.yaml](HTTPRoute.yaml). For complete information on the attributes for HTTP Route CRD, see [HTTPRoute CRD documentation](../../docs/crds/HTTPRoute.md).
+HTTPRoute CRD definition is available at [HTTPRoute.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml). For complete information on the attributes for HTTP Route CRD, see [HTTPRoute CRD documentation](../../docs/crds/HTTPRoute.md).
+
+Now, Citrix supports configuring the `HTTPRoute` CRD resource as a resource backend in the Ingress with Kubernetes Ingress version `networking.k8s.io/v1`. With this feature, you can extend advanced content routing capabilities to Ingress. For more information, see [Advanced content routing for Kubernetes Ingress using HTTPRoute CRD](../../docs/configure/advanced-content-routing-using-http-crd.md)
 
 ## Deploy the HTTPRoute CRD
 
 Perform the following to deploy the HTTPRoute CRD:
 
-1. Download the [HTTPRoute.yaml](HTTPRoute.yaml).
+1. Download the [HTTPRoute.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
 
 2. Apply the HTTPRoute CRD in your cluster using the following command.
 
@@ -126,7 +163,7 @@ Perform the following to deploy the HTTPRoute CRD:
 Following is a sample HTTPRoute CRD object definition named as `Route-crd.yaml`.
 
 ```yml
-apiVersion: citrix.com/v1alpha1
+apiVersion: citrix.com/v1
 kind: HTTPRoute
 metadata:
    name: test-route
@@ -160,7 +197,7 @@ spec:
 ```
 
 In this example, any request with a header name matching `my-header` is routed to the mobile-app service and all other traffic is routed to the default-app service.
-For detailed explanations and API specifications of HTTPRoute, see [HTTPRoute CRD](HTTPRoute.yaml).
+For detailed explanations and API specifications of HTTPRoute, see [HTTPRoute CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
 
 After you have defined the HTTP routes in the YAML file, deploy the YAML file for HTTPRoute CRD object using the following command. In this example, `Route-crd.yaml` is the YAML definition.
 
@@ -201,5 +238,3 @@ For example, snippet of a listener resource is as follows:
     routes:
     - labelSelector:
         team: team1
-
-

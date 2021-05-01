@@ -8,29 +8,60 @@ The Listener CRD represents the endpoint information of the content switching lo
 The following is an example of a Listener CRD object.
 
 ```yml
-
-apiVersion: citrix.com/v1alpha1
+apiVersion: citrix.com/v1
 kind: Listener
 metadata:
-  name: test-listener
+  name: my-listener 
   namespace: default
 spec:
-  vip: 192.168.0.1
-  port: 443
-  protocol: https
   certificates:
   - secret:
       name: my-secret
+    # Secret named 'my-secret' in current namespace bound as default certificate
+    default: true
+  - secret:
+      # Secret 'other-secret' in demo namespace bound as SNI certificate
+      name: other-secret
       namespace: demo
-  - default: true
-    preconfigured: configured-secret
+  - preconfigured: second-secret
+    # preconfigured certkey name in ADC
+  vip: '192.168.0.1' # Virtual IP address to be used, not required when CPX is used as ingress device
+  port: 443 
+  protocol: https
+  redirectPort: 80
+  secondaryVips:
+  - "10.0.0.1"
+  - "1.1.1.1"
+  policies:
+    httpprofile:
+      config:
+        websocket: "ENABLED"
+    tcpprofile:
+      config:
+        sack: "ENABLED"
+    sslprofile:
+      config:
+        ssl3: "ENABLED"
+    sslciphers:
+    - SECURE
+    - MEDIUM
+    analyticsprofile:
+      config:
+      - type: webinsight
+        parameters:
+           allhttpheaders: "ENABLED"
+    csvserverConfig:
+      rhistate: 'ACTIVE'
   routes:
+    # Attach the policies from the below Routes
+  - name: domain1-route 
+    namespace: default
+  - name: domain2-route
+    namespace: default
   - labelSelector:
-      xyz: abc
-  - name: domain-1
-    namespace: default
-  - name: domain-2
-    namespace: default
+      # Attach all HTTPRoutes with label route=my-route
+      route: my-route
+  # Default action when traffic matches none of the policies in the HTTPRoute
   defaultAction:
     backend:
       kube:
@@ -39,12 +70,14 @@ spec:
         service: default-service
         backendConfig:
           lbConfig:
+            # Use round robin LB method for default service
             lbmethod: ROUNDROBIN
           servicegroupConfig:
-            clttimeout: '20'
-```
+            # Client timeout of 20 seconds
+            clttimeout: "20"
 
-For more examples, see [Listener Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/Listener_examples).
+```
+For more examples, see [Listener examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/Listener_examples).
 
 ## Listener.spec
 
@@ -58,6 +91,9 @@ The `Listener.spec` attribute defines the Listener custom resource specification
 | `certificates`  |Specifies the list of certificates for the SSL virtual server if the protocol is HTTPS. This field is required if the protocol is HTTPS.                   | [ ] [certificates](#Listenercertificates)  |  No       |
 | `vip `          | Specifies the endpoint IP Address for the load balancing content switching virtual server. This address is required for Citrix ADC VPX and MPX devices, but not required for Citrix ADC CPXs present in the Kubernetes cluster. For Citrix ADC CPX, `vip` is same as the primary IP address of the Citrix ADC CPX allocated by the CNI.                                                | string           | No       |
 | `defaultAction` | Specifies the default action to take if none of the HTTPRoute resources specified in `routes` match the traffic.| action           | No       |
+| `policies`      | Specifies the option that enables you to customize HTTP, TCP, and SSL policies associated with the front-end virtual server.       | `Listener.policies`      | No      |
+| `redirectPort`     | Specifies that the HTTP traffic on this port is redirected to the HTTPS port. | Integer        | No      |
+| `secondaryVips`          | Specifies a set of IP addresses which are used as VIPs with the primary VIP. An IPset is created and these VIPs are added to the IPset.       | [] String       | No     |
 
 ## Listener.certificates
 
@@ -80,7 +116,7 @@ The following table explains the various fields in the `Listener.certificates` a
 | `secret`       | Specifies TLS certificates specified through the Kubernetes secret resource. The secret must contain keys `tls.crt` and `tls.key`. These keys contain the certificate and private key. Either the secret or the preconfigured field is required. All certificates are bound to the SSL virtual server as SNI certificates.                                                                        | [certificates.secret](#ListenercertificatesSecret) | No       |
 | `preconfigured` | Specifies the name of the preconfigured TLS `certkey` in Citrix ADC, and this field is applicable only for Tier-1 VPX and MPX devices. The `certkey` must be present before the actual deployment of the Listener resource and otherwise deployment of the resource fails with an error. The Citrix ingress controller does not manage the life cycle of `certkey`. So, you have to manage any addition or deletion of `certkey`  manually. Either the secret or the preconfigured field is required.                                          | string              | No       |
 | `default`       | Specifies the default certificate. Only one of the certificates can be marked as default. The default certificate is presented if virtual server receives the traffic without an SNI field. This certificate can be used to access the HTTPS application using the IP Address. Applicable values are `true` and `false` | boolean                | No       |
-|               |                                                  |                     |          |
+
 
 ## Listener.certificates.Secret
 
@@ -167,7 +203,7 @@ The following table explains the various fields in the `BackendConfig` attribute
 
 | Field              | Description                                                                                                                                                                             | Type   | Required |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|
-| `secureBackend`      | Specifies whether the communication is secure or not. If the value of `secureBackend` field is  `true` secure communication is used to communicate with the back end. The default value is `false`, that means HTTP is used for the back end communication.                                            |        |          |
+| `secureBackend`      | Specifies whether the communication is secure or not. If the value of the `secureBackend` field is  `true` secure communication is used to communicate with the back end. The default value is `false`, that means HTTP is used for the back end communication.                                            |        |          |
 | `lbConfig`          | Specifies the Citrix ADC load balancing virtual server configurations for the given back end. One can specify key-value pairs as shown in the example which sets the LBVserver configurations for the back end. For all the valid configurations, see [LB virtual server configurations](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/).             | object | No       |
 | `servicegroupConfig` | Specifies the Citrix ADC service group configurations for the given back end. One can specify the key-value pairs as shown in the example which sets the service group configurations for the back end. For all the valid configurations, see [service group configurations](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/).| object | No       |
 
@@ -186,3 +222,149 @@ The following table explains the various fields in the `Listener.action.redirect
 | `hostRedirect`     | Rewrites the host name part of the URL to the value set here and redirect the traffic. Other part of the URL is not modified during redirection.        | string  | No       |
 | `targetExpression` | Specifies the Citrix ADC expression for redirection. For example, to redirect traffic to HTTPS from HTTP, the following expression can be used: *"\"https://\"+HTTP.REQ.HOSTNAME + HTTP.REQ.URL.HTTP_URL_SAFE"*.                     | string  | No       |
 | `responseCode`    | Specifies the response code. The default response code is 302, which can be customized using this attribute.            | Integer | No       |
+
+## Listener.policies
+
+This attribute represents the default policies which are used for the Listener when policies are not specified. By using `Listener.policies`, you can customize the TCP, HTTP, and SSL behavior. 
+
+Following is an example for the `Listener.policies` attribute.
+```yml
+    policies:
+     httpprofile:
+      config:
+       websocket: "ENABLED"
+     tcpprofile:
+      config:
+       sack: "ENABLED"
+     sslprofile:
+      config:
+       ssl3: "ENABLED"
+     sslciphers:
+      - HIGH
+      - MEDIUM
+      analyticsprofile:
+       config:
+       - type: webinsight
+         parameters:
+          allhttpheaders: "ENABLED"
+      csvserverConfig:
+       rhistate: 'ACTIVE'
+       stateupdate: ‘ENABLED’
+```
+The following table explains the various fields in the `Listener.policies` attribute.
+
+| Field         | Description                                             | Type          | Required |
+|---------------|---------------------------------------------------------|---------------|----------|
+| `httpprofile`      | Specifies the HTTP configuration for the front end virtual server.      | [Listener.policies.httpprofile](#Listener.policies.httpprofile)        | No      |
+| `tcpprofile`     | Specifies the TCP configuration for the front-end virtual server. | [Listener.policies.tcpprofile](#Listener.policies.tcpprofile)        | No      |
+| `sslprofile`          | Specifies the SSL configuration for the front-end virtual server      | [Listener.policies.sslprofile](#Listener.policies.sslprofile)       | No      |
+| `sslciphers` | Specifies the list of ciphers which are to be bound to the SSL profile. The order is as specified in the list with the higher priority is provided to the first in the list and so on. You can use any SSL ciphers available in Citrix ADC or user created cipher groups in this field. For information about the list of ciphers available in the Citrix ADC, see [Ciphers in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).| string | No       |
+| `analyticsprofile`      | Specifies the analytics profile configuration for the front-end virtual server     | [Listener.policies.analyticsprofile](#Listener.policies.analyticsprofile)        | No      |
+| `csvserverConfig`     | Specifies the front-end CS virtual server configuration for the Listener. You can specify the key value pair as shown in the example which sets the CS virtual server configuration for the front-end.  | Object        | No     |
+
+## Listener.policies.tcpprofile
+
+This attribute represents the TCP profile settings for the front-end CS virtual server. 
+
+Following is an example for the `Listener.policies.tcpprofile` attribute.
+```yml
+    policies:
+     tcpprofile:
+      config:
+       sack: "ENABLED"
+       nagle: “ENABLED”
+    policies:
+     tcpprofile:
+      preconfigured: test-tcp-profile
+```
+The following table explains the various fields in the `Listener.policies.tcpprofile` attribute.
+
+| Field         | Description                                             | Type          | Required |
+|---------------|---------------------------------------------------------|---------------|----------|
+| `preconfigured `      | Specifies the name of the preconfigured TCP profile that is to be used for the front-end CS virtual server. This profile must be present in the Citrix ADC before applying the policy. Otherwise, the Listener resource fails to apply. Either `preconfigured` or `config` is required.      | String        | No     |
+| `config`     | Specifies the [TCP profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/) settings for the front-end virtual server. You can specify the key-value pair as shown in the example to tune the TCP characteristics of the virtual server.  | Object        | No      |
+
+## Listener.policies.httpprofile
+
+This attribute represents the HTTP configuration for the front-end CS virtual server.
+
+Following is an example for the `Listener.policies.httpprofil` attribute.
+```yml
+    policies:
+     httpprofile:
+      config:
+       websocket: "ENABLED"
+
+    policies:
+     httpprofile:
+     preconfigured: test-http-profile
+```
+The following table explains the various fields in the `Listener.policies.httpprofile` attribute.
+
+| Field         | Description                                             | Type          | Required |
+|---------------|---------------------------------------------------------|---------------|----------|
+| `preconfigured`      | Specifies the name of the preconfigured HTTP profile that is to be used for the front end CS virtual server. This profile must be present in the Citrix ADC before applying the policy. Otherwise, Listener resource fails to apply. Either `preconfigured` or `config` is required.      | String        | No      |
+| `config`     | Specifies the [HTTP](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nshttpprofile/) profile settings for the front-end virtual server. You can specify the key-value pair as shown in the example to tune the HTTP protocol characteristics of the virtual server.  | Object        | No      |
+
+## Listener.policies.sslprofile
+
+This attribute represents the SSL profile for the front-end CS virtual server. 
+
+Following is an example for the `Listener.policies.httpprofil` attribute.
+```yml
+    policies:
+     sslprofile:
+      config:
+       ssl3: "ENABLED"
+
+    policies:
+     sslprofile:
+      preconfigured: test-ssl-profile
+```
+The following table explains the various fields in the `Listener.policies.sslprofile` attribute.
+
+
+| Field         | Description                                             | Type          | Required |
+|---------------|---------------------------------------------------------|---------------|----------|
+| `preconfigured`      | Specifies the name of the preconfigured SSL profile that is to be used for the front-end SSL virtual server. This profile must be present in the Citrix ADC before applying the policy. Otherwise, the Listener resource fails to apply. Either `preconfigured` or `config` is required.    | String        | No      |
+| `config`     | Specifies the SSL policy configuration for the front-end virtual server. You can specify the key-value pair as shown in the example to tune the [SSL](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html) characteristics of the virtual server. **Note:** You must enable the default profiles using `set ssl parameter -defaultProfile ENABLED` in Citrix ADC for using the advanced SSL features.  | Object        | No      |
+
+## Listener.policies.analyticsprofile
+
+This attribute represents the analytics profile that is used to export counters and metrics to Citrix ADC Observability Exporter. By configuring this attribute, you can choose what is to be exported by creating and binding the analytics profile.  
+
+Following is an example for the `Listener.policies.analyticsprofile` attribute.
+
+```yml
+    policies:
+     analyticsprofile:
+      config:
+      - type: webinsight
+        parameters:
+         allhttpheaders: "ENABLED"
+
+    policies:
+     analyticsprofile:
+      preconfigured:
+      - test-analytics-profile
+      - test2-analytics-profile
+```
+The following table explains the various fields in the `Listener.policies.analyticsprofile` attribute.
+
+
+| Field         | Description                                             | Type          | Required |
+|---------------|---------------------------------------------------------|---------------|----------|
+| `preconfigured`      | Specifies the list of preconfigured analytics profiles that needs to be bound to the front-end virtual server. These profiles must be present in the Citrix ADC before applying the policy. Otherwise, the Listener resource fails to apply. Either `preconfigured` or `config` is required.    | String        | No      |
+| `config`     | Specifies the list of analytics profiles which is to be bound to the front-end virtual server. This determines the fields to be exported to Citrix ADC Observability Exporter.   | `Listener.policies.analyticsprofile.config`        | No      |
+
+## Listener.policies.analyticsprofile.config
+
+This attribute represents the analytics profile configuration for the different types of insights and HTTP header parameters which need to be exported.
+
+The following table explains the various fields in the `Listener.policies.analyticsprofile.config` attribute.
+
+
+| Field         | Description                                             | Type          | Required |
+|---------------|---------------------------------------------------------|---------------|----------|
+| `type`      | Specifies the type that determines the type of analytics profile to be enabled. You can enable one or more of the following types: `webinsight`, `tcpinsight`, `securityinsight`, `videoinsight`, `hdxinsight`, `gatewayinsight`, `timeseries`, `lsninsight`, and `botinsight`| String        | Yes      |
+| `parameters`     | Specifies the additional parameters to be enabled as part of the [analytics profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/). You can specify the key-value pair as shown in the example. For example, using this field, you can select the [HTTP](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nshttpprofile/) parameters to be exported as part of `webinsight`   | Object        | No      |
