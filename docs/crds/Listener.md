@@ -91,7 +91,7 @@ The `Listener.spec` attribute defines the Listener custom resource specification
 | `certificates`  |Specifies the list of certificates for the SSL virtual server if the protocol is HTTPS. This field is required if the protocol is HTTPS.                   | [ ] [certificates](#Listenercertificates)  |  No       |
 | `vip `          | Specifies the endpoint IP Address for the load balancing content switching virtual server. This address is required for Citrix ADC VPX and MPX devices, but not required for Citrix ADC CPXs present in the Kubernetes cluster. For Citrix ADC CPX, `vip` is same as the primary IP address of the Citrix ADC CPX allocated by the CNI.                                                | string           | No       |
 | `defaultAction` | Specifies the default action to take if none of the HTTPRoute resources specified in `routes` match the traffic.| action           | No       |
-| `policies`      | Specifies the option that enables you to customize HTTP, TCP, and SSL policies associated with the front-end virtual server.       | [ ] [Listener.policies](#listener.policies)      | No      |
+| `policies`      | Specifies the option that enables you to customize HTTP, TCP, and SSL policies associated with the front-end virtual server.       | [ ] [Listener.policies](#Listenerpolicies)      | No      |
 | `redirectPort`     | Specifies that the HTTP traffic on this port is redirected to the HTTPS port. | Integer        | No      |
 | `secondaryVips`          | Specifies a set of IP addresses which are used as VIPs with the primary VIP. An IPset is created and these VIPs are added to the IPset.       | [ ] string       | No     |
 
@@ -142,7 +142,7 @@ The following table explains the various fields in the `Listener.routes` attribu
 
 ## Listener.action
 
-This attribute represents the default action if a request to the load balancing virtual server does not match any of the route objects presented in the [Listener.routes](#listener.routes) field.
+This attribute represents the default action if a request to the load balancing virtual server does not match any of the route objects presented in the [Listener.routes](#Listenerroutes) field.
 
 The following table explains the various fields in the `Listener.action` attribute.
 
@@ -255,11 +255,11 @@ The following table explains the various fields in the `Listener.policies` attri
 
 | Field         | Description                                             | Type          | Required |
 |---------------|---------------------------------------------------------|---------------|----------|
-| `httpprofile`      | Specifies the HTTP configuration for the front end virtual server.      | [Listener.policies.httpprofile](#listener.policies.httpprofile)        | No      |
-| `tcpprofile`     | Specifies the TCP configuration for the front-end virtual server. | [Listener.policies.tcpprofile](#listener.policies.tcpprofile)        | No      |
-| `sslprofile`          | Specifies the SSL configuration for the front-end virtual server      | [Listener.policies.sslprofile](#listener.policies.sslprofile)       | No      |
+| `httpprofile`      | Specifies the HTTP configuration for the front end virtual server.      | [Listener.policies.httpprofile](#Listenerpolicieshttpprofile)        | No      |
+| `tcpprofile`     | Specifies the TCP configuration for the front-end virtual server. | [Listener.policies.tcpprofile](#Listenerpoliciestcpprofile)        | No      |
+| `sslprofile`          | Specifies the SSL configuration for the front-end virtual server      | [Listener.policies.sslprofile](#Listenerpoliciessslprofile)       | No      |
 | `sslciphers` | Specifies the list of ciphers which are to be bound to the SSL profile. The order is as specified in the list with the higher priority is provided to the first in the list and so on. You can use any SSL ciphers available in Citrix ADC or user created cipher groups in this field. For information about the list of ciphers available in the Citrix ADC, see [Ciphers in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).| [ ] string | No       |
-| `analyticsprofile`      | Specifies the analytics profile configuration for the front-end virtual server     | [Listener.policies.analyticsprofile](#listener.policies.analyticsprofile)        | No      |
+| `analyticsprofile`      | Specifies the analytics profile configuration for the front-end virtual server     | [Listener.policies.analyticsprofile](#Listenerpoliciesanalyticsprofile)        | No      |
 | `csvserverConfig`     | Specifies the front-end CS virtual server configuration for the Listener. You can specify the key value pair as shown in the example which sets the CS virtual server configuration for the front-end.  | Object        | No     |
 
 ## Listener.policies.tcpprofile
@@ -310,7 +310,7 @@ The following table explains the various fields in the `Listener.policies.httppr
 
 This attribute represents the SSL profile for the front-end CS virtual server. 
 
-Following is an example for the `Listener.policies.httpprofil` attribute.
+Following is an example for the `Listener.policies.sslprofile` attribute.
 ```yml
     policies:
      sslprofile:
@@ -355,7 +355,7 @@ The following table explains the various fields in the `Listener.policies.analyt
 | Field         | Description                                             | Type          | Required |
 |---------------|---------------------------------------------------------|---------------|----------|
 | `preconfigured`      | Specifies the list of preconfigured analytics profiles that needs to be bound to the front-end virtual server. These profiles must be present in the Citrix ADC before applying the policy. Otherwise, the Listener resource fails to apply. Either `preconfigured` or `config` is required.    | [ ] string        | No      |
-| `config`     | Specifies the list of analytics profiles which is to be bound to the front-end virtual server. This determines the fields to be exported to Citrix ADC Observability Exporter.   | [ ] [Listener.policies.analyticsprofile.config](#listener.policies.analyticsprofile.config)    | No      |
+| `config`     | Specifies the list of analytics profiles which is to be bound to the front-end virtual server. This determines the fields to be exported to Citrix ADC Observability Exporter.   | [ ] [Listener.policies.analyticsprofile.config](#Listenerpoliciesanalyticsprofileconfig)    | No      |
 
 ## Listener.policies.analyticsprofile.config
 
