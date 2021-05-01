@@ -121,6 +121,9 @@ nav:
     - SSL certificate for services of type LoadBalancer through the Kubernetes secret resource: configure/service-type-lb-ssl-secret.md
     - BGP advertisement for type LoadBalancer services and Ingresses using Citrix ADC CPX: configure/cpx-service-type-lb.md
     - Citrix ADC CPX integration with MetalLB in layer 2 mode for on-premises Kubernetes clusters: configure/cpx-metal-lb.md
+    - Advanced content routing for Kubernetes Ingress using the HTTPRoute CRD: configure/advanced-content-routing-using-http-crd.md 
+    - Profile support for the Listener CRD: configure/profiles-for-listener-crd.md
+    - IP address management using the Citrix IPAM controller for Ingress resources: ipam-for-ingress.md
   - Network:
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
