@@ -4,12 +4,18 @@ metadata:
   name: httproutes.citrix.com
 spec:
   group: citrix.com
-  version: v1alpha1
+  version: null
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha1
+    served: true
+    storage: false
   names:
     kind: HTTPRoute
     plural: httproutes
     singular: httproute
-  scope: Namespaced
   subresources:
     status: {}
   additionalPrinterColumns:
@@ -21,9 +27,11 @@ spec:
       type: string
       description: "Status Message"
       JSONPath: .status.status_message
+  scope: Namespaced
   validation:
     openAPIV3Schema:
       required: [spec] 
+      type: object
       properties:
         spec:
           type: object
@@ -186,12 +194,12 @@ spec:
                               - required: [name, exact]
                               - required: [name, contains]
                               - required: [name, regex]
-                            method:
-                              type: string
-                              description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
-                            policyExpression:
-                              type: string
-                              description: "Citrix ADC policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
+                        method:
+                          type: string
+                          description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
+                        policyExpression:
+                          type: string
+                          description: "Citrix ADC policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
                   action:
                     type: object
                     description: "Action for the matched rule"
@@ -217,7 +225,7 @@ spec:
                               backendConfig:
                                 description: "General backend service options"
                                 properties:
-                                  secure_backend:
+                                  secureBackend:
                                     description: "Use Secure communications to the backends"
                                     type: boolean
                                   lbConfig:
@@ -254,3 +262,4 @@ spec:
                     oneOf:
                     - required: ["backend"]
                     - required: ["redirect"]
+
