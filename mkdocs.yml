@@ -153,11 +153,12 @@ nav:
     - Enable Citrix ADC certificate validation: certificate-management/adc-certificate-validation.md
   - Metrics:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
+  - Analytics and observability: analytics.md
   - Troubleshooting: 
     - Troubleshooting: troubleshooting/troubleshooting.md
     - Enable troubleshooting: troubleshooting/troubleshooting-cic.md
     - Call Home: troubleshooting/call-home.md
-  - Upgrade: upgrade.md
+    - Upgrade: upgrade.md
   - Use cases:
     - Service mesh lite: deploy/service-mesh-lite.md
     - Securing ingress: how-to/secure-ingress.md
