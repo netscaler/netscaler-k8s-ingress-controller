@@ -7,7 +7,7 @@ With the Ingress version `networking.k8s.io/v1`, Kubernetes introduces support f
 
 Now, Citrix supports configuring the HTTP route CRD resource as a resource backend in Ingress. By default, Ingress supports only limited content routing capabilities like path and host-based routing. With this feature, you can extend advanced content routing capabilities to Ingress and configure various content switching options. For a given domain, you can use the `HTTPRoute` custom resource to configure content switching without losing the third party compatibility support of the Kubernetes Ingress API.
 
-  ![Architecture](../media/ingress-http-route.png)
+  ![Architecture](../media/http-route-as-resource-backend.png)
 
 **Note**: This feature supports the Kubernetes Ingress version `networking.k8s.io/v1` that is available on Kubernetes 1.19 and later versions.
 
