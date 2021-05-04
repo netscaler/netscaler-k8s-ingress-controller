@@ -123,8 +123,8 @@ nav:
     - Citrix ADC CPX integration with MetalLB in layer 2 mode for on-premises Kubernetes clusters: configure/cpx-metal-lb.md
     - Advanced content routing for Kubernetes Ingress using the HTTPRoute CRD: configure/advanced-content-routing-using-http-crd.md 
     - Profile support for the Listener CRD: configure/profiles-for-listener-crd.md
-    - IP address management using the Citrix IPAM controller for Ingress resources: ipam-for-ingress.md
-  - Network:
+    - IP address management using the Citrix IPAM controller for Ingress resources: configure/ipam-for-ingress.md
+  - Network: 
     - Static routing: network/staticrouting.md
     - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
