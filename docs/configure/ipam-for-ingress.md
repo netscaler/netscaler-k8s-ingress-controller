@@ -99,34 +99,36 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
  1. Create a file named `citrix-ipam-controller.yaml` with the following configuration:
 
-    ```yml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: citrix-ipam-controller
-      namespace: kube-system
-    spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app: citrix-ipam-controller
-      template:
-        metadata:
-          labels:
+      ```yml
+
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: citrix-ipam-controller
+        namespace: kube-system
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
             app: citrix-ipam-controller
-        spec:
-          serviceAccountName: citrix-ipam-controller
-          containers:
-          - name: citrix-ipam-controller
-            image: quay.io/citrix/citrix-ipam-controller:1.0.3
-            env:
-            # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-            - name: "VIP_RANGE"
-              value: '[["10.217.6.115-10.217.6.117"], {"one-ip": ["5.5.5.5"]}, {"two-ip": ["6.6.6.6", "7.7.7.7"]}]'
-            # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
-            # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
-            imagePullPolicy: Always
-    ```
+        template:
+          metadata:
+            labels:
+              app: citrix-ipam-controller
+          spec:
+            serviceAccountName: citrix-ipam-controller
+            containers:
+            - name: citrix-ipam-controller
+              image: quay.io/citrix/citrix-ipam-controller:1.0.3
+              env:
+              # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
+              - name: "VIP_RANGE"
+                value: '[["10.217.6.115-10.217.6.117"], {"one-ip": ["5.5.5.5"]}, {"two-ip": ["6.6.6.6", "7.7.7.7"]}]'
+              # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
+              # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
+              imagePullPolicy: Always
+      
+      ```
     The manifest contains two environment variables, `VIP_RANGE` and `VIP_NAMESPACES`. You can specify the appropriate routable IP range with a valid CIDR under the `VIP_RANGE`. If necessary, you can also specify a set of namespaces under `VIP_NAMESPACES` so that the IPAM controller allocates addresses only for services or Ingress resources from specific namespaces.
 
 2. Deploy the IPAM controller using the following command:
@@ -146,6 +148,7 @@ Perform the following steps to deploy a sample application and Ingress resource.
     The following is a sample YAML:
 
       ```yml
+      
       apiVersion: networking.k8s.io/v1
       kind: Ingress
       metadata:
