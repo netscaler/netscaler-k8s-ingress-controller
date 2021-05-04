@@ -39,53 +39,54 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
     - Specify the IPAM controller as an argument using the following:
 
-        args:
-          - --ipam
-            citrix-ipam-controller
+          args:
+            - --ipam
+              citrix-ipam-controller
 
-   Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
+    Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
 
-   **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
+    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
 
-    ```yml
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: cic-k8s-ingress-controller
-    spec:
-          serviceAccountName: cic-k8s-role
-          containers:
-          - name: cic-k8s-ingress-controller
-            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.14.17"
-            env:
-              - name: "NS_IP"
-                value: "x.x.x.x"
-              - name: "NS_USER"
-                valueFrom:
-                secretKeyRef:
-                  name: nslogin
-                  key: username
-              - name: "NS_PASSWORD"
-                valueFrom:
-                secretKeyRef:
-                  name: nslogin
-                  key: password
-              - name: "EULA"
-                value: "yes"
-              - name: POD_NAME
-                valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.name
-              - name: POD_NAMESPACE
-                valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.namespace
-            args:
-              - --ipam citrix-ipam-controller
-            imagePullPolicy: Always
-    ```
+    
+
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: cic-k8s-ingress-controller
+        spec:
+              serviceAccountName: cic-k8s-role
+              containers:
+              - name: cic-k8s-ingress-controller
+                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.14.17"
+                env:
+                  - name: "NS_IP"
+                    value: "x.x.x.x"
+                  - name: "NS_USER"
+                    valueFrom:
+                    secretKeyRef:
+                      name: nslogin
+                      key: username
+                  - name: "NS_PASSWORD"
+                    valueFrom:
+                    secretKeyRef:
+                      name: nslogin
+                      key: password
+                  - name: "EULA"
+                    value: "yes"
+                  - name: POD_NAME
+                    valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.name
+                  - name: POD_NAMESPACE
+                    valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.namespace
+                args:
+                  - --ipam citrix-ipam-controller
+                imagePullPolicy: Always
+    
 
 3. Deploy the Citrix ingress controller using the edited YAML file with the following command:
 
@@ -99,36 +100,35 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
  1. Create a file named `citrix-ipam-controller.yaml` with the following configuration:
 
-      ```yml
 
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: citrix-ipam-controller
-        namespace: kube-system
-      spec:
-        replicas: 1
-        selector:
-          matchLabels:
-            app: citrix-ipam-controller
-        template:
-          metadata:
-            labels:
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: citrix-ipam-controller
+          namespace: kube-system
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
               app: citrix-ipam-controller
-          spec:
-            serviceAccountName: citrix-ipam-controller
-            containers:
-            - name: citrix-ipam-controller
-              image: quay.io/citrix/citrix-ipam-controller:1.0.3
-              env:
-              # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-              - name: "VIP_RANGE"
-                value: '[["10.217.6.115-10.217.6.117"], {"one-ip": ["5.5.5.5"]}, {"two-ip": ["6.6.6.6", "7.7.7.7"]}]'
-              # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
-              # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
-              imagePullPolicy: Always
+          template:
+            metadata:
+              labels:
+                app: citrix-ipam-controller
+            spec:
+              serviceAccountName: citrix-ipam-controller
+              containers:
+              - name: citrix-ipam-controller
+                image: quay.io/citrix/citrix-ipam-controller:1.0.3
+                env:
+                # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
+                - name: "VIP_RANGE"
+                  value: '[["10.217.6.115-10.217.6.117"], {"one-ip": ["5.5.5.5"]}, {"two-ip": ["6.6.6.6", "7.7.7.7"]}]'
+                # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
+                # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
+                imagePullPolicy: Always
       
-      ```
+
     The manifest contains two environment variables, `VIP_RANGE` and `VIP_NAMESPACES`. You can specify the appropriate routable IP range with a valid CIDR under the `VIP_RANGE`. If necessary, you can also specify a set of namespaces under `VIP_NAMESPACES` so that the IPAM controller allocates addresses only for services or Ingress resources from specific namespaces.
 
 2. Deploy the IPAM controller using the following command:
@@ -147,27 +147,25 @@ Perform the following steps to deploy a sample application and Ingress resource.
 
     The following is a sample YAML:
 
-      ```yml
-      
-      apiVersion: networking.k8s.io/v1
-      kind: Ingress
-      metadata:
-        name: guestbook-ingress
+    
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: guestbook-ingress
+          annotations:
         annotations:
-      annotations:
-        ingress.citrix.com/ipam-range: "two-ip"
-        #ingress.citrix.com/frontend-ip: "5.5.5.5"
-        kubernetes.io/ingress.class: "cic-vpx"
-      spec:
-        rules:
-        - host:  www.guestbook.com
-          http:
-            paths:
-            - path: /
-              backend:
-                serviceName: frontend
-                servicePort: 80
-      ```
+          ingress.citrix.com/ipam-range: "two-ip"
+          #ingress.citrix.com/frontend-ip: "5.5.5.5"
+          kubernetes.io/ingress.class: "cic-vpx"
+        spec:
+          rules:
+          - host:  www.guestbook.com
+            http:
+              paths:
+              - path: /
+                backend:
+                  serviceName: frontend
+                  servicePort: 80
 
 3. Deploy the Ingress resource.
 
