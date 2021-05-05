@@ -394,7 +394,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
     | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#prerequisites). |
     | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#prerequisites). |
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
-    | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:**  The [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) value takes precedence over NS_VIP. |
+    | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress or Route yaml. Not supported for Type Loadbalancer service. |
 
 1.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
