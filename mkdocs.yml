@@ -19,7 +19,7 @@ labels_uri:
   - documentation
 
 # Copyright
-copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved.'
+copyright: 'Copyright &copy; 1999-2021 Citrix Systems, Inc. All rights reserved.'
 
 extra_css:
   - 'assets/stylesheets/extra.css'
@@ -71,6 +71,7 @@ markdown_extensions:
 plugins:
   - search:
       separator: '[\s\-\.]+'
+      prebuild_index: true
 
 # Page tree
 nav:
