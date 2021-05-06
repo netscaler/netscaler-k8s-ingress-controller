@@ -62,6 +62,34 @@ The following are the usage guidelines while using ConfigMap for configuring SNI
     - If SNIPs were not provided using the `NS_SNIPS` environment variable, static routes are added since `feature-node-watch` is enabled.
 
 
+### Steps to Validate PolicyBasedRoutes(PBR) configuration on the ADC after Deploying Citrix Ingress Controller(CIC)
+
+For the Validation example, we have a two node Kubernetes cluster and the following configmap with two SNIPs is created.
+![image](https://user-images.githubusercontent.com/46886297/117246195-cf68b400-ae59-11eb-9986-14e53ae98701.png)
+
+Following configuration is added to the ADC by Citrix Ingress Controller:
+
+ 1. An IPset of all the NS_SNIPS provided by Configmap is added.
+
+![image](https://user-images.githubusercontent.com/46886297/117246342-19519a00-ae5a-11eb-8e65-70944c24ef51.png)
+
+ 2. A Netprofile with SrcIP set to IPset is added.
+
+![image](https://user-images.githubusercontent.com/46886297/117246445-4736de80-ae5a-11eb-8f0e-fd1829d6343d.png)
+
+ 3. Servicegroup added by Citrix Ingress Controller has the Netprofile set.
+
+![image](https://user-images.githubusercontent.com/46886297/117246742-c4faea00-ae5a-11eb-8e1d-fe0878066b6c.png)
+
+4. Finally, Policy Based Routes(PBR) is added by Citrix Ingress Controller.
+    1. The number of PBRs is (number of snips) * (number of k8s nodes). In this case it adds 4(2*2) policy based routes(PBR).
+    2. PBR's srcIP is the NS_SNIPS provided to CIC by configmap, the destIP is the kubernete node's overlay subnet range, the NextHop is kubernetes node's IP. 
+
+    ![image](https://user-images.githubusercontent.com/46886297/117247049-3c307e00-ae5b-11eb-8130-2895384113ce.png)
+
+5. Citrix Ingress Controllers logs can be also used to validate the configuration.
+<img src="https://user-images.githubusercontent.com/46886297/117247896-b1e91980-ae5c-11eb-8fbb-177c1db7ceb2.png" width="1300" height="120">
+
 ## Configure PBR using the Citrix node controller
 
 You can configure PBR using the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) for multiple Kubernetes clusters. When you are using a single Citrix ADC to load balance multiple Kubernetes clusters with Citrix node controller for networking, the static routes added by it to forward packets to the IP address of the VXLAN tunnel interface may cause route conflicts. To support PBR, Citrix node controller needs to works in conjunction with the Citrix ingress controller to bind the Netprofile to the service group. 
@@ -92,3 +120,5 @@ Perform the following steps to configure PBR using the Citrix node controller:
 **Note:** The value provided for `CLUSTER_NAME` in the Citrix node controller and Citrix ingress controller deployment files should match when they are deployed in the same Kubernetes cluster.
 
 **Note:** `CLUSTER_NAME` is used while creating the net profile entity and binding it to service groups on Citrix ADC VPX or MPX.
+
+### Steps to Validate PolicyBasedRoutes(PBR) configuration on the ADC after Deploying Citrix Node Controller(CNC).
