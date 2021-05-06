@@ -128,7 +128,7 @@ For the Validation example, we have a two node Kubernetes cluster with Citrix No
 
 #### Following configuration is added to the ADC by Citrix Node Controller:
 
-  1. A Netprofile is added, with srcIP set to the SNIP added by Citrix Node Controller to create the VXLAN tunnel Network between the ADC and the kubernetes Nodes.
+  1. A Netprofile is added, with srcIP set to the SNIP added by Citrix Node Controller while creating the VXLAN tunnel Network between the ADC and the kubernetes Nodes.
   
    ![image](https://user-images.githubusercontent.com/46886297/117264605-03030880-ae71-11eb-81a1-827e58778b2e.png)
 
@@ -141,5 +141,5 @@ For the Validation example, we have a two node Kubernetes cluster with Citrix No
      2. PBR's srcIP is the SNIP added by CNC in tunnel network, the destIP is the kubernete node's CNI overlay subnet range, the NextHop is kubernetes Node's VXLAN Tunnel interface's IPAddress. 
          ![image](https://user-images.githubusercontent.com/46886297/117265066-7a389c80-ae71-11eb-82ce-247a9ded3b23.png)
 
-
+**Note:** Citrix Node Controller adds PolicyBasedRoutes instead of static routes, rest of the configuration of VXLAN and bridgetable remains the same. For More details, refer [CNC-Config](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy#verify-the-deployment) 
 
