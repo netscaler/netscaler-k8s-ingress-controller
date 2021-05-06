@@ -139,7 +139,8 @@ For the Validation example, we have a two node Kubernetes cluster with Citrix No
   3. Finally, Policy Based Routes(PBR) is added by Citrix Node Controller.
      1. The number of PBRs is equal to number of k8s nodes. In this case it adds 2 policy based routes(PBR).
      2. PBR's srcIP is the SNIP added by CNC in tunnel network, the destIP is the kubernete node's CNI overlay subnet range, the NextHop is kubernetes Node's VXLAN Tunnel interface's IPAddress. 
-         ![image](https://user-images.githubusercontent.com/46886297/117265066-7a389c80-ae71-11eb-82ce-247a9ded3b23.png)
+        ![image](https://user-images.githubusercontent.com/46886297/117265066-7a389c80-ae71-11eb-82ce-247a9ded3b23.png)
+        
 
 **Note:** Citrix Node Controller adds PolicyBasedRoutes instead of static routes, rest of the configuration of VXLAN and bridgetable remains the same. For More details, refer [CNC-Config](https://github.com/citrix/citrix-k8s-node-controller/tree/master/deploy#verify-the-deployment) 
 
