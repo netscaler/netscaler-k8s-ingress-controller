@@ -19,7 +19,7 @@ labels_uri:
   - documentation
 
 # Copyright
-copyright: 'Copyright &copy; 1999-2020 Citrix Systems, Inc. All rights reserved.'
+copyright: 'Copyright &copy; 1999-2021 Citrix Systems, Inc. All rights reserved.'
 
 extra_css:
   - 'assets/stylesheets/extra.css'
@@ -41,8 +41,6 @@ theme:
   
   # Default values, taken from mkdocs_theme.yml
   language: en
-  features:
-    - tabs: false
   palette:
     primary: teal
     accent: teal
@@ -71,6 +69,7 @@ markdown_extensions:
 plugins:
   - search:
       separator: '[\s\-\.]+'
+      prebuild_index: true
 
 # Page tree
 nav:
@@ -93,7 +92,6 @@ nav:
     - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
     - Deploy the Citrix API Gateway with GitOps: deploy/deploy-api-gateway-using-gitops.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
-    - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
     - Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX: deploy/deploy-azure-cic.md
     - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
     - Deploy the Citrix ingress controller in Anthos Platform: deploy/deploy-anthos.md
