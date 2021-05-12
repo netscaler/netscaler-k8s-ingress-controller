@@ -1,8 +1,8 @@
 # Deploy an HTTPS web application on Kubernetes with Citrix ingress controller and HashiCorp Vault using cert-manager
 
-For ingress resources deployed with the Citrix ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert manager.
+For ingress resources deployed with the Citrix ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert-manager.
 
-Specifically, the workflow uses the Vault PKI Secrets Engine to create a certificate authority (CA). This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications. For external facing applications that require public trust, see [automating TLS certificates using letsencrypt CA](./acme.md).
+Specifically, the workflow uses the Vault PKI Secrets Engine to create a certificate authority (CA). This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications. For external facing applications that require public trust, see [automating TLS certificates using Let’s Encrypt CA](./acme.md).
 
 The workflow uses a Vault secret engine and authentication methods. For the full list of Vault features, see the following Vault documentation:
 
@@ -32,7 +32,7 @@ Ensure that you have:
 
 -  Deployed Citrix ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
 
--  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure that you have administrator permission.
+-  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure that you have the administrator permission.
 
 **Note:** The following procedure shows steps to configure Vault as a certificate authority with Citrix ADC CPX used as the ingress device. When a Citrix ADC VPX or MPX is used as the ingress device, the steps are the same except the steps to verify the ingress configuration in the Citrix ADC.
 
@@ -45,7 +45,7 @@ Perform the following steps to deploy cert-manager using the supplied YAML manif
 
         kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/vx.x.x/cert-manager.yaml
 
-    You can also install cert-manager with Helm, for more information see the [cert-manager documentation](https://cert-manager.io/docs/installation/kubernetes/#installing-with-helm)
+    You can also install cert-manager with Helm. For more information, see the [cert-manager documentation](https://cert-manager.io/docs/installation/kubernetes/#installing-with-helm).
 
 1.  Verify that cert-manager is up and running using the following command.
 
@@ -333,11 +333,11 @@ Perform the following steps to associate a policy with an Approle.
 
 The `kube-role` approle allows you to sign the CSR with intermediate CA.
 
-### Generate the `role_id` and `secret_id`
+### Generate the role id and secret id
 
-The role_id and secret_id are used by the cert-manager to authenticate with the Vault.
+The role id and secret id are used by the cert-manager to authenticate with the Vault.
 
-Generate the role id and secret id and encode the `secret_id` with Base64. Perform the following:
+Generate the role id and secret id and encode the secret id with Base64. Perform the following:
 
     % vault read auth/approle/role/kube-role/role-id
     role_id     db02de05-fa39-4855-059b-67221c5c2f63
@@ -350,12 +350,13 @@ Generate the role id and secret id and encode the `secret_id` with Base64. Perfo
     % echo 6a174c20-f6de-a53c-74d2-6018fcceff64 | base64
     NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg==
 
+
 ## Configure issuing certificates in Kubernetes
 
 
 After you have configured Vault as the intermediate CA, and the Approle authentication method for the cert-manager to access Vault, you need to configure the certificate for the ingress.
 
-### Create a secret with Approle secret-id
+### Create a secret with Approle secret id
 
 Perform the following to create a secret with Approle secret id.
 
@@ -371,7 +372,7 @@ Perform the following to create a secret with Approle secret id.
           secretId: "NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg=="
 
     !!! note "Note"
-        `data.secretId` is the base64 encoded Secret Id generated in [Generate the Role id and Secret id](#generate-the-role-id-and-secret-id). If you are using an Issuer resource in the next step, the secret must be in the same namespace as the `Issuer`. For `ClusterIssuer`, the secret must be in the `cert-manager` namespace.
+        `data.secretId` is the base64 encoded secret Id generated in [Generate the role id and secret id](#generate-the-role-id-and-secret-id). If you are using an Issuer resource in the next step, the secret must be in the same namespace as the `Issuer`. For `ClusterIssuer`, the secret must be in the `cert-manager` namespace.
 
 2.  Deploy the secret file (`secretid.yaml`) using the following command.
 
@@ -647,15 +648,14 @@ Perform the following steps to modify the ingress to use the generated secret.
           3) VServer name: k8s-10.244.3.148:443:ssl Server Certificate for SNI
         Done
 
-   The HTTPS webserver is UP with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the 'RenewBefore" parameter in the Certificate, before expiry of the certificate.
+      The HTTPS webserver is up with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the `RenewBefore` parameter in the certificate, before expiry of the certificate.
 
-    **Note:**
-    The Vault signing of the certificate fails if the expiry of a certificate is beyond the expiry of the root CA or intermediate CA. You should ensure that the CA certificates are renewed in advance before the expiry.
+      **Note:** The Vault signing of the certificate fails if the expiry of a certificate is beyond the expiry of the root CA or intermediate CA. You should ensure that the CA certificates are renewed in advance before the expiry.
 
 1. Verify that the application is accessible using the HTTPS protocol.  
 
-       % curl -sS -D - https://kuard.example.com -k -o /dev/null
-       HTTP/1.1 200 OK
-       Content-Length: 1472
-       Content-Type: text/html
-       Date: Tue, 11 May 2021 20:39:23 GMT
+        % curl -sS -D - https://kuard.example.com -k -o /dev/null
+        HTTP/1.1 200 OK
+        Content-Length: 1472
+        Content-Type: text/html
+        Date: Tue, 11 May 2021 20:39:23 GMT
