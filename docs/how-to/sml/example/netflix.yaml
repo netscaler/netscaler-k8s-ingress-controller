@@ -1,0 +1,349 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netflix-frontend
+  labels:
+    app: netflix-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netflix-frontend
+  template:
+    metadata:
+      labels:
+        app: netflix-frontend
+    spec:
+      containers:
+      - name: netflix
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: netflix-frontend-service
+  labels:
+    app: netflix-frontend
+spec:
+  clusterIP: None
+  ports:
+  - name: netflix-frontend
+    port: 80
+  selector:
+    app: netflix-frontend
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tv-shows
+  labels:
+    app: tv-shows
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tv-shows
+  template:
+    metadata:
+      labels:
+        app: tv-shows
+    spec:
+      containers:
+      - name: tv-shows
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tv-shows-service
+  labels:
+    app: tv-shows
+spec:
+  clusterIP: None
+  ports:
+  - name: tv-shows
+    port: 80
+  selector:
+    app: tv-shows
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movies
+  labels:
+    app: movies
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movies
+  template:
+    metadata:
+      labels:
+        app: movies
+    spec:
+      containers:
+      - name: movies
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: movies-service
+  labels:
+    app: movies
+spec:
+  clusterIP: None
+  ports:
+  - name: movies
+    port: 80
+  selector:
+    app: movies
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metadata-store
+  labels:
+    app: metadata-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata-store
+  template:
+    metadata:
+      labels:
+        app: metadata-store
+    spec:
+      containers:
+      - name: metadata-store
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: metadata-store-service
+  labels:
+    app: metadata-store
+spec:
+  clusterIP: None
+  ports:
+  - name: metadata-store
+    port: 80
+  selector:
+    app: metadata-store
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-engine
+  labels:
+    app: recommendation-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendation-engine
+  template:
+    metadata:
+      labels:
+        app: recommendation-engine
+    spec:
+      containers:
+      - name: recommendation-engine
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommendation-engine-service
+  labels:
+    app: recommendation-engine
+spec:
+  clusterIP: None
+  ports:
+  - name: recommendation-engine
+    port: 80
+  selector:
+    app: recommendation-engine
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trending
+  labels:
+    app: trending
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trending
+  template:
+    metadata:
+      labels:
+        app: trending
+    spec:
+      containers:
+      - name: trending
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: trending-service
+  labels:
+    app: trending
+spec:
+  clusterIP: None
+  ports:
+  - name: trending
+    port: 80
+  selector:
+    app: trending
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: similarity-calculator
+  labels:
+    app: similarity-calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: similarity-calculator
+  template:
+    metadata:
+      labels:
+        app: similarity-calculator
+    spec:
+      containers:
+      - name: similarity-calculator
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: similarity-calculator-service
+  labels:
+    app: similarity-calculator
+spec:
+  clusterIP: None
+  ports:
+  - name: similarity-calculator
+    port: 80
+  selector:
+    app: similarity-calculator
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mutual-friends-interests
+  labels:
+    app: mutual-friends-interests
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mutual-friends-interests
+  template:
+    metadata:
+      labels:
+        app: mutual-friends-interests
+    spec:
+      containers:
+      - name: mutual-friends-interests
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mutual-friends-interests-service
+  labels:
+    app: mutual-friends-interests
+spec:
+  clusterIP: None
+  ports:
+  - name: mutual-friends-interests
+    port: 80
+  selector:
+    app: mutual-friends-interests
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemetry-store
+  labels:
+    app: telemetry-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry-store
+  template:
+    metadata:
+      labels:
+        app: telemetry-store
+    spec:
+      containers:
+      - name: telemetry-store
+        image: gyanny/eightflix:latest
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: telemetry-store-service
+  labels:
+    app: telemetry-store
+spec:
+  clusterIP: None
+  ports:
+  - name: telemetry-store
+    port: 80
+  selector:
+    app: telemetry-store
+  
+---
