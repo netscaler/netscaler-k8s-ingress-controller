@@ -6,7 +6,10 @@ spec:
     servicenames:
         - frontend
     security_level: basic
-    application_type: HTML
+    application_type:
+        - HTML
+        - JSON
+        - XML
     signatures: "http://x.x.x.x/crd/sig.xml"
     redirect_url: "/home.php"    #it can be external url also
     html_error_object: "http://x.x.x.x/crd/error_page.html"
