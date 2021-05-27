@@ -88,10 +88,10 @@ spec:
                                 maxLength: 127
                         application_type:
                             description: 'Type of applications to protect'
-                            oneOf:
-                                - type: string
-                                - type: array
-                            enum: ['HTML', 'JSON', 'XML']
+                            type: array
+                            items
+                                type: string
+                                enum: ['HTML', 'JSON', 'XML']
                         signatures:
                             description: 'Location of external signature file'
                             type: string
@@ -258,7 +258,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -279,7 +279,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           content_type: "on"
@@ -305,8 +305,8 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    signatures: "http://10.217.14.99/crd/sig.xml"
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    signatures: "http://x.x.x.x/crd/sig.xml"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -327,7 +327,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"
@@ -356,7 +356,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     target:
         path:
             - /
@@ -393,7 +393,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           credit_card: "on"
@@ -428,7 +428,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -452,7 +452,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"
@@ -618,7 +618,7 @@ spec:
     servicenames:
         - frontend
     application_type: JSON
-    json_error_object: "http://10.217.14.99/crd/error_page.json"
+    json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
           dos: "on"
@@ -653,7 +653,7 @@ spec:
     servicenames:
         - frontend
     application_type: JSON
-    json_error_object: "http://10.217.14.99/crd/error_page.json"
+    json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
           dos: "on"
@@ -689,7 +689,7 @@ spec:
     servicenames:
         - frontend
     application_type: XML
-    xml_error_object: "http://10.217.14.99/crd/error_page.xml"
+    xml_error_object: "http://x.x.x.x/crd/error_page.xml"
     security_checks:
         xml:
           dos: "on"
@@ -740,7 +740,7 @@ spec:
     servicenames:
         - frontend
     application_type: XML
-    xml_error_object: "http://10.217.14.99/crd/error_page.json"
+    xml_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         xml:
           dos: "on"

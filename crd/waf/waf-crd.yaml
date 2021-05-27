@@ -36,10 +36,10 @@ spec:
                 maxLength: 127
             application_type:
               description: 'Type of applications to protect'
-              oneOf:
-                - type: string
-                - type: array
-              enum: ['HTML', 'JSON', 'XML']
+              type: array
+              items:
+                type: string
+                enum: ['HTML', 'JSON', 'XML']
             signatures:
               description: 'Location of external signature file'
               type: string
