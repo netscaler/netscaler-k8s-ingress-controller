@@ -7,6 +7,19 @@ This guide details the steps to configure Azure Networking to connect the Citrix
 1. Citrix ADC VPX is deployed in either Standalone / HA / HA INC mode in Azure
 2. OpenShift is deployed using OpenShift installer for Azure
 
+## Configure Network Security Groups of Citrix ADC for Application Traffic
+
+Citrix ADC VPX can be deployed for load balancing public facing applications or for private applications. 
+
+In case of public facing applications, please configure the Client Subnet's Network Security Group (if Citrix is deployed in Multi NIC mode) of Citrix ADC VPX to allow traffic from external world to respective destination application ports like 80, 443, etc.
+
+Also, in order to configure the Citrix ADC VPX using SSH or the Citrix ADC Configuration utlity, configure the Management Subnet's Network Security Group (if Citrix is deployed in Multi NIC mode) to allow traffic on Port 22 and Port 443.
+
+**Note:**
+
+This guide assumes that already a Virtual IP address (VIP) is allocated for Citrix ADC VPX on Azure through which the Application would be accessible. This VIP would be used by Citrix Ingress Controller to configure the application on Citrix ADC.
+
+
 ## Configure Subnet IP (SNIP) in Citrix ADC
 
 In order for Citrix ADC VPX to communicate with OpenShift workloads, it needs a SNIP to be configured. 
@@ -23,7 +36,7 @@ If Citrix ADC VPX and the OpenShift deployment are in two different Virtual Netw
 
 For more information on how to configure VNET peering, please read [Virtual Network Peering](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview)
 
-## Network Security Groups
+## Configure Network Security Groups of Citrix ADC for OpenShift Communication
 
 When an OpenShift deployment is created in Azure using an OpenShift installer, it creates a Network Security Group for the OpenShift deployment that controlls the Inbound Access for the OpenShift Virtual Machines.
 
