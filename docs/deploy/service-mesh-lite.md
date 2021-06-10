@@ -129,7 +129,7 @@ subsets:
 
 Since you have modified the coffee service to point to Citrix ADC MPX, you need to create one more service that represents coffee microservice deployment.
 
-### Step 3: Create an Ingress resource with rules for “`coffee-headless`” service having the "`ingress.citrix.com/frontend-ip`" annotation
+### Step 3: Create an Ingress resource with rules for `coffee-headless` service having the "`ingress.citrix.com/frontend-ip`" annotation
   
 Create an Ingress resource using the `ingress.citrix.com/frontend-ip` annotation where the value matches the Ingress endpoint IP address in Citrix ADC MPX or VPX.
 
@@ -145,12 +145,6 @@ Using the usual ingress load balancing methodology with these changes Citrix ADC
 
 ## Automated deployment of applications in Service Mesh lite
 
-To deploy an application in a Service Mesh lite architecture, you need to perform multiple tasks which include:
-
-- Modifying the existing services to make them headless services
-- Creating a service to point to Citrix ADC CPX
-- Creating Ingress rules
-
-However, when you want to deploy multiple applications which consist of several microservices, you may need an easier way you deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready to deploy YAMLs out of your application YAMLs for Service Mesh lite deployment.
+To deploy an application in a Service Mesh lite architecture, you need to perform multiple tasks manually. However, when you want to deploy multiple applications which consist of several microservices, you may need an easier way you deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready to deploy YAMLs.
 
 [This](https://github.com/citrix/citrix-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite-script.md) doc provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment from your existing YAMLs using the Citrix provided script.

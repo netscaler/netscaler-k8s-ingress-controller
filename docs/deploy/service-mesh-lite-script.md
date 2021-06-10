@@ -2,18 +2,20 @@
 
 A Service Mesh architecture (like Istio or LinkerD) can be complex to manage. Service Mesh lite architecture is much simpler to get started to achieve the same requirements. To more about Service Mesh lite architecture refer [this](https://github.com/citrix/citrix-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite.md)
 
-To deploy an application in a Service Mesh lite architecture, you need to perform multiple tasks which include:
+To deploy an application in a Service Mesh lite architecture using Citrix portfolios, you need to perform multiple tasks which include:
 
 - Modifying the existing services to make them headless services
 - Creating a service to point to Citrix ADC CPX
 - Creating Ingress rules
+- Creating Citrix Ingress Controller for Tier-1 ADC if dual-tier topology is required.
 
 However, when you want to deploy multiple applications which consist of several microservices, you may need an easier way you deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready to deploy YAMLs out of your application YAMLs for Service Mesh lite deployment.
 
-This topic provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment from your existing YAMLs using the Citrix provided script.
+This topic provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment, where E-W traffic will be handled by Citrix ADC CPX, from your existing YAMLs using the Citrix provided script.
 
 **Prerequisites**
 
+- Ensure python has version 3.7 and above.
 - Ensure that pip3 is installed.
 - Install the required Python libraries using the following command:
     
@@ -92,6 +94,7 @@ This section provides information on the inputs you need to provide.
      
      
         Please provide the name of the service exposed to tier-1:
+
     
 3. Provide the host name for the application.
 
@@ -122,15 +125,15 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
        Citrix ADM required? (Y/N):
 
-   - Provide Citrix ADM agent IP:
+   - Provide Citrix ADM agent IP for CPX to communicate with ADM, this is generally the service IP of the ADM container agent:
 
-       Please provide IP of ADM Agent:
+       Please provide IP of ADM Agent(svcIP of container agent) for Citrix ADC CPX:
 
    - Provide Kubernetes Secret created using Citrix ADM agent credentials, default value for this is "admlogin":
 
        Please provide name of K8s Secret created using ADM Agent credentials. Press ENTER for 'admlogin': 
 
-8. If you want to use CIC for Tier1 Citix ADC VPX/MPX, please select yes:
+8. If you want to use Citrix ingress controller for Tier1 Citix ADC VPX/MPX, please select yes:
 
        Citrix Ingress Controller for tier-1 ADC required? (Y/N): 
 
@@ -145,6 +148,10 @@ For more information on TLS certificate handling by the Citrix ingress controlle
    - Provide Kubernetes Secret created using Citrix ADM agent credentials, default value for this is "nslogin":
 
        Please provide name of K8s Secret created using ADC credentials. Press ENTER for 'nslogin':
+
+   - If have you opted to use ADM in step 7, provide Citrix ADM agent IP for VPX/MPX to communicate with ADM, this is generally the pod IP of the ADM container agent:
+
+       Please provide IP of ADM Agent(podIP of container agent) for Citrix ADC VPX/MPX:
 
    - Provide the port on which you want to expose frontend microservice of your application:
 
@@ -179,25 +186,36 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
     For example:
 
-        python3 smlite.py example/hotdrinks-all-in-one.yaml
-        Please provide name of the service exposed to tier-1: frontend
-        Please provide hostname for exposing "frontend" service: hotdrink.beverages.com
-        Please enter protocol to be used for service "tea" (tcp/udp/http/https/grpc): https
-        Found multiple ports in the service "tea". Please enter port to be used 80, 443: 443
-        Please give secret-name for TLS certificate: hotdrink-secret
-        Please enter protocol to be used for service "coffee" (tcp/udp/http/https/grpc): https
-        Found multiple ports in the service "coffee". Please enter port to be used 80, 443: 443
-        Please give secret-name for TLS certificate: hotdrink-secret
-        Please enter protocol to be used for service "frontend" (tcp/udp/http/https/grpc): https
-        Found multiple ports in the service "frontend". Please enter port to be used 80, 443: 443
-        Please give secret-name for TLS certificate: hotdrink-secret
-        2020-04-14 12:04:01,683 - SMLITE - INFO - ServiceMesh Lite YAMLs are created and is present in "smlite-all-in-one.yaml" file.
+        python3 smlite.py example/netflix.yaml
+        Please provide name of the service exposed to tier-1: netflix-frontend-service
+        Please provide hostname for exposing "netflix-frontend-service" service: netflix.citrix
+        Please enter protocol to be used for service "netflix-frontend-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "tv-shows-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "movies-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "metadata-store-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "recommendation-engine-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "trending-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "similarity-calculator-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "mutual-friends-interests-service" (tcp/udp/http/https/grpc): http
+        Please enter protocol to be used for service "telemetry-store-service" (tcp/udp/http/https/grpc): http
+        Citrix ADM required? (Y/N): y
+        Please provide IP of ADM Agent(svcIP of container agent) for Citrix ADC CPX: 1.1.1.1
+        Please provide name of K8s Secret created using ADM Agent credentials. Press ENTER for 'admlogin':
+        Citrix Ingress Controller for tier-1 ADC required? (Y/N): y
+        Please provide tier-1 ADC NSIP: 2.2.2.2
+        Please provide tier-1 ADC VIP: 3.3.3.3
+        Please provide name of K8s Secret created using ADC credentials. Press ENTER for 'nslogin': nscred
+        Please provide IP of ADM Agent(podIP of container agent) for Citrix ADC VPX/MPX: 4.4.4.4
+        Please provide port used to expose CPX service to Tier-1 ADC: 80
+        Please provide protocol used to expose CPX service to Tier-1 ADC (tcp/udp/http/https/grpc): http
+        2021-06-09 16:18:07,466 - SMLITE - INFO - Please note Tier-1 ADC VPX ingress tier1-vpx-ingress is created with basic config. Please edit it as per your requirements
+        2021-06-09 16:18:07,466 - SMLITE - INFO - ServiceMesh Lite YAMLs are created and is present in "smlite-all-in-one.yaml" file.
 
     A YAML named `smlite-all-in-one.yaml`  gets created with all the YAML files of your application for Service Mesh lite architecture.
 
-    **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, the `smlite-all-in-one.yaml`  file will not contain the deployment YAML files of the application. In that case, you must deploy the deployment YAML files in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
+    **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, the `smlite-all-in-one.yaml` file will not contain the deployment YAML files of the application. In that case, you must deploy the deployment YAML files in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
 
-4. Deploy the ingress YAML file to expose Citrix ADC CPX (the Citrix ADC CPX handling front-end microservice) service to tier-1 Citrix ADC VPX or MPX and the [Citrix Ingress Controller](https://github.com/citrix/citrix-k8s-ingress-controller) to access your application from outside.
+    **Note:** This script creates an ingress to expose one of the CPX (CPX handling your frontend microservice) to the tier-1 Citrix ADC VPX. This ingress contains basic config only so please update this ingress if some additonal config is required. For more information on features supported by Citrix ingress contoller see [this](https://github.com/citrix/citrix-k8s-ingress-controller).
 
 ### Limitations
 
