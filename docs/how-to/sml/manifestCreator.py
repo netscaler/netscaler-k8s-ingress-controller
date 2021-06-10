@@ -369,7 +369,7 @@ class ingress:
            sampleInput = {
            # Multiple paths under an hostname
            "hostname1": [
-               {"path":"path1","serviceName":"se	rvice1","servicePort":port1},
+               {"path":"path1","serviceName":"service1","servicePort":port1},
                {"path":"path2","serviceName":"service2","servicePort":port2},
            ],
            # Hostname with single path
