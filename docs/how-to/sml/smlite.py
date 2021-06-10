@@ -7,6 +7,7 @@ SML yaml for services of an applcation which are already running inside Kubernet
 '''
 
 import sys
+import os
 import re
 import oyaml as yaml
 import manifestCreator
@@ -62,6 +63,9 @@ def main():
     converted_yamls_dict_list = []
 
     if(".yaml" not in svcs[0]):
+        '''
+        Code for connecting to Kubenetes Cluster
+        '''
         if not namespace:
             logger.error("Please provide namespace as well in which services are deployed while starting the script")
             sys.exit(0)
@@ -101,8 +105,15 @@ def main():
     if not namespace:
         namespace = "default"
 
+
+    '''
+    Coverting YAMLs to SML YAMLs
+    '''
     for svc in svcs:
         if(".yaml" in svc):
+            '''
+            When applcation YAMLs is provided as input.
+            '''
             with open(svc, 'r') as stream:
                 try:
                     yaml_dictionaries = yaml.safe_load_all(stream)
@@ -113,6 +124,9 @@ def main():
                     logger.error("Retrieving yaml from service yamls provided failed with error: {}" .format(e))
                     sys.exit("Please ensure service yaml is in proper format")
         else:
+            '''
+            When service name running in Kubernetes cluster is provided as input.
+            '''
             try:
                 service = v1.read_namespaced_service(svc,namespace)
             except Exception as e:
@@ -126,6 +140,10 @@ def main():
 #                            ('spec',service['spec']),
             converted_yamls_dict_list.extend(convert_yaml_to_sml(service,app_frontend_svc_name,app_hostname))
 
+
+    '''
+    Checking if required HELM is there or not.
+    '''
     helm_ver = subprocess.run(["helm version"],shell=True,capture_output=True).stdout.decode('utf-8')
     matchObj = re.search(r'Version:"v3.*', helm_ver, re.M|re.I)
     if not matchObj:
@@ -136,7 +154,7 @@ def main():
     
 
     '''
-    ADM details
+    Getting ADM details
     '''
     prompts = chain(['Citrix ADM required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
     adm_required = validate_input(prompts,"yesORno")
@@ -177,6 +195,7 @@ def main():
             converted_yamls_dict_list.extend(yaml_dictionaries)
         else:
             converted_yamls_dict_list.extend(yaml_dictionaries)
+
 #    rbac = manifestCreator.rbac()
 #    rbac = rbac.createRbac()
 #    converted_yamls_dict_list.extend(rbac)
@@ -184,6 +203,9 @@ def main():
 #        cpx_cic_yaml = cpx_cic_yaml.create()
 #        converted_yamls_dict_list.extend(cpx_cic_yaml)
 
+    '''
+    Getting details for Tier-1 ADC
+    '''
     prompts = chain(['Citrix Ingress Controller for tier-1 ADC required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
     create_cic = validate_input(prompts,"yesORno")
     if create_cic.lower() == "y":
@@ -222,7 +244,7 @@ def main():
                                                     "serviceDetails":{app_hostname:[{"serviceName":"sml"+str(frontend_cpx_count)+"-cpx-service",
                                                                                      "servicePort":app_frontend_svc_port}]}})
         else:
-            output = subprocess.run(["helm template "+ chart_name + " citrix/citrix-cloud-native --set cic.enabled=true,cic.nsIP="+ ns_ip +",cic.license.accept=yes,cic.adcCredentialSecret="+ ns_secret +",cic.ingressClass[0]="+vpx_ingress_class+" -n "+ namespace +" > temp.yaml"],shell=True,capture_output=True)
+            output = subprocess.run(["helm template "+ chart_name + " citrix/citrix-cloud-native --set cic.enabled=true,cic.nsIP="+ ns_ip +",cic.nsVIP="+ ns_vip +",cic.license.accept=yes,cic.adcCredentialSecret="+ ns_secret +",cic.ingressClass[0]="+vpx_ingress_class+" -n "+ namespace +" > temp.yaml"],shell=True,capture_output=True)
             if output.stderr:
                 logger.error("Helm chart command failed with error {}" .format(output.stderr))
                 sys.exit("Please ensure you have provided proper inputs.")
@@ -237,6 +259,13 @@ def main():
 
         ingress_yaml = ingress_yaml.create()
         converted_yamls_dict_list.append(ingress_yaml)
+
+    '''
+    Deleting temp.yaml which got created via Helm
+    '''
+    my_file = Path("temp.yaml")
+    if my_file.is_file():
+        os.remove("temp.yaml")
     
     '''
     Writing dictionay of YAML into a .yaml file
@@ -302,6 +331,7 @@ def create_smlite_yamls(yaml_instance,frontend,hostname):
     global cpx_count
     global cpx_ingress_class
     global chart_name
+    global frontend_cpx_count
     headless_svc_tag = "-headless"
     ew_ing_tag = "-ingress"
     ns_ing_tag = "-ns-ingress"
