@@ -81,39 +81,39 @@ spec:
                     type: object
                     properties:
                         servicenames:
-                            description: 'Name of the services to which the waf policies are applied.'
+                            description: "Name of the services to which the waf policies are applied."
                             type: array
                             items:
                                 type: string
                                 maxLength: 127
                         application_type:
-                            description: 'Type of applications to protect'
+                            description: "Type of applications to protect"
                             type: array
                             items
                                 type: string
-                                enum: ['HTML', 'JSON', 'XML']
+                                enum: ["HTML", "JSON", "XML"]
                         signatures:
-                            description: 'Location of external signature file'
+                            description: "Location of external signature file"
                             type: string
                         redirect_url:
-                            description: ''
+                            description: ""
                             type: string
                         html_error_object:
-                            description: 'Location of customized error page to respond when html or common violation are hit'
+                            description: "Location of customized error page to respond when html or common violation are hit"
                             type: string
                         xml_error_object:
-                            description: 'Location of customized error page to respond when xml violations are hit'
+                            description: "Location of customized error page to respond when xml violations are hit"
                             type: string
                         json_error_object:
-                            description: 'Location of customized error page to respond when json violations are hit'
+                            description: "Location of customized error page to respond when json violations are hit"
                             type: string
                         ip_reputation:
-                            description: 'Enabling IP reputation feature'
+                            description: "Enabling IP reputation feature"
                             oneOf:
                                 - type: string
                                 - type: object
                         target:
-                            description: 'To control what traffic to be inspected by Web Application Firewall. If you do not provide the target, everything will be inspected by default'
+                            description: "To control what traffic to be inspected by Web Application Firewall. If you do not provide the target, everything will be inspected by default"
                             type: object
                             properties:
                                 paths:
@@ -127,7 +127,7 @@ spec:
                                     description: "List of http methods to inspect"
                                     items:
                                         type: string
-                                        enum: ['GET', 'PUT', 'POST','DELETE']
+                                        enum: ["GET", "PUT", "POST","DELETE"]
                                 header:
                                     type: array
                                     description: "List of http headers to inspect"
@@ -135,7 +135,7 @@ spec:
                                         type: string
                                         description: "header name"
                         security_checks:
-                            description: 'To enable/disable application firewall security checks'
+                            description: "To enable/disable application firewall security checks"
                             type: object
                             properties:
                                 common:
@@ -147,7 +147,7 @@ spec:
                                 xml:
                                     type: object
                         settings:
-                            description: 'To fine tune application firewall security checks default settings'
+                            description: "To fine tune application firewall security checks default settings"
                             type: object
                             properties:
                                 common:
@@ -159,7 +159,7 @@ spec:
                                 xml:
                                     type: object
                         relaxations:
-                            description: 'Section which contains relaxation rules for known traffic and false positives'
+                            description: "Section which contains relaxation rules for known traffic and false positives"
                             type: object
                             properties:
                                 common:
@@ -171,7 +171,7 @@ spec:
                                 xml:
                                     type: object
                         enforcements:
-                            description: 'Section which contains enforcement or restriction rules'
+                            description: "Section which contains enforcement or restriction rules"
                             type: object
                             properties:
                                 common:
@@ -408,7 +408,7 @@ spec:
           safe_object:
             - rule:
                 name: aadhar
-                expression: '[1-9]{4,4}\s[1-9]{4,4}\s[1-9]{4,4}'
+                expression: "[1-9]{4,4}\s[1-9]{4,4}\s[1-9]{4,4}"
                 max_match_len: 19
                 action: ["log","block"]
 ```
