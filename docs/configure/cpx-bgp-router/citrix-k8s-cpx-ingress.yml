@@ -88,7 +88,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.14.17" 
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.15.12" 
         imagePullPolicy: Always
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
