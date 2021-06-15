@@ -166,16 +166,13 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
 ### Create Service Mesh lite YAMLs
 
-1. Clone the citrix-k8s-ingress-controller repository from GitHub using the following command.
+1. Get the required files the citrix-k8s-ingress-controller repository from GitHub using the following command.
 
-         git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/sml/manifestCreator.py
+         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/sml/smlite.py
 
-2. Go to the repository and change your directory to `sml`.
-
-         cd docs/how-to/sml
-
-3. Run one of the following commands:
-    
+  
+2. Run one of the following commands.
 
 
         python3 smlite.py <list-of-path-of-application-yaml-seperated-by-comma>
