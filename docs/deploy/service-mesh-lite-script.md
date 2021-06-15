@@ -1,22 +1,22 @@
 ## Automated deployment of applications in Service Mesh lite
 
-A Service Mesh architecture (like Istio or LinkerD) can be complex to manage. Service Mesh lite architecture is much simpler to get started to achieve the same requirements. To more about Service Mesh lite architecture refer [this](https://github.com/citrix/citrix-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite.md)
+A Service Mesh architecture (such as Istio or LinkerD) is complex to manage. Service Mesh lite architecture is a lightweight version and much simpler to get started to achieve the same requirements. To know more about Service Mesh lite architecture, see [Service Mesh lite](https://github.com/citrix/citrix-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite.md).
 
-To deploy an application in a Service Mesh lite architecture using Citrix portfolios, you need to perform multiple tasks which include:
+To deploy an application in a Service Mesh lite architecture using Citrix portfolios, you need to perform the following tasks:
 
-- Modifying the existing services to make them headless services
-- Creating a service to point to Citrix ADC CPX
-- Creating Ingress rules
-- Creating Citrix Ingress Controller for Tier-1 ADC if dual-tier topology is required.
+- Modify the existing services to make them headless services
+- Create a service to point to Citrix ADC CPX
+- Create Ingress rules
+- Create Citrix Ingress Controller for Tier-1 ADC if dual-tier topology is required.
 
-However, when you want to deploy multiple applications which consist of several microservices, you may need an easier way you deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready to deploy YAMLs out of your application YAMLs for Service Mesh lite deployment.
+However, when you want to deploy multiple applications which consist of several microservices, you may need an easier way you deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready-to-deploy YAMLs out of your application YAMLs for Service Mesh lite deployment.
 
-This topic provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment, where E-W traffic will be handled by Citrix ADC CPX, from your existing YAMLs using the Citrix provided script.
+This topic provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment. In this deployment, E-W traffic is handled by Citrix ADC CPX, from your existing YAMLs using the Citrix provided script.
 
 **Prerequisites**
 
-- Ensure python has version 3.7 and above.
-- Ensure that pip3 is installed.
+- Ensure python version 3.7 or later.
+- Ensure that the pip3 is installed.
 - Install the required Python libraries using the following command:
     
       pip3 install -r https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/sml/requirements.txt
@@ -29,15 +29,15 @@ This section provides information on the inputs you need to provide.
 
 1. Provide one of the following while running the script:
 
-    - Provide the YAML file that contains your application deployments and services. If you are choosing this option, you can directly go to step 2.
+    - Provide the YAML file that contains your application deployments and services. If choose this option, you can directly go to step 2.
 
-    - Provide all service names and the namespace in which they are already running in a Kubernetes cluster. Deployment YAMLs remain the same for running an application in SML architecture, so they can be used as it is. In this case you must provide more inputs as follows:
+    - Provide all service names and the namespace in which they are already running in a Kubernetes cluster. Deployment YAMLs remain the same for running an application in SML architecture, so they can be used as it is. In this case, you must provide more inputs as follows:
 
         You can run the applications from a Kubernetes cluster where the provided services are already running or from a client. Depending on the option you need, choose `Yes` or `No`.
 
             Do you want to connect to a Remote Kubernetes Cluster? (Y/N):
         
-        If you are running the script from a Kubernetes cluster where the services that you want the SML YAML files for are already running then choose which `Kubeconfig` file to use.
+        If you are running the script from a Kubernetes cluster where the services, that you want the SML YAML files for, are already running then choose which `Kubeconfig` file to use.
 
 
         - Choose `Y` if you want to use the default `kubeconfig` file of the Kubernetes cluster.
@@ -53,7 +53,7 @@ This section provides information on the inputs you need to provide.
     
         If you want to run the application from a client, the remote Kubernetes cluster can be accessed either using a bearer token or the `Kubeconfig` file.
       
-        - If the remote cluster is accessed using the bearer token, provide the following inputs.
+        - If the remote cluster is accessed using the bearer token, provide the following inputs:
     
         
           1. Choose `Y` if you are using a bearer token to access the remote Kubernetes Cluster:
@@ -121,11 +121,11 @@ This section provides information on the inputs you need to provide.
 
 For more information on TLS certificate handling by the Citrix ingress controller, see [TLS certificates handling in the Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/certificate-management/tls-certificates.md).
 
-7. If you want to enable Citrix ADCs to send data to the Citrix Application Delivery Management, please select yes:
+7. If you want to enable Citrix ADCs to send data to the Citrix Application Delivery Management, select 'yes':
 
        Citrix ADM required? (Y/N):
 
-   - Provide Citrix ADM agent IP for CPX to communicate with ADM, this is generally the service IP of the ADM container agent:
+   - Provide Citrix ADM agent IP address for Citrix ADC CPX to communicate with ADM, this is generally the service IP address of the ADM container agent:
 
        Please provide IP of ADM Agent(svcIP of container agent) for Citrix ADC CPX:
 
@@ -133,7 +133,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
        Please provide name of K8s Secret created using ADM Agent credentials. Press ENTER for 'admlogin': 
 
-8. If you want to use Citrix ingress controller for Tier1 Citix ADC VPX/MPX, please select yes:
+8. If you want to use Citrix ingress controller for Tier1 Citix ADC VPX/MPX, select 'yes':
 
        Citrix Ingress Controller for tier-1 ADC required? (Y/N): 
 
@@ -149,7 +149,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
        Please provide name of K8s Secret created using ADC credentials. Press ENTER for 'nslogin':
 
-   - If have you opted to use ADM in step 7, provide Citrix ADM agent IP for VPX/MPX to communicate with ADM, this is generally the pod IP of the ADM container agent:
+   - If have you opted to use ADM in step 7, provide Citrix ADM agent IP address for VPX/MPX to communicate with ADM, this is generally the pod IP address of the ADM container agent:
 
        Please provide IP of ADM Agent(podIP of container agent) for Citrix ADC VPX/MPX:
 
@@ -162,7 +162,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
        Please provide protocol used to expose "<frontend-micoservice-name>" service to Tier-1 ADC (tcp/udp/http/https/grpc):
 
 >**Note:**
->You must create the Kubernetes secret used for the certificates and accessing Citrix ADC or Citric ADM agent before applying the service mesh lite YAMLs.
+>You must create the Kubernetes secret used for the certificates and access Citrix ADC or Citrix ADM agent before applying the service mesh lite YAMLs.
 
 ### Create Service Mesh lite YAMLs
 
@@ -171,7 +171,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/sml/manifestCreator.py
          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/how-to/sml/smlite.py
 
-
+  
 2. Run one of the following commands.
 
 
@@ -209,11 +209,11 @@ For more information on TLS certificate handling by the Citrix ingress controlle
         2021-06-09 16:18:07,466 - SMLITE - INFO - Please note Tier-1 ADC VPX ingress tier1-vpx-ingress is created with basic config. Please edit it as per your requirements
         2021-06-09 16:18:07,466 - SMLITE - INFO - ServiceMesh Lite YAMLs are created and is present in "smlite-all-in-one.yaml" file.
 
-    A YAML named `smlite-all-in-one.yaml`  gets created with all the YAML files of your application for Service Mesh lite architecture.
+    A YAML named `smlite-all-in-one.yaml`  has been created with all the YAML files of your application for Service Mesh lite architecture.
 
     **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, the `smlite-all-in-one.yaml` file will not contain the deployment YAML files of the application. In that case, you must deploy the deployment YAML files in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
 
-    **Note:** This script creates an ingress to expose one of the CPX (CPX handling your frontend microservice) to the tier-1 Citrix ADC VPX. This ingress contains basic config only so please update this ingress if some additonal config is required. For more information on features supported by Citrix ingress contoller see [this](https://github.com/citrix/citrix-k8s-ingress-controller).
+    **Note:** This script creates an ingress to expose one of the Citrix ADC CPX (CPX handling your frontend microservice) to the tier-1 Citrix ADC VPX. This ingress contains basic configuration only. So update this ingress if some additonal configuration is required. For more information on features supported by Citrix ingress contoller, see [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller).
 
 ### Limitations
 
