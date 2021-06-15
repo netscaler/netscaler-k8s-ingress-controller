@@ -346,6 +346,10 @@ class ingress:
             self.protocol = ingressInput["protocol"]
             self.tls = ingressInput["tls"]
             self.serviceDetails = ingressInput["serviceDetails"]
+            self.adm = False
+            if "admRequired" in ingressInput.keys():
+                if ingressInput["admRequired"]:
+                    self.adm = True
 #            if "port" in ingressInput.keys():
 #                self.tcpPort = ingressInput["port"]
             if "ingressClass" in ingressInput.keys():
@@ -387,6 +391,9 @@ class ingress:
             ("spec", {})
             ])
 
+#        basicConfigIn['metadata']['annotations']["ingress.citrix.com/insecure-termination"] = 'allow'
+        if self.adm:
+            basicConfigIn['metadata']['annotations']['ingress.citrix.com/analyticsprofile'] = '{"webinsight": {"httpurl":"ENABLED", "httpuseragent":"ENABLED", "httphost":"ENABLED", "httpmethod":"ENABLED", "httpcontenttype":"ENABLED"}, "tcpinsight": {"tcpBurstReporting":"DISABLED"}}'
         if self.protocol == "tcp":
             basicConfigIn['metadata']['annotations']['ingress.citrix.com/insecure-service-type'] = "tcp"
             basicConfigIn['metadata']['annotations']['ingress.citrix.com/insecure-port'] = self.serviceDetails['servicePort']
