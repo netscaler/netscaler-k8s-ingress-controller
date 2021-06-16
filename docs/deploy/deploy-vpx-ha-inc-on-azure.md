@@ -1,6 +1,6 @@
 # Citrix ADC VPX in High Availability INC mode as ingress for Azure Kubernetes Services
 
-You can deploy Citrix ADC VPX in a high availability (High Availability) INC (Independent Network Configuration) mode in the Azure Kubernetes cluster.
+You can deploy Citrix ADC VPX in a high availability (High Availability) INC (Independent Network Configuration) mode in the Azure Kubernetes Services (AKS).
 
 In a typical high availability deployment, both the Citrix ADC VPX instances in a high availability pair reside on the same subnet. A high availability deployment can also consist of two VPX instances in which each VPX is in a different network.
 
