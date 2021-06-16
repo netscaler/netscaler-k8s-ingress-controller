@@ -8,4 +8,4 @@ You can deploy Citrix ADC CPX as an Ingress in AKS. For detailed instructions, s
 
 ## Citrix ADC VPX in HA INC mode an Ingress in Azure Kubernetes Services
 
-You can deploy Citrix ADC VPX in High Availability INC mode as ingress for Azure Kubernetes Services. For information, see [Citrix ADC VPX in High Availability INC mode as ingress for Azure Kubernetes Services](../../docs/deploy/vpx-ha-inc-on-azure.md).
+You can deploy Citrix ADC VPX in High Availability INC mode as ingress for Azure Kubernetes Services. For information, see [Citrix ADC VPX in High Availability INC mode as ingress for Azure Kubernetes Services](../../docs/deploy/deploy-vpx-ha-inc-on-azure.md).
