@@ -35,7 +35,7 @@ Also, you can install the Citrix ADC VPX instances in a different VPC. In that c
 
 For high availability (HA), you can install two instances of Citrix ADC VPX in HA mode.
 
-1. Install Citrix ADC VPX in AWS. For information on installing Citrix ADC VPX in AWS, see [Deploy Citrix ADC VPX instance on AWS](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-awshtml#deploy-a-citrix-adc-vpx-instance-on-aws).
+1. Install Citrix ADC VPX in AWS. For information on installing Citrix ADC VPX in AWS, see [Deploy Citrix ADC VPX instance on AWS](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws.html#deploy-a-citrix-adc-vpx-instance-on-aws).
 
     Citrix ADC VPX requires a secondary public IP address other than the NSIP to run GSLB service sync and ADNS service.
 
