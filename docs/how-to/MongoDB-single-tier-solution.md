@@ -34,7 +34,7 @@ Perform the following after you deploy the Citrix ADC VPX:
 
 1. Configure an IP address from the subnet of the Kubernetes cluster as SNIP on the Citrix ADC. For information on configuring SNIPs in Citrix ADC, see [Configuring Subnet IP Addresses (SNIPs)](https://docs.citrix.com/en-us/citrix-adc/13/networking/ip-addressing/configuring-citrix-adc-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html).
 
-2. Enable management access for the SNIP that is the same subnet of the Kubernetes cluster. The SNIP should be used as `NS_IP` variable in the [Citrix ingress controller YAML](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml) file to enable the Citrix ingress controller to configure the Tier-1 Citrix ADC.
+2. Enable management access for the SNIP that is the same subnet of the Kubernetes cluster. The SNIP should be used as `NS_IP` variable in the [Citrix ingress controller YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml) file to enable the Citrix ingress controller to configure the Tier-1 Citrix ADC.
 
     >**Note:**
     >It is not mandatory to use SNIP as `NS_IP`. If the management IP address of the Citrix ADC is reachable from the Citrix ingress controller then you can use the management IP address as `NS_IP`.
@@ -61,7 +61,7 @@ Perform the following steps to deploy the Citrix Ingress solution for MongoDB.
 
 1. Create a Kubernetes secret with the user name and password for Citrix ADC VPX.
 
-        kubectl create secret  generic nslogin1 --from-literal=username='nsroot' --from-literal=password='nsroot' 
+        kubectl create secret  generic nslogin1 --from-literal=username='username' --from-literal=password='mypassword'
 
 1. Download the [cic-configmap.yaml](https://raw.githubusercontent.com/citrix/citrix-observability-exporter/master/examples/elasticsearch/cic-configmap.yaml) file and then deploy it using the following command.
 
