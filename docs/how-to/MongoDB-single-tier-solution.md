@@ -34,7 +34,7 @@ Perform the following after you deploy the Citrix ADC VPX:
 
 1. Configure an IP address from the subnet of the Kubernetes cluster as SNIP on the Citrix ADC. For information on configuring SNIPs in Citrix ADC, see [Configuring Subnet IP Addresses (SNIPs)](https://docs.citrix.com/en-us/citrix-adc/13/networking/ip-addressing/configuring-citrix-adc-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html).
 
-2. Enable management access for the SNIP that is the same subnet of the Kubernetes cluster. The SNIP should be used as `NS_IP` variable in the [Citrix ingress controller YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml) file to enable the Citrix ingress controller to configure the Tier-1 Citrix ADC.
+2. Enable management access for the SNIP that is the same subnet of the Kubernetes cluster. The SNIP should be used as `NS_IP` variable in the [Citrix ingress controller YAML](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/dual-tier/manifest/tier-1-vpx-cic.yaml) file to enable the Citrix ingress controller to configure the Tier-1 Citrix ADC.
 
     >**Note:**
     >It is not mandatory to use SNIP as `NS_IP`. If the management IP address of the Citrix ADC is reachable from the Citrix ingress controller then you can use the management IP address as `NS_IP`.
@@ -85,19 +85,19 @@ Perform the following steps to deploy the Citrix Ingress solution for MongoDB.
         | ingress-classes | Optional | If multiple Ingress load balancers are used to load balance different Ingress resources. You can use this environment variable to specify the Citrix ingress controller to configure Citrix ADC associated with a specific Ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
         | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
     
-    1. Specify the following arguments in the Citrix ingress controller YAML file.
+    1. Specify or modify the following arguments in the Citrix ingress controller YAML file.
 
             args:
              - --configmap
                 default/cic-configmap
              - --ingress-classes
-                tier-1-vpx 
+                tier-1-vpx                  
 
     3.  Deploy the updated Citrix ingress controller manifest file using the following command:
 
             kubectl create -f tier-1-vpx-cic.yaml
 
-1. Create an Ingress object for the Tier-1 Citrix ADC using the [tier-1-vpx-ingress.yaml]() file.
+1. Create an Ingress object for the Tier-1 Citrix ADC using the [tier-1-vpx-ingress.yaml](../../example/mongodb/tier-1-vpx-ingress.yaml) file.
 
         kubectl apply -f tier-1-vpx-ingress.yaml 
 
