@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mongo-db-ingress 
+  annotations:
+   kubernetes.io/ingress.class: "tier-1-vpx"
+   ingress.citrix.com/insecure-termination: "allow"
+   ingress.citrix.com/insecure-service-type: "mongo"
+   ingress.citrix.com/analyticsprofile: '{"tcpinsight": {"tcpBurstReporting":"DISABLED"}}'
+   ingress.citrix.com/insecure-port: "27017"
+spec:
+  backend:
+        serviceName: mongodb-mongos 
+        servicePort: 27017
