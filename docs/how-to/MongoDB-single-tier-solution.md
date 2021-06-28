@@ -38,16 +38,17 @@ Perform the following after you deploy the Citrix ADC VPX:
 
     >**Note:**
     >It is not mandatory to use SNIP as `NS_IP`. If the management IP address of the Citrix ADC is reachable from the Citrix ingress controller then you can use the management IP address as `NS_IP`.
+
 3. Create a [Citrix ADC system user account](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc) specific to the Citrix ingress controller. The Citrix ingress controller uses the system user account to automatically configure the Tier-1 Citrix ADC.
 
 1. Configure Citrix ADC VPX to forward DNS queries to CoreDNS pod IP addresses in the Kubernetes cluster. 
  
-       add dns nameServer <core-dns-pod-ip-address>
+        add dns nameServer <core-dns-pod-ip-address>
 
-   For example, if the pod IP addresses are 10.244.0.2 and 10.244.0.3, configure the name servers on Citrix ADC VPX as:
+    For example, if the pod IP addresses are 10.244.0.2 and 10.244.0.3, configure the name servers on Citrix ADC VPX as:
 
-       add dns nameServer 10.244.0.3
-       add dns nameServer 10.244.0.2
+        add dns nameServer 10.244.0.3
+        add dns nameServer 10.244.0.2
 
 ## Deploy the Citrix Ingress solution for MongoDB
 
@@ -61,7 +62,7 @@ Perform the following steps to deploy the Citrix Ingress solution for MongoDB.
 
 1. Create a Kubernetes secret with the user name and password for Citrix ADC VPX.
 
-        kubectl create secret  generic nslogin1 --from-literal=username='username' --from-literal=password='mypassword'
+        kubectl create secret  generic nslogin --from-literal=username='username' --from-literal=password='mypassword'
 
 1. Download the [cic-configmap.yaml](https://raw.githubusercontent.com/citrix/citrix-observability-exporter/master/examples/elasticsearch/cic-configmap.yaml) file and then deploy it using the following command.
 
@@ -125,7 +126,7 @@ Perform the following steps to deploy the Citrix Ingress solution for MongoDB.
 
    **Note:** You must set the Elasticsearch server details in the ELKServer environment variable either based on an IP address or the DNS name, along with the port information.
 
-   Following is shows a sample ConfigMap file.
+   Following is a sample ConfigMap file.
 
 
 ```yml
@@ -195,9 +196,9 @@ Perform the following steps to verify observability for MongoDB traffic.
 
 1. Configure your client application for MongoDB to point to the virtual IP address of the Tier-1 Citrix ADC VPX.
 
-   For example:
+     For example:
 
-       mongodb://<vip-of-vpx>:27017/
+        mongodb://<vip-of-vpx>:27017/
 
 2. Send multiple requests (for example insert, update, delete) to the MongoDB database using your MongoDB client application. The transactions are uploaded to the Elasticsearch server.
 
