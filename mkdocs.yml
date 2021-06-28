@@ -174,6 +174,7 @@ nav:
     - Admission controller webhook: how-to/webhook-use-case.md
     - Enable GRPC support: how-to/grpc.md
     - Policy based routing: how-to/pbr.md
+    - MongoDB solution: how-to/MongoDB-single-tier-solution.md
   - Entity name change: entity-name-change.md
 google_analytics:
   - 'UA-59929653-12'
