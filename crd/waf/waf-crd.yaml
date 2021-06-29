@@ -47,7 +47,7 @@ spec:
               description: 'Location of external signature file'
               type: string
             redirect_url:
-              description: ''
+              description: 'URL to which the user is redirected with status code 302 when an WAF violation occurs'
               type: string
             html_error_object:
               description: 'Location of customized error page to respond when html or common violation are hit'
