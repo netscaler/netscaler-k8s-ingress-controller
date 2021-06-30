@@ -13,4 +13,4 @@ For information, see [Deploy a Citrix ADC CPX Instance in Docker](quick-deploy-c
 
 # Deploy Citrix ADC VPX in High Availability INC mode as ingress for Amazon EKS
 
-For information, see [Deploy Citrix ADC VPX in High Availability INC mode as ingress for Amazon EKS](deploy-vpx-ha-inc-on-aws.md).
+For information, see [Deploy Citrix ADC VPX in High Availability INC mode as ingress for Amazon EKS](../../docs/deploy/deploy-vpx-ha-inc-on-aws.md).
