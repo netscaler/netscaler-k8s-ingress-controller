@@ -14,8 +14,8 @@ The following are the Ingress annotations supported by Citrix:
 |ingress.citrix.com/secure-backend|In JSON form, list of services for secure-backend |Use `True`, if you want to establish secure HTTPS between Citrix ADC and the application, Use `False`, if you want to establish insecure HTTP connection Citrix ADC to the application.</br> </br>For example: `ingress.citrix.com/secure-backend: {"app1":"True", "app2":"False", "app3":"True"}`| `False`|
 |kubernetes.io/ingress.class|ingress class name| It is a way to associate a particular ingress resource with an ingress controller.</br> </br>For example: `kubernetes.io/ingress.class:"Citrix"` | Configures all ingresses |
 | ingress.citrix.com/secure-service-type | `ssl` or `ssl_tcp` | The annotation allows L4 load balancing with SSL over TCP as protocol. Use `ssl_tcp`, if you want to use SSL over TCP. | `ssl` |
-|ingress.citrix.com/insecure-service-type| `http`, `tcp`, `udp`, or `any` | The annotation allows L4 load balancing with tcp/udp/any as protocol. Use `tcp`, if you want TCP as the protocol. Use `udp`, if you want UDP as the protocol.| `http` |
-| ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Citrix ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Citrix ingress controller to consider any path string as a prefix expression. | `prefix` |
+|ingress.citrix.com/insecure-service-type| `http`, `tcp`, `udp`, `sip_udp`, or `any` | The annotation allows L4 load balancing with tcp/udp/sip_udp any as protocol. Use `tcp`, if you want TCP as the protocol. Use `udp`, if you want UDP as the protocol.| `http` |
+|ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Citrix ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Citrix ingress controller to consider any path string as a prefix expression. | `prefix` |
 | ingress.citrix.com/deployment | `dsr` | Use this annotation to create Direct Server Return (DSR) configuration on Citrix ADC. For example, the `ingress.citrix.com/deployment: "dsr"` annotation creates DSR configuration on the Citrix ADC. |
 
 ## Smart annotations for Ingress
@@ -84,6 +84,7 @@ The following table details the smart annotations provided by the Citrix ingress
 | `servicegroup` | route.citrix.com/servicegroup | `route.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
 | `monitor` | route.citrix.com/monitor | `route.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
 
+
 ### Sample route manifest with smart annotations
 
 The following is a sample route YAML file.
@@ -126,7 +127,7 @@ In service annotations, `index` is the ordered index of the ports in a service s
 
 |**Annotations**|**Description**|**Example**|
 |---------------|---------------|-----------|
-|`service.citrix.com/service-type-<index>`|Use this annotation to specify the service type for the Citrix ADC entities created. The acceptable values are `TCP`, `HTTP`, `SSL`,`UDP`,`ANY`, and `SSL_TCP`. | service.citrix.com/service-type-0: ‘SSL’|
+|`service.citrix.com/service-type-<index>`|Use this annotation to specify the service type for the Citrix ADC entities created. The acceptable values are `TCP`, `HTTP`, `SSL`,`UDP`,`ANY`, `SSL_TCP`, and `SIP_UDP`. | service.citrix.com/service-type-0: ‘SSL’|
 |`service.citrix.com/lbmethod-<index>`| Use this annotation to specify the method for load balancing. The accepted values are: `ROUNDROBIN`, `LEASTCONNECTION`, and `LEASTRESPONSETIME`.| service.citrix.com/lbmethod-0: ‘LEASTCONNECTION’|
 |`service.citrix.com/persistence-<index>`| Use this annotation to specify the persistence type. The accepted values are: `NONE`, `COOKIEINSERT`, `SOURCEIP`, `SRCIPDESTIP`, and `DESTIP`.| service.citrix.com/persistence-0: ‘SOURCEIP’|
 |`service.citrix.com/ssl-certificate-data-<index>`| Use this annotation to specify the server certificate value in the PEM format.|  service.citrix.com/ssl-certificate-data-0: \| <`certificate`>|
@@ -269,3 +270,27 @@ spec:
     app: apache
 ---
 ```
+
+## Examples
+
+### Sample Ingress YAML for SIP_UDP support in insecure service type annotation
+
+The following is a sample Ingress YAML which includes the configuration for enabling SIP over UDP support using the `ingress.citrix.com/insecure-service-type` annotation. 
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sip-ingress
+  annotations:
+    kubernetes.io/ingress.class: "cic-vpx"
+    ingress.citrix.com/insecure-service-type: "sip_udp"
+    ingress.citrix.com/frontend-ip: "1.1.1.1"
+    ingress.citrix.com/insecure-port: "5060"
+    ingress.citrix.com/lbvserver: '{"asterisk17":{"lbmethod":"CALLIDHASH","persistenceType":"CALLID"}}'
+spec:
+  backend:
+    serviceName: asterisk17
+    servicePort: 5060
+```
+
