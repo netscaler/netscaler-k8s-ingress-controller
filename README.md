@@ -57,7 +57,7 @@ Deploy the Guestbook application and use the [Citrix ADC CPX](https://www.citrix
 
 Click [here](https://github.com/citrix/citrix-k8s-ingress-controller/releases) for the release notes of the latest Citrix ingress controller release.
 
-## Questions
+## Questions and support
 
 For questions and support the following channels are available:
 
@@ -65,6 +65,10 @@ For questions and support the following channels are available:
 -  [Citrix ADC Cloud Native Slack Channel](https://citrixadccloudnative.slack.com/)
 
 To request an invitation to participate in the Slack channel, provide your email address using this form: [https://podio.com/webforms/22979270/1633242](https://podio.com/webforms/22979270/1633242)
+
+For more information about Citrix cloud native solutions, you can reach out to the Citrix product team at: AppModernization@citrix.com
+
+![ ](./docs/media/contact-product-team.png)
 
 ## Issues
 
