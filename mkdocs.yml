@@ -88,9 +88,6 @@ nav:
     - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
     - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
     - Deploy the Citrix ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
-    - Deploy the Citrix API gateway using OpenShift Operator: deploy/deploy-api-gateway-openshift.md
-    - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
-    - Deploy the Citrix API Gateway with GitOps: deploy/deploy-api-gateway-using-gitops.md
     - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
     - Deploy Citrix ADC CPX as an Ingress in an Azure Kubernetes Service cluster with advanced networking mode: deploy/deploy-azure-cni.md
     - Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX: deploy/deploy-azure-cic.md
@@ -99,13 +96,17 @@ nav:
     - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
     - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
     - Citrix solution for service of type LoadBalancer in AWS: configure/service-type-lb-solution-in-aws.md
-    - Multi-cluster ingress and load balancing solution: multicluster/multi-cluster.md
-    - Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters: deploy/multi-cloud-ingress-lb-solution.md 
+  - Deploy Citrix API gateway: 
+    - Deploy the Citrix API gateway using OpenShift Operator: deploy/deploy-api-gateway-openshift.md
+    - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
+    - Deploy the Citrix API Gateway with GitOps: deploy/deploy-api-gateway-using-gitops.md
   - Citrix ADC Integrated canary deployment solution: canary/canary.md
     #- Software Requirements: canary.md#software-requirements
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
     #- Deploy the Citrix ADC Integrated Canary Deployment Solution in Google cloud Platform:
     #- Troubleshooting: 
+  - Multi-cluster ingress and load balancing solution: multicluster/multi-cluster.md
+  - Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters: deploy/multi-cloud-ingress-lb-solution.md 
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
@@ -115,7 +116,6 @@ nav:
     - Service class: configure/service-classes.md
     - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
-    - COE ConfigMap: configure/config-map-coe.md
     - TCP profile support for services of type LoadBalancer: configure/TCP-profile-type-lb.md
     - SSL certificate for services of type LoadBalancer through the Kubernetes secret resource: configure/service-type-lb-ssl-secret.md
     - BGP advertisement for type LoadBalancer services and Ingresses using Citrix ADC CPX: configure/cpx-service-type-lb.md
@@ -153,13 +153,14 @@ nav:
   - Metrics:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Analytics and observability: analytics.md
+  - Citrix ADC Observability Exporter support using ConfigMap: configure/config-map-coe.md
   - Troubleshooting: 
     - Troubleshooting: troubleshooting/troubleshooting.md
     - Enable troubleshooting: troubleshooting/troubleshooting-cic.md
     - Call Home: troubleshooting/call-home.md
     - Upgrade: upgrade.md
+  - Service mesh lite: deploy/service-mesh-lite.md
   - Use cases:
-    - Service mesh lite: deploy/service-mesh-lite.md
     - Securing ingress: how-to/secure-ingress.md
     - TCP use cases: how-to/tcp-use-cases.md
     - HTTP use cases: how-to/http-use-cases.md
