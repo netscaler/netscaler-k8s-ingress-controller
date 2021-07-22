@@ -32,8 +32,6 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 
 You can use Citrix ADC for load balancing Openshift control plane (master nodes). Citrix provides a solution to automate the configuration of Citrix ADC using Terraform instead of manually configuring the Citrix ADC. For more information, see [Citrix ADC as a load balancer for the OpenShift control plane](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/citrix-adc-for-control-plane/README.md).
 
-**Note:** OpenShift support of alternate backends is now supported by the Citrix ingress controller. Citrix ADC is configured according to the weights provided in the routes definition and traffic is distributed among the service pods based on those weights.
-
 
 ## Supported Citrix components on OpenShift
 
