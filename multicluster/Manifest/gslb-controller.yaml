@@ -1,15 +1,12 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: gslb-k8s-ingress-controller
-  namespace: default
-  labels:
-    app: gslb-k8s-ingress-controller
 spec:
       serviceAccountName: gslb-k8s-role
       containers:
       - name: gslb-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.9.9"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.16.9"
         imagePullPolicy: Always
         env:
         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
