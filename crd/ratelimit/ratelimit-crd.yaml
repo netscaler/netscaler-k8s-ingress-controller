@@ -10,17 +10,6 @@ spec:
     plural: ratelimits
     singular: ratelimit
   scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
-    - name: Status
-      type: string
-      description: "Current Status of the CRD"
-      JSONPath: .status.state
-    - name: Message
-      type: string
-      description: "Status Message"
-      JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
       properties:
@@ -61,7 +50,7 @@ spec:
               description: 'Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds'
               type: integer
             limittype:
-              description: "Burst mode or smooth. Defaults to burst mode if the limittype is not specified"
+              description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
               type: string
               enum: ['BURSTY','SMOOTH']
             throttle_action:
@@ -71,4 +60,17 @@ spec:
             redirect_url:
               type: string
               description: "Redirect-URL"
+            logpackets:
+              description: 'Adds an audit message action.
+                            The action specifies whether to log the message, and to which log.'
+              properties:
+                logexpression:
+                  description: 'Default-syntax expression that defines the format and content of the log message.'
+                  type: string
+                  maxLength: 7991
+                loglevel:
+                  description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                  type: string
+                  enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+              required: [logexpression, loglevel]
           required: [servicenames, req_threshold]

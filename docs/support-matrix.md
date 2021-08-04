@@ -42,15 +42,15 @@ The following table lists the various deployment topologies supported by the Cit
 
 | Deployment Topologies | GKE | EKS | AKS (Basic mode - Kubenet) | AKS (Advanced mode - Azure CNI) |
 | --------------------- |  --------------------------- | ------------------------- | --------------- | ----------------- |
-| Single-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Citrix ADC VPX in tier-1) | Yes | Yes | Yes | No | |
-| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Citrix ADC VPX in tier-1 and Citrix ADC CPXs in tier-2) | Yes | No | Yes | No |
-| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Cloud LB in tier-1 and Citrix ADC CPXs in tier-2) | Yes | No | Yes | No |
+| Single-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Citrix ADC VPX in tier-1) | Yes | Yes | Yes | Yes | |
+| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Citrix ADC VPX in tier-1 and Citrix ADC CPXs in tier-2) | Yes | No | Yes | Yes |
+| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Cloud LB in tier-1 and Citrix ADC CPXs in tier-2) | Yes | No | Yes | Yes |
 
 ## Supported Citrix ingress controller feature on platforms
 
 The following table lists the Citrix ingress controller features supported on various cloud-native platforms:
 
-| Citrix ingress controller features | Kubernetes | GKE | EKS | AKS | Red Hat OpenShift | PKS |
+| Citrix ingress controller features | Kubernetes | Google Cloud  | AWS | Azure | Red Hat OpenShift | PKS |
 | --------------------- | ---------- | --------------------------- | ------------------------- | --------------- | ----------------- | --------------------------------|
 | [TCP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [UDP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | Yes | Yes | Yes | Yes | Yes | Yes |
@@ -58,12 +58,16 @@ The following table lists the Citrix ingress controller features supported on va
 | [TCP over SSL Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/#load-balance-ingress-traffic-based-on-tcp-over-ssl) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [HTTP, TCP, or SSL profiles](configure/profiles.md) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [NodePort support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/nodeport/) | Yes | Yes | Yes | Yes | Yes | Yes |
-| [Type LoadBalancer support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/) | Yes | Yes | Yes | Yes | Yes | Yes |
+| [Type LoadBalancer support](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/) | Yes | No | Yes | No | Yes | Yes |
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [Rate limit CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rate-limit/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [Auth CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/auth/) | Yes | Yes | Yes | Yes | Yes | Yes |
+| [Advanced content routing](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/content-routing/)| Yes | Yes | Yes | Yes | Yes | Yes |
+| [WAF CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/waf/) | Yes | Yes | Yes | Yes | Yes | Yes |
+| [Bot CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/bot/) | Yes | Yes | Yes | Yes | Yes | Yes |                   | 
 | [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | N/A | N/A | N/A | N/A | Yes | N/A |
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | N/A | N/A | N/A | N/A | Yes | N/A |
+| [Simplified canary using Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations) | Yes | Yes | Yes | Yes | Yes | Yes |  
 
 The following table lists the Citrix ingress controller features supported on the respective Citrix Ingress Controller versions and Citrix ADC versions:
 
@@ -79,8 +83,13 @@ The following table lists the Citrix ingress controller features supported on th
 | [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Rate limit CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rate-limit/) | 1.4.392 | 11.1–61.7 and later | 12.1–51.16 and later |
 | [Auth CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/auth/) | 1.4.392 | 11.1–61.7 and later | 12.1–51.16 and later |
-| [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 |
-| [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 and later | 12.1–51.16 and later | 13.0–36.28 |
+|  [Advanced content routing](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/content-routing/)| 1.7.46|   12.1–51.16 and later |  12.1–51.16 and later  |
+| [WAF CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/waf/) | 1.9.2 | 13.0–65.4 and later  | 13.0–65.4 and later  |
+| [Bot CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/bot/)|1.11.3 |Citrix ADC VPX version 13.0.67.39 and later |Not supported |
+| [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 and later |
+| [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 and later | 12.1–51.16 and later | 13.0–36.28 and later |
+|[Simplified canary using Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations) | Version 1.13.15 and later | 11.1–61.7 and later | 12.1–51.16 and later|
+
 
 ## Container network interfaces (CNIs) for Citrix ADC CPX
 
@@ -95,6 +104,7 @@ The following table lists the Container network interfaces (CNIs) supported by C
 | Calico on GKE | 12.1–51.16 and later |
 | OVS | 13.0–36.28 |
 | Weave | 12.1–51.16 and later |
+| Cilium| 13-0-71-40 and later  |
 
 ## Supported container runtime interfaces for Citrix ADC CPX
 
