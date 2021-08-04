@@ -4,11 +4,13 @@ In a Kubernetes deployment, you can rate limit the requests to the resources on 
 
 Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Rate limit CRD** that you can use with the Citrix ingress controller to configure the rate limiting configurations on the Citrix ADCs used as Ingress devices.
 
-Apart from rate limiting the requests to the services in Kubernetes environment, you can use the Rate limit CRD for API security as well. The Rate limit CRD allows you to limit the REST API request to API servers or specific API endpoints on the API servers. It monitors and keeps track of the requests to the API server or endpoints against the allowed limit per time slice and hence protects from attacks such as DDos attack.
+Apart from rate limiting the requests to the services in a Kubernetes environment, you can use the Rate limit CRD for API security as well. The Rate limit CRD allows you to limit the REST API request to API servers or specific API endpoints on the API servers. It monitors and keeps track of the requests to the API server or endpoints against the allowed limit per time slice and hence protects from attacks such as the DDoS attack.
+
+You can enable logging for observability with the rate limit CRD. Logs are stored on Citrix ADC which can be viewed by checking the logs using the shell command. The file location is based on the syslog configuration. For example, `/var/logs/ns.log`.
 
 ## Rate limit CRD definition
 
-The Rate limit CRD is available in the Citrix ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The Rate limit CRD provides [attributes](#ratelimit-crd-attributes) for various options that are required to define the rate limit policies on the Ingress Citrix ADC that acts as an API gateway.
+The Rate limit CRD is available in the Citrix ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Citrix ADC that acts as an API gateway.
 
 The following is the Rate limit CRD definition ([ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml)):
 
@@ -25,17 +27,6 @@ spec:
     plural: ratelimits
     singular: ratelimit
   scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
-    - name: Status
-      type: string
-      description: "Current Status of the CRD"
-      JSONPath: .status.state
-    - name: Message
-      type: string
-      description: "Status Message"
-      JSONPath: .status.status_message
   validation:
     openAPIV3Schema:
       properties:
@@ -76,7 +67,7 @@ spec:
               description: 'Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds'
               type: integer
             limittype:
-              description: "Burst mode or smooth. Defaults to burst if limittype is not specified"
+              description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
               type: string
               enum: ['BURSTY','SMOOTH']
             throttle_action:
@@ -86,6 +77,19 @@ spec:
             redirect_url:
               type: string
               description: "Redirect-URL"
+            logpackets:
+              description: 'Adds an audit message action.
+                            The action specifies whether to log the message, and to which log.'
+              properties:
+                logexpression:
+                  description: 'Default-syntax expression that defines the format and content of the log message.'
+                  type: string
+                  maxLength: 7991
+                loglevel:
+                  description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                  type: string
+                  enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+              required: [logexpression, loglevel]
           required: [servicenames, req_threshold]
 ```
 
@@ -96,12 +100,15 @@ The following table lists the various attributes provided in the Rate limit CRD:
 | CRD attribute | Description |
 | ---------- | ----------- |
 | `servicename` | The list of Kubernetes services to which you want to apply the rate limit policies. |
-| `selector_keys` | The traffic selector keys that filter the traffic to identify the API requests against which the throttling is applied and monitored. </br> </br>**Note:** The `selector_keys` is an optional attribute. You can choose to configure zero, one or more of the selector keys. If more than one selector keys are configured then it is considered as a logical AND expression.</br></br> In this version of the Rate limit CRD, `selector_keys` provides `basic` configuration section that you can use to configure the following commonly used traffic characteristics as the keys against which the configured limits are monitored and throttled:</br></br> - **path:** An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/` </br> - **method:** An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br> - **header_name:** HTTP header that has the unique API client or user identifier. For example, `X-apikey` which comes with unique API-key that identifies the API client sending the request. </br>- **per_client_ip:** Allows you to monitor and apply the configured threshold to each API request received per unique client IP address. |
+| `selector_keys` | The traffic selector keys that filter the traffic to identify the API requests against which the throttling is applied and monitored. </br> </br>**Note:** The `selector_keys` is an optional attribute. You can choose to configure zero, one or more of the selector keys. If more than one selector keys are configured then it is considered as a logical AND expression.</br></br> In this version of the Rate limit CRD, `selector_keys` provides the `basic` configuration section that you can use to configure the following commonly used traffic characteristics as the keys against which the configured limits are monitored and throttled:</br></br> - **path:** An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/` </br> - **method:** An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br> - **header_name:** HTTP header that has the unique API client or user identifier. For example, `X-apikey` which comes with a unique API-key that identifies the API client sending the request. </br>- **per_client_ip:** Allows you to monitor and apply the configured threshold to each API request received per unique client IP address. |
 | `req_threshold` | The maximum number of requests that are allowed in the given time slice (request rate). |
 | `timeslice` | The time interval specified in microseconds (multiple of 10 s), during which the requests are monitored against the configured limits. If not specified it defaults to 1000 milliseconds. |
-| `limittype` | It allows you to configure the following type of throttling algorithms that you want to use to apply the limit: </br> - burst </br> - smooth </br> The default is ***burst*** mode.
-| `throttle_action` | It allows you to define the throttle action that needs to be taken on the traffic that's throttled for crossing the configured threshold. </br></br> The following are the throttle action that you can define: </br> - **DROP:** Drops the requests above the configured traffic limits. </br>- **RESET:** Resets the connection for the requests crossing configured limit. </br> - **REDIRECT:** Redirects the traffic to the configured `redirect_url`. </br> - **RESPOND:** Responds with the standard "***429 Too many requests***" response. |
-| `redirect_url` | This is an optional attribute that is required only if `throttle_action` is configured with the value `REDIRECT`. |
+| `limittype` | It allows you to configure the following type of throttling algorithms that you want to use to apply the limit: </br> - burst </br> - smooth.  The default is the ***burst*** mode.
+| `throttle_action` | It allows you to define the throttle action that needs to be taken on the traffic that's throttled for crossing the configured threshold. </br></br> The following are the throttle action that you can define: </br> - **DROP:** Drops the requests above the configured traffic limits. </br>- **RESET:** Resets the connection for the requests crossing the configured limit. </br> - **REDIRECT:** Redirects the traffic to the configured `redirect_url`. </br> - **RESPOND:** Responds with the standard "***429 Too many requests***" response. |
+| `redirect_url` | This attribute is an optional attribute that is required only if `throttle_action` is configured with the value `REDIRECT`. |
+| `logpackets` | Enables audit logs. |
+| `logexpression` | Specifies the default-syntax expression that defines the format and content of the log message. |
+| `loglevel` | Specifies the severity level of the log message that is generated. |
 
 ## Deploy the Rate limit CRD
 
@@ -153,11 +160,14 @@ spec:
   req_threshold: 15
   timeslice: 60000
   throttle_action: "RESPOND"
+  logpackets:
+    logexpression: "http.req.url"
+    loglevel: "INFORMATIONAL"
 ```
 
 >**Note:**
 >
-> You can initiate multiple Kubernetes objects for different paths that require different ratelimit configurations.
+> You can initiate multiple Kubernetes objects for different paths that require different rate limit configurations.
 
 After you have defined the policy configuration, deploy the `.yaml` file using the following command:
 
@@ -168,7 +178,7 @@ The Citrix ingress controller applies the policy configuration on the Ingress Ci
 
 #### Limit API requests to calender APIs
 
-Consider a scenario wherein you want to define a rate-based policy in Citrix ADC to limit the API requests (GET or POST) to 5 requests from each API client identified using HTTP header `X-API-Key` to the calender APIs. Create a `.yaml` file called `ratelimit-example2.yaml` and use the appropriate CRD attributes to define the rate-based policy as follows:
+Consider a scenario wherein you want to define a rate-based policy in a Citrix ADC to limit the API requests (GET or POST) to five requests from each API client identified using the HTTP header `X-API-Key` to the calender APIs. Create a `.yaml` file called `ratelimit-example2.yaml` and use the appropriate CRD attributes to define the rate-based policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1beta1
@@ -188,6 +198,9 @@ spec:
       header_name: "X-API-Key"
   req_threshold: 5
   throttle_action: "RESPOND"
+  logpackets:
+    logexpression: "rate exceeded, you may want to configure higher limit"
+    loglevel: "INFORMATIONAL"
 ```
 
 After you have defined the policy configuration, deploy the `.yaml` file using the following command:

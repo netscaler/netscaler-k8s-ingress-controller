@@ -136,6 +136,7 @@ nav:
     - Content Routing: crds/content-routing.md
     - Web application firewall: crds/waf.md
     - Bot: crds/bot.md
+    - CORS: crds/cors.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
     #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
