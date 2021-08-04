@@ -289,10 +289,10 @@ kind: Ingress
 metadata:
   name: sip-ingress
   annotations:
-    kubernetes.io/ingress.class: 'cic-vpx'
-    ingress.citrix.com/insecure-service-type: 'sip_udp'
-    ingress.citrix.com/frontend-ip: '1.1.1.1'
-    ingress.citrix.com/insecure-port: '5060'
+    kubernetes.io/ingress.class: "cic-vpx"
+    ingress.citrix.com/insecure-service-type: "sip_udp"
+    ingress.citrix.com/frontend-ip: "1.1.1.1"
+    ingress.citrix.com/insecure-port: "5060"
     ingress.citrix.com/lbvserver: '{"asterisk17":{"lbmethod":"CALLIDHASH","persistenceType":"CALLID"}}'
 spec:
   backend:
