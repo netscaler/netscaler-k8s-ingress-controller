@@ -25,7 +25,7 @@ The following are the attributes provided in the CORS CRD:
 |`allow_methods`| Specifies the list of allowed methods as part of the CORS protocol.|
 | `allow_headers`| Specifies the list of allowed headers as part of the CORS protocol.|
 |`max_age`| Specifies the number of seconds the information provided by the `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` headers can be cached. The default value is 86400.|
-| `allow_credentials` |Specifies whether the response can be shared when the credentials mode of the request is "include". The default value is 'true'.
+| `allow_credentials` |Specifies whether the response can be shared when the credentials mode of the request is "include". The default value is 'true'.|
 
 ## Deploy the CORS CRD
 
