@@ -36,7 +36,6 @@ The following table details the smart annotations provided by the Citrix ingress
 | lbvserver | ingress.citrix.com/lbvserver | `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
 | servicegroup | ingress.citrix.com/servicegroup | `ingress.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
 | monitor | ingress.citrix.com/monitor | `ingress.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
-| csvserver| ingress.citrix.com/csvserver| `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` |
 
 ### Sample ingress YAML with smart annotations
 
@@ -48,8 +47,8 @@ kind: Ingress
 metadata:
   name: citrix
   annotations:
-    ingress.citrix.com/insecure-port: '80'
-    ingress.citrix.com/frontend-ip: '192.168.1.1'
+    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/frontend-ip: "192.168.1.1"
     ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
     ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
     ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
@@ -71,11 +70,6 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 | `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'` | Sets the load balancing method as [Least Connection](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-customizing-algorithms/leastconnection-method.html) and also configures [Source IP address persistence](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-persistence/source-ip-persistence.html). |
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
-
-**Note:** When multiple ingresses are sharing the same front-end IP address and port, you cannot have conflicting configurations provided through multiple ingress configurations.
-
-By default, the content switching virtual server does not depend on the state of the target load balancing virtual servers bound to it. The annotation `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` sets the content switching virtual server to consider its state based on the state of the load balancing virtual server bound to it via the content switching policies. 
-
 
 ## Smart annotations for routes
 
@@ -142,12 +136,12 @@ In service annotations, `index` is the ordered index of the ports in a service s
 |`service.citrix.com/ssl-backend-ca-certificate-data-<index>`| Use this annotation to specify the CA certificate value to verify the server certificate of the back-end in PEM format.| service.citrix.com/ssl-backend-ca-certificate-data-0: \| <`certificate`> |
 | `service.citrix.com/ssl-termination-<index>` | Use this annotation to specify the SSL termination. The accepted values are `EDGE` and `REENCRYPT`.  | service.citrix.com/ssl-termination-0: 'EDGE' |
 | `service.citrix.com/insecure-redirect` | Use this annotation to redirect insecure traffic to a secure port. You can either specify the secure port using {`secure-portname` : `port-number`} or {`secure-portnumber`- `secure-port-protocol` : `insecure-portnumber` } to redirect traffic from an insecure port.  | service.citrix.com/insecure-redirect: '{"port-443": 80 }'  <br> or <br> service.citrix.com/insecure-redirect: '{"443-tcp": 80 }' |
-| `service.citrix.com/frontend-ip` | Use this annotation to pass the VIP for services of type `LoadBalancer`.|service.citrix.com/frontend-ip: '192.168.1.1' |
-| `service.citrix.com/ipam-range` | Use this annotation to select a particular IP address range from a set of ranges specified to the Citrix IPAM controller. This annotation is used for services of type LoadBalancer.|service.citrix.com/ipam-range: 'Dev'|
-| `service.citrix.com/secret` | Use this annotation to specify the name of the secret resource for the front-end server certificate. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).| service.citrix.com/secret: 'hotdrink-secret' |
-| `service.citrix.com/ca-secret` |Use this annotation to provide a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).| service.citrix.com/ca-secret: 'hotdrink-ca-secret'|
-| `service.citrix.com/backend-secret` | Use this annotation if the back-end communication between Citrix ADC and your workload is on an encrypted channel, and you need the client authentication in your workload. This certificate is sent to the server during the SSL handshake and it is bound to the back end SSL service group. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).| service.citrix.com/backend-secret: 'hotdrink-secret'|
-| `service.citrix.com/backend-ca-secret` |Use this annotation to enable server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Citrix ADC. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).|  service.citrix.com/backend-ca-secret: 'hotdrink-ca-secret'|
+| `service.citrix.com/frontend-ip` | Use this annotation to pass the VIP for services of type `LoadBalancer`.|service.citrix.com/frontend-ip: "192.168.1.1" |
+| `service.citrix.com/ipam-range` | Use this annotation to select a particular IP address range from a set of ranges specified to the Citrix IPAM controller. This annotation is used for services of type LoadBalancer.|service.citrix.com/ipam-range: "Dev"|
+| `service.citrix.com/secret` | Use this annotation to specify the name of the secret resource for the front-end server certificate.| service.citrix.com/secret: "hotdrink-secret" |
+| `service.citrix.com/ca-secret` |Use this annotation to provide a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC.| service.citrix.com/ca-secret: "hotdrink-ca-secret"|
+| `service.citrix.com/backend-secret` | Use this annotation if the back-end communication between Citrix ADC and your workload is on an encrypted channel, and you need the client authentication in your workload. This certificate is sent to the server during the SSL handshake and it is bound to the back end SSL service group.| service.citrix.com/backend-secret: "hotdrink-secret"|
+| `service.citrix.com/backend-ca-secret` |Use this annotation to enable server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Citrix ADC.|  service.citrix.com/backend-ca-secret: "hotdrink-ca-secret"|
 | `service.citrix.com/preconfigured-certkey` |Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be used as a front-end server certificate. |service.citrix.com/preconfigured-certkey: 'coffee-cert' |
 | `service.citrix.com/preconfigured-ca-certkey`|Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be used as a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC. | service.citrix.com/preconfigured-backend-certkey: 'coffee-cert'|
 |`service.citrix.com/preconfigured-backend-certkey` |Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be bound to the back-end SSL service group. This certificate is sent to the server during the SSL handshake for server authentication. | service.citrix.com/preconfigured-ca-certkey: 'coffee-ca-cert'|
@@ -173,7 +167,7 @@ metadata:
     service.citrix.com/service-type-0: SSL
     service.citrix.com/frontend-ip: '192.2.170.26'
     service.citrix.com/secret: '{"port-443": "web-ingress-secret"}'
-    service.citrix.com/ssl-termination-0: 'EDGE'
+    service.citrix.com/ssl-termination-0: "EDGE"
     service.citrix.com/insecure-redirect: '{"port-443": 80}'
 spec:
   type: LoadBalancer
@@ -258,9 +252,9 @@ metadata:
     service.citrix.com/lbvserver: '{"80-tcp":{"lbmethod":"SRCIPDESTIPHASH"}}'
     service.citrix.com/servicegroup: '{"80-tcp":{"usip":"yes"}}'
     service.citrix.com/monitor: '{"80-tcp":{"type":"http"}}'
-    service.citrix.com/frontend-ip: '10.217.212.16'
+    service.citrix.com/frontend-ip: "10.217.212.16"
     service.citrix.com/analyticsprofile: '{"80-tcp":{"webinsight": {"httpurl":"ENABLED", "httpuseragent":"ENABLED"}}}'
-    NETSCALER_VPORT: '80'
+    NETSCALER_VPORT: "80"
   labels:
     name: apache
 spec:
