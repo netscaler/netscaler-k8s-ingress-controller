@@ -45,7 +45,9 @@ The following are the attributes for forms based authentication.
 |`listener_name`| The name of the Listener CRD for which the authentication using forms is applicable.|
 | `vip` |Specifies the front-end IP address of the Ingress for which the authentication using forms is applicable. This attribute refers to the `frontend-ip` address provided with the Ingress. If there is more than one Ingress resource which uses the same frontend-ip, it is recommended to use vip.|
 
-**Note:** While using forms, authentication can be enabled for all types of traffic. Currently, granular authentication is not supported.
+**Note:** While using forms, authentication can be enabled for all types of traffic. Currently, granular authentication is not supported. 
+
+**Note:**  Depending on the resource to which you need to apply form based authentication, you can use one of the `ingress_name`, `lb_service_name`, `listener_name`, or `vip` attributes to specify the resource.
 
 ### Authentication providers
 
@@ -412,7 +414,7 @@ spec:
         authentication_host: "fqdn_authenticaton_host"
         authentication_host_cert:
           tls_secret: authhost-tls-cert-secret
-        ingress_name: “example-ingress”
+        listener_name: “example-listener”
 
     authentication_providers:
         - name: "saml-auth-provider"
@@ -614,3 +616,4 @@ stringData:
   password: 'ldap_server_password'
 
 ```
+        

@@ -221,3 +221,13 @@ spec:
            - petstore_auth: jwt-auth-provider
            - api_key: introspect-auth-provider
 ```
+
+## Support for web insight based analytics
+
+Web insight based analytics is now supported with the API gateway CRD. When you use GitOps, the following web insight parameters are enabled by default:
+
+- `httpurl`
+- `httpuseragent`
+- `httphost`
+- `httpmethod`
+- `httpcontenttype`  

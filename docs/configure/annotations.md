@@ -14,8 +14,8 @@ The following are the Ingress annotations supported by Citrix:
 |ingress.citrix.com/secure-backend|In JSON form, list of services for secure-backend |Use `True`, if you want to establish secure HTTPS between Citrix ADC and the application, Use `False`, if you want to establish insecure HTTP connection Citrix ADC to the application.</br> </br>For example: `ingress.citrix.com/secure-backend: {"app1":"True", "app2":"False", "app3":"True"}`| `False`|
 |kubernetes.io/ingress.class|ingress class name| It is a way to associate a particular ingress resource with an ingress controller.</br> </br>For example: `kubernetes.io/ingress.class:"Citrix"` | Configures all ingresses |
 | ingress.citrix.com/secure-service-type | `ssl` or `ssl_tcp` | The annotation allows L4 load balancing with SSL over TCP as protocol. Use `ssl_tcp`, if you want to use SSL over TCP. | `ssl` |
-|ingress.citrix.com/insecure-service-type| `http`, `tcp`, `udp`, or `any` | The annotation allows L4 load balancing with tcp/udp/any as protocol. Use `tcp`, if you want TCP as the protocol. Use `udp`, if you want UDP as the protocol.| `http` |
-| ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Citrix ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Citrix ingress controller to consider any path string as a prefix expression. | `prefix` |
+|ingress.citrix.com/insecure-service-type| `http`, `tcp`, `udp`, `sip_udp`, or `any` | The annotation allows L4 load balancing with tcp/udp/sip_udp any as protocol. Use `tcp`, if you want TCP as the protocol. Use `udp`, if you want UDP as the protocol.| `http` |
+|ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Citrix ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Citrix ingress controller to consider any path string as a prefix expression. | `prefix` |
 | ingress.citrix.com/deployment | `dsr` | Use this annotation to create Direct Server Return (DSR) configuration on Citrix ADC. For example, the `ingress.citrix.com/deployment: "dsr"` annotation creates DSR configuration on the Citrix ADC. |
 
 ## Smart annotations for Ingress
@@ -36,6 +36,7 @@ The following table details the smart annotations provided by the Citrix ingress
 | lbvserver | ingress.citrix.com/lbvserver | `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
 | servicegroup | ingress.citrix.com/servicegroup | `ingress.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
 | monitor | ingress.citrix.com/monitor | `ingress.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
+| csvserver| ingress.citrix.com/csvserver| `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` |
 
 ### Sample ingress YAML with smart annotations
 
@@ -47,8 +48,8 @@ kind: Ingress
 metadata:
   name: citrix
   annotations:
-    ingress.citrix.com/insecure-port: "80"
-    ingress.citrix.com/frontend-ip: "192.168.1.1"
+    ingress.citrix.com/insecure-port: '80'
+    ingress.citrix.com/frontend-ip: '192.168.1.1'
     ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
     ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
     ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
@@ -71,6 +72,11 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 | `ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Ingress Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the client's IP address for communication with the back-end pods. |
 | `ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
 
+**Note:** When multiple ingresses are sharing the same front-end IP address and port, you cannot have conflicting configurations provided through multiple ingress configurations.
+
+By default, the content switching virtual server does not depend on the state of the target load balancing virtual servers bound to it. The annotation `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` sets the content switching virtual server to consider its state based on the state of the load balancing virtual server bound to it via the content switching policies. 
+
+
 ## Smart annotations for routes
 
 Similar to Ingress, you can also use smart annotations with OpenShift routes.
@@ -83,6 +89,7 @@ The following table details the smart annotations provided by the Citrix ingress
 | `lbvserver` | route.citrix.com/lbvserver | `route.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
 | `servicegroup` | route.citrix.com/servicegroup | `route.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
 | `monitor` | route.citrix.com/monitor | `route.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
+
 
 ### Sample route manifest with smart annotations
 
@@ -126,7 +133,7 @@ In service annotations, `index` is the ordered index of the ports in a service s
 
 |**Annotations**|**Description**|**Example**|
 |---------------|---------------|-----------|
-|`service.citrix.com/service-type-<index>`|Use this annotation to specify the service type for the Citrix ADC entities created. The acceptable values are `TCP`, `HTTP`, `SSL`,`UDP`,`ANY`, and `SSL_TCP`. | service.citrix.com/service-type-0: ‘SSL’|
+|`service.citrix.com/service-type-<index>`|Use this annotation to specify the service type for the Citrix ADC entities created. The acceptable values are `TCP`, `HTTP`, `SSL`,`UDP`,`ANY`, `SSL_TCP`, and `SIP_UDP`. | service.citrix.com/service-type-0: ‘SSL’|
 |`service.citrix.com/lbmethod-<index>`| Use this annotation to specify the method for load balancing. The accepted values are: `ROUNDROBIN`, `LEASTCONNECTION`, and `LEASTRESPONSETIME`.| service.citrix.com/lbmethod-0: ‘LEASTCONNECTION’|
 |`service.citrix.com/persistence-<index>`| Use this annotation to specify the persistence type. The accepted values are: `NONE`, `COOKIEINSERT`, `SOURCEIP`, `SRCIPDESTIP`, and `DESTIP`.| service.citrix.com/persistence-0: ‘SOURCEIP’|
 |`service.citrix.com/ssl-certificate-data-<index>`| Use this annotation to specify the server certificate value in the PEM format.|  service.citrix.com/ssl-certificate-data-0: \| <`certificate`>|
@@ -135,12 +142,12 @@ In service annotations, `index` is the ordered index of the ports in a service s
 |`service.citrix.com/ssl-backend-ca-certificate-data-<index>`| Use this annotation to specify the CA certificate value to verify the server certificate of the back-end in PEM format.| service.citrix.com/ssl-backend-ca-certificate-data-0: \| <`certificate`> |
 | `service.citrix.com/ssl-termination-<index>` | Use this annotation to specify the SSL termination. The accepted values are `EDGE` and `REENCRYPT`.  | service.citrix.com/ssl-termination-0: 'EDGE' |
 | `service.citrix.com/insecure-redirect` | Use this annotation to redirect insecure traffic to a secure port. You can either specify the secure port using {`secure-portname` : `port-number`} or {`secure-portnumber`- `secure-port-protocol` : `insecure-portnumber` } to redirect traffic from an insecure port.  | service.citrix.com/insecure-redirect: '{"port-443": 80 }'  <br> or <br> service.citrix.com/insecure-redirect: '{"443-tcp": 80 }' |
-| `service.citrix.com/frontend-ip` | Use this annotation to pass the VIP for services of type `LoadBalancer`.|service.citrix.com/frontend-ip: "192.168.1.1" |
-| `service.citrix.com/ipam-range` | Use this annotation to select a particular IP address range from a set of ranges specified to the Citrix IPAM controller. This annotation is used for services of type LoadBalancer.|service.citrix.com/ipam-range: "Dev"|
-| `service.citrix.com/secret` | Use this annotation to specify the name of the secret resource for the front-end server certificate.| service.citrix.com/secret: "hotdrink-secret" |
-| `service.citrix.com/ca-secret` |Use this annotation to provide a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC.| service.citrix.com/ca-secret: "hotdrink-ca-secret"|
-| `service.citrix.com/backend-secret` | Use this annotation if the back-end communication between Citrix ADC and your workload is on an encrypted channel, and you need the client authentication in your workload. This certificate is sent to the server during the SSL handshake and it is bound to the back end SSL service group.| service.citrix.com/backend-secret: "hotdrink-secret"|
-| `service.citrix.com/backend-ca-secret` |Use this annotation to enable server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Citrix ADC.|  service.citrix.com/backend-ca-secret: "hotdrink-ca-secret"|
+| `service.citrix.com/frontend-ip` | Use this annotation to pass the VIP for services of type `LoadBalancer`.|service.citrix.com/frontend-ip: '192.168.1.1' |
+| `service.citrix.com/ipam-range` | Use this annotation to select a particular IP address range from a set of ranges specified to the Citrix IPAM controller. This annotation is used for services of type LoadBalancer.|service.citrix.com/ipam-range: 'Dev'|
+| `service.citrix.com/secret` | Use this annotation to specify the name of the secret resource for the front-end server certificate. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).| service.citrix.com/secret: 'hotdrink-secret' |
+| `service.citrix.com/ca-secret` |Use this annotation to provide a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).| service.citrix.com/ca-secret: 'hotdrink-ca-secret'|
+| `service.citrix.com/backend-secret` | Use this annotation if the back-end communication between Citrix ADC and your workload is on an encrypted channel, and you need the client authentication in your workload. This certificate is sent to the server during the SSL handshake and it is bound to the back end SSL service group. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).| service.citrix.com/backend-secret: 'hotdrink-secret'|
+| `service.citrix.com/backend-ca-secret` |Use this annotation to enable server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Citrix ADC. For more information and example, see [SSL certificate for services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/service-type-lb-ssl-secret/).|  service.citrix.com/backend-ca-secret: 'hotdrink-ca-secret'|
 | `service.citrix.com/preconfigured-certkey` |Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be used as a front-end server certificate. |service.citrix.com/preconfigured-certkey: 'coffee-cert' |
 | `service.citrix.com/preconfigured-ca-certkey`|Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be used as a CA certificate for client certificate authentication. This certificate is bound to the front-end SSL virtual server in Citrix ADC. | service.citrix.com/preconfigured-backend-certkey: 'coffee-cert'|
 |`service.citrix.com/preconfigured-backend-certkey` |Use this annotation to specify the name of the preconfigured certificate key in the Citrix ADC to be bound to the back-end SSL service group. This certificate is sent to the server during the SSL handshake for server authentication. | service.citrix.com/preconfigured-ca-certkey: 'coffee-ca-cert'|
@@ -166,7 +173,7 @@ metadata:
     service.citrix.com/service-type-0: SSL
     service.citrix.com/frontend-ip: '192.2.170.26'
     service.citrix.com/secret: '{"port-443": "web-ingress-secret"}'
-    service.citrix.com/ssl-termination-0: "EDGE"
+    service.citrix.com/ssl-termination-0: 'EDGE'
     service.citrix.com/insecure-redirect: '{"port-443": 80}'
 spec:
   type: LoadBalancer
@@ -251,9 +258,9 @@ metadata:
     service.citrix.com/lbvserver: '{"80-tcp":{"lbmethod":"SRCIPDESTIPHASH"}}'
     service.citrix.com/servicegroup: '{"80-tcp":{"usip":"yes"}}'
     service.citrix.com/monitor: '{"80-tcp":{"type":"http"}}'
-    service.citrix.com/frontend-ip: "10.217.212.16"
+    service.citrix.com/frontend-ip: '10.217.212.16'
     service.citrix.com/analyticsprofile: '{"80-tcp":{"webinsight": {"httpurl":"ENABLED", "httpuseragent":"ENABLED"}}}'
-    NETSCALER_VPORT: "80"
+    NETSCALER_VPORT: '80'
   labels:
     name: apache
 spec:
@@ -268,4 +275,27 @@ spec:
   selector:
     app: apache
 ---
+```
+
+## Examples
+
+### Sample Ingress YAML for SIP_UDP support in insecure service type annotation
+
+The following is a sample Ingress YAML which includes the configuration for enabling SIP over UDP support using the `ingress.citrix.com/insecure-service-type` annotation. 
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sip-ingress
+  annotations:
+    kubernetes.io/ingress.class: 'cic-vpx'
+    ingress.citrix.com/insecure-service-type: 'sip_udp'
+    ingress.citrix.com/frontend-ip: '1.1.1.1'
+    ingress.citrix.com/insecure-port: '5060'
+    ingress.citrix.com/lbvserver: '{"asterisk17":{"lbmethod":"CALLIDHASH","persistenceType":"CALLID"}}'
+spec:
+  backend:
+    serviceName: asterisk17
+    servicePort: 5060
 ```
