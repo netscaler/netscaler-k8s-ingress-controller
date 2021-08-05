@@ -157,8 +157,6 @@ spec:
                       type: object
                     ip:
                       type: object
-                    host:
-                      type: object
                 trapinsertion:
                   type: array
                   properties:
