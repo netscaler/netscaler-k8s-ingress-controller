@@ -216,3 +216,201 @@ Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix 
 
     ingress.citrix.com/frontend-sslprofile: "ssl_preconf_profile"
     ingress.citrix.com/backend-sslprofile: '{"citrix-svc":"ssl_preconf_profile"}'
+
+## Example for applying HTTP, SSL, and TCP profiles
+
+This example shows how to apply HTTP, SSL, or TCP profiles. In this example, two ingress resources are created: one front-end ingress resource for profiles and the other resource for defining the back-end. SSL, HTTP, or TCP profiles must be specified as part of an empty ingress, referred as the front-end ingress. It should not be part of the regular ingress. This empty front-end ingress is required to avoid users providing conflicting values in different ingresses belonging to the same content switching virtual server. You need one front-end ingress per front-end IP port combination.
+
+Sometimes, there may be situations where you want to continue using profiles even after deleting the ingress resource. If there are two ingress resources, decoupling of profiles and back-end resources are possible and the administrator can delete an ingress resource and still keep the profiles. 
+
+To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resource, perform the following steps:
+
+1. Define the front-end ingress resource with the required profiles. In this Ingress resource, back-end and TLS is not defined.
+
+   A sample YAML (`ingress1.yaml`) is provided as follows: 
+
+    ```yml
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: ingress-vpx1
+      annotations:
+        kubernetes.io/ingress.class: "vpx"
+        ingress.citrix.com/insecure-termination: "allow"
+        ingress.citrix.com/frontend-ip: "10.221.36.190"
+        ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
+        ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
+        ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls13" : "enabled"}'
+    spec:
+      tls:
+      - hosts:
+      rules:
+      - host:
+    ```  
+
+1. Deploy the front-end ingress resource.
+
+       kubectl create -f ingress1.yaml
+
+1. Define the secondary ingress resource with the same front-end IP address and TLS and the back-end defined which creates the load balancing resource definition. 
+
+   A sample YAML (ingress2.yaml) is provided as follows: 
+ 
+      ```yml
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: ingress-vpx2
+        annotations:
+        kubernetes.io/ingress.class: "vpx"
+        ingress.citrix.com/insecure-termination: "allow"
+        ingress.citrix.com/frontend-ip: "10.221.36.190"
+      spec:
+        tls:
+        - secretName: <hotdrink-secret>
+        rules:
+        - host:  hotdrink.beverages.com
+          http:
+            paths:
+            - path: 
+              backend:
+                serviceName: frontend-hotdrinks
+                servicePort: 80
+      ```
+
+1. Deploy the back-end ingress resource.
+
+         kubectl create -f ingress2.yaml
+
+
+1. Once the YAMLs are applied the corresponding entities, profiles, and ingress resources are created and they were bound to the ingress resource. 
+ 
+        # show cs vserver <k8s150-10.221.36.190_443_ssl>
+    
+          k8s150-10.221.36.190_443_ssl (10.221.36.190:443) - SSL Type: CONTENT 
+          State: UP
+          Last state change was at Thu Apr 22 20:14:44 2021
+          Time since last state change: 0 days, 00:10:56.850
+          Client Idle Timeout: 180 sec
+          Down state flush: ENABLED
+          Disable Primary Vserver On Down : DISABLED
+          Comment: uid=QEYQI2LDW5WR4A6P3NSZ37XICKOJKV4HPEM2H4PSK4HWA3JQWCLQ====
+          TCP profile name: k8s150-10.221.36.190_443_ssl
+          HTTP profile name: k8s150-10.221.36.190_443_ssl
+          Appflow logging: ENABLED
+          State Update: DISABLED
+          Default:   Content Precedence: RULE
+          Vserver IP and Port insertion: OFF 
+          L2Conn: OFF Case Sensitivity: ON
+          Authentication: OFF
+          401 Based Authentication: OFF
+          Push: DISABLED Push VServer: 
+          Push Label Rule: none
+          Persistence: NONE
+          Listen Policy: NONE
+          IcmpResponse: PASSIVE
+          RHIstate:  PASSIVE
+          Traffic Domain: 0
+
+          1)  Content-Switching Policy: k8s150-ingress-vpx1_tier-2-adc_443_k8s150-frontend-hotdrinks_tier-2-adc_80_svc    Priority: 200000004   Hits: 0
+          Done
+
+
+### Example: Adding SNI certificate to an SSL virtual server
+
+This example shows how to add a single SNI certificate. In this example, two ingress resources are defined.
+
+**Note:** For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+
+1. Define the front-end ingress resource with the required profiles. In this Ingress resource, back-end and TLS is not defined.
+
+   A sample YAML (ingress1.yaml) is provided as follows: 
+
+    ```yml
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: ingress-vpx1
+      annotations:
+       kubernetes.io/ingress.class: "vpx"
+       ingress.citrix.com/insecure-termination: "allow"
+       ingress.citrix.com/frontend-ip: "10.221.36.190"
+       ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
+       ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
+       ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled", "tls13" : "enabled"}'
+    spec:
+      tls:
+      - hosts:
+      rules:
+      - host:
+
+    ```
+   
+1. Deploy the front-end ingress resource.
+
+        kubectl create -f ingress1.yaml
+
+1. Define the secondary ingress resource with the same front-end IP address defining back-end as well as SNI certificates. If hosts are specified then the certkey specified as the secret name is added as the SNI certificate.
+
+   A sample YAML (ingress2.yaml) is provided as follows: 
+ 
+    ```yml
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: ingress-vpx2  
+      annotations:
+       kubernetes.io/ingress.class: "vpx"
+       ingress.citrix.com/insecure-termination: "allow"
+       ingress.citrix.com/frontend-ip: "10.221.36.190"
+    spec:
+      tls:
+      - hosts:
+          - hotdrink.beverages.com
+        secretName: hotdrink-secret
+      rules:
+      - host: hotdrink.beverages.com
+        http:
+          paths:
+          - path: /
+            backend:
+              serviceName: web
+              servicePort: 80
+    ```
+1. Deploy the secondary ingress resource.
+
+         kubectl create -f ingress2.yaml
+
+If multiple SNI certificates need to be bound to the front-end VIP, following is a sample YAML file.
+
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: ingress-vpx-frontend
+      annotations:
+       kubernetes.io/ingress.class: "vpx"
+       ingress.citrix.com/insecure-termination: "allow"
+       ingress.citrix.com/frontend-ip: "10.221.36.190"
+    spec:
+      tls:
+      - hosts:
+          - hotdrink.beverages.com
+        secretName: hotdrink-secret
+      - hosts:
+          - frontend.agiledevelopers.com
+        secretName: <frontend-secret>
+      rules:
+      - host: hotdrink.beverages.com
+        http:
+          paths:
+          - path: /
+            backend:
+              serviceName: web
+              servicePort: 80
+      - host: frontend.agiledevelopers.com 
+        http:
+          paths:
+          - path: /
+            backend:
+              serviceName: frontend-developers
+              servicePort: 80
