@@ -158,27 +158,48 @@ The IP and port of the VPX device needs to be filled in as the ```--target-nsip`
 To monitor a CPX ingress device, the exporter is added as a side-car.An example yaml file of a CPX ingress device with an exporter as a side car is given below;
 ```
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
   labels:
+    name: cpx-ingress
     app: cpx-ingress
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: cpx-ingress
+  replicas: 1
   template:
     metadata:
+      name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations:
-        NETSCALER_AS_APP: "True"
+      annotations: null
     spec:
       serviceAccountName: cpx
       containers:
         # Adding exporter as a side-car
+        - name: cpx-ingress
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-79.64"
+          tty: true
+          securityContext:
+            privileged: true
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "KUBERNETES_TASK_ID"
+            value: ""
+          - name: "METRICS_EXPORTER_PORT"
+            value: "8888"
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/deviceinfo
+              name: shared-data
+            - mountPath: /cpx/conf/
+              name: cpx-volume1
+            - mountPath: /cpx/crash/
+              name: cpx-volume2
         - name: exporter
           image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
           imagePullPolicy: Always
@@ -187,32 +208,21 @@ spec:
             - "--port=8888"
             - "--secure=no"
           env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          securityContext:
-            readOnlyRootFilesystem: true
-        - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
-          imagePullPolicy: Always
+          - name: "NS_DEPLOYMENT_MODE"
+            value: "SIDECAR"
           securityContext:
             privileged: true
-          env:
-            - name: "EULA"
-              value: "YES"
-            - name: "NS_PROTOCOL"
-              value: "HTTP"
-            #Define the NITRO port here
-            - name: "NS_PORT"
-              value: "9080"
-          ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
-            - name: nitro-http
-              containerPort: 9080
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /var/deviceinfo
+              name: shared-data
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      - name: cpx-volume1
+        emptyDir: {}
+      - name: cpx-volume2
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -240,7 +250,7 @@ Here, the exporter uses the ```127.0.0.1``` local IP to fetch metrics from the C
 
 To monitor a CPX-EW (east-west) device, the exporter is added as a side-car. An example yaml file of a CPX-EW device with an exporter as a side car is given below;
 ```
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: cpx-ew
@@ -257,7 +267,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-79.64"
           securityContext: 
              privileged: true
           env:
@@ -274,14 +284,16 @@ spec:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
             - "--secure=no"
-          env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          imagePullPolicy: Always
+          volumeMounts:
+          - name: nslogin
+            mountPath: "/mnt/nslogin"
+            readOnly: true
           securityContext:
             readOnlyRootFilesystem: true
+      volumes:
+      - name: nslogin
+        secret:
+          secretName: nslogin
 ---
 apiVersion: v1
 kind: Service
