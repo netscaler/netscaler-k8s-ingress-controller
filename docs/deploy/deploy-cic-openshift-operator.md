@@ -30,6 +30,33 @@ Using the Citrix ingress controller Operator you can deploy the Citrix ingress c
     You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
 
         kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+        
+#### Specify the allowed image registries to access by Operators and Pods
+
+You must specify the list of image registries to which Operators and pods should have access for pulling the images. You can specify the allowed list of registries by updating the `image.config.openshift.io/cluster` Custom Resource definition file. Ensure to bring up the Openshift Cluster before updating the `image.config.openshift.io/cluster` Custom Resource definition file.
+
+To update, perform the following steps:
+
+1. Run the following command:
+
+        oc edit image.config.openshift.io/cluster
+
+2. Edit the `spec` field such as follows:
+
+        spec:
+          registrySources:
+            allowedRegistries:
+            - quay.io
+            - registry.redhat.io
+            - registry.connect.redhat.com
+            - registry.access.redhat.com
+            - image-registry.openshift-image-registry.svc:5000
+
+**Note:** If your application needs to pull images from registries other than the ones specified here, you can update those as well in the list.
+
+**Note**: The changes are applied to all the master and worker nodes and the node will be in 'Not Ready' state after updating the CRD. You must wait for all the nodes to be in 'Ready' state before proceeding to the next step. You can view the status of the nodes using the following command:
+
+    oc get nodes
 
 #### Create a system user account for the Citrix ingress controller in Citrix ADC
 
