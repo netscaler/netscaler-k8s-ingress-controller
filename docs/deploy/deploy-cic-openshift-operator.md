@@ -31,11 +31,11 @@ Using the Citrix ingress controller Operator you can deploy the Citrix ingress c
 
         kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
         
-#### Specify the allowed image registries to access by Operators and Pods
+#### Specify the allowed image registries to access by operators and pods
 
-You must specify the list of image registries to which Operators and pods should have access for pulling the images. You can specify the allowed list of registries by updating the `image.config.openshift.io/cluster` Custom Resource definition file. Ensure to bring up the Openshift Cluster before updating the `image.config.openshift.io/cluster` Custom Resource definition file.
+You must specify the image registries to which operators and pods should have access for pulling the images. You can specify the allowed list of registries by updating the `image.config.openshift.io/cluster` custom resource definition file. Ensure to bring up the Openshift cluster before updating the `image.config.openshift.io/cluster` custom resource definition.
 
-To update, perform the following steps:
+To update the `image.config.openshift.io/cluster` custom resource definition, perform the following steps:
 
 1. Run the following command:
 
@@ -52,9 +52,9 @@ To update, perform the following steps:
             - registry.access.redhat.com
             - image-registry.openshift-image-registry.svc:5000
 
-**Note:** If your application needs to pull images from registries other than the ones specified here, you can update those as well in the list.
+**Note:** If your application needs to pull images from registries other than the ones specified here, you can add those registries.
 
-**Note**: The changes are applied to all the master and worker nodes and the node will be in 'Not Ready' state after updating the CRD. You must wait for all the nodes to be in 'Ready' state before proceeding to the next step. You can view the status of the nodes using the following command:
+**Note**: The changes are applied to all the master and worker nodes and the node is in 'Not Ready' state for some time after updating the CRD. You must wait for all the nodes to be in 'Ready' state before proceeding to the next step. You can view the status of the nodes using the following command:
 
     oc get nodes
 
