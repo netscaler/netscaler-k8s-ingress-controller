@@ -1,0 +1,46 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - cd/canary-azure-devops/deployment_configs/deploy.json
+    - cd/canary-azure-devops/kubernetes_configs/*
+    
+
+pool: <Your Agent pool name>
+
+stages:
+- stage:
+  jobs:
+  - job: Deploy
+    displayName: Guestbook Application Deployment
+    pool: <Your Agent pool name>
+    steps:
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          sudo apt-get install python -y
+          sudo apt-get install unzip -y
+      displayName: 'Installing Unzip package'
+    
+    - task: KubectlInstaller@0
+      inputs:
+        kubectlVersion: 'latest'
+      displayName: 'Installing kubectl'
+
+    - task: PythonScript@0
+      displayName: 'Reading configuration file'
+      inputs:
+        scriptSource: 'filePath'
+        scriptPath: '$(System.DefaultWorkingDirectory)/cd/canary-azure-devops/pipeline_configs/read_config.py'
+        arguments: --config_file $(System.DefaultWorkingDirectory)/cd/canary-azure-devops/deployment_configs/deploy.json --action 'apply'
+    - task: Kubernetes@0
+      displayName: 'Deploy Guestbook Application'
+      inputs:
+        kubernetesServiceConnection: <Your Kubernetes service connection name>
+        command: apply
+        useConfigurationFile: true
+        configuration: '$(System.DefaultWorkingDirectory)/$(K8S_CONFIG_PATH)'
