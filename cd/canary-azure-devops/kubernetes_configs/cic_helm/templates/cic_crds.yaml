@@ -1,0 +1,1865 @@
+{{- if .Values.crds.install }}
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: rewritepolicies.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1
+  names:
+    kind: rewritepolicy 
+    plural: rewritepolicies
+    singular: rewritepolicy 
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            rewrite-policies:
+              type: array
+              items:
+                properties:
+                  servicenames:
+                    description: 'Name of the services that needs to be binded to rewrite policy.'
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 127
+                  goto-priority-expression:
+                    description: 'Expression or other value specifying the next policy to be
+                                  evaluated if the current policy evaluates to TRUE.
+                                  Specify one of the following values:
+                                  * NEXT - Evaluate the policy with the next higher priority number.
+                                  * END - End policy evaluation.
+                                  Default value of goto-priority-expression: END'
+                    type: string
+                    maxLength: 1499
+                  logpackets:
+                    description: 'Adds an audit message action.
+                                  The action specifies whether to log the message, and to which log.'
+                    properties:
+                      logexpression:
+                        description: 'Default-syntax expression that defines the format and content of the log message.'
+                        type: string
+                        maxLength: 7991
+                      loglevel:
+                        description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                        type: string
+                        enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+                    required: [logexpression, loglevel]
+                  rewrite-policy:
+                    properties:
+                      rewrite-criteria:
+                        description: 'Expression against which traffic is evaluated.'
+                        type: string
+                        maxLength: 1299
+                      default-action:
+                        description: 'Action to perform if the result of policy evaluation is undefined (UNDEF). 
+                                      An UNDEF event indicates an internal error condition.'
+                        type: string
+                        maxLength: 77
+                        enum: ['NOREWRITE', 'RESET', 'DROP']
+                      operation:
+                        description: 'Type of user-defined rewrite action.'
+                        type: string
+                        enum: ["noop", "delete", "insert_http_header", "delete_http_header",
+                                "corrupt_http_header", "insert_before", "insert_after", "replace",
+                                "replace_http_res", "delete_all", "replace_all", "insert_before_all",
+                                "insert_after_all", "clientless_vpn_encode", "clientless_vpn_encode_all",
+                                "clientless_vpn_decode", "clientless_vpn_decode_all", "insert_sip_header",
+                                "delete_sip_header", "corrupt_sip_header", "replace_sip_res", "replace_diameter_header_field",
+                                "replace_dns_header_field", "replace_dns_answer_section"]
+                      target:
+                        description: 'Default syntax expression that specifies which part of the request or response to rewrite.'
+                        type: string
+                        maxLength: 1229
+                      modify-expression:
+                        description: 'Default syntax expression that specifies the content to insert into the request 
+                                      or response at the specified location, or that replaces the specified string.'
+                        type: string
+                        maxLength: 7991
+                      multiple-occurence-modify:
+                        description: 'Search facility that is used to match multiple strings in the request or response.'
+                        type: string
+                        maxLength: 171
+                      additional-multiple-occurence-modify:
+                        description: 'Specify additional criteria to refine the results of the search.
+                                      Always starts with the "extend(m,n)" operation, where "m" specifies number of bytes to the left of selected data
+                                      and "n" specifies number of bytes to the right of selected data.
+                                      You can use refineSearch only on body expressions, and only when rewrite-criteria is any one of this:
+                                      INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, and DELETE_ALL.'
+                        type: string
+                        maxLength: 1299
+                      direction:
+                        description: 'Bind point to which to bind the policy.'
+                        type: string
+                        enum: ["REQUEST","RESPONSE"]
+                      comment:
+                        description: 'Any comments to preserve information about this rewrite policy.' 
+                        type: string
+                        maxLength: 255
+                    required: [rewrite-criteria, operation, target, direction]
+                required: [servicenames, rewrite-policy]
+
+            responder-policies:
+              type: array
+              items:
+                properties:
+                  servicenames:
+                    description: 'Name of the services that needs to be binded to responder policy.' 
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 127
+                  goto-priority-expression:
+                    description: 'Expression or other value specifying the next policy to be
+                                  evaluated if the current policy evaluates to TRUE.
+                                  Specify one of the following values:
+                                  * NEXT - Evaluate the policy with the next higher priority number.
+                                  * END - End policy evaluation.
+                                  Default value of goto-priority-expression: END'
+                    type: string
+                    maxLength: 1499
+                  logpackets:
+                    description: 'Adds an audit message action.
+                                  The action specifies whether to log the message, and to which log.'
+                    properties:
+                      logexpression:
+                        description: 'Default-syntax expression that defines the format and content of the log message.'
+                        type: string
+                        maxLength: 7991
+                      loglevel:
+                        description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                        type: string
+                        enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING",
+                                "NOTICE", "INFORMATIONAL", "DEBUG"]
+                    required: [logexpression, loglevel]
+                  responder-policy:
+                    properties:
+                      redirect:
+                        description: 'Use this option when you want to Redirect the request when request matches to policy.'
+                        properties:
+                          url:
+                            description: 'URL on which you want to redirect the request.'
+                            type: string
+                            maxLength: 7991
+                          redirect-status-code:
+                            description: 'HTTP response status code, for example 200, 302, 404, etc.'
+                            type: integer
+                            minimum: 100
+                            maximum: 599
+                          redirect-reason:
+                            description: 'Expression specifying the reason for redirecting the request.'
+                            type: string
+                            maxLength: 7991
+                        required: [url]
+                      respondwith:
+                        description: 'Use this parameter when you want to respond to the request when request matches to policy.'
+                        properties:
+                          http-payload-string:
+                            description: 'Expression that you want to sent as response to the request.'
+                            type: string
+                            maxLength: 7991
+                        required: [http-payload-string]
+                      noop:
+                        description: 'Use this option when you want to send the request to the protected server instead of 
+                                      responding to it when request matches to policy.'
+                        properties:
+                          target:
+                            description: 'Default syntax expression that specifies to perform noop operation on'
+                            type: string
+                            maxLength: 1229
+                      reset:
+                        description: 'Use this option when you want to Reset the client connection by closing it when request matches to policy.'
+                        properties:
+                      drop:
+                        description: 'Use this option when you want to drop the request without sending a response to the user when request matches to policy.'
+                        properties:
+                      respond-criteria:
+                        description: 'Default syntax expression that the policy uses to determine whether to respond to the specified request.'
+                        type: string
+                        maxLength: 1299
+                      default-action:
+                        description: 'Action to perform if the result of policy evaluation is undefined (UNDEF).
+                                      An UNDEF event indicates an internal error condition.'
+                        type: string
+                        maxLength: 77
+                        enum: ['NOOP', 'RESET', 'DROP']
+                      comment:
+                        description: 'Any comments to preserve information about this responder policy.'
+                        type: string
+                        maxLength: 255
+                    required: [respond-criteria]
+                    oneOf: [required: [redirect], required: [respondwith], required: [noop], required: [reset], required: [drop]]
+                required: [servicenames, responder-policy]
+
+            dataset:
+              type: array
+              items:
+                properties:
+                  name:
+                    description: 'Name of the dataset.'
+                    type: string
+                    maxLength: 32
+                  type:
+                    description: 'Type of value to bind to the dataset.'
+                    type: string
+                    enum: ["ipv4", "number", "ipv6", "ulong", "double", "mac"]
+                  comment:
+                    description: 'Any comments to preserve information about this dataset.'
+                    type: string
+                    maxLength: 255
+                  values:
+                    description: 'Value of the specified type that is associated with this dataset.'
+                    type: array
+                required: [name, type, values]
+
+            patset:
+              type: array
+              items:
+                properties:
+                  name:
+                    description: 'Name of the Patset.'
+                    type: string
+                    maxLength: 32
+                  comment:
+                    description: 'Any comments to preserve information about this patset.'
+                    type: string
+                    maxLength: 255
+                  values:
+                    description: 'String of characters that constitutes a pattern and is associated with this patset.'
+                    type: array
+                required: [name, values]
+
+            stringmap:
+              type: array
+              items:
+                properties:
+                  name:
+                    description: 'Name of the Stringmap.'
+                    type: string
+                    maxLength: 32
+                  comment:
+                    description: 'Any comments to preserve information about this stringmap.'
+                    type: string
+                    maxLength: 255
+                  values:
+                    description: 'List of (key,value) pairs to be bound to this string map.'
+                    type: array
+                    items:
+                      properties:
+                        key:
+                          description: 'Character string constituting the key to be bound to this string map.'
+                          type: string
+                          maxLength: 2047
+                        value:
+                          description: 'Character string constituting the value associated with the key.'
+                          type: string
+                          maxLength: 2047
+                required: [name, values]
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: ratelimits.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1beta1
+  names:
+    kind: ratelimit
+    plural: ratelimits
+    singular: ratelimit
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            servicenames:
+              description: 'Name of the services to which the ratelimit policies are applied.'
+              type: array
+              items:
+                type: string
+                maxLength: 127
+            selector_keys:
+              description: 'Traffic match criteria to which apply above rate-limit/throttling. All keys are applied as AND condition. If no keys are specified, rate-limit applies at service level'
+              properties:
+                basic:
+                  description: "Basic traffic stream selection criteria to which to apply the ratelimit"
+                  properties:
+                    path:
+                      type: array
+                      description: "api resource path prefix match. e.g. /api/v1/products"
+                      items:
+                        type: string
+                    method:
+                      type: array
+                      items:
+                        type: string
+                        enum: ['GET', 'PUT', 'POST','DELETE']
+                    header_name:
+                      description: "HTTP header that identifies the unique API client for e.g. X-apikey"
+                      type: string
+                    per_client_ip:
+                      description: "Setting this applies the throttling limit to each unique Client IP address accessing the API resource"
+                      type: boolean
+            req_threshold:
+              description: 'Max requests per timeslice units to be allowed'
+              type: integer
+            timeslice:
+              description: 'Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds'
+              type: integer
+            limittype:
+              description: "Burst mode or smooth. Defaults to burst mode if the limittype is not specified"
+              type: string
+              enum: ['BURSTY','SMOOTH']
+            throttle_action:
+              type: string
+              enum: ['DROP', 'RESET','REDIRECT', 'RESPOND']
+              description: "Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'"
+            redirect_url:
+              type: string
+              description: "Redirect-URL"
+          required: [servicenames, req_threshold]
+---
+#Sample CRD instance
+  
+#apiVersion: citrix.com/v1
+#description: VIP for apache service
+#kind: vip
+#metadata:
+#  name: service-apache
+#  namespace: default
+#spec:
+#  description: VIP for the apache Service
+#  ipaddress: 10.99.98.90
+#  kind: service
+#  name: apache
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: vips.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1
+  names:
+    kind: vip
+    plural: vips
+    singular: vip
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+  - JSONPath: .spec.ipaddress
+    name: VIP
+    type: string
+  - name: Age
+    type: date
+    JSONPath: .metadata.creationTimestamp
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            ipaddress:
+              type: string
+            name:
+              type: string
+            kind:
+              type: string
+              enum: ["service", "ingress"]
+            description:
+              type: string
+            range-name:
+              type: string
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: authpolicies.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1beta1
+  names:
+    kind: authpolicy
+    plural: authpolicies
+    singular: authpolicy 
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: 'Current Status of the CRD'
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: 'Status Message'
+      JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      type: object 
+      properties:
+        spec:
+          type: object 
+          properties:
+            servicenames:
+              description: |+
+                           'Name of the services for which the policies applied'
+              type: array
+              items:
+                type: string
+                maxLength: 63
+            authentication_mechanism:
+              type: object 
+              description: |+
+                          'Authentication mechanism. Options: using forms or using request header.
+                           Default is Authentication using request header, when no option is specified'
+              properties:
+                    using_request_header:
+                      description: |+
+                                   'Enable user authentication using request header. Use when the credentials
+                                    or api keys are passed in a header. For example, when using Basic, Digest,
+                                    Bearer authentication or api keys.
+                                    When authentication using forms is provided, this is set to OFF'
+
+                      type: string
+                    using_forms:
+                      type: object
+                      description: 'Enables authentication using forms. Use with user/web authentication.'
+                      properties:
+                        authentication_host:
+                          description: |+
+                                       'Fully qualified domain name (FQDN) for authentication.
+                                        This FQDN should be unique and should resolve to frontend IP of
+                                        ADC with Ingress/service type LoadBalancer (or) vip of Listener CRD'
+                          type: string
+                          maxLength: 255
+                        authentication_host_cert:
+                          description: |+
+                                       'Name of the SSL certificate to be used with authentication_host.
+                                        This certificate is mandatory while using_forms'
+                          type: object
+                          properties:
+                              tls_secret:
+                                type: string
+                                description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                                pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                              preconfigured:
+                                type: string
+                                maxLength: 63
+                                description: |+
+                                             'Preconfigured SSL certkey name on ADC with the
+                                              certificate and key already added on ADC'
+                          oneOf:
+                          - properties:
+                            required: [tls_secret]
+                          - properties:             
+                            required: [preconfigured]
+                        ingress_name:
+                          description: |+
+                                       'Ingress name for which the authentication using forms
+                                        is applicable.'
+                          type: string
+                          maxLength: 63
+                        lb_service_name:
+                          description: |+
+                                       'Service of type LoadBalancer for which the authentication using forms
+                                        is applicable.'
+                          type: string
+                          maxLength: 63
+                        listener_name:
+                          description: |+
+                                       'Listener CRD name for which the authentication using forms is applicable.'   
+                          type: string
+                          maxLength: 63
+                        vip:
+                          description: |+
+                                       'Frontend IP of ingress for which the authentication 
+                                        using forms is applicable. This refers to frontend-ip provided 
+                                        with Ingress. It is suggested to use vip, if more than one Ingress
+                                        resource use the same frontend-ip'
+                          type: string
+                      required: [authentication_host, authentication_host_cert]
+                      oneOf:
+                      - properties:
+                        required: [ingress_name]                      
+                      - properties:
+                        required: [lb_service_name]
+                      - properties:
+                        required: [listener_name]
+                      - properties:
+                        required: [vip]
+              oneOf:
+                - properties:
+                    using_request_header:
+                      enum: ['ON']
+                  required: [using_request_header]
+                - properties:
+                  required: [using_forms]
+                  
+            authentication_providers:
+              description: |+
+                           'Authentication Configuration for required authentication providers/schemes.
+                            One or more of these can be created'
+              type: array
+              items:
+                  description: 'Create config for a single authentication provider of a particular type'
+                  type: object 
+                  properties:
+                    name:
+                      description: 'Name for this provider, has to be unique, referenced by authentication policies'
+                      type: string
+                      maxLength: 127
+
+                    oauth:
+                      description: 'Authentication provided by external oAuth provider' 
+                      type: object 
+                      properties:
+                          issuer:
+                              description: 'Identity of the server whose tokens are to be accepted'
+                              type: string
+                              maxLength: 127
+                          audience:
+                              description: 'Audience for which token sent by Authorization server is applicable'
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 127
+                          jwks_uri:
+                              description: |+
+                                          'URL of the endpoint that contains JWKs (Json Web Key) for 
+                                           JWT (Json Web Token) verification'
+                              type: string
+                              maxLength: 127
+                          introspect_url:
+                              description: ' URL of the introspection server'
+                              type: string
+                              maxLength: 127
+                          client_credentials:
+                              description: |+
+                                           'secrets object that contains Client Id and secret as known 
+                                            to Introspection server'
+                              type: string
+                              maxLength: 253
+                          token_in_hdr:
+                              description: |+
+                                           'custom header name where token is present,
+                                            default is Authorization header'
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 127
+                              maxItems: 2
+                          token_in_param:
+                              description: 'query parameter name where token is present'
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 127
+                              maxItems: 2
+                          signature_algorithms:
+                              description: 'list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed'
+                              type: array
+                              items:
+                                type: string
+                                enum: ['HS256', 'RS256', 'RS512']
+                          claims_to_save:
+                              description: 'list of claims to be saved, used to create authorization policies'
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 127
+                          metadata_url:
+                              description: 'URL used to get OAUTH/OIDC provider metadata'
+                              type: string
+                              maxLength: 255
+                          user_field:
+                              description: |+
+                                           'Attribute in the token from which username should be extracted. 
+                                            by default, ADC looks at email attribute for user id'
+                              type: string
+                              maxLength: 127
+                          default_group:
+                              description: |+
+                                           'group assigned to the request if authentication succeeds,
+                                            this is in addition to any extracted groups from token'
+                              type: string
+                              maxLength: 63
+                          grant_type:
+                              description: 'used to specify the type of flow to the token end point, defaults to CODE'
+                              type: array
+                              items:
+                                type: string
+                                enum: ['CODE','PASSWORD']
+                          pkce:
+                              description: 'specify whether to enable Proof Key Code Exchange, defaults to ENABLED'
+                              type: string
+                              enum: ['ENABLED', 'DISABLED']
+                          token_ep_auth_method:
+                              description: |+
+                                           'authentication method to be used with token end point, 
+                                            defaults to client_secret_post'
+                              type: string
+                              enum: ['client_secret_post', 'client_secret_jwt']
+
+                      anyOf:
+                      - properties:
+                        required : [jwks_uri]
+                      - properties:
+                        required : [introspect_url, client_credentials]
+                      - properties:
+                        required : [metadata_url]
+
+                    ldap:
+                      description: 'LDAP authentication provider'
+                      type: object
+                      properties:
+                          server_ip:
+                              description: 'IP address assigned to the LDAP server'
+                              type: string
+                          server_name:
+                              description: 'LDAP server name as a FQDN'
+                              type: string
+                              maxLength: 127
+                          server_port:
+                              description: 'Port on which the LDAP server accepts connections. Default is 389'
+                              type: integer
+                              minimum: 1
+                              maximum: 65535
+                          base:
+                              description: |+
+                                           'Base (node) from which to start LDAP searches. If the LDAP server is
+                                            running locally, the default value of base is dc=netscaler, dc=com'
+                              type: string
+                              maxLength: 127
+                          server_login_credentials:
+                              description: |+
+                                           'Kubernetes secret object providing credentials to login to LDAP server,
+                                            The secret data should have username and password'
+                              type: string
+                          login_name:
+                              description: |+
+                                           'LDAP login name attribute. The Citrix ADC uses the LDAP login name
+                                            to query external LDAP servers or Active Directories'
+                              type: string
+                              maxLength: 127
+                          security_type:
+                              description: |+
+                                           'Type of security used for communications between the Citrix ADC
+                                            and the LDAP server. Default is TLS'
+                              type: string
+                              enum: ['PLAINTEXT', 'TLS', 'SSL']
+                          validate_server_cert:
+                              description: 'Validate LDAP Server certs. Default is NO'
+                              type: string
+                              enum: ['YES', 'NO']
+                          hostname:
+                              description: |+
+                                           'Hostname for the LDAP server. If validate_server_cert is ON,
+                                            this must be the host name on the certificate from the LDAP
+                                            A hostname mismatch will cause a connection failure'
+                              type: string 
+                              maxLength: 127
+                          sub_attribute_name:
+                              description: 'LDAP group sub-attribute name. Used for group extraction from the LDAP server.'
+                              type: string
+                              maxLength: 31
+                          group_attribute_name:
+                              description: 'LDAP group attribute name. Used for group extraction on the LDAP server.'
+                              type: string
+                              maxLength: 31
+                          search_filter:
+                              description: |+
+                                           'String to be combined with the default LDAP user search string to form the
+                                            search value. For example, if the search filter "vpnallowed=true" is combined
+                                            with the LDAP login name "samaccount" and the user-supplied username is "bob",
+                                            the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)"" 
+                                            (Be sure to enclose the search string in two sets of double quotation marks)'
+                              type: string
+                              maxLength: 255
+                          auth_timeout:
+                              description: |+
+                                           'Number of seconds the Citrix ADC waits for a response from the server
+                                            Default is 3'
+                              type: integer
+                              minimum: 1
+                              maximum: 4294967295
+                          password_change:
+                              description: 'Allow password change requests. Default is DISABLED'
+                              type: string
+                              enum: ['ENABLED', 'DISABLED']
+                          attributes_to_save:
+                              description: |+
+                                           'List of attribute names separated by comma which needs to be fetched
+                                            from LDAP server and stored as key-value pair for the session on ADC'
+                              type: string
+                              maxLength: 2047
+                      oneOf:
+                        - properties:
+                          required: [server_ip]
+                        - properties:
+                          required: [server_name]
+                          
+                    saml:
+                      description: |+
+                                   'SAML authentication provider.
+                                    Currently SAML is supported only with authentication mechanism using forms'
+                      type: object
+                      properties:
+                          metadata_url:
+                              description: 'URL is used for obtaining saml metadata.'
+                              type: string
+                              maxLength: 255
+                          metadata_refresh_interval:
+                              description: |+
+                                           'Interval in minutes for fetching metadata from specified metadata URL.
+                                            Default is 36000'
+                              type: integer
+                              minimum: 1
+                              maximum: 4294967295
+                          signing_cert:
+                              description: 'SSL certificate to sign requests from SP to IDP'
+                              type: object
+                              properties:
+                                  tls_secret:
+                                    type: string
+                                    description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                                  preconfigured:
+                                    type: string
+                                    maxLength: 63
+                                    description: |+
+                                                 'Preconfigured SSL certkey name on ADC with the
+                                                  certificate and key already added on ADC'                                    
+                              oneOf:
+                              - properties:
+                                required: [tls_secret]
+                              - properties:
+                                required: [preconfigured]
+                          audience:
+                              description: 'Audience for which assertion sent by IdP is applicable'
+                              type: string
+                              maxLength: 127                          
+                          issuer_name:
+                              description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
+                              type: string
+                              maxLength: 63
+                          binding:
+                              description: 'Specifies the transport mechanism of saml message. Default is POST'
+                              type: string
+                              enum: ['REDIRECT', 'POST', 'ARTIFACT']
+                          artifact_resolution_service_url:
+                              description: 'URL of the Artifact Resolution Service on IdP'
+                              type: string
+                              maxLength: 255
+                          logout_binding:
+                              description: 'Specifies the transport mechanism of saml logout.  Default is POST'
+                              type: string
+                              enum: ['REDIRECT', 'POST']
+                          reject_unsigned_assertion:
+                              description: |+
+                                           'Reject unsigned SAML assertions. ON, rejects assertion without signature.
+                                            STRICT ensure that both Response and Assertion are signed. Default is ON'
+                              type: string
+                              enum: ['ON', 'OFF', 'STRICT']                      
+                          user_field:
+                              description: 'SAML user ID, as given in the SAML assertion'
+                              type: string
+                              maxLength: 63
+                          default_authentication_group:
+                              description: |+
+                                           'This is the default group that is chosen when the authentication 
+                                            succeeds in addition to extracted groups'
+                              type: string
+                              maxLength: 63                                                  
+                          skew_time:
+                              description: |+
+                                           'Allowed clock skew in number of minutes on an incoming assertion.
+                                            Default is 5'
+                              type: integer
+                              minimum: 1
+                          attributes_to_save:
+                              description: |+
+                                           'List of attribute names separated by comma which needs to be extracted
+                                            and stored as key-value pair for the session on ADC'
+                              type: string
+                              maxLength: 2047                   
+                      required:
+                        - metadata_url
+
+                    basic_local_db:
+                      description: 'Basic HTTP authentication, user data in local DB of ADC'
+
+                  required:
+                    - name
+
+            authentication_policies:
+              description: 'Authentication policies'
+              type: array
+              items:
+                type: object 
+                description: 'Authentication policy'
+                properties:
+                  resource:
+                      type: object 
+                      description: 'endpoint/resource selection criteria'
+                      properties:
+                        path:
+                          description: 'api resource path e.g. /products. '
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 511
+                        method:
+                          type: array
+                          items:
+                            type: string
+                            enum: ['GET', 'PUT', 'POST','DELETE']
+                      required:
+                        - path
+                  provider:
+                    description: 'name of the authentication provider for the policy, empty if no authentication required'
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 127
+                    maxItems: 1
+                required:
+                  - resource
+                  - provider
+
+            authorization_policies:
+              description: 'Authorization policies'
+              type: array
+              items:
+                type: object 
+                description: 'Authorization policy'
+                properties:
+                  resource:
+                      type: object 
+                      description: 'endpoint/resource selection criteria'
+                      properties:
+                        path:
+                          description: 'api resource path e.g. /products. '
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 511
+                        method:
+                          description: ' http method'
+                          type: array
+                          items:
+                            type: string
+                            enum: ['GET', 'PUT', 'POST','DELETE']
+                        claims:
+                          description: 'authorization scopes required for selected resource saved as claims or attributes'
+                          type: array
+                          items:
+                              type: object
+                              properties:
+                                name:
+                                  description: 'name of the claim/attribute to check'
+                                  type: string
+                                  maxLength: 127
+                                values:
+                                  description: 'list of claim values required for the request'
+                                  type: array
+                                  items:
+                                    type: string
+                                    maxLength: 127
+                                  minItems: 1
+                              required:
+                                - name
+                                - values
+                      required:
+                        - claims
+
+          required:
+            - servicenames      
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: listeners.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+status:
+spec:
+  group: citrix.com
+  version: null 
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha1
+    served: true
+    storage: false
+  names:
+    kind: Listener
+    plural: listeners
+    singular: listener
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      required: [spec]
+      type: object
+      properties:
+        spec:
+          type: object
+          required: [protocol]
+          properties:
+            protocol:
+              type: string
+              enum: ["https", "http"]
+              description: "Protocol for this listener"
+            vip:
+              type: string
+              description: "VIP address, Optional for CPX, required for Tier-1 deployments"
+            secondaryVips:
+              type: array 
+              description: "An array of Secondary VIPs. All the VIPs will be part of an ipset"
+              minItems: 1
+              items:
+                type: string 
+            redirectPort:
+              type: integer 
+              minimum: 1
+              maximum: 65535
+              description: "Port from which http traffic should be redirected to https"
+            port:
+              type: integer
+              minimum: 1
+              maximum: 65535
+            certificates:
+              type: array
+              description: "certificates attached to the endpoints - Not applicable for HTTP"
+              minItems: 1
+              items:
+                type: object
+                properties:
+                  preconfigured:
+                    type: string
+                    description: "Preconfigured Certificate name on ADC "
+                  secret:
+                    type: object
+                    description: "Kuberentes secret object"
+                    required: [name]
+                    properties:
+                      name:
+                        type: string
+                        description: "name of the Kubernetes Secret object where Cert is located"
+                        pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                      namespace:
+                        type: string
+                        description: "Namespace of the kubernetes secret object; Default is same namespace where the Listener object is located"
+                        pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                  default:
+                    type: boolean
+                    description: "Only one of the certificate can be marked as default which will be presented if none of the cert matches with the hostname"
+                oneOf:
+                - required: ["preconfigured"]
+                - required: ["secret"]
+            policies:
+              type: object
+              description: "Policies attached to the Listener"
+              properties:
+                httpprofile:
+                  type: object
+                  description: "HTTP profile configurations for the Listener, HTTP level configurations"
+                  properties:
+                    preconfigured:
+                      type: string
+                      description: "Preconfigured or Built-in HTTP profile name"
+                    config:
+                      type: object
+                      description: "HTTP profile configuration for the listener. For individual fields, refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nshttpprofile/nshttpprofile/  Name field is auto populated"
+                      additionalProperties:
+                        type: string
+                  oneOf:
+                  - required: ["preconfigured"]
+                  - required: ["config"]
+                tcpprofile:
+                  type: object
+                  description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
+                  properties:
+                    preconfigured:
+                      description: "Preconfigured or Built-in TCP profile name"
+                      type: string
+                    config:
+                      type: object
+                      description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nstcpprofile/ ; Name field is auto populated"
+                      additionalProperties:
+                        type: string
+                  oneOf:
+                  - required: ["preconfigured"]
+                  - required: ["config"]
+                csvserverConfig:
+                  type: object
+                  description: "CS Vserver configuration for the listener"
+                  additionalProperties:
+                    type: string
+                sslprofile:
+                  type: object
+                  description: "SSL profile configuration"
+                  properties:
+                    preconfigured:
+                      type: string
+                      description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
+                    config:
+                      description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                      type: object
+                      additionalProperties:
+                        type: string
+                  oneOf:
+                  - required: ["preconfigured"]
+                  - required: ["config"]
+                sslciphers:
+                  type: array
+                  description: "List of ciphers to be bound to the ssl profile for the listener. Priority is as per the order in the list. A cipher suite, predefined cipher group or User created cipher group can be mentioned"
+                  minItems: 1
+                  items:
+                    type: string
+                    description: "Cipher suite, cipher group name"
+                analyticsprofile:
+                  type: object
+                  description: "Analytics profile configuration"
+                  properties:
+                    preconfigured:
+                      type: array
+                      description: "Preconfigured Analytics profile that needs to be bound to the vserver"
+                      minItems: 1
+                      items:
+                        type: string
+                        description: "Name of the analytics profile preconfigured that will be bound to the Vserver"
+                    config:
+                      type: array
+                      description: "An array of analytics to be enabled"
+                      minItems: 1
+                      items:
+                        type: object 
+                        description: "Anlytics to be enabled"
+                        required: ['type']
+                        properties:
+                          type:
+                             description: "Analytics profile to be enabled, you can enable one or more of the webinsight, tcpinsight, securityinsight, videoinsight, hdxinsight, gatewayinsight, timeseries, lsninsight, botinsight "
+                             type: string
+                             enum: ["webinsight", "tcpinsight", "securityinsight", "videoinsight", "hdxinsight", "gatewayinsight", "timeseries", "lsninsight", "botinsight"]
+                          parameters:
+                            type: object
+                            description: "Additional parameters for analytics profile. Please refer:https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/"
+                            additionalProperties:
+                              type: string
+                  oneOf:
+                  - required: ["preconfigured"]
+                  - required: ["config"]
+            routes:
+              type: array
+              description: "List of route objects attached to the listener"
+              minItems: 1
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: "Name of the HTTPRoute object"
+                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                  namespace:
+                    type: string
+                    description: "Namespace of the HTTPRoute object"
+                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                  labelSelector:
+                    description: "Labels key value pair, if the route carries the same labels, it is automatically attached"
+                    type: object
+                    additionalProperties:
+                      type: string
+                oneOf:
+                - required: [name, namespace]
+                - required: [labelSelector]
+            defaultAction:
+              type: object
+              description: "Default action for the listener: One of Backend or Redirect"
+              properties:
+                backend:
+                  type: object
+                  oneOf:
+                  - required: [kube]
+                  properties:
+                    kube:
+                      type: object
+                      required: [service, port]
+                      properties:
+                        service:
+                          description: "Name of the backend service"
+                          type: string
+                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                        port:
+                          description: "Service port"
+                          type: integer
+                          minimum: 1
+                          maximum: 65535
+                        namespace:
+                          description: "Service namespace"
+                          type: string
+                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                        backendConfig:
+                          description: "General backend service options"
+                          type: object
+                          properties:
+                            secureBackend:
+                              description: "Use Secure communications to the backends"
+                              type: boolean
+                            lbConfig:
+                              description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                              type: object
+                              additionalProperties:
+                                type: string
+                            servicegroupConfig:
+                              description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                              type: object
+                              additionalProperties:
+                                type: string
+                redirect:
+                  type: object
+                  oneOf:
+                  - required: [targetExpression]
+                  - required: [hostRedirect]
+                  - required: [httpsRedirect]
+                  properties:
+                    httpsRedirect:
+                      description: "Change the scheme from http to https keeping URL intact"
+                      type: boolean
+                    hostRedirect:
+                      description: "Host name specified is used for redirection with URL intact"
+                      type: string
+                    targetExpression:
+                      description: "A target can be specified using Citrix ADC policy expression"
+                      type: string
+                    responseCode:
+                      description: "Default response code is 302, which can be customised using this attribute"
+                      type: integer
+                      minimum: 100
+                      maximum: 599
+              oneOf:
+              - required: ["backend"]
+              - required: ["redirect"]
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: httproutes.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: null
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha1
+    served: true
+    storage: false
+  names:
+    kind: HTTPRoute
+    plural: httproutes
+    singular: httproute
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      required: [spec] 
+      type: object
+      properties:
+        spec:
+          type: object
+          required: [rules]
+          properties:
+            hostname:
+              type: array
+              description: "List of domain names that share the same route, default is '*'"
+              minItems: 1
+              items:
+                type: string
+                description: "Domain name"
+            rules:
+              type: array
+              description: "List Content routing rules with an action defined"
+              minItems: 1
+              items:
+                type: object
+                required: [name, action]
+                properties:
+                  name:
+                    type: string
+                    description: "A name to represent the rule, this is used as an identifier in content routing policy name in ADC"
+                    minLength: 1
+                    maxLength: 20
+                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                  match:
+                    type: array
+                    description: "List of rules with same action"
+                    minItems: 1
+                    items:
+                      type: object
+                      anyOf:
+                      - required: [path]
+                      - required: [headers]
+                      - required: [cookies]
+                      - required: [queryParams]
+                      - required: [method]
+                      - required: [policyExpression]
+                      properties:
+                        path:
+                          type: object
+                          description: "URL Path based content routing"
+                          properties:
+                            prefix:
+                              type: string
+                              description: "URL path matches the prefix expression"
+                            exact:
+                              type: string
+                              description: "URL Path must match exact path"
+                            regex:
+                              type: string
+                              description: "PCRE based regex expression for path matching"
+                        headers:
+                          type: array
+                          description: "List of header for content routing - Must match all the rules- Treated as AND condition if more than 1 rule"
+                          minItems: 1
+                          items:
+                            type: object
+                            description: "Header details for content routing, Check for existence of a header or header name-value match"
+                            properties:
+                              headerName:
+                                type: object
+                                description: "Header name based content routing, Here existence of header is used for routing"
+                                properties:
+                                  exact:
+                                    type: string
+                                    description: "Header Name - treated as exact must exist"
+                                  contains:
+                                    type: string
+                                    description: "Header Name - A header must exist that contain the string the name"
+                                  regex:
+                                    type: string
+                                    description: "header Name - treated as PCRE regex expression"
+                                  not:
+                                    type: boolean
+                                    description: "Default False, if present, rules are inverted. I.e header name must not exist"
+                                oneOf:
+                                - required: [exact]
+                                - required: [contains]
+                                - required: [regex]
+                              headerValue:
+                                type: object
+                                description: "Header Name and Value based match"
+                                properties:
+                                  name:
+                                    type: string
+                                    description: "Header name that must match the value"
+                                  exact:
+                                    type: string
+                                    description: "Header value - treated as exact"
+                                  contains:
+                                    type: string
+                                    description: "Header value - treated as contains"
+                                  regex:
+                                    type: string
+                                    description: "header value - treated as PCRE regex expression"
+                                  not:
+                                    type: boolean
+                                    description: "Default False, if present, rules are inverted. I.e header if present must not match the value"
+                                oneOf:
+                                - required: [name, exact]
+                                - required: [name, contains]
+                                - required: [name, regex]
+                        queryParams:
+                          type: array
+                          description: "List of Query parameters  for content routing - Must match all the rules- Treated as AND condition if more than 1 rule"
+                          minItems: 1
+                          items:
+                            type: object
+                            description: "Query parameters Name and Value based match"
+                            properties:
+                              name:
+                                type: string
+                                description: "Query name that must match the value. If no value is specified, matches with any value"
+                              exact:
+                                type: string
+                                description: "Query value - Exact match"
+                              contains:
+                                type: string
+                                description: "Query value - value must have the string(substring)"
+                              regex:
+                                type: string
+                                description: "Query value - Value must match this regex patterm"
+                              not:
+                                type: boolean
+                                description: "Default False, if present, rules are inverted. I.e query if present must not match the value"
+                            anyOf:
+                            - required: [name]
+                            - oneOf:
+                              - required: [name, exact]
+                              - required: [name, contains]
+                              - required: [name, regex]
+                        cookies:
+                          type: array
+                          description: "List of Cookie params for content routing - Must match all the rules- Treated as AND condition if more than 1 rule"
+                          minItems: 1
+                          items:
+                            type: object
+                            description: "Cookie based routing"
+                            properties:
+                              name:
+                                type: string
+                                description: "cookie name that must match the value. If no value specified, it matches with any value"
+                              exact:
+                                type: string
+                                description: "cookie value - treated as exact"
+                              contains:
+                                type: string
+                                description: "cookie value - treated as substring"
+                              regex:
+                                type: string
+                                description: "cookie value - treated as PCRE regex expression"
+                              not:
+                                type: boolean
+                                description: "Default False, if present, rules are inverted. I.e cookie if present must not match the value"
+                            anyOf:
+                            - required: [name]
+                            - oneOf:
+                              - required: [name, exact]
+                              - required: [name, contains]
+                              - required: [name, regex]
+                        method:
+                          type: string
+                          description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
+                        policyExpression:
+                          type: string
+                          description: "Citrix ADC policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
+                  action:
+                    type: object
+                    description: "Action for the matched rule"
+                    properties:
+                      backend:
+                        type: object
+                        oneOf:
+                        - required: [kube]
+                        properties:
+                          kube:
+                            type: object
+                            required: [service, port]
+                            properties:
+                              service:
+                                description: "Name of the backend service"
+                                type: string
+                                pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                              port:
+                                description: "Service port" 
+                                type: integer 
+                                minimum: 1
+                                maximum: 65535
+                              backendConfig:
+                                description: "General backend service options"
+                                type: object
+                                properties:
+                                  secureBackend:
+                                    description: "Use Secure communications to the backends"
+                                    type: boolean
+                                  lbConfig:
+                                    description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  servicegroupConfig:
+                                    description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                      redirect:
+                        type: object
+                        oneOf:
+                        - required: [targetExpression]
+                        - required: [hostRedirect]
+                        - required: [httpsRedirect]
+                        properties:
+                          httpsRedirect:
+                            description: "Change the scheme from http to https keeping URL intact"
+                            type: boolean
+                          hostRedirect:
+                            description: "Host name specified is used for redirection with URL intact"
+                            type: string
+                          targetExpression:
+                            description: "A target can be specified using Citrix ADC policy expression"
+                            type: string
+                          responseCode:
+                            description: "Default response code is 302, which can be customised using this attribute"
+                            type: integer
+                            minimum: 100
+                            maximum: 599
+                    oneOf:
+                    - required: ["backend"]
+                    - required: ["redirect"]
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: continuousdeployments.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: citrix.com
+  # list of versions supported by this CustomResourceDefinition
+  version: v1
+  #    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      #      served: true
+      # One and only one version must be marked as the storage version.
+      #storage: true
+  # either Namespaced or Cluster
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: continuousdeployments
+    # singular name to be used as an alias on the CLI and for display
+    singular: continuousdeployment
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: continuousdeployment
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - crd
+
+  validation:
+   # openAPIV3Schema is the schema for validating custom objects.
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            cronSpec:
+              type: integer
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: wafs.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1
+  names:
+    kind: waf
+    plural: wafs 
+    singular: waf
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+   - name: Status
+     type: string
+     description: "Current Status of the CRD"
+     JSONPath: .status.state
+   - name: Message
+     type: string
+     description: "Status Message"
+     JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      required: [spec]
+      properties:
+        spec:
+          type: object
+          properties:
+            servicenames:
+              description: 'Name of the services to which the waf policies are applied.'
+              type: array
+              items:
+                type: string
+                maxLength: 127
+            application_type:
+              description: 'Type of applications to protect'
+              oneOf:
+                - type: array
+                  items:
+                    type: string
+                    enum: ['HTML', 'JSON', 'XML']
+                - type: string
+                  enum: ['HTML', 'JSON', 'XML']
+            signatures:
+              description: 'Location of external signature file'
+              type: string
+            redirect_url:
+              description: ''
+              type: string
+            html_error_object:
+              description: 'Location of customized error page to respond when html or common violation are hit'
+              type: string
+            xml_error_object:
+              description: 'Location of customized error page to respond when xml violations are hit'
+              type: string
+            json_error_object:
+              description: 'Location of customized error page to respond when json violations are hit'
+              type: string
+            ip_reputation:
+              description: 'Enabling IP reputation feature'
+              oneOf:
+                - type: string
+                - type: object
+            target:
+              description: 'To control what traffic to be inspected by Web Application Firewall. If you do not provide the target, everything will be inspected by default'
+              type: object
+              properties:
+                path:
+                  type: array
+                  description: "List of http urls to inspect"
+                  items:
+                    type: string
+                    description: "URL path"
+                method:
+                  type: array
+                  description: "List of http methods to inspect"
+                  items:
+                    type: string
+                    enum: ['GET', 'PUT', 'POST','DELETE']
+                header:
+                  type: array
+                  description: "List of http headers to inspect"
+                  items:
+                    type: string
+                    description: "header name"
+            security_checks:
+              description: 'To enable/disable application firewall security checks'
+              type: object
+              properties:
+                common:
+                  type: object
+                html:
+                  type: object
+                json:
+                  type: object
+                xml:
+                  type: object
+            settings:
+              description: 'To fine tune application firewall security checks default settings'
+              type: object
+              properties:
+                common:
+                  type: object
+                html:
+                  type: object
+                json:
+                  type: object
+                xml:
+                  type: object
+            relaxations:
+              description: 'Section which contains relaxation rules for known traffic and false positives'
+              type: object
+              properties:
+                common:
+                  type: object
+                html:
+                  type: object
+                json:
+                  type: object
+                xml:
+                  type: object
+            enforcements:
+              description: 'Section which contains enforcement or restriction rules'
+              type: object
+              properties:
+                common:
+                  type: object
+                html:
+                  type: object
+                json:
+                  type: object
+                xml:
+                  type: object                                 
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: bots.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1
+  names:
+    kind: bot
+    plural: bots
+    singular: bot
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+  validation:
+    openAPIV3Schema:
+      required: [spec]
+      properties:
+        spec:
+          type: object
+          properties:
+            servicenames:
+              description: 'Name of the services to which the bot policies are applied.'
+              type: array
+              items:
+                type: string
+                maxLength: 127
+            signatures:
+              description: 'Location of external bot signature file'
+              type: string
+            redirect_url:
+              description: 'url to redirect when bot violation is hit'
+              type: string
+            target:
+              description: 'To control what traffic to be inspected by BOT. If you do not provide the target, everything will be inspected by default'
+              type: object
+              properties:
+                paths:
+                  type: array
+                  description: "List of http urls to inspect"
+                  items:
+                    type: string
+                    description: "URL path"
+                method:
+                  type: array
+                  description: "List of http methods to inspect"
+                  items:
+                    type: string
+                    enum: ['GET', 'PUT', 'POST','DELETE']
+                header:
+                  type: array
+                  description: "List of http headers to inspect"
+                  items:
+                    type: string
+                    description: "header name"
+            security_checks:
+              description: 'To enable/disable bot ecurity checks'
+              type: object
+              properties:
+                allow_list:
+                  type: string
+                  enum: ['ON', 'OFF']
+                block_list:
+                  type: string
+                  enum: ['ON', 'OFF']
+                device_fingerprint:
+                  oneOf:
+                    - type: string
+                      enum: ['ON', 'OFF']
+                    - type: object
+                      properties:
+                        action:
+                          type: array
+                          items:
+                            type: string
+                reputation:
+                  type: string
+                  enum: ['ON', 'OFF']
+                ratelimit:
+                  type: string
+                  enum: ['ON', 'OFF']
+                tps:
+                  type: string
+                  enum: ['ON', 'OFF']
+                trap:
+                  oneOf:
+                    - type: string
+                      enum: ['ON', 'OFF']
+                    - type: object
+                      properties:
+                        action:
+                          type: array
+                          items:
+                            type: string
+            relaxations:
+              description: 'Section which contains binding rules for bot security checks'
+              type: object
+              properties:
+                allow_list:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      subnet:
+                        type: object
+                      ip:
+                        type: object
+                      expression:
+                        type: object
+
+                block_list:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      subnet:
+                        type: object
+                      ip:
+                        type: object
+                      expression:
+                        type: object
+                ratelimit:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      url:
+                        type: object
+                      ip:
+                        type: object
+                      cookie:
+                        type: object
+                reputation:
+                  type: object
+                  properties:
+                    categories:
+                      oneOf:
+                        - type: string
+                        - type: object
+                captcha:
+                  type: array
+                tps:
+                  type: object
+                  properties:
+                    geolocation:
+                      type: object
+                    host:
+                      type: object
+                    ip:
+                      type: object
+                    host:
+                      type: object
+                trapinsertion:
+                  type: array
+                  properties:
+                    urls:
+                      type: object
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: apigatewaypolicies.citrix.com
+{{- if .Values.crds.retainOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+{{- end }}
+spec:
+  group: citrix.com
+  version: v1beta1
+  names:
+    kind: apigatewaypolicy
+    plural: apigatewaypolicies
+    singular: apigatewaypolicy
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      JSONPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      JSONPath: .status.status_message
+
+---
+{{- end }}
