@@ -35,7 +35,7 @@ For more information, see [simplified canary deployment using Ingress annotation
 
 Citrix proposes a solution for canary deployment using Citrix ADC VPX and Citrix ingress controller with Azure pipelines for Kubernetes based applications.
 
-![canary-deployment](./media/canary-blue-green.png)
+![canary-deployment](../../media/canary-blue-green.png)
 
 
 In this solution, there are three configuration directories:
@@ -49,19 +49,19 @@ In this solution, there are three configuration directories:
 
 This directory includes the version based application specific deployment YAML files and the Helm based configuration files to deploy Citrix ingress Controller which is responsible to push Citrix ADC configuration to achieve canary deployment.
 
-![kubernetes_configs](./media/canary-kubernetes-configs.png)
+![kubernetes_configs](../../media/canary-kubernetes-configs.png)
 
 **deployment_configs**
 
 This directory includes the `setup_config` and `teardown_config` JSON files that specify the path of the YAML files available for the specific version of the application to be deployed or brought down during canary deployment. 
 
-![deployment_configs](./media/canary-deployment-configs.png)
+![deployment_configs](../../media/canary-deployment-configs.png)
 
 **pipeline_configs**
 
 This directory includes the Azure pipeline script and the python script which reads the user configurations and triggers the pipeline based on the user request to introduce a new version of the application or teardown a version of an application. The change in percentage of traffic weight in application ingress YAML would trigger the pipeline to switch the traffic between the available version of applications.
 
-![pipeline_configs](./media/pipeline-configs-canary.png)
+![pipeline_configs](../../media/pipeline-configs-canary.png)
 
 With all the three configuration files in place, any update to the files under `deployment_configs` and `kubernetes_configs` directories in GitHub, would trigger the pipeline in Azure.
 
