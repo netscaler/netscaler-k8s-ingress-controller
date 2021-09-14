@@ -1,3 +1,3 @@
 {
-    "K8S_CONFIG_PATH" : "k8s_cd/kubernetes_configs/v2"
+    "K8S_CONFIG_PATH" : "cd/canary-azure-devops/kubernetes_configs/v2"
 }
