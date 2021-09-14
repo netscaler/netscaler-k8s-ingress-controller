@@ -6,7 +6,7 @@ This topic provides information on how to achieve canary and blue-green deployme
 
 Canary is a deployment strategy which involves deploying new versions of an application in small and phased incremental steps. The idea of canary is to first deploy the new changes to a small set of users to take a decision on whether to reject or promote the new deployments and then roll out the changes to the rest of the users. This strategy limits the risk involved in deploying a new version of the application in the production environment.
 
-Azure pipelines are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
+[Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
 
 This section provides information on how to achieve canary deployment for Kubernetes based application using Citrix ADC VPX and Citrix ingress controller with Azure pipelines.
 
