@@ -2,13 +2,13 @@
 
 This topic provides information on how to achieve canary and blue-green deployment for Kubernetes applications using Citrix ADC VPX and Azure pipelines.
 
-## Canary deployment using Citrix ADC VPX and Azure DevOps for Kubernetes based applications
+## Canary deployment using Citrix ADC VPX and Azure pipelines for Kubernetes based applications
 
 Canary is a deployment strategy which involves deploying new versions of an application in small and phased incremental steps. The idea of canary is to first deploy the new changes to a small set of users to take a decision on whether to reject or promote the new deployments and then roll out the changes to the rest of the users. This strategy limits the risk involved in deploying a new version of the application in the production environment.
 
 Azure pipelines are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
 
-This topic discusses how to achieve canary deployment for Kubernetes based application using Citrix ADC VPX and Citrix ingress controller with Azure pipelines.
+This section provides information on how to achieve canary deployment for Kubernetes based application using Citrix ADC VPX and Citrix ingress controller with Azure pipelines.
 
 ### Benefits of Canary deployment
 
@@ -28,7 +28,7 @@ You can achieve canary deployment using Citrix ADC with Ingress annotations whic
 - Applying the canary rules based on the HTTP request header
 - Applying the canary rules based on the HTTP header value
 
-For more information, see the [Simplified canary deployment using Ingress annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations)
+For more information, see [simplified canary deployment using Ingress annotations](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations)
 
 
 ### Canary deployment using Citrix ADC VPX with Azure pipelines
