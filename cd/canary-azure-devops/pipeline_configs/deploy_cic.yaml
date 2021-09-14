@@ -1,0 +1,56 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - k8s_cd/kubernetes_configs/cic_helm
+    - k8s_cd/deployment_configs/deploy.json
+pool: <Your agent pool name>
+stages:
+- stage:
+  jobs:
+  - job: CIC
+    displayName: Deploying CIC
+    pool: <Your agent pool name>
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          sudo apt-get update
+          sudo apt-get install unzip -y
+      displayName: 'Install zip package'
+    - task: HelmInstaller@0
+      displayName: 'Install Helm 2.14.1'
+    - task: Kubernetes@0
+      displayName: 'Delete Stale NS Secrets'
+      inputs:
+        kubernetesServiceConnection: <Your service connection name>
+        command: delete
+        arguments: 'secret nslogin '
+      continueOnError: true
+    - task: HelmDeploy@0
+      displayName: 'Delete Stale Helm Entries'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: <Your service connection name>
+        command: uninstall
+        arguments: cic
+      continueOnError: true
+    - task: Kubernetes@0
+      displayName: 'Create NS Secrets'
+      inputs:
+        kubernetesServiceConnection: <Your service connection name>
+        command: create
+        arguments: 'secret generic  nslogin --from-literal=username="<ADC username>" --from-literal=password="<ADC password>"'
+    - task: HelmDeploy@0
+      displayName: 'Deploy CIC using Helm'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: <Your service connection name>
+        command: install
+        chartType: FilePath
+        chartPath: '$(System.DefaultWorkingDirectory)/k8s_cd/kubernetes_configs/cic_helm'
+        releaseName: cic
+        overrideValues: 'nsIP=<NSIP of ADC>,license.accept=yes,adcCredentialSecret=nslogin'

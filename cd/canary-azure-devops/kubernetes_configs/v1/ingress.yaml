@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: guestbook
+  annotations:
+    kubernetes.io/ingress.class: "citrix"
+    ingress.citrix.com/frontend-ip: 1.1.1.1
+spec:
+  rules:
+  - host:  demo-canary.webapp.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: guestbook
+          servicePort: 80

@@ -1,0 +1,48 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - k8s_cd/deployment_configs/teardown.json
+    
+
+pool: <Your Agent Pool Name>
+
+stages:
+- stage:
+  jobs:
+  - job: Delete
+    displayName: Delete Kubernetes Application
+    pool: <Your Agent Pool Name>
+    steps:
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          sudo apt-get install python -y
+          sudo apt-get install unzip -y
+      displayName: 'Installing Unzip package'
+    
+    - task: PythonScript@0
+      displayName: 'Reading configuration file'
+      inputs:
+        scriptSource: 'filePath'
+        scriptPath: '$(System.DefaultWorkingDirectory)/k8s_cd/pipeline_configs/read_config.py'
+        arguments: --config_file $(System.DefaultWorkingDirectory)/k8s_cd/deployment_configs/teardown.json --action delete
+
+    - task: KubectlInstaller@0
+      inputs:
+        kubectlVersion: 'latest'
+      displayName: 'Installing kubectl'
+      condition:  and(succeeded(), eq(variables['TEARDOWN_FLAG'], true))
+
+    - task: Kubernetes@0
+      displayName: 'Delete Guestbook Application'
+      inputs:
+        kubernetesServiceConnection: <Your service Connection name>
+        command: delete
+        useConfigurationFile: true
+        configuration: '$(System.DefaultWorkingDirectory)/$(K8S_CONFIG_PATH)'
+      condition:  and(succeeded(), eq(variables['TEARDOWN_FLAG'], true))
