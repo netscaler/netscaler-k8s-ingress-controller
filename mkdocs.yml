@@ -177,6 +177,7 @@ nav:
     - Enable GRPC support: how-to/grpc.md
     - Policy based routing: how-to/pbr.md
     - MongoDB solution: how-to/MongoDB-single-tier-solution.md
+    - Canary and blue-green deployment using Azure pipelines: cd/canary-azure-pipline/canary-deployment-with-azure-pipelines.md
   - Entity name change: entity-name-change.md
 google_analytics:
   - 'UA-59929653-12'
