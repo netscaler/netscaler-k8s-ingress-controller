@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cicconfigmap.fullname" . }}
+data:
+  LOGLEVEL: {{ .Values.logLevel | quote | lower }}
+  NS_PROTOCOL: {{ .Values.nsProtocol | quote | lower }}
+  NS_PORT: {{ .Values.nsPort | quote }}
+{{- if .Values.nsSNIPS }}
+  NS_SNIPS: {{ .Values.nsSNIPS | toJson}}
+{{- end }}
+{{- if .Values.podIPsforServiceGroupMembers }}
+  POD_IPS_FOR_SERVICEGROUP_MEMBERS: {{ .Values.podIPsforServiceGroupMembers | quote }}
+{{- end }}
+{{- if .Values.ignoreNodeExternalIP }}
+  IGNORE_NODE_EXTERNAL_IP: {{ .Values.ignoreNodeExternalIP | quote }}
+{{- end }}
+
+{{- if ne (upper .Values.nsHTTP2ServerSide) "OFF" }}
+  NS_HTTP2_SERVER_SIDE: {{ .Values.nsHTTP2ServerSide | quote }}
+{{- end }}
+{{- if ne (toString .Values.nsCookieVersion) "0" }}
+  NS_COOKIE_VERSION: {{ .Values.nsCookieVersion | quote }}
+{{- end }}
+
+{{- if .Values.coeConfig.required }}
+  NS_ANALYTICS_CONFIG: |
+    distributed_tracing:
+      enable: {{ .Values.coeConfig.distributedTracing.enable | quote }}
+      samplingrate: {{ .Values.coeConfig.distributedTracing.samplingrate }}
+    endpoint:
+      server: {{ include "analytics.server" . | quote }}
+    timeseries:
+      port: {{ .Values.coeConfig.timeseries.port }}
+      metrics:
+        enable: {{ .Values.coeConfig.timeseries.metrics.enable | quote }}
+        mode: {{ .Values.coeConfig.timeseries.metrics.mode | quote }}
+      auditlogs:
+        enable: {{ .Values.coeConfig.timeseries.auditlogs.enable | quote }}
+      events:
+        enable: {{ .Values.coeConfig.timeseries.events.enable | quote }}
+    transactions:
+      enable: {{ .Values.coeConfig.transactions.enable | quote }}
+      port: {{ .Values.coeConfig.transactions.port }}
+{{- end }}
