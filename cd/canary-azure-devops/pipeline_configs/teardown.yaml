@@ -4,7 +4,7 @@ trigger:
     - master
   paths:
     include:
-    - k8s_cd/deployment_configs/teardown.json
+    - cd/canary-azure-devops/deployment_configs/teardown.json
     
 
 pool: <Your Agent Pool Name>
@@ -29,8 +29,8 @@ stages:
       displayName: 'Reading configuration file'
       inputs:
         scriptSource: 'filePath'
-        scriptPath: '$(System.DefaultWorkingDirectory)/k8s_cd/pipeline_configs/read_config.py'
-        arguments: --config_file $(System.DefaultWorkingDirectory)/k8s_cd/deployment_configs/teardown.json --action delete
+        scriptPath: '$(System.DefaultWorkingDirectory)/cd/canary-azure-devops/pipeline_configs/read_config.py'
+        arguments: --config_file $(System.DefaultWorkingDirectory)/cd/canary-azure-devops/deployment_configs/teardown.json --action delete
 
     - task: KubectlInstaller@0
       inputs:

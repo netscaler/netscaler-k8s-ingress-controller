@@ -4,8 +4,8 @@ trigger:
     - master
   paths:
     include:
-    - k8s_cd/kubernetes_configs/cic_helm
-    - k8s_cd/deployment_configs/deploy.json
+    - cd/canary-azure-devops/kubernetes_configs/cic_helm
+    - cd/canary-azure-devops/deployment_configs/deploy.json
 pool: <Your agent pool name>
 stages:
 - stage:
@@ -51,6 +51,6 @@ stages:
         kubernetesServiceConnection: <Your service connection name>
         command: install
         chartType: FilePath
-        chartPath: '$(System.DefaultWorkingDirectory)/k8s_cd/kubernetes_configs/cic_helm'
+        chartPath: '$(System.DefaultWorkingDirectory)/cd/canary-azure-devops/kubernetes_configs/cic_helm'
         releaseName: cic
         overrideValues: 'nsIP=<NSIP of ADC>,license.accept=yes,adcCredentialSecret=nslogin'

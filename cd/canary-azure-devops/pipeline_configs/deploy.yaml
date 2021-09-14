@@ -4,8 +4,8 @@ trigger:
     - master
   paths:
     include:
-    - k8s_cd/deployment_configs/deploy.json
-    - k8s_cd/kubernetes_configs/*
+    - cd/canary-azure-devops/deployment_configs/deploy.json
+    - cd/canary-azure-devops/kubernetes_configs/*
     
 
 pool: <Your Agent pool name>
@@ -35,8 +35,8 @@ stages:
       displayName: 'Reading configuration file'
       inputs:
         scriptSource: 'filePath'
-        scriptPath: '$(System.DefaultWorkingDirectory)/ci_cd/pipeline_configs/read_config.py'
-        arguments: --config_file $(System.DefaultWorkingDirectory)/k8s_cd/deployment_configs/deploy.json --action 'apply'
+        scriptPath: '$(System.DefaultWorkingDirectory)/cd/canary-azure-devops/pipeline_configs/read_config.py'
+        arguments: --config_file $(System.DefaultWorkingDirectory)/cd/canary-azure-devops/deployment_configs/deploy.json --action 'apply'
     - task: Kubernetes@0
       displayName: 'Deploy Guestbook Application'
       inputs:

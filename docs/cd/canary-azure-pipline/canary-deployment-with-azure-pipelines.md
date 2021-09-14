@@ -76,7 +76,7 @@ This topic explains how to deploy a sample application on Canary mode using Citr
 Ensure that:
 
 - Citrix ADC VPX is already deployed on the Azure platform and is ready to be used by our sample application.
-- AKS cluster with Kubernetes service Connection configured for the Azure pipeline.
+- AKS cluster with [Kubernetes service connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) configured for the Azure pipeline.
 
 Perform the following steps:
 
@@ -90,7 +90,7 @@ Perform the following steps:
 
         {
 
-         "K8S_CONFIG_PATH" : "kubernetes_configs/v1"
+         "K8S_CONFIG_PATH" : "cd/canary-azure-devops/kubernetes_configs/v1"
 
         }
 
