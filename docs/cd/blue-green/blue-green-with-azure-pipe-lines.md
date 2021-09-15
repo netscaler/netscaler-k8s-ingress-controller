@@ -65,7 +65,7 @@ Ensure that:
 Perform the following steps:
 
 1. Clone the GitHub repository and go to the directory `cd/blue-green`.
-1. Review and update the adc confgurations in the terraform files under the `adc_configs` directory
+1. Review and update the Citrix ADC configurations in the Terraform files under the `adc_configs` directory.
 1. Create two Azure pipelines using the existing YAML files, `deploy.yaml` and `teardown.yaml`, for deploying and tearing down the applications. See, [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) for creating a pipeline.
 1. Update the subscription details and agent pool details in the pipeline YAML.
 1. Save the pipeline.
