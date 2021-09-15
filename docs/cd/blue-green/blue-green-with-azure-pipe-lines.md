@@ -1,4 +1,4 @@
-# Blue green deployment using Citrix ADC VPX and Azure pipelines
+# Blue-green deployment using Citrix ADC VPX and Azure pipelines
 
 Blue-green deployment is a technique that reduces downtime and risk by running two identical production environments called blue and green. At any time, only one of the environments is live that serves all the production traffic. The basis of the blue-green method is side-by-side deployments of two separate but identical environments. Deploying an application in both the environments can be fully automated by using jobs and tasks. This approach enforces duplication of every resource of an application. However, there are many different ways blue-green deployments can be carried out in various continuous deployment tools. This topic provides information on how to achieve the blue green deployment of an application (non cloud-native applications) using Citrix ADC with Azure pipelines. [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
 
@@ -23,7 +23,9 @@ Here, you are using the content switching (CS) policy in Citrix ADC for each app
 
 ## Blue-green deployment using Citrix ADC with Azure pipelines
 
-Citrix proposes a solution for blue-green deployment using Citrix ADC for any virtual machine based application as explained in the following diagram.
+Citrix proposes a solution for blue-green deployment using Citrix ADC with Azure pipelines for any virtual machine based application as depicted in the following topology.
+
+For information on how to create and configure agent pools on Azure, see the [Azure documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=azure-devops&tabs=yaml%2Cbrowser).
 
 ![](../../media/topology-blue-green.png)
 
@@ -65,26 +67,33 @@ Ensure that:
 Perform the following steps:
 
 1. Clone the GitHub repository and go to the directory `cd/blue-green`.
+
 1. Review and update the Citrix ADC configurations in the Terraform files under the `adc_configs` directory.
+
 1. Create two Azure pipelines using the existing YAML files, `deploy.yaml` and `teardown.yaml`, for deploying and tearing down the applications. See, [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) for creating a pipeline.
-1. Update the subscription details and agent pool details in the pipeline YAML.
-1. Save the pipeline.
+
+1. Update the subscription details and agent pool details in the pipeline YAML and then save the pipeline.
+
 1. Create `v1.conf` under the `deployment_configs` directory as follows:
 
        backend_service_ip = "<IP of backend service with version v1>"
 
        priority = 101 
        /*This configuration is used to set the priority of the traffic to be served by Citrix ADC when you introduce a new version of the application in production environment.*/
+
 1. Update the `setup_config.json` file with version and traffic weight percentage.
 
        {
         "TRAFFIC_WEIGHT": "100",
-        "ADC_CONFIG": "cd/blue-green/deployment_config/v1.conf",
+        "ADC_CONFIG": "cd/blue-green/deployment_configs/v1.conf",
         "DEPLOYMENT_VERSION": "v1"
         }
+
 1. Commit `setup_config.json` and `v1.conf` files using Git to trigger the pipeline to deploy the v1 version of the application.
 
+
 1. Access the application through Citrix ADC. 
+
 1. Introduce the v2 version of the application by creating the `v2.conf` file.
 
         backend_service_ip = "<IP of backend service with version v2>"
@@ -95,7 +104,7 @@ Perform the following steps:
 
         {
         "TRAFFIC_WEIGHT": "0",
-        "ADC_CONFIG": "cd/blue-green/deployment_config/v2.conf",
+        "ADC_CONFIG": "cd/blue-green/deployment_configs/v2.conf",
         "DEPLOYMENT_VERSION": "v2"
         }
     At this point, the traffic is served by version v1 of the application because the traffic weight is set as zero for version v2.
@@ -105,7 +114,7 @@ Perform the following steps:
 
            {
            "TRAFFIC_WEIGHT": "100",
-            "ADC_CONFIG": "cd/blue-green/deployment_config/v2.conf",
+            "ADC_CONFIG": "cd/blue-green/deployment_configs/v2.conf",
             "DEPLOYMENT_VERSION": "v2"
             }
 
@@ -119,6 +128,23 @@ Perform the following steps:
    Once the pipeline build is completed, version v1 of the deployment is torn down and only version v2 is running.
 
    **Note:** You can continue introducing newer versions by following the same steps as followed for version v2.
+
+## Canary deployment
+
+Blue-green solution can be also used to achieve canary deployment for your application and the steps remains same as in the blue-green deployment.
+
+To achieve the canary deployment, you need to set the `TRAFFIC_WEIGHT` to the desired traffic percentage that you want to route to the v2 version of the application. 
+For example, as per the following configuration 20 percentage of the traffic goes to the v2 version of application and the remaining 80 percentage of the traffic continues to get routed to the older version (v1) of the application without any manual intervention.
+
+
+          {
+           "TRAFFIC_WEIGHT": "20",
+           "ADC_CONFIG": "cd/blue-green/deployment_configs/v2.conf",
+           "DEPLOYMENT_VERSION": "v2"
+          }
+
+
+
 
 
 
