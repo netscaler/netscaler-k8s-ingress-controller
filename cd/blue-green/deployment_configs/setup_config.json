@@ -1,0 +1,5 @@
+{
+  "TRAFFIC_WEIGHT": "100",
+  "ADC_CONFIG": "cd/blue-green/deployment_configs/v1.conf",
+  "DEPLOYMENT_VERSION": "v1"
+}
