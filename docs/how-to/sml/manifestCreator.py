@@ -493,6 +493,7 @@ class service:
             ("kind", "Service"),
             ("metadata", {
                 "name": self.name,
+                "labels": {"citrix-adc": "cpx"},
             }),
             ("spec", {
                 "ports": [],
