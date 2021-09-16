@@ -191,9 +191,14 @@ def main():
                     list_to_remove.append(yaml_instance)
                 elif yaml_instance['kind'] == "Deployment":
                     yaml_instance['spec']['template']['spec']['serviceAccountName'] = re.sub("sml"+str(i),"sml1",yaml_instance['spec']['template']['spec']['serviceAccountName'])
+                elif yaml_instance['kind'] == "Service":
+                    yaml_instance['metadata']['labels']['citrix-adc'] = 'cpx'
             yaml_dictionaries = [x for x in yaml_dictionaries if x not in list_to_remove]
             converted_yamls_dict_list.extend(yaml_dictionaries)
         else:
+            for yaml_instance in yaml_dictionaries:
+                if yaml_instance['kind'] == "Service":
+                    yaml_instance['metadata']['labels']['citrix-adc'] = 'cpx'
             converted_yamls_dict_list.extend(yaml_dictionaries)
 
 #    rbac = manifestCreator.rbac()
