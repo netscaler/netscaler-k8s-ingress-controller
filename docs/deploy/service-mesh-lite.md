@@ -35,7 +35,11 @@ For Citrix ADC CPX to manage east-west traffic, the FQDN of the microservice (fo
 
 ![Modify coffee service](../media/coffee-svs-cpx.png)
 
-### Step 2: Create a headless service named  “`coffee-headless`” for coffee microservice pods
+> **Note:**
+> If you are deploying service mesh lite to bring up the service graph in Citrix ADM for observability,
+> then you should add the label `citrix-adc: cpx` in all the services of your application which are pointing to the Citrix ADC CPX IP address after modifying the service.
+
+### Step 2: Create a headless service named  `coffee-headless` for coffee microservice pods
 
 Since you have modified the `coffee` service to point to Citrix ADC CPX, you need to create one more service that represents coffee microservice deployment.
 
