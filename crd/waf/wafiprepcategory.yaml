@@ -3,7 +3,8 @@ kind: waf
 metadata:
     name: wafiprepcategory
 spec:
-    application_type: HTML
+    application_type:
+        - HTML
     servicenames:
         - frontend
     ip_reputation:

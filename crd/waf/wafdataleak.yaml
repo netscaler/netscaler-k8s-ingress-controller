@@ -5,7 +5,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/hipster.html"
     security_checks:
         common:
