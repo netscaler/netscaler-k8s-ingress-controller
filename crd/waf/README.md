@@ -256,7 +256,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
@@ -277,7 +278,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -303,7 +305,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     signatures: "http://x.x.x.x/crd/sig.xml"
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
@@ -325,7 +328,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -354,7 +358,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     target:
         path:
@@ -391,7 +396,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -426,7 +432,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
@@ -450,7 +457,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -569,7 +577,8 @@ kind: waf
 metadata:
     name: wafiprep
 spec:
-    application_type: html
+    application_type:
+        - html
     servicenames:
         - frontend
     ip_reputation: "on"
@@ -585,7 +594,8 @@ kind: waf
 metadata:
     name: wafiprepcategory
 spec:
-    application_type: html
+    application_type:
+        - html
     servicenames:
         - frontend
     ip_reputation:
@@ -616,7 +626,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: JSON
+    application_type:
+        - JSON
     json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
@@ -651,7 +662,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: JSON
+    application_type:
+        - JSON
     json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
@@ -687,7 +699,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: XML
+    application_type:
+        - XML
     xml_error_object: "http://x.x.x.x/crd/error_page.xml"
     security_checks:
         xml:
@@ -738,7 +751,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: XML
+    application_type:
+        - XML
     xml_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         xml:
