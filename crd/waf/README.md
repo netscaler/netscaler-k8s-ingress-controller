@@ -258,7 +258,7 @@ spec:
         - frontend
     application_type:
         - HTML
-    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -459,7 +459,7 @@ spec:
         - frontend
     application_type:
         - HTML
-    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"
