@@ -1,274 +1,272 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: listeners.citrix.com
-status:
 spec:
   group: citrix.com
-  version: null 
-  versions:
-  - name: v1
-    served: true
-    storage: true
-  - name: v1alpha1
-    served: true
-    storage: false
+  version: null
   names:
     kind: Listener
     plural: listeners
     singular: listener
   scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
-    - name: Status
-      type: string
-      description: "Current Status of the CRD"
-      JSONPath: .status.state
-    - name: Message
-      type: string
-      description: "Status Message"
-      JSONPath: .status.status_message
-  validation:
-    openAPIV3Schema:
-      required: [spec]
-      type: object
-      properties:
-        spec:
-          type: object
-          required: [protocol]
-          properties:
-            protocol:
-              type: string
-              enum: ["https", "http"]
-              description: "Protocol for this listener"
-            vip:
-              type: string
-              description: "VIP address, Optional for CPX, required for Tier-1 deployments"
-            secondaryVips:
-              type: array 
-              description: "An array of Secondary VIPs. All the VIPs will be part of an ipset"
-              minItems: 1
-              items:
-                type: string 
-            redirectPort:
-              type: integer 
-              minimum: 1
-              maximum: 65535
-              description: "Port from which http traffic should be redirected to https"
-            port:
-              type: integer
-              minimum: 1
-              maximum: 65535
-            certificates:
-              type: array
-              description: "certificates attached to the endpoints - Not applicable for HTTP"
-              minItems: 1
-              items:
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        required: [spec]
+        type: object
+        properties:
+          status:
+            type: object
+            properties:
+              state:
+                 type: string
+              status_message:
+                 type: string
+          spec:
+            type: object
+            required: [protocol]
+            properties:
+              ingressclass:
+                type: string
+                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+              protocol:
+                type: string
+                enum: ["https", "http"]
+                description: "Protocol for this listener"
+              vip:
+                type: string
+                description: "VIP address, Optional for CPX, required for Tier-1 deployments"
+              secondaryVips:
+                type: array
+                description: "An array of Secondary VIPs. All the VIPs will be part of an ipset"
+                minItems: 1
+                items:
+                  type: string
+              redirectPort:
+                type: integer
+                minimum: 1
+                maximum: 65535
+                description: "Port from which http traffic should be redirected to https"
+              port:
+                type: integer
+                minimum: 1
+                maximum: 65535
+              certificates:
+                type: array
+                description: "certificates attached to the endpoints - Not applicable for HTTP"
+                minItems: 1
+                items:
+                  type: object
+                  properties:
+                    preconfigured:
+                      type: string
+                      description: "Preconfigured Certificate name on ADC "
+                    secret:
+                      type: object
+                      description: "Kuberentes secret object"
+                      required: [name]
+                      properties:
+                        name:
+                          type: string
+                          description: "name of the Kubernetes Secret object where Cert is located"
+                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                        namespace:
+                          type: string
+                          description: "Namespace of the kubernetes secret object; Default is same namespace where the Listener object is located"
+                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                    default:
+                      type: boolean
+                      description: "Only one of the certificate can be marked as default which will be presented if none of the cert matches with the hostname"
+                  oneOf:
+                  - required: ["preconfigured"]
+                  - required: ["secret"]
+              policies:
                 type: object
+                description: "Policies attached to the Listener"
                 properties:
-                  preconfigured:
-                    type: string
-                    description: "Preconfigured Certificate name on ADC "
-                  secret:
+                  httpprofile:
                     type: object
-                    description: "Kuberentes secret object"
-                    required: [name]
+                    description: "HTTP profile configurations for the Listener, HTTP level configurations"
                     properties:
-                      name:
+                      preconfigured:
                         type: string
-                        description: "name of the Kubernetes Secret object where Cert is located"
-                        pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                      namespace:
-                        type: string
-                        description: "Namespace of the kubernetes secret object; Default is same namespace where the Listener object is located"
-                        pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                  default:
-                    type: boolean
-                    description: "Only one of the certificate can be marked as default which will be presented if none of the cert matches with the hostname"
-                oneOf:
-                - required: ["preconfigured"]
-                - required: ["secret"]
-            policies:
-              type: object
-              description: "Policies attached to the Listener"
-              properties:
-                httpprofile:
-                  type: object
-                  description: "HTTP profile configurations for the Listener, HTTP level configurations"
-                  properties:
-                    preconfigured:
-                      type: string
-                      description: "Preconfigured or Built-in HTTP profile name"
-                    config:
-                      type: object
-                      description: "HTTP profile configuration for the listener. For individual fields, refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nshttpprofile/nshttpprofile/  Name field is auto populated"
-                      additionalProperties:
-                        type: string
-                  oneOf:
-                  - required: ["preconfigured"]
-                  - required: ["config"]
-                tcpprofile:
-                  type: object
-                  description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
-                  properties:
-                    preconfigured:
-                      description: "Preconfigured or Built-in TCP profile name"
-                      type: string
-                    config:
-                      type: object
-                      description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nstcpprofile/ ; Name field is auto populated"
-                      additionalProperties:
-                        type: string
-                  oneOf:
-                  - required: ["preconfigured"]
-                  - required: ["config"]
-                csvserverConfig:
-                  type: object
-                  description: "CS Vserver configuration for the listener"
-                  additionalProperties:
-                    type: string
-                sslprofile:
-                  type: object
-                  description: "SSL profile configuration"
-                  properties:
-                    preconfigured:
-                      type: string
-                      description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
-                    config:
-                      description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
-                      type: object
-                      additionalProperties:
-                        type: string
-                  oneOf:
-                  - required: ["preconfigured"]
-                  - required: ["config"]
-                sslciphers:
-                  type: array
-                  description: "List of ciphers to be bound to the ssl profile for the listener. Priority is as per the order in the list. A cipher suite, predefined cipher group or User created cipher group can be mentioned"
-                  minItems: 1
-                  items:
-                    type: string
-                    description: "Cipher suite, cipher group name"
-                analyticsprofile:
-                  type: object
-                  description: "Analytics profile configuration"
-                  properties:
-                    preconfigured:
-                      type: array
-                      description: "Preconfigured Analytics profile that needs to be bound to the vserver"
-                      minItems: 1
-                      items:
-                        type: string
-                        description: "Name of the analytics profile preconfigured that will be bound to the Vserver"
-                    config:
-                      type: array
-                      description: "An array of analytics to be enabled"
-                      minItems: 1
-                      items:
-                        type: object 
-                        description: "Anlytics to be enabled"
-                        required: ['type']
-                        properties:
-                          type:
-                             description: "Analytics profile to be enabled, you can enable one or more of the webinsight, tcpinsight, securityinsight, videoinsight, hdxinsight, gatewayinsight, timeseries, lsninsight, botinsight "
-                             type: string
-                             enum: ["webinsight", "tcpinsight", "securityinsight", "videoinsight", "hdxinsight", "gatewayinsight", "timeseries", "lsninsight", "botinsight"]
-                          parameters:
-                            type: object
-                            description: "Additional parameters for analytics profile. Please refer:https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/"
-                            additionalProperties:
-                              type: string
-                  oneOf:
-                  - required: ["preconfigured"]
-                  - required: ["config"]
-            routes:
-              type: array
-              description: "List of route objects attached to the listener"
-              minItems: 1
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: "Name of the HTTPRoute object"
-                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                  namespace:
-                    type: string
-                    description: "Namespace of the HTTPRoute object"
-                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                  labelSelector:
-                    description: "Labels key value pair, if the route carries the same labels, it is automatically attached"
+                        description: "Preconfigured or Built-in HTTP profile name"
+                      config:
+                        type: object
+                        description: "HTTP profile configuration for the listener. For individual fields, refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nshttpprofile/nshttpprofile/  Name field is auto populated"
+                        additionalProperties:
+                          type: string
+                    oneOf:
+                    - required: ["preconfigured"]
+                    - required: ["config"]
+                  tcpprofile:
                     type: object
+                    description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
+                    properties:
+                      preconfigured:
+                        description: "Preconfigured or Built-in TCP profile name"
+                        type: string
+                      config:
+                        type: object
+                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nstcpprofile/ ; Name field is auto populated"
+                        additionalProperties:
+                          type: string
+                    oneOf:
+                    - required: ["preconfigured"]
+                    - required: ["config"]
+                  csvserverConfig:
+                    type: object
+                    description: "CS Vserver configuration for the listener"
                     additionalProperties:
                       type: string
-                oneOf:
-                - required: [name, namespace]
-                - required: [labelSelector]
-            defaultAction:
-              type: object
-              description: "Default action for the listener: One of Backend or Redirect"
-              properties:
-                backend:
-                  type: object
-                  oneOf:
-                  - required: [kube]
-                  properties:
-                    kube:
-                      type: object
-                      required: [service, port]
-                      properties:
-                        service:
-                          description: "Name of the backend service"
+                  sslprofile:
+                    type: object
+                    description: "SSL profile configuration"
+                    properties:
+                      preconfigured:
+                        type: string
+                        description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
+                      config:
+                        description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                        type: object
+                        additionalProperties:
                           type: string
-                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                        port:
-                          description: "Service port"
-                          type: integer
-                          minimum: 1
-                          maximum: 65535
-                        namespace:
-                          description: "Service namespace"
+                    oneOf:
+                    - required: ["preconfigured"]
+                    - required: ["config"]
+                  sslciphers:
+                    type: array
+                    description: "List of ciphers to be bound to the ssl profile for the listener. Priority is as per the order in the list. A cipher suite, predefined cipher group or User created cipher group can be mentioned"
+                    minItems: 1
+                    items:
+                      type: string
+                      description: "Cipher suite, cipher group name"
+                  analyticsprofile:
+                    type: object
+                    description: "Analytics profile configuration"
+                    properties:
+                      preconfigured:
+                        type: array
+                        description: "Preconfigured Analytics profile that needs to be bound to the vserver"
+                        minItems: 1
+                        items:
                           type: string
-                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                        backendConfig:
-                          description: "General backend service options"
+                          description: "Name of the analytics profile preconfigured that will be bound to the Vserver"
+                      config:
+                        type: array
+                        description: "An array of analytics to be enabled"
+                        minItems: 1
+                        items:
                           type: object
+                          description: "Anlytics to be enabled"
+                          required: ['type']
                           properties:
-                            secureBackend:
-                              description: "Use Secure communications to the backends"
-                              type: boolean
-                            lbConfig:
-                              description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                            type:
+                               description: "Analytics profile to be enabled, you can enable one or more of the webinsight, tcpinsight, securityinsight, videoinsight, hdxinsight, gatewayinsight, timeseries, lsninsight, botinsight "
+                               type: string
+                               enum: ["webinsight", "tcpinsight", "securityinsight", "videoinsight", "hdxinsight", "gatewayinsight", "timeseries", "lsninsight", "botinsight"]
+                            parameters:
                               type: object
+                              description: "Additional parameters for analytics profile. Please refer:https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/"
                               additionalProperties:
                                 type: string
-                            servicegroupConfig:
-                              description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
-                              type: object
-                              additionalProperties:
-                                type: string
-                redirect:
+                    oneOf:
+                    - required: ["preconfigured"]
+                    - required: ["config"]
+              routes:
+                type: array
+                description: "List of route objects attached to the listener"
+                minItems: 1
+                items:
                   type: object
-                  oneOf:
-                  - required: [targetExpression]
-                  - required: [hostRedirect]
-                  - required: [httpsRedirect]
                   properties:
-                    httpsRedirect:
-                      description: "Change the scheme from http to https keeping URL intact"
-                      type: boolean
-                    hostRedirect:
-                      description: "Host name specified is used for redirection with URL intact"
+                    name:
                       type: string
-                    targetExpression:
-                      description: "A target can be specified using Citrix ADC policy expression"
+                      description: "Name of the HTTPRoute object"
+                      pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                    namespace:
                       type: string
-                    responseCode:
-                      description: "Default response code is 302, which can be customised using this attribute"
-                      type: integer
-                      minimum: 100
-                      maximum: 599
-              oneOf:
-              - required: ["backend"]
-              - required: ["redirect"]
+                      description: "Namespace of the HTTPRoute object"
+                      pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                    labelSelector:
+                      description: "Labels key value pair, if the route carries the same labels, it is automatically attached"
+                      type: object
+                      additionalProperties:
+                        type: string
+                  oneOf:
+                  - required: [name, namespace]
+                  - required: [labelSelector]
+              defaultAction:
+                type: object
+                description: "Default action for the listener: One of Backend or Redirect"
+                properties:
+                  backend:
+                    type: object
+                    oneOf:
+                    - required: [kube]
+                    properties:
+                      kube:
+                        type: object
+                        required: [service, port]
+                        properties:
+                          service:
+                            description: "Name of the backend service"
+                            type: string
+                            pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                          port:
+                            description: "Service port"
+                            type: integer
+                            minimum: 1
+                            maximum: 65535
+                          namespace:
+                            description: "Service namespace"
+                            type: string
+                            pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                          backendConfig:
+                            description: "General backend service options"
+                            type: object
+                            properties:
+                              secure_backend:
+                                description: "Use Secure communications to the backends"
+                                type: boolean
+                              lbConfig:
+                                description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                type: object
+                                additionalProperties:
+                                  type: string
+                              servicegroupConfig:
+                                description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                type: object
+                                additionalProperties:
+                                  type: string
+                  redirect:
+                    type: object
+                    oneOf:
+                    - required: [targetExpression]
+                    - required: [hostRedirect]
+                    - required: [httpsRedirect]
+                    properties:
+                      httpsRedirect:
+                        description: "Change the scheme from http to https keeping URL intact"
+                        type: boolean
+                      hostRedirect:
+                        description: "Host name specified is used for redirection with URL intact"
+                        type: string
+                      targetExpression:
+                        description: "A target can be specified using Citrix ADC policy expression"
+                        type: string
+                      responseCode:
+                        description: "Default response code is 302, which can be customised using this attribute"
+                        type: integer
+                        minimum: 100
+                        maximum: 599
+                oneOf:
+                - required: ["backend"]
+                - required: ["redirect"]
+    subresources:
+      # status enables the status subresource.
+      status: {}
