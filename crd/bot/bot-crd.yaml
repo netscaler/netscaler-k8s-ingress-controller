@@ -89,15 +89,6 @@ spec:
                   device_fingerprint:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
-                    # oneOf:
-                    #   - type: string
-                    #     enum: ['ON', 'OFF']
-                    #   - type: object
-                    #     properties:
-                    #       action:
-                    #         type: array
-                    #         items:
-                    #           type: string
                   reputation:
                     type: string
                     enum: ['ON', 'OFF']
@@ -110,15 +101,6 @@ spec:
                   trap:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
-                    # oneOf:
-                    #   - type: string
-                    #     enum: ['ON', 'OFF']
-                    #   - type: object
-                    #     properties:
-                    #       action:
-                    #         type: array
-                    #         items:
-                    #           type: string
               bindings:
                 description: 'Section which contains binding rules for bot security checks'
                 type: object
