@@ -1,15 +1,18 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: guestbook-ingress
   annotations:
-   kubernetes.io/ingress.class: "citrix"
+    kubernetes.io/ingress.class: citrix
+  name: guestbook-ingress
 spec:
   rules:
-  - host:  www.guestbook.com
+  - host: www.guestbook.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: frontend
-          servicePort: 80
+      - backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
