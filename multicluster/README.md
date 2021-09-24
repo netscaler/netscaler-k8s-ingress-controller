@@ -305,34 +305,14 @@ The following is the GTP CRD definition.
 
 ```yml
 
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   # name must match the spec fields below, and be in the form: <plural>.<group>
   name: globaltrafficpolicies.citrix.com
 spec:
-  # group name to use for REST API: /apis/<group>/<version>
   group: citrix.com
-  # list of versions supported by this CustomResourceDefinition
-  version: v1beta1
-  #    - name: v1
-      # Each version can be enabled/disabled by Served flag.
-      #      served: true
-      # One and only one version must be marked as the storage version.
-      #storage: true
-  # either Namespaced or Cluster
   scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
-    - name: Status
-      type: string
-      description: "Current Status of the CRD"
-      JSONPath: .status.state
-    - name: Message
-      type: string
-      description: "Status Message"
-      JSONPath: .status.status_message
   names:
     # plural name to be used in the URL: /apis/<group>/<version>/<plural>
     plural: globaltrafficpolicies
@@ -343,109 +323,137 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - gtp
- 
-  validation:
-  # openAPIV3Schema is the schema for validating custom objects.
-    openAPIV3Schema:
-      required: ["apiVersion","kind","metadata","spec"]
-      properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-        metadata:
-          required: ["name","namespace"]
-          properties:
-            name:
-              type: string
-            namespace:
-              type: string
-          type: object
-        spec:
-          required: ["serviceType","hosts"]
-          properties:
-            ipType:
-              type: string
-              enum:
-              - ipv4
-              description: "Type of address A or AAAA. Currently only A is supported"
-            serviceType:
-              type: string
-              enum:
-              - HTTP
-              - SSL
-              - TCP
-              - UDP
-              - ANY
-              description: "Protocol supported in multi-cluster deployment"
-            hosts:
-              items:
-                required: ["host","policy"]
-                properties:
-                  host:
-                    type: string
-                    description: "Domain for which multi-cluster support will be applied"
-                  policy:
-                    required: ["targets","trafficPolicy"]
-                    properties:
-                      trafficPolicy:
-                        type: string
-                        enum:
-                        - LOCAL-FIRST
-                        - CANARY
-                        - FAILOVER
-                        - RTT
-                        - ROUNDROBIN
-                        - STATICPROXIMITY
-                        description: "The traffic distribution policy supported in multi-cluster deployment"
-                      secLbMethod:
-                        type: string
-                        description: "The traffic distribution policy supported among clusters under a group in local-first, canary or failover"
-                      targets:
-                        items:
-                          required: ["destination"]
-                          properties:
-                            destination:
-                              type: string
-                              description: "Ingress or LoadBalancer service endpoint in each cluster. Should match with name of GSE"
-                            weight:
-                              type: integer
-                              minimum: 1
-                              maximum: 100
-                              description: "Proportion of traffic to be maintained across clusters. For canary proportion is percentage"
-                            rule:
-                              type: string
-                            CIDR:
-                              type: string
-                              description: "CIDR to be used in local-first to determine the scope of locality"
-                            primary:
-                              type: boolean
-                              description: "Is this destination a primary cluster or a backup cluster in failover deployment. Possible values: True or False"
-                          type: object
-                        type: array
-                    type: object
-                  monitor:
-                    items:
+  versions: 
+  - name: v1beta1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+      - name: Status
+        type: string
+        description: "Current Status of the CRD"
+        jsonPath: .status.state
+      - name: Message
+        type: string
+        description: "Status Message"
+        jsonPath: .status.status_message 
+    schema:
+     # openAPIV3Schema is the schema for validating custom objects.
+      openAPIV3Schema:
+        type: object
+        required: ["apiVersion","kind","metadata","spec"]
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            #required: ["name","namespace"]
+            properties:
+              name:
+                type: string
+              #namespace:
+              #  type: string
+            type: object
+          status:
+            type: object
+            properties:
+              state:
+                 type: string
+              status_message:
+                 type: string
+          spec:
+            required: ["serviceType","hosts","status"]
+            properties:
+              ipType:
+                type: string
+                enum:
+                - ipv4
+                description: "Type of address A or AAAA. Currently only A is supported"
+              serviceType:
+                type: string
+                enum:
+                - HTTP
+                - SSL
+                - TCP
+                - UDP
+                - ANY
+                description: "Protocol supported in multi-cluster deployment"
+              hosts:
+                items:
+                  required: ["host","policy"]
+                  properties:
+                    host:
+                      type: string
+                      description: "Domain for which multi-cluster support will be applied"
+                    policy:
+                      required: ["targets","trafficPolicy"]
                       properties:
-                        monType:
+                        trafficPolicy:
                           type: string
                           enum:
-                          - PING
-                          - TCP
-                          - HTTP
-                          - HTTPS
-                          description: "Type of probe to determine the health of multi-cluster endpoint"
-                        uri:
+                          - LOCAL-FIRST
+                          - CANARY
+                          - FAILOVER
+                          - RTT
+                          - ROUNDROBIN
+                          - STATICPROXIMITY
+                          description: "The traffic distribution policy supported in multi-cluster deployment"
+                        secLbMethod:
                           type: string
-                          description: "Path to be probed for the health of multi-cluster endpoint in case of http and https"
-                        respCode:
-                          type: integer
-                          description: "Response code expected to mark the multi-cluster endpoint healthy in case of http and https"
+                          description: "The traffic distribution policy supported among clusters under a group in local-first, canary or failover"
+                        targets:
+                          items:
+                            required: ["destination"]
+                            properties:
+                              destination:
+                                type: string
+                                description: "Ingress or LoadBalancer service endpoint in each cluster"
+                              weight:
+                                type: integer
+                                minimum: 0 
+                                maximum: 100
+                                description: "Proportion of traffic to be maintained across clusters. For canary proportion is percentage"
+                              rule: 
+                                type: string
+                              CIDR:
+                                type: string
+                                description: "CIDR to be used in local-first to determine the scope of locality"
+                              primary:
+                                type: boolean
+                                description: "Is this destination a primary cluster or a backup cluster in failover deployment. Possible values: True or False"
+                            type: object
+                          type: array
+                        monitor:
+                          items:
+                            properties:
+                              monType: 
+                                type: string
+                                enum:
+                                - PING
+                                - TCP
+                                - HTTP
+                                - HTTPS
+                                - ping
+                                - tcp
+                                - http
+                                - https
+                                description: "Type of probe to determine the health of multi-cluster endpoint"
+                              uri:
+                                type: string
+                                description: "Path to be probed for the health of multi-cluster endpoint in case of http and https"
+                              respCode:
+                                type: integer
+                                description: "Response code expected to mark the multi-cluster endpoint healthy in case of http and https"
+                            type: object
+                          type: array
                       type: object
-                    type: array
+                  type: object
+                type: array
+              status:
                 type: object
-              type: array
-          type: object
+            type: object
 ```
 
 The following table explains the GTP CRD attributes.
@@ -471,7 +479,7 @@ The following table explains the GTP CRD attributes.
 Following is the GSE CRD definition.
 
 ```yml
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   # name must match the spec fields below, and be in the form: <plural>.<group>
@@ -480,25 +488,6 @@ spec:
   # group name to use for REST API: /apis/<group>/<version>
   group: citrix.com
   # list of versions supported by this CustomResourceDefinition
-  version: v1beta1
-  #    - name: v1
-      # Each version can be enabled/disabled by Served flag.
-      #      served: true
-      # One and only one version must be marked as the storage version.
-      #storage: true
-  # either Namespaced or Cluster
-  scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
-    - name: Status
-      type: string
-      description: "Current Status of the CRD"
-      JSONPath: .status.state
-    - name: Message
-      type: string
-      description: "Status Message"
-      JSONPath: .status.status_message
   names:
     # plural name to be used in the URL: /apis/<group>/<version>/<plural>
     plural: globalserviceentries
@@ -509,41 +498,56 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - gse
- 
-  validation:
-  # openAPIV3Schema is the schema for validating custom objects.
-    openAPIV3Schema:
-      required: ["apiVersion","kind","metadata","spec"]
-      properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-        metadata:
-          required: ["name","namespace"]
-          properties:
-            name:
-              type: string
-            namespace:
-              type: string
-          type: object
-        spec:
-          required: ["endpoint"]
-          properties:
-            endpoint:
-              required: ["monitorPort"]
-              properties:
-                ipv4address:
-                  type: string
-                  description: "ipv4 address of local cluster ingress / load balancer kind service endpoint"
-                domainName:
-                  type: string
-                  description: "domain name of local cluster ingress / load balancer kind service endpoint"
-                monitorPort:
-                  type: integer
-                  description: "listening port of local cluster ingress / load balancer kind service endpoint"
-              type: object
-          type: object
+  # either Namespaced or Cluster
+  scope: Namespaced
+  versions: 
+  - name: v1beta1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+      - name: Status
+        type: string
+        description: "Current Status of the CRD"
+        jsonPath: .status.state
+      - name: Message
+        type: string
+        description: "Status Message"
+        jsonPath: .status.status_message
+    schema:
+     # openAPIV3Schema is the schema for validating custom objects.
+      openAPIV3Schema:
+        type: object
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          status:
+            type: object
+            properties:
+              state:
+                 type: string
+              status_message:
+                 type: string
+          spec:
+            properties:
+              endpoint:
+                properties:
+                  ipv4address:
+                    type: string
+                    description: "local cluster ingress / load balancer kind service endpoint ipv4 address"
+                  domainName:
+                    type: string
+                    description: "local cluster ingress / load balancer kind service endpoint domain name"
+                  monitorPort:
+                    type: integer
+                    description: "listening port of local cluster ingress / load balancer kind service endpoint"
+                type: object
+            type: object
 
 ```
 
