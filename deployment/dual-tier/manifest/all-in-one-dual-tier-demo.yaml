@@ -183,24 +183,27 @@ spec:
           imagePullPolicy: Always
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: citrix-ingress
   annotations:
-   kubernetes.io/ingress.class: "tier-2-cpx"
-   ingress.citrix.com/insecure-termination: "allow"
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: tier-2-cpx
+  name: citrix-ingress
 spec:
-  tls:
-  - secretName: cert-key
   rules:
   - host: citrix-ingress.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
+      - backend:
+          service:
+            name: apache
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: cert-key
 ---
 kind: Service
 apiVersion: v1
@@ -219,24 +222,27 @@ spec:
       port: 443
       targetPort: https
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: vpx-ingress
   annotations:
-   kubernetes.io/ingress.class: "tier-1-vpx"
-   ingress.citrix.com/insecure-termination: "allow"
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: vpx-ingress
 spec:
-  tls:
-  - secretName: cert2k
   rules:
   - host: citrix-ingress.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: cpx-ingress
-          servicePort: 80
+      - backend:
+          service:
+            name: cpx-ingress
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: cert2k
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
