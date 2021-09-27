@@ -64,7 +64,7 @@ spec:
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 The sample Ingress YAML includes use cases related to the service, `citrix-svc`, and the following table explains the smart annotations used in the sample:

@@ -19,7 +19,7 @@ spec:
             name: spin-deck
             port:
               number: 9000
-        pathType: ImplementationSpecific
+        pathType: Prefix
   - host: spinnaker-api.example.com
     http:
       paths:
@@ -28,7 +28,7 @@ spec:
             name: spin-gate
             port:
               number: 8084
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - hosts:
     - spinnaker.example.com

@@ -15,6 +15,6 @@ spec:
             port:
               number: 80
         path: /testpath
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - {}

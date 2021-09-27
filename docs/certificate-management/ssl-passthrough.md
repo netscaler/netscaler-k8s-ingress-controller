@@ -44,7 +44,7 @@ spec:
             port:
               number: 443
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - secretName: beverages
 ```

@@ -38,7 +38,7 @@ spec:
             port:
               number: 443
         path: /web-frontend/frontend.php
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - secretName: certchain1
 

@@ -820,7 +820,7 @@ Perform the following steps to deploy a sample application as a canary release.
                           port:
                             number: 80
                       path: /
-                      pathType: ImplementationSpecific
+                      pathType: Prefix
               ```
 
     Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Citrix ADC in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.

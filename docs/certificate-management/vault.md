@@ -151,7 +151,7 @@ Perform the following steps to deploy a sample web application.
                     name: kuard
                     port:
                       number: 80
-                pathType: ImplementationSpecific
+                pathType: Prefix
   
     !!! info "Important"
         Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
@@ -455,7 +455,7 @@ In this approach, you modify the ingress annotation for the cert-manager to auto
                     port:
                       number: 80
                 path: /
-                pathType: ImplementationSpecific
+                pathType: Prefix
           tls:
           - hosts:
             - kuard.example.com
@@ -559,7 +559,7 @@ Perform the following steps to modify the ingress to use the generated secret.
                     name: kuard
                     port:
                       number: 80
-                pathType: ImplementationSpecific
+                pathType: Prefix
           tls:
           - hosts:
             - kuard.example.com

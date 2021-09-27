@@ -359,7 +359,7 @@ spec:
             name: frontend-headless
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -379,7 +379,7 @@ spec:
             name: frontend-headless
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ---
 apiVersion: v1
 kind: Service
@@ -424,7 +424,7 @@ spec:
             name: frontend-external-headless
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1260,7 +1260,7 @@ spec:
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
