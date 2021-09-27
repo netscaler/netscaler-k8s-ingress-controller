@@ -15,7 +15,7 @@ If you want to upgrade by modifying the **YAML** definition file, perform the fo
 2.  Update the `CluterRole` as follows:
 
         kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         metadata:
           name: cic-k8s-role
         rules:
@@ -76,7 +76,7 @@ If you want to upgrade Citrix ingress controller to version 1.5.25 by modifying 
 2.  Update the `ClusterRole` as follows:
 
         kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         metadata:
           name: cic-k8s-role
         rules:

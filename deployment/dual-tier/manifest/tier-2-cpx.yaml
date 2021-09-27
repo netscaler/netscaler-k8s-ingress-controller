@@ -1,6 +1,6 @@
 #Cluster role required by CPX
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 rules:
@@ -42,7 +42,7 @@ rules:
 ---
 #Cluster role bindings required by CPX
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 roleRef:
