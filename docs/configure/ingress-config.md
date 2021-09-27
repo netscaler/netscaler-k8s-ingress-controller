@@ -24,7 +24,7 @@ spec:
             name: service1
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
   - host: bar.foo.com
     http:
       paths:
@@ -33,7 +33,7 @@ spec:
             name: service2
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 After the sample Ingress definition is deployed, all the HTTP request with a host header is load balanced by Citrix ADC to `service1`. And, the HTTP request with a host header is load balancer by Citrix ADC to `service2`.
@@ -59,14 +59,14 @@ spec:
             port:
               number: 80
         path: /foo
-        pathType: ImplementationSpecific
+        pathType: Prefix
       - backend:
           service:
             name: service2
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 After the sample Ingress definition is deployed, any HTTP requests with host `test.example.com` and URL path with prefix `/foo`, Citrix ADC routes the request to `service1` and all other requests are routed to `service2`.
@@ -94,7 +94,7 @@ spec:
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 After the sample Ingress definition is deployed, HTTP requests to all the subdomains of `example.com` is routed to `service1` by Citrix ADC.
@@ -127,7 +127,7 @@ spec:
             port:
               name: "80"
         path: /exact
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 After the sample Ingress definition is deployed, HTTP requests with path `/exact` is routed by Citrix ADC to `service1` but not to `/exact/somepath`.
@@ -152,14 +152,14 @@ spec:
             port:
               number: 80
         path: /foo
-        pathType: ImplementationSpecific
+        pathType: Prefix
       - backend:
           service:
             name: service2
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 All incoming traffic that does not match the ingress rules with host name is matched here for the paths for routing.

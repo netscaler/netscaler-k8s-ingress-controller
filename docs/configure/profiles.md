@@ -154,7 +154,7 @@ spec:
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```
 
 **Sample backend ingress manifest with TLS configuration:**
@@ -185,7 +185,7 @@ spec:
             port:
               number: 443
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - secretName: hotdrink.secret
 ```

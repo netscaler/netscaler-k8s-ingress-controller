@@ -182,7 +182,7 @@ Perform the following steps to enable GRPC support using HTTP2.
                       port:
                         number: 50051
                   path: /
-                  pathType: ImplementationSpecific
+                  pathType: Prefix
             tls:
             - hosts:
               - grpc.example.com

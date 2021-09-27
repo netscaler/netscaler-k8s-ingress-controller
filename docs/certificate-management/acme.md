@@ -128,7 +128,7 @@ Perform the following to deploy a sample web application:
                         name: kuard
                         port:
                           number: 80
-                    pathType: ImplementationSpecific
+                    pathType: Prefix
 
       **Note:**
         You must change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
@@ -293,7 +293,7 @@ spec:
             name: kuard
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - hosts:
     - kuard.example.com
@@ -504,7 +504,7 @@ spec:
             name: kuard
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - hosts:
     - kuard.example.com

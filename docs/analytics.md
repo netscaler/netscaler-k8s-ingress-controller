@@ -30,7 +30,7 @@ spec:
             port:
               number: 80
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
   tls:
   - secretName: name
 ```

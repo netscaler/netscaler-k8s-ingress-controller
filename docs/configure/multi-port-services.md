@@ -28,7 +28,7 @@ spec:
             port:
               name: insecure
         path: /v1
-        pathType: ImplementationSpecific
+        pathType: Prefix
   - host: app
     http:
       paths:
@@ -38,7 +38,7 @@ spec:
             port:
               name: secure
         path: /v2
-        pathType: ImplementationSpecific
+        pathType: Prefix
 ```                
 
 **Multi-port service**

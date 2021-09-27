@@ -12,7 +12,7 @@ spec:
             name: apache
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
   - host: example-host1.example.com
     http:
       paths:
@@ -21,4 +21,4 @@ spec:
             name: apache2
             port:
               number: 80
-        pathType: ImplementationSpecific
+        pathType: Prefix
