@@ -54,12 +54,17 @@ Perform the following to deploy a sample web application:
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration:
 
-        apiVersion: extensions/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
+          labels:
+            app: kuard
           name: kuard
         spec:
           replicas: 1
+          selector:
+            matchLabels:
+              app: kuard
           template:
             metadata:
               labels:
@@ -71,6 +76,7 @@ Perform the following to deploy a sample web application:
                 name: kuard
                 ports:
                 - containerPort: 8080
+                  protocol: TCP
 
 2. Deploy the Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands:
 
@@ -106,20 +112,23 @@ Perform the following to deploy a sample web application:
 
     **Note:** Ensures that you change the value of `kubernetes.io/ingress.class` to your ingress class on which the Citrix ingress controller is started.
 
-            apiVersion: extensions/v1beta1
+            apiVersion: networking.k8s.io/v1
             kind: Ingress
             metadata:
-              name: kuard
               annotations:
-                kubernetes.io/ingress.class: "citrix"
+                kubernetes.io/ingress.class: citrix
+              name: kuard
             spec:
               rules:
               - host: kuard.example.com
                 http:
                   paths:
                   - backend:
-                      serviceName: kuard
-                      servicePort: 80
+                      service:
+                        name: kuard
+                        port:
+                          number: 80
+                    pathType: ImplementationSpecific
 
       **Note:**
         You must change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
@@ -267,25 +276,28 @@ Also, modify the `ingress.yaml` to use TLS by specifying a secret.
 
 ```YAML
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: kuard
   annotations:
-    kubernetes.io/ingress.class: "citrix"
-    certmanager.io/cluster-issuer: "letsencrypt-staging"
+    certmanager.io/cluster-issuer: letsencrypt-staging
+    kubernetes.io/ingress.class: citrix
+  name: kuard
 spec:
-  tls:
-  - hosts:
-    - kuard.example.com
-    secretName: kuard-example-tls
   rules:
   - host: kuard.example.com
     http:
       paths:
       - backend:
-          serviceName: kuard
-          servicePort: 80
+          service:
+            name: kuard
+            port:
+              number: 80
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - kuard.example.com
+    secretName: kuard-example-tls
 ```
 
 The `cert-manager.io/cluster-issuer: "letsencrypt-staging"` annotation tells cert-manager to use the `letsencrypt-staging` cluster-wide issuer to request a certificate from Let's Encrypt's staging servers. Cert-manager creates a `certificate` object that is used to manage the lifecycle of the certificate for `kuard.example.com`. The value for the domain name and challenge method for the certificate object is derived from the ingress object. Cert-manager manages the contents of the secret as long as the Ingress is present in your cluster.
@@ -475,25 +487,28 @@ certmanager.io/cluster-issuer: "letsencrypt-staging"
 ```
 
 ```YAML
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: kuard
   annotations:
-    kubernetes.io/ingress.class: "citrix"
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    kubernetes.io/ingress.class: citrix
+  name: kuard
 spec:
-  tls:
-  - hosts:
-    - kuard.example.com
-    secretName: kuard-example-tls
   rules:
   - host: kuard.example.com
     http:
       paths:
       - backend:
-          serviceName: kuard
-          servicePort: 80
+          service:
+            name: kuard
+            port:
+              number: 80
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - kuard.example.com
+    secretName: kuard-example-tls
 ```
 
 The cert-manager creates a `Certificate` CRD resource with the DNS01 challenge. It uses credentials specified in the `ClusterIssuer` to create a TXT record in the DNS server for the domain you own. Then, Let's Encypt CA validates the content of the TXT record to complete the challenge.

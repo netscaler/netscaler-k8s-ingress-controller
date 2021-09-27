@@ -141,20 +141,20 @@ Perform the following steps to enable GRPC support using HTTP2.
   
      The content of the `frontend-ingress.yaml` file is provided as follows:
 
-          apiVersion: extensions/v1beta1
+          apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: frontend-ingress
             annotations:
-              kubernetes.io/ingress.class: "citrix"
-              ingress.citrix.com/frontend-ip: "192.0.2.1"
-              ingress.citrix.com/secure-port: "443"
               ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled", "http2direct" : "enabled"}'
+              ingress.citrix.com/frontend-ip: 192.0.2.1
+              ingress.citrix.com/secure-port: "443"
+              kubernetes.io/ingress.class: citrix
+            name: frontend-ingress
           spec:
-            tls:
-              - hosts:
             rules:
-            - host:
+            - {}
+            tls:
+            - {}
 
    - Create a YAML file for the back-end Ingress configuration with the following content and apply it to enable HTTP2 on back-end (service group).
 
@@ -162,31 +162,31 @@ Perform the following steps to enable GRPC support using HTTP2.
 
       The content of the `backend-ingress.yaml` file is provided as follows:
 
-          apiVersion: extensions/v1beta1
+          apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: grpc-ingress
             annotations:
-              # Note that gRPC services must be specified as backend services.
-              kubernetes.io/ingress.class: "citrix"
-              ingress.citrix.com/frontend-ip: "192.0.2.2"
-              ingress.citrix.com/secure-port: "443"
               ingress.citrix.com/backend-httpprofile: '{"grpc-service":{"http2": "enabled", "http2direct" : "enabled"}}'
+              ingress.citrix.com/frontend-ip: 192.0.2.2
+              ingress.citrix.com/secure-port: "443"
+              kubernetes.io/ingress.class: citrix
+            name: grpc-ingress
           spec:
-            tls:
-              - hosts:
-                # Certificate domain name
-                - grpc.example.com
-                secretName: grpc-secret
             rules:
-            # gRPC service domain name
             - host: grpc.example.com
               http:
                 paths:
-                - path: /
-                  backend:
-                    serviceName: grpc-service
-                    servicePort: 50051
+                - backend:
+                    service:
+                      name: grpc-service
+                      port:
+                        number: 50051
+                  path: /
+                  pathType: ImplementationSpecific
+            tls:
+            - hosts:
+              - grpc.example.com
+              secretName: grpc-secret
 
 3. Test the gRPC traffic using the `grpcurl` command.
 

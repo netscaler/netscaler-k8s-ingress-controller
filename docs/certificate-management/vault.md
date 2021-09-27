@@ -135,20 +135,23 @@ Perform the following steps to deploy a sample web application.
         **Note:**
         Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Citrix ingress controller is started.
 
-        apiVersion: extensions/v1beta1
+        apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          name: kuard
           annotations:
-            kubernetes.io/ingress.class: "citrix"
+            kubernetes.io/ingress.class: citrix
+          name: kuard
         spec:
           rules:
           - host: kuard.example.com
             http:
               paths:
               - backend:
-                  serviceName: kuard
-                  servicePort: 80
+                  service:
+                    name: kuard
+                    port:
+                      number: 80
+                pathType: ImplementationSpecific
   
     !!! info "Important"
         Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
@@ -434,26 +437,29 @@ In this approach, you modify the ingress annotation for the cert-manager to auto
 
 1.	Modify the ingress with the `tls` section specifying a host name and secret. Also, specify the cert-manager annotation `cert-manager.io/cluster-issuer` as follows.
 
-        apiVersion: extensions/v1beta1
+        apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          name: kuard
           annotations:
-            kubernetes.io/ingress.class: citrix
             cert-manager.io/cluster-issuer: vault-issuer
+            kubernetes.io/ingress.class: citrix
+          name: kuard
         spec:
-          tls:
-          - hosts:
-            - kuard.example.com
-            secretName: kuard-example-tls
           rules:
           - host: kuard.example.com
             http:
               paths:
-              - path: /
-                backend:
-                  serviceName: kuard-service
-                  servicePort: 80
+              - backend:
+                  service:
+                    name: kuard-service
+                    port:
+                      number: 80
+                path: /
+                pathType: ImplementationSpecific
+          tls:
+          - hosts:
+            - kuard.example.com
+            secretName: kuard-example-tls
 
 
 1. Deploy the modified ingress as follows.
@@ -537,24 +543,27 @@ Perform the following steps to modify the ingress to use the generated secret.
 
 1.  Edit the original ingress and add a `spec.tls` section specifying the secret `kuard-example-tls` as follows.
 
-        apiVersion: extensions/v1beta1
+        apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          name: kuard
           annotations:
-            kubernetes.io/ingress.class: "citrix"
+            kubernetes.io/ingress.class: citrix
+          name: kuard
         spec:
-          tls:
-          - hosts:
-            - kuard.example.com
-            secretName: kuard-example-tls
           rules:
           - host: kuard.example.com
             http:
               paths:
               - backend:
-                  serviceName: kuard
-                  servicePort: 80
+                  service:
+                    name: kuard
+                    port:
+                      number: 80
+                pathType: ImplementationSpecific
+          tls:
+          - hosts:
+            - kuard.example.com
+            secretName: kuard-example-tls
 
 1.  Deploy the ingress using the following command.
 

@@ -71,20 +71,20 @@ For the front end configuration (Client Plane) of the Ingress Citrix ADC, you ne
 
 ```yml
 #The values for the parameters are for demonstration purpose only.
-
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-ingress
   annotations:
-  # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
-   ingress.citrix.com/insecure-port: "80" 
-   ingress.citrix.com/frontend-ip: "192.168.1.1"
-   ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
-   ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+    # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
+    ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval"
+      : "enabled"}'
+    ingress.citrix.com/frontend-ip: 192.168.1.1
+    ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+    ingress.citrix.com/insecure-port: "80"
+  name: frontend-ingress
 spec:
   rules:
-  - host:
+  - {}
 ```
 
 If you want to configure SSL related parameters to the front end configuration, you need to add the SSL profile based smart annotation and also add the `spec:tls` parameter to the ingress definition:
@@ -102,25 +102,25 @@ spec:
 
 ```yml
 #The values for the parameters are for demonstration purpose only.
-
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: admin-ingress
   annotations:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
-   ingress.citrix.com/frontend-ip: "1.1.1.1"
-   ingress.citrix.com/insecure-port: "80"
-   ingress.citrix.com/secure-port: "443"
-   ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
-   ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
-   ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls1" : "enabled"}'
-   #ingress.citrix.com/insecure-termination: "redirect"
+    ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval"
+      : "enabled"}'
+    ingress.citrix.com/frontend-ip: 1.1.1.1
+    ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls1" : "enabled"}'
+    ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
+    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/secure-port: "443"
+    #ingress.citrix.com/insecure-termination: "redirect"
+  name: admin-ingress
 spec:
   rules:
-  - host:
+  - {}
   tls:
-  - hosts:
+  - {}
 # - secretName:  #either of hosts or secretName can be given
 ```
 
@@ -133,26 +133,28 @@ Any ingress definition that includes service details, `spec:rules:host`, `spec:b
 ```yml
 #The values for the parameters are for demonstration purpose only.
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: apache-ingress
   annotations:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
-   ingress.citrix.com/frontend-ip: "10.106.172.22"
-   ingress.citrix.com/insecure-port: "80"
-   ingress.citrix.com/backend-httpprofile: '{"apache":{"markhttp09inval": "disabled"}}'
-   ingress.citrix.com/backend-tcpprofile: '{"apache":{"sack":"enabled"}}'
+    ingress.citrix.com/backend-httpprofile: '{"apache":{"markhttp09inval": "disabled"}}'
+    ingress.citrix.com/backend-tcpprofile: '{"apache":{"sack":"enabled"}}'
+    ingress.citrix.com/frontend-ip: 10.106.172.22
+    ingress.citrix.com/insecure-port: "80"
+  name: apache-ingress
 spec:
   rules:
-  - host:  www.apachetest.com
+  - host: www.apachetest.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
-
+      - backend:
+          service:
+            name: apache
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
 ```
 
 **Sample backend ingress manifest with TLS configuration:**
@@ -160,30 +162,32 @@ spec:
 ```yml
 #The values for the parameters are for demonstration purpose only.
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hotdrink-ingress
   annotations:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
-    ingress.citrix.com/frontend-ip: "10.106.172.22"
-    ingress.citrix.com/secure-port: "443"
-    ingress.citrix.com/backend-sslprofile: '{"hotdrink":{"snienable": "enabled"}}'
     ingress.citrix.com/backend-httpprofile: '{"hotdrink":{"markhttp09inval": "disabled"}}'
+    ingress.citrix.com/backend-sslprofile: '{"hotdrink":{"snienable": "enabled"}}'
     ingress.citrix.com/backend-tcpprofile: '{"hotdrink":{"sack":"enabled"}}'
+    ingress.citrix.com/frontend-ip: 10.106.172.22
     ingress.citrix.com/secure-backend: '{"hotdrink":"true"}'
+    ingress.citrix.com/secure-port: "443"
+  name: hotdrink-ingress
 spec:
-  tls:
-  - secretName: hotdrink.secret
   rules:
-  - host:  hotdrinks.beverages.com
+  - host: hotdrinks.beverages.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: hotdrink
-          servicePort: 443
-
+      - backend:
+          service:
+            name: hotdrink
+            port:
+              number: 443
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: hotdrink.secret
 ```
 
 ## Using built-in or existing user-defined profiles on the Ingress Citrix ADC

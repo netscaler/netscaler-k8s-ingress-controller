@@ -83,14 +83,16 @@ The sample deploys and exposes the apache web server as a service. You can acces
 After you have deployed the service, create an ingress definition to configure the ingress Citrix ADC to send the North-South traffic to the nodeport of the `apache` app. The following is a manifest for the ingress definition:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: vpx-ingress
   annotations:
-   ingress.citrix.com/frontend-ip: "xx.xxx.xxx.xx" # This IP address is configured in Citrix ADC as VIP.
+    ingress.citrix.com/frontend-ip: xx.xxx.xxx.xx
+  name: vpx-ingress
 spec:
-  backend:
-    serviceName: apache
-    servicePort: 80
+  defaultBackend:
+    service:
+      name: apache
+      port:
+        number: 80
 ```

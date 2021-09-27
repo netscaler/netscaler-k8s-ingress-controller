@@ -11,28 +11,34 @@ Following is an example for multi-port service definitions.
 
 ```yml
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: servicemultiportname
   annotations:
-    ingress.citrix.com/frontend-ip: "192.101.12.111"
+    ingress.citrix.com/frontend-ip: 192.101.12.111
+  name: servicemultiportname
 spec:
   rules:
-    - host: app
-      http:
-        paths:
-        - path: /v1
-          backend:
-              serviceName: myservice
-              servicePort: insecure
-    - host: app
-      http:
-        paths:
-        - path: /v2
-          backend:
-              serviceName: my-service
-              servicePort: secure
+  - host: app
+    http:
+      paths:
+      - backend:
+          service:
+            name: myservice
+            port:
+              name: insecure
+        path: /v1
+        pathType: ImplementationSpecific
+  - host: app
+    http:
+      paths:
+      - backend:
+          service:
+            name: my-service
+            port:
+              name: secure
+        path: /v2
+        pathType: ImplementationSpecific
 ```                
 
 **Multi-port service**

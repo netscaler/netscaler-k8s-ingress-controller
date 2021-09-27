@@ -9,7 +9,7 @@ Citrix ingress controller is built around Kubernetes Ingress and automatically c
 The following sample Ingress definition demonstrates how to set up an Ingress to route the traffic based on the host name:
 
 ```yml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: Virtual-Host-Ingress
@@ -20,14 +20,20 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: service1
-          servicePort: 80
+          service:
+            name: service1
+            port:
+              number: 80
+        pathType: ImplementationSpecific
   - host: bar.foo.com
     http:
       paths:
       - backend:
-          serviceName: service2
-          servicePort: 80
+          service:
+            name: service2
+            port:
+              number: 80
+        pathType: ImplementationSpecific
 ```
 
 After the sample Ingress definition is deployed, all the HTTP request with a host header is load balanced by Citrix ADC to `service1`. And, the HTTP request with a host header is load balancer by Citrix ADC to `service2`.
@@ -37,24 +43,30 @@ After the sample Ingress definition is deployed, all the HTTP request with a hos
 The following sample Ingress definition demonstrates how to set up an Ingress to route the traffic based on URL path:
 
 ```yml
-apiVersion: extension/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: Path-Ingress
   namespace: default
 spec:
   rules:
-  - host:test.example.com
+  - host: test.example.com
     http:
       paths:
-      - path: "/foo"
-        backend:
-          serviceName: service1
-          servicePort: 80
-      - path: "/"
-        backend:
-          serviceName: service2
-          servicePort: 80
+      - backend:
+          service:
+            name: service1
+            port:
+              number: 80
+        path: /foo
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: service2
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
 ```
 
 After the sample Ingress definition is deployed, any HTTP requests with host `test.example.com` and URL path with prefix `/foo`, Citrix ADC routes the request to `service1` and all other requests are routed to `service2`.
@@ -66,20 +78,23 @@ Citrix ingress controller follows first match policy to evaluate paths. For effe
 The following sample Ingress definition demonstrates how to set up an ingress with wildcard host.
 
 ```yml
-apiVersion: extension/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: Wildcard-Ingress
   namespace: default
 spec:
   rules:
-  - host:’*.example.com’
+  - host: ’*.example.com’
     http:
       paths:
-      - path: "/"
-        backend:
-          serviceName: service1
-          servicePort: 80
+      - backend:
+          service:
+            name: service1
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
 ```
 
 After the sample Ingress definition is deployed, HTTP requests to all the subdomains of `example.com` is routed to `service1` by Citrix ADC.
@@ -94,22 +109,25 @@ By default Ingress paths are treated as prefix expressions. Using the annotation
 The following sample Ingress definition demonstrates how to set up Ingress for exact path matching:
 
 ```yml
-apiVersion: extension/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: Path-exact-Ingress
-  namespace: default
   annotations:
     ingress.citrix.com/path-match-method: “exact”
+  name: Path-exact-Ingress
+  namespace: default
 spec:
   rules:
-  - host:test.example.com
+  - host: test.example.com
     http:
       paths:
-      - path: /exact
-        backend:
-          serviceName: service1
-          servicePort: '80'
+      - backend:
+          service:
+            name: service1
+            port:
+              name: "80"
+        path: /exact
+        pathType: ImplementationSpecific
 ```
 
 After the sample Ingress definition is deployed, HTTP requests with path `/exact` is routed by Citrix ADC to `service1` but not to `/exact/somepath`.
@@ -119,23 +137,29 @@ After the sample Ingress definition is deployed, HTTP requests with path `/exact
 Following example shows path based routing for the default traffic that does not match any host based routes. This ingress rule applies to all inbound HTTP traffic through the specified IP address.
 
 ```yml
-apiVersion: extension/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: Default-Path-Ingress
   namespace: default
 spec:
   rules:
--	http:
+  - http:
       paths:
-      - path: "/foo"
-        backend:
-          serviceName: service1
-          servicePort: 80
-      - path: "/"
-        backend:
-          serviceName: service2
-          servicePort: 80
+      - backend:
+          service:
+            name: service1
+            port:
+              number: 80
+        path: /foo
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: service2
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
 ```
 
 All incoming traffic that does not match the ingress rules with host name is matched here for the paths for routing.
@@ -145,15 +169,17 @@ All incoming traffic that does not match the ingress rules with host name is mat
 Default back end is a service that handles all traffic that is not matched against any of the Ingress rules.
 
 ```yml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: Default-Ingress
   namespace: default
 spec:
-  backend:
-    serviceName: testsvc
-    servicePort: 80
+  defaultBackend:
+    service:
+      name: testsvc
+      port:
+        number: 80
 
 ```
 
