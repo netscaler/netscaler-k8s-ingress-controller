@@ -28,20 +28,23 @@ spec:
   selector:
     app: kuard
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: kuard
   annotations:
-    kubernetes.io/ingress.class: "citrix"
-    ingress.citrix.com/insecure-termination: "allow"
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: citrix
+  name: kuard
 spec:
   rules:
   - host: test.example.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: kuard
-          servicePort: 80
+      - backend:
+          service:
+            name: kuard
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
 ---
