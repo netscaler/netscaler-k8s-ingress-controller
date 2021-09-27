@@ -125,69 +125,72 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
           name: citrix
           namespace: default
         ---
-        apiVersion: extensions/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
+          labels:
+            app: cpx-cic
           name: cpx-cic
         spec:
           replicas: 1
+          selector:
+            matchLabels:
+              app: cpx-cic
           template:
             metadata:
-              name: cpx-cic
               labels:
                 app: cpx-cic
-              annotations:
+              name: cpx-cic
             spec:
-              serviceAccountName: citrix
               containers:
-                - name: cpx
-                  image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
-                  securityContext:
-                    privileged: true
-                  env:
-                  - name: "EULA"
-                    value: "yes"
-                  - name: "KUBERNETES_TASK_ID"
-                    value: ""
-                  ports:
-                  - containerPort: 80
-                    hostPort: 80
-                  - containerPort: 443
-                    hostPort: 443
-                  imagePullPolicy: Always
-                # Add cic as a sidecar
-                - name: cic
-                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
-                  imagePullPolicy: Always
-                  env:
-                  - name: "EULA"
-                    value: "yes"
-                  - name: "NS_IP"
-                    value: "127.0.0.1"
-                  - name: "NS_PROTOCOL"
-                    value: "HTTP"
-                  - name: "NS_PORT"
-                    value: "80"
-                  - name: "NS_DEPLOYMENT_MODE"
-                    value: "SIDECAR"
-                  - name: "NS_ENABLE_MONITORING"
-                    value: "YES"
-                  - name: POD_NAME
-                    valueFrom:
-                      fieldRef:
-                        apiVersion: v1
-                        fieldPath: metadata.name
-                  - name: POD_NAMESPACE
-                    valueFrom:
-                      fieldRef:
-                        apiVersion: v1
-                        fieldPath: metadata.namespace
-                  args:
-                    - --default-ssl-certificate
-                      $(POD_NAMESPACE)/default-cert
-                  imagePullPolicy: Always
+              - env:
+                - name: EULA
+                  value: "yes"
+                - name: KUBERNETES_TASK_ID
+                image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29
+                imagePullPolicy: Always
+                name: cpx
+                ports:
+                - containerPort: 80
+                  hostPort: 80
+                  protocol: TCP
+                - containerPort: 443
+                  hostPort: 443
+                  protocol: TCP
+                securityContext:
+                  privileged: true
+              - args:
+                - --default-ssl-certificate $(POD_NAMESPACE)/default-cert
+                env:
+                - name: EULA
+                  value: "yes"
+                - name: NS_IP
+                  value: 127.0.0.1
+                - name: NS_PROTOCOL
+                  value: HTTP
+                - name: NS_PORT
+                  value: "80"
+                - name: NS_DEPLOYMENT_MODE
+                  value: SIDECAR
+                - name: NS_ENABLE_MONITORING
+                  value: "YES"
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.name
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.namespace
+                image: quay.io/citrix/citrix-k8s-ingress-controller:1.5.25
+                imagePullPolicy: Always
+                name: cic
               nodeSelector:
-                  "node-role.kubernetes.io/infra": "true"
+                node-role.kubernetes.io/infra: "true"
+              serviceAccountName: citrix
+
 
 1.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
@@ -463,57 +466,65 @@ In this example, the Citrix ingress controller is deployed as a router plug-in i
     The content of the `apache.yaml` file is given as follows.
 
         ---
-        apiVersion: apps/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
-          name: apache-only-http
           labels:
-              name: apache-only-http
+            name: apache-only-http
+          name: apache-only-http
         spec:
+          replicas: 4
           selector:
             matchLabels:
               app: apache-only-http
-          replicas: 4
           template:
             metadata:
               labels:
                 app: apache-only-http
             spec:
               containers:
-              - name: apache-only-http
-                image: "raghulc/apache-multiport-http:1.0.0"
+              - image: raghulc/apache-multiport-http:1.0.0
+                imagePullPolicy: IfNotPresent
+                name: apache-only-http
                 ports:
-                # All HTTP Ports
                 - containerPort: 80
+                  protocol: TCP
                 - containerPort: 5080
+                  protocol: TCP
                 - containerPort: 5081
+                  protocol: TCP
                 - containerPort: 5082
+                  protocol: TCP
         ---
-        apiVersion: apps/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
-          name: apache-only-ssl
           labels:
-              name: apache-only-ssl
+            name: apache-only-ssl
+          name: apache-only-ssl
         spec:
+          replicas: 4
           selector:
             matchLabels:
               app: apache-only-ssl
-          replicas: 4
           template:
             metadata:
               labels:
                 app: apache-only-ssl
             spec:
               containers:
-              - name: apache-only-ssl
-                image: "raghulc/apache-multiport-ssl:1.0.0"
+              - image: raghulc/apache-multiport-ssl:1.0.0
+                imagePullPolicy: IfNotPresent
+                name: apache-only-ssl
                 ports:
-                # All SSL Ports
                 - containerPort: 443
+                  protocol: TCP
                 - containerPort: 5443
+                  protocol: TCP
                 - containerPort: 5444
+                  protocol: TCP
                 - containerPort: 5445
+                  protocol: TCP
         ---
         apiVersion: v1
         kind: Service

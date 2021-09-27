@@ -1,9 +1,9 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cpx-ingress
   labels:
     name: cpx-ingress
+  name: cpx-ingress
 spec:
   replicas: 1
   selector:
@@ -11,58 +11,56 @@ spec:
       name: cpx-ingress
   template:
     metadata:
-      labels:
-        name: cpx-ingress
       annotations:
         NETSCALER_AS_APP: "True"
+      labels:
+        name: cpx-ingress
     spec:
-      serviceAccountName: cpx 
+      serviceAccountName: cpx
       containers:
-        - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
-          args:
-            - "--target-nsip=127.0.0.1"
-            - "--port=8888"
-            - "--secure=no"
-          env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          securityContext:
-            readOnlyRootFilesystem: true
-          imagePullPolicy: Always
-        - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103"
-          securityContext:
-            privileged: true
-          env:
-            - name: "EULA"
-              value: "YES"
-            - name: "KUBERNETES_TASK_ID"
-              value: ""
-          ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
-            - name: nitro-http
-              containerPort: 9080
-            - name: nitro-https
-              containerPort: 9443
-
-          #This is required for Health check to succeed
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /
-              port: 9080
-              scheme: HTTP
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          imagePullPolicy: Always
+      - args:
+        - --target-nsip=127.0.0.1
+        - --port=8888
+        - --secure=no
+        env:
+        - name: NS_USER
+          value: nsroot
+        - name: NS_PASSWORD
+          value: nsroot
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.8
+        imagePullPolicy: Always
+        name: exporter
+        securityContext:
+          readOnlyRootFilesystem: true
+      - env:
+        - name: EULA
+          value: "YES"
+        - name: KUBERNETES_TASK_ID
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103
+        imagePullPolicy: Always
+        name: cpx-ingress
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 9080
+          name: nitro-http
+          protocol: TCP
+        - containerPort: 9443
+          name: nitro-https
+          protocol: TCP
+        #This is required for Health check to succeed
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 9080
+            scheme: HTTP
+        securityContext:
+          privileged: true
 ---
 kind: Service
 apiVersion: v1

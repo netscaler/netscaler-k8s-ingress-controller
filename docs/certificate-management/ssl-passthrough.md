@@ -23,25 +23,28 @@ SSL passthrough is enabled for all services or host names provided in the Ingres
 To configure SSL passthrough on the Ingress Citrix ADC, you must define the `ingress.citrix.com/ssl-passthrough:` as shown in the following sample Ingress definition. You must also enable TLS for the host as shown in the example.
 
 ```yml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hotdrinks-ingress
   annotations:
-    ingress.citrix.com/frontend-ip: "10.106.143.160" # IP address of the Ingress Citrix ADC.
-    kubernetes.io/ingress.class: "citrix"
-    ingress.citrix.com/ssl-passthrough: "True"  # Enable SSL passthrough on the Ingress Citrix ADC
-    ingress.citrix.com/insecure-termination: "redirect"
+    ingress.citrix.com/frontend-ip: 10.106.143.160
+    ingress.citrix.com/insecure-termination: redirect
     ingress.citrix.com/secure-backend: "True"
+    ingress.citrix.com/ssl-passthrough: "True"
+    kubernetes.io/ingress.class: citrix
+  name: hotdrinks-ingress
 spec:
-  tls:                              # Enable TLS
-  - secretName: beverages
   rules:
-  - host:  hotdrinks.beverages.com
+  - host: hotdrinks.beverages.com
     http:
       paths:
-      - path: / # If the path is specified, it is ignored
-        backend:
-          serviceName: frontend-hotdrinks
-          servicePort: 443
+      - backend:
+          service:
+            name: frontend-hotdrinks
+            port:
+              number: 443
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: beverages
 ```

@@ -46,12 +46,12 @@ spec:
 Following is the snippet from an Ingress YAML file where the Ingress class association is depicted. In the given example, an Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If the Citrix ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: web-ingress
   annotations:
-     kubernetes.io/ingress.class: "my-custom-class"
+    kubernetes.io/ingress.class: my-custom-class
+  name: web-ingress
 ```
 
 ## Ingress V1 and IngressClass support
