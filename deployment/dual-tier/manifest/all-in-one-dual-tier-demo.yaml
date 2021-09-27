@@ -46,7 +46,7 @@ spec:
 ---
 #Cluster role required by CPX
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 rules:
@@ -88,7 +88,7 @@ rules:
 ---
 #Cluster role bindings required by CPX
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 roleRef:
@@ -239,7 +239,7 @@ spec:
           servicePort: 80
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 rules:
@@ -272,7 +272,7 @@ rules:
     verbs: ["get", "list", "watch"]
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 roleRef:

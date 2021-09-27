@@ -68,7 +68,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
     The contents of the `cpx_cic_side_car.yaml` file is given as follows:
 
         kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         metadata:
           name: citrix
         rules:
@@ -107,7 +107,7 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
        
         ---
         kind: ClusterRoleBinding
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         metadata:
           name: citrix
         roleRef:
@@ -275,7 +275,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
     The contents of the `cic.yaml` is given as follows:
 
         kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         metadata:
           name: citrix
         rules:
@@ -313,7 +313,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
             verbs: ["get", "list", "watch"]  
         ---
         kind: ClusterRoleBinding
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         metadata:
           name: citrix
         roleRef:
