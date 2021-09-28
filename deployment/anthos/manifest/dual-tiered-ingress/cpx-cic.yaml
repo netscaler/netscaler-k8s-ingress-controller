@@ -5,16 +5,13 @@ metadata:
   name: cpx
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
   - apiGroups: [""]
     resources: ["services/status"]
     verbs: ["patch"]
-  - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create"]
@@ -74,6 +71,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
+  labels:
+    name: cpx-ingress
+    app: cpx-ingress
 spec:
   selector:
     matchLabels:
@@ -84,12 +84,12 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations:
+      annotations: null
     spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-79.64
           securityContext:
              privileged: true
           env:
@@ -122,7 +122,7 @@ spec:
               name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.20
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.18.5
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
