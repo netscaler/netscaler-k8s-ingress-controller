@@ -5,16 +5,13 @@ metadata:
   name: cpx
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
   - apiGroups: [""]
     resources: ["services/status"]
     verbs: ["patch"]
-  - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create"]
@@ -74,6 +71,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
+  labels:
+    name: cpx-ingress
+    app: cpx-ingress
 spec:
   selector:
     matchLabels:
@@ -84,7 +84,7 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations:
+      annotations: null
     spec:
       serviceAccountName: cpx
       containers:
