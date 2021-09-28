@@ -4,7 +4,7 @@ metadata:
   name: citrix
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces", "configmaps"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
@@ -12,17 +12,14 @@ rules:
     resources: ["services/status"]
     verbs: ["patch"]
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
-  - apiGroups: [""]
-    resources: ["events"]
+    resources: ["services", "events"]
     verbs: ["create"]
-  - apiGroups: ["extensions","networking.k8s.io"]
-    resources: ["ingresses", "ingressclasses"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["extensions","networking.k8s.io"]
-    resources: ["ingresses/status"]
-    verbs: ["patch"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -71,6 +68,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-cic
+  labels:
+    name: cpx-cic
+    app: cpx-cic
 spec:
   selector:
     matchLabels:
@@ -86,7 +86,7 @@ spec:
       serviceAccountName: citrix
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-79.64"
           tty: true
           securityContext: 
              privileged: true
@@ -103,7 +103,7 @@ spec:
           imagePullPolicy: IfNotPresent
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.14.17"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.18.5"
           volumeMounts:
             - mountPath: /var/deviceinfo
               name: shared-data
