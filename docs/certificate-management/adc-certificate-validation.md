@@ -41,44 +41,44 @@ metadata:
   labels:
     app: cic
 spec:
-      serviceAccountName: cpx
-     # Make secret available as a volume
-     volumes:
-      - name: certs
-        secret:
-          secretName: ciccacert
-      containers:
-      - name: cic
-        image: "xxxx"
-        imagePullPolicy: Always
-        args: []
-       # Mounting certs in a volume path
-        volumeMounts:
-        - name: certs
-          mountPath: <Path to mount the certificate>
-          readOnly: true
-        env:
-        # Set Citrix ADM Management IP
-        - name: "NS_IP"
-          value: "xx.xx.xx.xx"
-        # Set port for Nitro
-        - name: "NS_PORT"
-          value: "xx"
-        # Set Protocol for Nitro
-        - name: "NS_PROTOCOL"
-         # Enable HTTPS protocol for secure communication
-          value: "HTTPS"
-        # Set username for Nitro
-        - name: "NS_USER"
-          value: "nsroot"
-        # Set user password for Nitro
-        - name: "NS_PASSWORD"
-          value: "nsroot"
-        # Certificate validation configurations
-         - name: "NS_VALIDATE_CERT"
-          value: "yes"
-        - name: "NS_CACERT_PATH"
-          value: " <Mounted volume path>/myCA.pem"
+  serviceAccountName: cpx
+  # Make secret available as a volume
+  volumes:
+  - name: certs
+    secret:
+      secretName: ciccacert
+  containers:
+  - name: cic
+    image: "xxxx"
+    imagePullPolicy: Always
+    args: []
+    # Mounting certs in a volume path
+    volumeMounts:
+    - name: certs
+      mountPath: <Path to mount the certificate>
+      readOnly: true
+    env:
+    # Set Citrix ADM Management IP
+    - name: "NS_IP"
+      value: "xx.xx.xx.xx"
+    # Set port for Nitro
+    - name: "NS_PORT"
+      value: "xx"
+    # Set Protocol for Nitro
+    - name: "NS_PROTOCOL"
+      # Enable HTTPS protocol for secure communication
+      value: "HTTPS"
+    # Set username for Nitro
+    - name: "NS_USER"
+      value: "nsroot"
+    # Set user password for Nitro
+    - name: "NS_PASSWORD"
+      value: "nsroot"
+    # Certificate validation configurations
+    - name: "NS_VALIDATE_CERT"
+      value: "yes"
+    - name: "NS_CACERT_PATH"
+      value: " <Mounted volume path>/myCA.pem"
 ```
 
 As specified in the example YAML file, following are the specific changes required for enabling certificate validation in the Citrix ingress controller.
