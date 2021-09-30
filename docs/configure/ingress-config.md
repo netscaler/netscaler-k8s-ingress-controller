@@ -12,7 +12,7 @@ The following sample Ingress definition demonstrates how to set up an Ingress to
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: Virtual-Host-Ingress
+  name: virtual-host-ingress
   namespace: default
 spec:
   rules:
@@ -25,6 +25,7 @@ spec:
             port:
               number: 80
         pathType: Prefix
+        path: /
   - host: bar.foo.com
     http:
       paths:
@@ -34,6 +35,7 @@ spec:
             port:
               number: 80
         pathType: Prefix
+        path: /
 ```
 
 After the sample Ingress definition is deployed, all the HTTP request with a host header is load balanced by Citrix ADC to `service1`. And, the HTTP request with a host header is load balancer by Citrix ADC to `service2`.
@@ -46,7 +48,7 @@ The following sample Ingress definition demonstrates how to set up an Ingress to
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: Path-Ingress
+  name: path-ingress
   namespace: default
 spec:
   rules:
@@ -81,11 +83,11 @@ The following sample Ingress definition demonstrates how to set up an ingress wi
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: Wildcard-Ingress
+  name: wildcard-ingress
   namespace: default
 spec:
   rules:
-  - host: ’*.example.com’
+  - host: '*.example.com'
     http:
       paths:
       - backend:
@@ -104,16 +106,12 @@ After the sample Ingress definition is deployed, HTTP requests to all the subdom
 
 ## Exact path matching
 
-By default Ingress paths are treated as prefix expressions. Using the annotation `ingress.citrix.com/path-match-method: “exact”` in the ingress definition defines the Citrix ingress controller to consider the path for the exact match.
-
-The following sample Ingress definition demonstrates how to set up Ingress for exact path matching:
+Ingresses belonging to `networking.k8s.io/v1` APIversion can make use of `PathType: Exact` to consider the path for the exact match. 
 
 ```yml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    ingress.citrix.com/path-match-method: “exact”
   name: Path-exact-Ingress
   namespace: default
 spec:
@@ -125,9 +123,32 @@ spec:
           service:
             name: service1
             port:
-              name: "80"
+              name: 80
         path: /exact
-        pathType: Prefix
+        pathType: Exact
+```
+
+(Deprecated as of k8s 1.22+) By default for Ingresses belonging to `extension/v1beta1`, paths are treated as `Prefix` expressions. Using the annotation `ingress.citrix.com/path-match-method: "exact"` in the ingress definition defines the Citrix ingress controller to consider the path for the exact match.
+
+The following sample Ingress definition demonstrates how to set up Ingress for exact path matching:
+
+```yml
+apiVersion: extension/v1beta1
+kind: Ingress
+metadata:
+  name: path-exact-ingress
+  namespace: default
+  annotations:
+    ingress.citrix.com/path-match-method: "exact"
+spec:
+  rules:
+  - host:test.example.com
+    http:
+      paths:
+      - path: /exact
+        backend:
+          serviceName: service1
+          servicePort: 80
 ```
 
 After the sample Ingress definition is deployed, HTTP requests with path `/exact` is routed by Citrix ADC to `service1` but not to `/exact/somepath`.
@@ -140,7 +161,7 @@ Following example shows path based routing for the default traffic that does not
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: Default-Path-Ingress
+  name: default-path-ingress
   namespace: default
 spec:
   rules:
