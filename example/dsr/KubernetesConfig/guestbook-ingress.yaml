@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/frontend-ip: 10.102.169.210
+    ingress.citrix.com/frontend-ip: x.x.x.x
     kubernetes.io/ingress.class: dsr-tier2
   name: guestbook-ingress
 spec:

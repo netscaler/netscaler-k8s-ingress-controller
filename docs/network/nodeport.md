@@ -19,7 +19,7 @@ In this section, we shall create a Deployment, `apache`, and deploy it in your K
 #
 
 #For illustration a basic apache web server is used as a application
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apache
