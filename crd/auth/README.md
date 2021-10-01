@@ -203,7 +203,8 @@ spec:
 
     authentication_providers:
         - name: "local-auth-provider"
-          basic-local-db:
+          basic_local_db:
+              use_local_auth: 'YES'
 
     authentication_policies:
         - resource:
@@ -523,7 +524,8 @@ spec:
               server_login_credentials: ldapcredential
 
         - name: "local-auth-provider"
-          basic-local-db:
+          basic_local_db:
+              use_local_auth: 'YES'
 
     authentication_policies:
 
@@ -616,4 +618,3 @@ stringData:
   password: 'ldap_server_password'
 
 ```
-        
