@@ -44,14 +44,14 @@ The following deployment types are supported:
  - Failover: A failover deployment is used when you want to deploy applications in an active/passive configuration when they cannot be deployed in active/active mode.
 
 - Round trip time (RTT):  In an RTT deployment, the real-time status of the network is monitored and dynamically directs the client request to the data center with the lowest RTT value.
-  
+
 - Static proximity: In a static proximity deployment, an IP-address based static proximity database is used to determine the proximity between the client’s local DNS server and the GSLB sites. The requests are sent to the site that best matches the proximity criteria.
 
 - Round robin: In a round robin deployment, the GSLB device continuously rotates a list of the services that are bound to it. When it receives a request, it assigns the connection to the first service in the list, and then moves that service to the bottom of the list.
 
 
 
-**Note:** 
+**Note:**
   Currently, IPv6 is not supported.
 
 ## CRDs for configuring Multi-cluster ingress and load balancing solution for Kubernetes clusters
@@ -65,13 +65,13 @@ The following CRDs are introduced to support the Citrix ADC configuration for pe
 
 GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
 
-For the GTP CRD definition, see the [GTP CRD](#gtp-crd-definition).
+The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml).
 
 ### GSE CRD
 
 GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-For the full GSE CRD definition, see the [GSE CRD](#gse-crd-definition).
+The GSE CRD Spec is available in the citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
 
 The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
 
@@ -89,25 +89,25 @@ For GSE CRD auto generation in the case of Ingress, host name should exactly mat
 Perform the following steps to deploy the Citrix global load balancing solution for geographically distributed Kubernetes clusters.
 
 1. Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-rbac.yaml) file.
-    
+
         kubectl apply -f gslb-rbac.yaml
-    
+
 2. Create the secrets required for the GSLB controller to connect to GSLB devices and push the configuration from the GSLB controller.
 
         kubectl create secret generic secret1 --from-literal=username=<username> --from-literal=password=<password>
 
      **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
-  
+
 3. Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml).
 
 4. Edit the GSLB controller YAML file and update the following values as per the requirements of each cluster.
 
     - LOCAL_REGION and LOCAL_CLUSTER: Specify the region and cluster name where this controller is deployed.
     - SITENAMES: Provide site names separated by commas and the configuration should be the same as the site configured on GSLB devices.
-    - IP address, region, user name, and password for each site should start with the corresponding site name.  
+    - IP address, region, user name, and password for each site should start with the corresponding site name.
     For example: For site1 in `SITENAMES`, fields should be `site1_ip`, `site1_region`, `site1_username`, and `site1_password`.
     - argument section in the specification should include `--config-interface` and    `gslb-endpoint`.
- 
+
      The following is a snippet of the YAML file for deploying the GSLB controller.
 
 
@@ -150,8 +150,8 @@ Perform the following steps to deploy the Citrix global load balancing solution 
         - --config-interface
             gslb-endpoints
 
-   
-     **Note:** 
+
+     **Note:**
      The order of the GSLB site information should be the same in all clusters. First site in the order is considered as the master site for pushing the configuration. When that master site goes down, the next site in the list will be the new master. Hence, the order of the sites should be the same in all Kubernetes clusters. For example,
      if the order of sites is `site1` followed by `site2` in cluster1 all other clusters should follow the same order.
 
@@ -179,7 +179,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
     **Note:** You can specify the load balancing method for local first, canary, and failover deployments.
 
 
-   
+
 
         apiVersion: "citrix.com/v1beta1"
         kind: globaltrafficpolicy
@@ -204,7 +204,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
                 uri: ''
                 respCode: 200
 
-  
+
 
     For more information on other GTP deployment options like canary and failover, see [Examples: Global traffic policy deployments](#Examples-Global-traffic-policy-deployments).
 
@@ -213,10 +213,10 @@ Perform the following steps to deploy the Citrix global load balancing solution 
         kubectl create -f  gse-example.yaml
 
     **Note:**  GSE CRD is applied in a specific cluster based on the cluster endpoint information. The global service entry name should be the same as the target destination name in the global traffic policy.
-  
+
     Following is an example for a global service entry.
 
-   
+
         apiVersion: "citrix.com/v1beta1"
         kind: globalserviceentry
         metadata:
@@ -226,14 +226,14 @@ Perform the following steps to deploy the Citrix global load balancing solution 
           endpoint:
             ipv4address: 10.102.217.70
             monitorPort: 33036
-  
-  
+
+
     In this example, the global service entry name `app2.default.east.cluster1` is one of the target destination names in the global traffic policy created in step 8.
 
 10. Apply service YAML for GSLB of services of type LoadBalancer.
 
           kubectl create -f  service-example.yaml
-     
+
      Following is a sample service.
 
           apiVersion: v1
@@ -313,161 +313,7 @@ The IP address specified (`forward . 10.102.217.149`) is a DNS service configure
 
 ## GTP CRD definition
 
-The following is the GTP CRD definition.
-
-```yml
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  # name must match the spec fields below, and be in the form: <plural>.<group>
-  name: globaltrafficpolicies.citrix.com
-spec:
-  group: citrix.com
-  scope: Namespaced
-  names:
-    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
-    plural: globaltrafficpolicies
-    # singular name to be used as an alias on the CLI and for display
-    singular: globaltrafficpolicy
-    # kind is normally the CamelCased singular type. Your resource manifests use this.
-    kind: globaltrafficpolicy
-    # shortNames allow shorter string to match your resource on the CLI
-    shortNames:
-    - gtp
-  versions: 
-  - name: v1beta1
-    served: true
-    storage: true
-    subresources:
-      status: {}
-    additionalPrinterColumns:
-      - name: Status
-        type: string
-        description: "Current Status of the CRD"
-        jsonPath: .status.state
-      - name: Message
-        type: string
-        description: "Status Message"
-        jsonPath: .status.status_message 
-    schema:
-     # openAPIV3Schema is the schema for validating custom objects.
-      openAPIV3Schema:
-        type: object
-        required: ["apiVersion","kind","metadata","spec"]
-        properties:
-          apiVersion:
-            type: string
-          kind:
-            type: string
-          metadata:
-            #required: ["name","namespace"]
-            properties:
-              name:
-                type: string
-              #namespace:
-              #  type: string
-            type: object
-          status:
-            type: object
-            properties:
-              state:
-                 type: string
-              status_message:
-                 type: string
-          spec:
-            required: ["serviceType","hosts","status"]
-            properties:
-              ipType:
-                type: string
-                enum:
-                - ipv4
-                description: "Type of address A or AAAA. Currently only A is supported"
-              serviceType:
-                type: string
-                enum:
-                - HTTP
-                - SSL
-                - TCP
-                - UDP
-                - ANY
-                description: "Protocol supported in multi-cluster deployment"
-              hosts:
-                items:
-                  required: ["host","policy"]
-                  properties:
-                    host:
-                      type: string
-                      description: "Domain for which multi-cluster support will be applied"
-                    policy:
-                      required: ["targets","trafficPolicy"]
-                      properties:
-                        trafficPolicy:
-                          type: string
-                          enum:
-                          - LOCAL-FIRST
-                          - CANARY
-                          - FAILOVER
-                          - RTT
-                          - ROUNDROBIN
-                          - STATICPROXIMITY
-                          description: "The traffic distribution policy supported in multi-cluster deployment"
-                        secLbMethod:
-                          type: string
-                          description: "The traffic distribution policy supported among clusters under a group in local-first, canary or failover"
-                        targets:
-                          items:
-                            required: ["destination"]
-                            properties:
-                              destination:
-                                type: string
-                                description: "Ingress or LoadBalancer service endpoint in each cluster"
-                              weight:
-                                type: integer
-                                minimum: 0 
-                                maximum: 100
-                                description: "Proportion of traffic to be maintained across clusters. For canary proportion is percentage"
-                              rule: 
-                                type: string
-                              CIDR:
-                                type: string
-                                description: "CIDR to be used in local-first to determine the scope of locality"
-                              primary:
-                                type: boolean
-                                description: "Is this destination a primary cluster or a backup cluster in failover deployment. Possible values: True or False"
-                            type: object
-                          type: array
-                        monitor:
-                          items:
-                            properties:
-                              monType: 
-                                type: string
-                                enum:
-                                - PING
-                                - TCP
-                                - HTTP
-                                - HTTPS
-                                - ping
-                                - tcp
-                                - http
-                                - https
-                                description: "Type of probe to determine the health of multi-cluster endpoint"
-                              uri:
-                                type: string
-                                description: "Path to be probed for the health of multi-cluster endpoint in case of http and https"
-                              respCode:
-                                type: integer
-                                description: "Response code expected to mark the multi-cluster endpoint healthy in case of http and https"
-                            type: object
-                          type: array
-                      type: object
-                  type: object
-                type: array
-              status:
-                type: object
-            type: object
-
-```
+GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml))
 
 The following table explains the GTP CRD attributes.
 
@@ -478,7 +324,7 @@ The following table explains the GTP CRD attributes.
 | `host `          |                                                                                           Specifies the domain for which multi-cluster support is applied.                                                                                                                                |
 | `trafficPolicy`    | Specifies the traffic distribution policy supported in a multi-cluster deployment. |
 | `secLbMethod`    |  Specifies the traffic distribution policy supported among clusters under a group in local-first, canary, or failover.  |
-|  `destination `        | Specifies the Ingress or LoadBalancer service endpoint in each cluster. The destination name should match with the name of GSE.                                                                                      |                                                            
+|  `destination `        | Specifies the Ingress or LoadBalancer service endpoint in each cluster. The destination name should match with the name of GSE.                                                                                      |
 | `weight`               |  Specifies the proportion of traffic to be distributed across clusters. For canary deployment, the proportion is specified as percentage.                                                                                                                                                                                                                                                   |
 |`CIDR`    |Specifies the CIDR to be used in local-first to determine the scope of locality.                                                                                                                                                                                                                                                                                  |
 |`primary`    | Specifies whether the destination is a primary cluster or a backup cluster in the failover deployment.                                                                                                                                                                                                                                                                              |
@@ -489,81 +335,7 @@ The following table explains the GTP CRD attributes.
 
 ## GSE CRD definition
 
-Following is the GSE CRD definition.
-
-```yml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  # name must match the spec fields below, and be in the form: <plural>.<group>
-  name: globalserviceentries.citrix.com
-spec:
-  # group name to use for REST API: /apis/<group>/<version>
-  group: citrix.com
-  # list of versions supported by this CustomResourceDefinition
-  names:
-    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
-    plural: globalserviceentries
-    # singular name to be used as an alias on the CLI and for display
-    singular: globalserviceentry
-    # kind is normally the CamelCased singular type. Your resource manifests use this.
-    kind: globalserviceentry
-    # shortNames allow shorter string to match your resource on the CLI
-    shortNames:
-    - gse
-  # either Namespaced or Cluster
-  scope: Namespaced
-  versions: 
-  - name: v1beta1
-    served: true
-    storage: true
-    subresources:
-      status: {}
-    additionalPrinterColumns:
-      - name: Status
-        type: string
-        description: "Current Status of the CRD"
-        jsonPath: .status.state
-      - name: Message
-        type: string
-        description: "Status Message"
-        jsonPath: .status.status_message
-    schema:
-     # openAPIV3Schema is the schema for validating custom objects.
-      openAPIV3Schema:
-        type: object
-        properties:
-          apiVersion:
-            type: string
-          kind:
-            type: string
-          metadata:
-            type: object
-          status:
-            type: object
-            properties:
-              state:
-                 type: string
-              status_message:
-                 type: string
-          spec:
-            properties:
-              endpoint:
-                properties:
-                  ipv4address:
-                    type: string
-                    description: "local cluster ingress / load balancer kind service endpoint ipv4 address"
-                  domainName:
-                    type: string
-                    description: "local cluster ingress / load balancer kind service endpoint domain name"
-                  monitorPort:
-                    type: integer
-                    description: "listening port of local cluster ingress / load balancer kind service endpoint"
-                type: object
-            type: object
-
-```
-
+GSE CRD definition is available at [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
 
 ## Examples: Global traffic policy deployments
 
@@ -629,7 +401,7 @@ The following example shows a sample GTP configuration for failover. Using the `
             uri: ''
             respCode: 200
 
-  
+
 ### RTT deployment
 
 Following is a sample global traffic policy for round trip time deployment.

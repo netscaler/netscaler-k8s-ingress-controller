@@ -20,6 +20,7 @@ spec:
             port:
               number: 9000
         pathType: Prefix
+        path: /
   - host: spinnaker-api.example.com
     http:
       paths:
@@ -29,6 +30,7 @@ spec:
             port:
               number: 8084
         pathType: Prefix
+        path: /
   tls:
   - hosts:
     - spinnaker.example.com

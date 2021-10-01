@@ -31,46 +31,46 @@ The following is a sample HTTP CRD object.
 ```yml
 apiVersion: citrix.com/v1
 kind: HTTPRoute
- metadata:
-    name: test-route
-    labels:
-      domain: abc.com
- spec:
-   hostname:
-   - abc.com
-   rules:
-   - name: exactpath
-     match:
-     - path:
-         exact: /resources
-     action:
-       backend:
-         kube:
-           service: resource
-           port: 80
-   - name: prefixpath
-     match:
-     - path:
-         prefix: /cart
-     action:
-       backend:
-         kube:
-           service: cart
-           port: 80
-   - name: header
-     match:
-     - headers:
-       - headerName:
-           contains: Mobile
-     action:
-       backend:
-         kube:
-           service: mobile
-           port: 443
-           backendConfig:
-             secureBackend: true
-             lbConfig:
-               lbmethod: ROUNDROBIN
+metadata:
+  name: test-route
+  labels:
+    domain: abc.com
+spec:
+  hostname:
+  - abc.com
+  rules:
+  - name: exactpath
+    match:
+    - path:
+        exact: /resources
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80
+  - name: prefixpath
+    match:
+    - path:
+        prefix: /cart
+    action:
+      backend:
+        kube:
+          service: cart
+          port: 80
+  - name: header
+    match:
+    - headers:
+      - headerName:
+          contains: Mobile
+    action:
+      backend:
+        kube:
+          service: mobile
+          port: 443
+          backendConfig:
+            secureBackend: true
+            lbConfig:
+              lbmethod: ROUNDROBIN
 ```
 
 For more examples, see [HTTP Route Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/HTTPRoute_examples).
@@ -114,7 +114,7 @@ HTTPRoute custom resource defines a spec field which represents the HTTP routing
 This attribute specifies the path based matching for content routing.
 
 Following is an example for the `HTTPRoute.rules.match.path` attribute.
-
+```yml
      match:
      - path:
          prefix: /resources
@@ -132,6 +132,7 @@ Following is an example for the `HTTPRoute.rules.match.path` attribute.
          kube:
            service: resource
            port: 80
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.path` attribute.
 
@@ -158,6 +159,7 @@ This attribute represents the header name based matching for content routing.
 
 Following example shows sample snippets for the `HTTPRoute.rules.match.headers.headerName` attribute configuration.
 
+```yml
     match:
     - headers:
       - headerName:
@@ -177,6 +179,7 @@ Following example shows sample snippets for the `HTTPRoute.rules.match.headers.h
         kube:
           service: resource-service
           port: 80
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.headers.headerName` attribute.
 
@@ -192,7 +195,7 @@ The following table explains the various fields in the `HTTPRoute.rules.match.he
 This attribute represents the header name and value matching for content routing. The header name is matched exactly and value is matched according to the fields specified.
 
 The following example shows sample snippets for the `HTTPRoute.rules.match.headers.headerValue` attribute configuration.
-
+```yml
 
      match:
      - headers:
@@ -227,7 +230,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.heade
          kube:
            service: example
            port: 80
-
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.headers.headerValue` attribute.
 
@@ -246,7 +249,7 @@ This attribute represents the cookie based matching for content routing. The coo
 
 The following example shows sample snippets for the `HTTPRoute.rules.match.cookies` attribute configuration.
 
-
+```yml
      match:
      - cookies:
        - name: version
@@ -276,6 +279,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.cooki
          kube:
            service: v1-app
            port: 80
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.cookies` attribute.
 
@@ -290,7 +294,7 @@ The following table explains the various fields in the `HTTPRoute.rules.match.co
 ## HTTPRoute.rules.match.queryParams
 
 This attribute represents the HTTP query parameters in the URL matching for content routing.
-
+```yml
 
     match:
      - queryParams:
@@ -322,6 +326,7 @@ This attribute represents the HTTP query parameters in the URL matching for cont
         kube:
           service: mobile
           port: 80
+```
 
 The following example shows sample snippets for the `HTTPRoute.rules.match.cookies` attribute configuration.
 
