@@ -18,9 +18,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: “6379”
-    ingress.citrix.com/insecure-service-type: “tcp”
-    kubernetes.io/ingress.class: “guestbook”
+    ingress.citrix.com/insecure-port: "6379"
+    ingress.citrix.com/insecure-service-type: "tcp"
+    kubernetes.io/ingress.class: "guestbook"
   name: redis-master-ingress
 spec:
   defaultBackend:
@@ -37,15 +37,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: “5084”
-    ingress.citrix.com/insecure-service-type: “udp”
+    ingress.citrix.com/insecure-port: "5084"
+    ingress.citrix.com/insecure-service-type: "udp"
   name: udp-ingress
 spec:
   defaultBackend:
     service:
       name: frontend
       port:
-        name: udp-53 /* Service port name defined in the service defination */
+        name: udp-53  # Service port name defined in the service defination
 ```
 
 The following is a sample service definition where the service port name is defined as `udp-53`:
@@ -74,8 +74,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: “5084”
-    ingress.citrix.com/insecure-service-type: “udp”
+    ingress.citrix.com/insecure-port: "5084"
+    ingress.citrix.com/insecure-service-type: "udp"
   name: udp-ingress
 spec:
   defaultBackend:
@@ -87,7 +87,7 @@ spec:
 
 ## Load balance Ingress traffic based on TCP over SSL
 
-Citrix ingress controller provides an `‘ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
+Citrix ingress controller provides an `'ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
 
 **Sample:** Ingress definition for TCP over SSL based Ingress.
 
@@ -96,9 +96,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/secure-service-type: “ssl_tcp”
-    ingress.citrix.com/secure_backend: ‘{“frontendcolddrinks”:”True”}’
-    kubernetes.io/ingress.class: “colddrink”
+    ingress.citrix.com/secure-service-type: "ssl_tcp"
+    ingress.citrix.com/secure_backend: '{"frontendcolddrinks":"True"}'
+    kubernetes.io/ingress.class: "colddrink"
   name: colddrinks-ingress
 spec:
   defaultBackend:
@@ -107,7 +107,7 @@ spec:
       port:
         number: 443
   tls:
-  - secretName: “colddrink-secret”
+  - secretName: "colddrink-secret"
 ```
 
 ## Monitor and improve the performance of your TCP or UDP based applications
@@ -123,11 +123,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/csvserver: ‘{“l2conn”:”on”}’
-    ingress.citrix.com/frontend-ip: “192.168.1.1”
-    ingress.citrix.com/insecure-port: “80”
-    ingress.citrix.com/lbvserver: ‘{“mongodb-svc”:{“lbmethod”:”SRCIPDESTIPHASH”}}’
-    ingress.citrix.com/monitor: ‘{“mongodbsvc”:{“type”:”tcp-ecv”}}’
+    ingress.citrix.com/csvserver: '{"l2conn":"on"}'
+    ingress.citrix.com/frontend-ip: "192.168.1.1"
+    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/lbvserver: '{"mongodb-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'
+    ingress.citrix.com/monitor: '{"mongodbsvc":{"type":"tcp-ecv"}}'
   name: mongodb
 spec:
   rules:

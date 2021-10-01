@@ -45,7 +45,7 @@ spec:
   - host: kuard.example.com
     http:
       paths:
-      - pathType: Prefix
+      - pathType: ImplementationSpecific
         backend:
           resource:
             apiGroup: citrix.com

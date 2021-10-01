@@ -17,61 +17,13 @@ Perform the following steps to enable GRPC support using HTTP2.
 
 3. Edit the `cic.yaml` file for deploying the Citrix ingress controller to support ConfigMap.
 
-        
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: cic-k8s-ingress-controller
-        spec:
-          selector:
-            matchLabels:
-              app: cic-k8s-ingress-controller
-          replicas: 1
-          template:
-            metadata:
-              name: cic-k8s-ingress-controller
-              labels:
-                app: cic-k8s-ingress-controller
-              annotations:
-            spec:
-              serviceAccountName: cic-k8s-role
-              containers:
-              - name: cic-k8s-ingress-controller
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
-                env:
-                # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
-                - name: "NS_IP"
-                  value: "10.106.143.133"
-                # Set username for Nitro
-                - name: "NS_USER"
-                  valueFrom:
-                    secretKeyRef:
-                    name: nslogin
-                    key: username
-                # Set user password for Nitro
-                - name: "NS_PASSWORD"
-                  valueFrom:
-                    secretKeyRef:
-                    name: nslogin
-                    key: password
-                # Set log level
-                - name: "EULA"
-                  value: "yes"
-                envFrom:
-                - configMapRef:
-                    name: cic-configmap
+                ```yml
                 args:
                   - --ingress-classes
                     citrix
-                  - --feature-node-watch
-                    true
-                  - --default-ssl-certificate
-                    default/default.secret
                   - --configmap
                     default/cic-configmap
-                # imagePullPolicy: IfNotPresent
-                imagePullPolicy: Always
-
+                ```
 4. Deploy the Citrix ingress controller as a stand-alone pod by applying the edited YAML file.
 
         kubectl apply -f cic.yaml
@@ -87,7 +39,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
     Following is a sample content for the `grpc-service.yaml` file. 
          
-
+          ```yml
           apiVersion: apps/v1
           kind: Deployment
           metadata:
@@ -124,7 +76,7 @@ Perform the following steps to enable GRPC support using HTTP2.
               app: grpc-service
             sessionAffinity: None
             type: NodePort
-
+          ```
 7. Create a certificate for the gRPC Ingress configuration.
 
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=grpc.example.com/O=grpc.example.com"
@@ -141,6 +93,7 @@ Perform the following steps to enable GRPC support using HTTP2.
   
      The content of the `frontend-ingress.yaml` file is provided as follows:
 
+          ```yml
           apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
@@ -155,6 +108,7 @@ Perform the following steps to enable GRPC support using HTTP2.
             - {}
             tls:
             - {}
+          ```
 
    - Create a YAML file for the back-end Ingress configuration with the following content and apply it to enable HTTP2 on back-end (service group).
 
@@ -162,6 +116,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
       The content of the `backend-ingress.yaml` file is provided as follows:
 
+          ```yml
           apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
@@ -187,14 +142,16 @@ Perform the following steps to enable GRPC support using HTTP2.
             - hosts:
               - grpc.example.com
               secretName: grpc-secret
+          ```
 
 3. Test the gRPC traffic using the `grpcurl` command.
 
-
+        ```
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
-
+        ```
     The output of the command is shown as follows:
 
+        ```
         Resolved method descriptor:
         rpc SayHello ( .helloworld.HelloRequest ) returns ( .helloworld.HelloReply );
  
@@ -216,6 +173,7 @@ Perform the following steps to enable GRPC support using HTTP2.
         Response trailers received:
         (empty)
         Sent 1 request and received 1 response
+        ```
 
 ## Validate the rate limit CRD
 
@@ -227,7 +185,7 @@ Perform the following steps to validate the rate limit CRD.
 
 2. Create a YAML file (ratelimit-crd-object.yaml) with the following content for the rate limit policy.
 
-
+          ```yml
           apiVersion: citrix.com/v1beta1
           kind: ratelimit
           metadata:
@@ -243,7 +201,7 @@ Perform the following steps to validate the rate limit CRD.
             req_threshold: 5
             timeslice: 60000
             throttle_action: "RESPOND"
-         
+          ```
 
 1. Apply the YAML file using the following command.
   
@@ -251,14 +209,17 @@ Perform the following steps to validate the rate limit CRD.
 
 2. Test gRPC traffic using the `grpcurl` command.
 
-
+        ```
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
+        ```
 
       The command returns the following error in response after the rate limit is reached:
 
+        ```
         Error invoking method "helloworld.Greeter.SayHello": failed to query for service descriptor "helloworld.Greeter": rpc error: code = Unavailable desc =
 
         Too Many Requests: HTTP status code 429; transport: missing content-type field
+        ```
 
 ## Validate the Rewrite and Responder CRD with gRPC
 
@@ -270,7 +231,7 @@ Perform the following steps to validate the Rewrite and Responder CRD.
 
 2. Create a YAML file (rewrite-crd-object.yaml) with the following content for the rewrite policy.
 
-      
+        ```yml      
         apiVersion: citrix.com/v1
         kind: rewritepolicy
         metadata:
@@ -286,7 +247,7 @@ Perform the following steps to validate the Rewrite and Responder CRD.
                 comment: 'insert SessionID in header'
                 direction: RESPONSE
                 rewrite-criteria: 'http.res.is_valid'
-
+        ```
 
 1. Apply the YAML file using the following command. 
 
@@ -294,11 +255,13 @@ Perform the following steps to validate the Rewrite and Responder CRD.
 
 3. Test the gRPC traffic using the `grpcurl` command.
 
+        ```
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
-
+        ```
     
      This command adds a session id in the gRPC request response.
 
+        ```
         Resolved method descriptor:
         rpc SayHello ( .helloworld.HelloRequest ) returns ( .helloworld.HelloReply );
 
@@ -317,3 +280,4 @@ Perform the following steps to validate the Rewrite and Responder CRD.
         Response trailers received:
         (empty)
         Sent 1 request and received 1 response
+        ```
