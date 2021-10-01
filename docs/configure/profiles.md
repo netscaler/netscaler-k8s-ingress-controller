@@ -140,7 +140,7 @@ metadata:
   # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
     ingress.citrix.com/backend-httpprofile: '{"apache":{"markhttp09inval": "disabled"}}'
     ingress.citrix.com/backend-tcpprofile: '{"apache":{"sack":"enabled"}}'
-    ingress.citrix.com/frontend-ip: 10.106.172.22
+    ingress.citrix.com/frontend-ip: 'VIP_IP'
     ingress.citrix.com/insecure-port: "80"
   name: apache-ingress
 spec:
@@ -170,7 +170,7 @@ metadata:
     ingress.citrix.com/backend-httpprofile: '{"hotdrink":{"markhttp09inval": "disabled"}}'
     ingress.citrix.com/backend-sslprofile: '{"hotdrink":{"snienable": "enabled"}}'
     ingress.citrix.com/backend-tcpprofile: '{"hotdrink":{"sack":"enabled"}}'
-    ingress.citrix.com/frontend-ip: 10.106.172.22
+    ingress.citrix.com/frontend-ip: 'VIP_IP'
     ingress.citrix.com/secure-backend: '{"hotdrink":"true"}'
     ingress.citrix.com/secure-port: "443"
   name: hotdrink-ingress
