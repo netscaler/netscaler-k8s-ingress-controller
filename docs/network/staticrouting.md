@@ -72,7 +72,7 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
 
 ```yml
   kind: ClusterRole
-  apiVersion: rbac.authorization.k8s.io/v1beta1
+  apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: cic-k8s-role
   rules:

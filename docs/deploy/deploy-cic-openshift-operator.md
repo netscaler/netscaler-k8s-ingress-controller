@@ -165,7 +165,7 @@ Perform the following:
     | Parameters | Mandatory or Optional | Default value | Description |
     | --------- | --------------------- | ------------- | ----------- |
     | license.accept | Mandatory | no | Set `yes` to accept the Citrix ingress controller end user license agreement. |
-    | cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.2.0` | The Citrix ingress controller image. |
+    | cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.18.5` | The Citrix ingress controller image. |
     | cic.pullPolicy | Mandatory | Always | The Citrix ingress controller image pull policy. |
     | loginFileName | Mandatory | nslogin | The secret key to log on to the Citrix ADC VPX or MPX. For information on how to create the secret keys, see [Prerequisites](#Prerequisites). |
     | nsIP | Mandatory | N/A | The IP address of the Citrix ADC device. For details, see [Prerequisites](#Prerequisites). |
@@ -274,7 +274,7 @@ Perform the following:
     | lsIP | Optional | N/A | Provide the Citrix Application Delivery Management (ADM) IP address to license Citrix ADC CPX. For more information, see [Licensing](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/licensing/)|
     | lsPort | Optional | 27000 | Citrix ADM port if a non-default port is used. |
     | platform | Optional | N/A | Platform license. The platform is **CP1000**. |
-    | cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.2.0` | The Citrix ingress controller image. |
+    | cic.image | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller:1.18.5` | The Citrix ingress controller image. |
     | cic.pullPolicy | Mandatory | Always | The Citrix ingress controller image pull policy. |
     | cic.required | Optional | true | Specifies this parameter to run the Citrix ingress controller as a sidecar with Citrix ADC CPX |
     | defaultSSLCert | Optional | N/A | Default SSL certificate that must be used as a non-SNI certificate in Citrix ADC. |

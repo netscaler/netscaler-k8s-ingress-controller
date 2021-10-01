@@ -23,21 +23,24 @@ While applying the Kubernetes secret, you can link the server certificates with 
 The following is a sample Ingress definition:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frontendssl
 spec:
-  tls:
-  - secretName: certchain1
   rules:
-  - host:  frontend.com
+  - host: frontend.com
     http:
       paths:
-      - path: /web-frontend/frontend.php
-        backend:
-          serviceName: frontend
-          servicePort: 443
+      - backend:
+          service:
+            name: frontend
+            port:
+              number: 443
+        path: /web-frontend/frontend.php
+        pathType: Prefix
+  tls:
+  - secretName: certchain1
 
 ```
 

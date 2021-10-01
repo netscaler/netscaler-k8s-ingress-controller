@@ -1,4 +1,4 @@
-# Deploy the Citrix ingress controller as an OpenShift router plug-in
+b Deploy the Citrix ingress controller as an OpenShift router plug-in
 
 In an OpenShift cluster, external clients need a way to access the services provided by pods. OpenShift provides two resources for communicating with services running in the cluster: [routes](https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html) and [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
@@ -65,139 +65,16 @@ Perform the following steps to deploy Citrix ADC CPX as a router with the Citrix
 
         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml
 
-    The contents of the `cpx_cic_side_car.yaml` file is given as follows:
 
-        kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1beta1
-        metadata:
-          name: citrix
-        rules:
-          - apiGroups: [""]
-            resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces"]
-            verbs: ["get", "list", "watch"]
-          # services/status is needed to update the loadbalancer IP in service status for integrating
-          # service of type LoadBalancer with external-dns
-          - apiGroups: [""]
-            resources: ["services/status"]
-            verbs: ["patch"]
-          - apiGroups: [""]
-            resources: ["services"]
-            verbs: ["get", "list", "watch", "patch"]
-          - apiGroups: ["extensions"]
-            resources: ["ingresses", "ingresses/status"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["apiextensions.k8s.io"]
-            resources: ["customresourcedefinitions"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["apps"]
-            resources: ["deployments"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["citrix.com"]
-            resources: ["vips"]
-            verbs: ["get", "list", "watch", "create", "delete"]
-          - apiGroups: ["route.openshift.io"]
-            resources: ["routes"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["network.openshift.io"]
-            resources: ["hostsubnets"]
-            verbs: ["get", "list", "watch"]
-       
-        ---
-        kind: ClusterRoleBinding
-        apiVersion: rbac.authorization.k8s.io/v1beta1
-        metadata:
-          name: citrix
-        roleRef:
-          apiGroup: rbac.authorization.k8s.io
-          kind: ClusterRole
-          name: citrix
-        subjects:
-        - kind: ServiceAccount
-          name: citrix
-          namespace: default
-        ---
-        apiVersion: v1
-        kind: ServiceAccount
-        metadata:
-          name: citrix
-          namespace: default
-        ---
-        apiVersion: extensions/v1beta1
-        kind: Deployment
-        metadata:
-          name: cpx-cic
-        spec:
-          replicas: 1
-          template:
-            metadata:
-              name: cpx-cic
-              labels:
-                app: cpx-cic
-              annotations:
-            spec:
-              serviceAccountName: citrix
-              containers:
-                - name: cpx
-                  image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
-                  securityContext:
-                    privileged: true
-                  env:
-                  - name: "EULA"
-                    value: "yes"
-                  - name: "KUBERNETES_TASK_ID"
-                    value: ""
-                  ports:
-                  - containerPort: 80
-                    hostPort: 80
-                  - containerPort: 443
-                    hostPort: 443
-                  imagePullPolicy: Always
-                # Add cic as a sidecar
-                - name: cic
-                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
-                  imagePullPolicy: Always
-                  env:
-                  - name: "EULA"
-                    value: "yes"
-                  - name: "NS_IP"
-                    value: "127.0.0.1"
-                  - name: "NS_PROTOCOL"
-                    value: "HTTP"
-                  - name: "NS_PORT"
-                    value: "80"
-                  - name: "NS_DEPLOYMENT_MODE"
-                    value: "SIDECAR"
-                  - name: "NS_ENABLE_MONITORING"
-                    value: "YES"
-                  - name: POD_NAME
-                    valueFrom:
-                      fieldRef:
-                        apiVersion: v1
-                        fieldPath: metadata.name
-                  - name: POD_NAMESPACE
-                    valueFrom:
-                      fieldRef:
-                        apiVersion: v1
-                        fieldPath: metadata.namespace
-                  args:
-                    - --default-ssl-certificate
-                      $(POD_NAMESPACE)/default-cert
-                  imagePullPolicy: Always
-              nodeSelector:
-                  "node-role.kubernetes.io/infra": "true"
-
-1.  Add the service account to privileged security context constraints (SCC) of OpenShift.
+2.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
         oc adm policy add-scc-to-user privileged system:serviceaccount:default:citrix
 
-1.  Deploy the Citrix ingress controller using the following command:
+3.  Deploy the Citrix ingress controller using the following command:
 
         oc create -f cpx_cic_side_car.yaml
 
-1.  Verify if the Citrix ingress controller is deployed successfully using the following command:
+4.  Verify if the Citrix ingress controller is deployed successfully using the following command:
 
         oc get pods --all-namespaces
 
@@ -272,121 +149,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 
         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml
 
-    The contents of the `cic.yaml` is given as follows:
-
-        kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1beta1
-        metadata:
-          name: citrix
-        rules:
-          - apiGroups: [""]
-            resources: ["endpoints", "ingresses", "pods", "secrets", "routes", "routes/status", "tokenreviews", "subjectaccessreviews", "nodes", "namespaces"]
-            verbs: ["get", "list", "watch"]
-          # services/status is needed to update the loadbalancer IP in service status for integrating
-          # service of type LoadBalancer with external-dns
-          - apiGroups: [""]
-            resources: ["services/status"]
-            verbs: ["patch"]
-          - apiGroups: [""]
-            resources: ["services"]
-            verbs: ["get", "list", "watch", "patch"]
-          - apiGroups: ["extensions"]
-            resources: ["ingresses", "ingresses/status"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["apiextensions.k8s.io"]
-            resources: ["customresourcedefinitions"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["apps"]
-            resources: ["deployments"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["citrix.com"]
-            resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["citrix.com"]
-            resources: ["vips"]
-            verbs: ["get", "list", "watch", "create", "delete"]
-          - apiGroups: ["route.openshift.io"]
-            resources: ["routes"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: ["network.openshift.io"]
-            resources: ["hostsubnets"]
-            verbs: ["get", "list", "watch"]  
-        ---
-        kind: ClusterRoleBinding
-        apiVersion: rbac.authorization.k8s.io/v1beta1
-        metadata:
-          name: citrix
-        roleRef:
-          apiGroup: rbac.authorization.k8s.io
-          kind: ClusterRole
-          name: citrix
-        subjects:
-        - kind: ServiceAccount
-          name: citrix
-          namespace: default
-        ---
-        apiVersion: v1
-        kind: ServiceAccount
-        metadata:
-          name: citrix
-          namespace: default
-        ---
-        apiVersion: v1
-        kind: DeploymentConfig
-        metadata:
-          name: cic
-        spec:
-          replicas: 1
-          selector:
-            router: cic
-          strategy:
-            resources: {}
-            rollingParams:
-              intervalSeconds: 1
-              maxSurge: 0
-              maxUnavailable: 25%
-              timeoutSeconds: 600
-              updatePeriodSeconds: 1
-            type: Rolling
-          template:
-            metadata:
-              name: cic
-              labels:
-                router: cic
-            spec:
-              serviceAccount: citrix
-              containers:
-              - name: cic
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.5.25"
-                securityContext:
-                  privileged: true
-                env:
-                - name: "EULA"
-                  value: "yes"
-                # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
-                - name: "NS_IP"
-                  value: "X.X.X.X"
-                # Set Citrix ADC VIP that receives the traffic
-                - name: "NS_VIP"
-                  value: "X.X.X.X"
-                # Set username for Nitro
-                - name: "NS_USER"
-                  valueFrom:
-                  secretKeyRef:
-                    name: nslogin
-                    key: username
-                # Set user password for Nitro
-                - name: "NS_PASSWORD"
-                  valueFrom:
-                  secretKeyRef:
-                    name: nslogin
-                    key: password
-                args:
-                - --default-ssl-certificate
-                  default/default-cert
-                imagePullPolicy: Always
-
-1.  Edit the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file and enter the values for the following environmental variables:
+2.  Edit the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file and enter the values for the following environmental variables:
 
     | Environment Variable | Mandatory or Optional | Description |
     | ---------------------- | ---------------------- | ----------- |
@@ -395,19 +158,19 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
     | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress or Route yaml. Not supported for Type Loadbalancer service. |
 
-1.  Add the service account to privileged security context constraints (SCC) of OpenShift.
+3.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
         oc adm policy add-scc-to-user privileged system:serviceaccount:default:citrix
 
-1.  Save the edited ``cic.yaml`` file and deploy it using the following command:
+4.  Save the edited ``cic.yaml`` file and deploy it using the following command:
 
          oc create -f cic.yaml
 
-1.  Verify if the Citrix ingress controller is deployed successfully using the following command:
+5.  Verify if the Citrix ingress controller is deployed successfully using the following command:
 
         oc create get pods --all-namespaces
 
-1.  Configure static routes on Citrix ADC VPX or MPX to reach the pods inside the OpenShift cluster.
+6.  Configure static routes on Citrix ADC VPX or MPX to reach the pods inside the OpenShift cluster.
 
       1.  Use the following command to get the information about host names, host IP addresses, and subnets for static route configuration.
 
@@ -463,57 +226,65 @@ In this example, the Citrix ingress controller is deployed as a router plug-in i
     The content of the `apache.yaml` file is given as follows.
 
         ---
-        apiVersion: apps/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
-          name: apache-only-http
           labels:
-              name: apache-only-http
+            name: apache-only-http
+          name: apache-only-http
         spec:
+          replicas: 4
           selector:
             matchLabels:
               app: apache-only-http
-          replicas: 4
           template:
             metadata:
               labels:
                 app: apache-only-http
             spec:
               containers:
-              - name: apache-only-http
-                image: "raghulc/apache-multiport-http:1.0.0"
+              - image: raghulc/apache-multiport-http:1.0.0
+                imagePullPolicy: IfNotPresent
+                name: apache-only-http
                 ports:
-                # All HTTP Ports
                 - containerPort: 80
+                  protocol: TCP
                 - containerPort: 5080
+                  protocol: TCP
                 - containerPort: 5081
+                  protocol: TCP
                 - containerPort: 5082
+                  protocol: TCP
         ---
-        apiVersion: apps/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
-          name: apache-only-ssl
           labels:
-              name: apache-only-ssl
+            name: apache-only-ssl
+          name: apache-only-ssl
         spec:
+          replicas: 4
           selector:
             matchLabels:
               app: apache-only-ssl
-          replicas: 4
           template:
             metadata:
               labels:
                 app: apache-only-ssl
             spec:
               containers:
-              - name: apache-only-ssl
-                image: "raghulc/apache-multiport-ssl:1.0.0"
+              - image: raghulc/apache-multiport-ssl:1.0.0
+                imagePullPolicy: IfNotPresent
+                name: apache-only-ssl
                 ports:
-                # All SSL Ports
                 - containerPort: 443
+                  protocol: TCP
                 - containerPort: 5443
+                  protocol: TCP
                 - containerPort: 5444
+                  protocol: TCP
                 - containerPort: 5445
+                  protocol: TCP
         ---
         apiVersion: v1
         kind: Service
