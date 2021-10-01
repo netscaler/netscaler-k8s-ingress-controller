@@ -74,19 +74,21 @@ subsets:
       - port: 5000
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: emailservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "5000"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: emailservice-ingress
 spec:
- backend:
-   serviceName: emailservice-app
-   servicePort: 5000
+  defaultBackend:
+    service:
+      name: emailservice-app
+      port:
+        number: 5000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -173,19 +175,21 @@ subsets:
       - port: 5050
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: checkoutservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "5050"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: checkoutservice-ingress
 spec:
-  backend:
-    serviceName: checkoutservice-headless
-    servicePort: 5050
+  defaultBackend:
+    service:
+      name: checkoutservice-headless
+      port:
+        number: 5050
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -267,19 +271,21 @@ subsets:
       - port: 8081
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: recommendationservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "8081"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: recommendationservice-ingress
 spec:
-  backend:
-    serviceName: recommendationservice-headless
-    servicePort: 8081
+  defaultBackend:
+    service:
+      name: recommendationservice-headless
+      port:
+        number: 8081
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -440,19 +446,21 @@ subsets:
       - port: 50051
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: paymentservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "50051"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: paymentservice-ingress
 spec:
-  backend:
-    serviceName: paymentservice-headless
-    servicePort: 50051
+  defaultBackend:
+    service:
+      name: paymentservice-headless
+      port:
+        number: 50051
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -528,19 +536,21 @@ subsets:
       - port: 3550
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: productcatalogservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "3550"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: productcatalogservice-ingress
 spec:
-  backend:
-    serviceName: productcatalogservice-headless
-    servicePort: 3550
+  defaultBackend:
+    service:
+      name: productcatalogservice-headless
+      port:
+        number: 3550
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -625,19 +635,21 @@ subsets:
       - port: 7070
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cartservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "7070"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: cartservice-ingress
 spec:
-  backend:
-    serviceName: cartservice-headless
-    servicePort: 7070
+  defaultBackend:
+    service:
+      name: cartservice-headless
+      port:
+        number: 7070
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -714,19 +726,21 @@ subsets:
       - port: 7000
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: currencyservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "7000"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: currencyservice-ingress
 spec:
-  backend:
-    serviceName: currencyservice-headless
-    servicePort: 7000
+  defaultBackend:
+    service:
+      name: currencyservice-headless
+      port:
+        number: 7000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -802,19 +816,21 @@ subsets:
       - port: 50052
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: shippingservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "50052"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: shippingservice-ingress
 spec:
-  backend:
-    serviceName: shippingservice-headless
-    servicePort: 50052
+  defaultBackend:
+    service:
+      name: shippingservice-headless
+      port:
+        number: 50052
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -889,19 +905,21 @@ subsets:
       - port: 6379
         name: redis
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: redis-cart-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "6379"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: redis-cart-ingress
 spec:
-  backend:
-    serviceName: redis-cart-headless
-    servicePort: 6379
+  defaultBackend:
+    service:
+      name: redis-cart-headless
+      port:
+        number: 6379
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -981,36 +999,41 @@ subsets:
       - port: 9555
         name: grpc
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: adservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
     ingress.citrix.com/insecure-port: "9555"
-    kubernetes.io/ingress.class: "tier-1-vpx"
-    ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: adservice-ingress
 spec:
-  backend:
-    serviceName: adservice-headless
-    servicePort: 9555
+  defaultBackend:
+    service:
+      name: adservice-headless
+      port:
+        number: 9555
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tier-1-ingress
   annotations:
-     kubernetes.io/ingress.class: "tier-1-vpx"
-     ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: tier-1-ingress
 spec:
   rules:
   - host: citrix.hipster.smlite
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: frontend-headless
-          servicePort: 80
+      - backend:
+          service:
+            name: frontend-headless
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -1018,7 +1041,7 @@ metadata:
   name: cic-k8s-role
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
+    resources: ["endpoints", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
@@ -1026,17 +1049,14 @@ rules:
     resources: ["services/status"]
     verbs: ["patch"]
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
-  - apiGroups: [""]
     resources: ["events"]
     verbs: ["create"]
-  - apiGroups: ["extensions", "networking.k8s.io"]
-    resources: ["ingresses"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["extensions", "networking.k8s.io"]
-    resources: ["ingresses/status"]
-    verbs: ["patch"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses", "ingresses/status"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -1044,20 +1064,24 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
-    verbs: ["get", "list", "watch"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots", "corspolicies"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
-    verbs: ["get", "list", "patch"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status", "corspolicies/status"]
+    verbs: ["patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
     verbs: ["get", "list", "watch", "create", "delete"]
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
+
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 roleRef:

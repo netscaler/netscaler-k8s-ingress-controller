@@ -1,17 +1,20 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: canary-by-header-value
   annotations:
-    kubernetes.io/ingress.class: "citrix"
-    ingress.citrix.com/canary-by-header: "some-header-info"
-    ingress.citrix.com/canary-by-header-value: "citrix-canary"
+    ingress.citrix.com/canary-by-header: some-header-info
+    ingress.citrix.com/canary-by-header-value: citrix-canary
+    kubernetes.io/ingress.class: citrix
+  name: canary-by-header-value
 spec:
   rules:
-  - host:  webapp.com
+  - host: webapp.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: guestbook-canary
-          servicePort: 80
+      - backend:
+          service:
+            name: guestbook-canary
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

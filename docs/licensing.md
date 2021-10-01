@@ -11,12 +11,12 @@ For licensing the Citrix ADC CPX, you need to provide the following information 
 The following is a sample yaml file:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cpx-ingress
   labels:
     name: cpx-ingress
+  name: cpx-ingress
 spec:
   replicas: 1
   selector:
@@ -24,42 +24,44 @@ spec:
       name: cpx-ingress
   template:
     metadata:
-      labels:
-        name: cpx-ingress
       annotations:
         NETSCALER_AS_APP: "True"
+      labels:
+        name: cpx-ingress
     spec:
       serviceAccountName: cpx
       containers:
-        - name: cpx-ingress
-          image: "cpx-ingress:latest"
-          securityContext:
-            privileged: true
-          env:
-            - name: "EULA"
-              value: "YES"
-            - name: "NS_PROTOCOL"
-              value: "HTTP"
-            #Define the NITRO port here
-            - name: "NS_PORT"
-              value: "9080"
-            - name: "LS_IP"
-              value: "<ADM IP>"
-            - name: "LS_PORT"
-              value: "27000"
-            - name: "PLATFORM"
-              value: "CP1000"
-          args:
-            - --ingress-classes
-              citrix-ingress
-          ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
-            - name: nitro-http
-              containerPort: 9080
-            - name: nitro-https
-              containerPort: 9443
-          imagePullPolicy: Always
+      - args:
+        - --ingress-classes citrix-ingress
+        env:
+        - name: EULA
+          value: "YES"
+        - name: NS_PROTOCOL
+          value: HTTP
+        - name: NS_PORT
+          value: "9080"
+        - name: LS_IP
+          value: <ADM IP>
+        - name: LS_PORT
+          value: "27000"
+        - name: PLATFORM
+          value: CP1000
+        image: cpx-ingress:latest
+        imagePullPolicy: Always
+        name: cpx-ingress
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 9080
+          name: nitro-http
+          protocol: TCP
+        - containerPort: 9443
+          name: nitro-https
+          protocol: TCP
+        securityContext:
+          privileged: true
 ```

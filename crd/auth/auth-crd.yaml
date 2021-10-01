@@ -1,504 +1,525 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: authpolicies.citrix.com
 spec:
   group: citrix.com
-  version: v1beta1
   names:
     kind: authpolicy
     plural: authpolicies
-    singular: authpolicy 
+    singular: authpolicy
   scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
-    - name: Status
-      type: string
-      description: 'Current Status of the CRD'
-      JSONPath: .status.state
-    - name: Message
-      type: string
-      description: 'Status Message'
-      JSONPath: .status.status_message
-  validation:
-    openAPIV3Schema:
-      type: object 
-      properties:
-        spec:
-          type: object 
-          properties:
-            servicenames:
-              description: |+
-                           'Name of the services for which the policies applied'
-              type: array
-              items:
+  versions: 
+  - name: v1beta1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+      - name: Status
+        type: string
+        description: 'Current Status of the CRD'
+        jsonPath: .status.state
+      - name: Message
+        type: string
+        description: 'Status Message'
+        jsonPath: .status.status_message
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          status:
+            type: object
+            properties:
+              state:
+                 type: string
+              status_message:
+                 type: string
+          spec:
+            type: object
+            properties:
+              ingressclass:
                 type: string
-                maxLength: 63
-            authentication_mechanism:
-              type: object 
-              description: |+
-                          'Authentication mechanism. Options: using forms or using request header.
-                           Default is Authentication using request header, when no option is specified'
-              properties:
-                    using_request_header:
-                      description: |+
-                                   'Enable user authentication using request header. Use when the credentials
-                                    or api keys are passed in a header. For example, when using Basic, Digest,
-                                    Bearer authentication or api keys.
-                                    When authentication using forms is provided, this is set to OFF'
-
-                      type: string
-                    using_forms:
-                      type: object
-                      description: 'Enables authentication using forms. Use with user/web authentication.'
-                      properties:
-                        authentication_host:
-                          description: |+
-                                       'Fully qualified domain name (FQDN) for authentication.
-                                        This FQDN should be unique and should resolve to frontend IP of
-                                        ADC with Ingress/service type LoadBalancer (or) vip of Listener CRD'
-                          type: string
-                          maxLength: 255
-                        authentication_host_cert:
-                          description: |+
-                                       'Name of the SSL certificate to be used with authentication_host.
-                                        This certificate is mandatory while using_forms'
-                          type: object
-                          properties:
-                              tls_secret:
-                                type: string
-                                description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
-                                pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                              preconfigured:
-                                type: string
-                                maxLength: 63
-                                description: |+
-                                             'Preconfigured SSL certkey name on ADC with the
-                                              certificate and key already added on ADC'
-                          oneOf:
-                          - properties:
-                            required: [tls_secret]
-                          - properties:             
-                            required: [preconfigured]
-                        ingress_name:
-                          description: |+
-                                       'Ingress name for which the authentication using forms
-                                        is applicable.'
-                          type: string
-                          maxLength: 63
-                        lb_service_name:
-                          description: |+
-                                       'Service of type LoadBalancer for which the authentication using forms
-                                        is applicable.'
-                          type: string
-                          maxLength: 63
-                        listener_name:
-                          description: |+
-                                       'Listener CRD name for which the authentication using forms is applicable.'   
-                          type: string
-                          maxLength: 63
-                        vip:
-                          description: |+
-                                       'Frontend IP of ingress for which the authentication 
-                                        using forms is applicable. This refers to frontend-ip provided 
-                                        with Ingress. It is suggested to use vip, if more than one Ingress
-                                        resource use the same frontend-ip'
-                          type: string
-                      required: [authentication_host, authentication_host_cert]
-                      oneOf:
-                      - properties:
-                        required: [ingress_name]                      
-                      - properties:
-                        required: [lb_service_name]
-                      - properties:
-                        required: [listener_name]
-                      - properties:
-                        required: [vip]
-              oneOf:
-                - properties:
-                    using_request_header:
-                      enum: ['ON']
-                  required: [using_request_header]
-                - properties:
-                  required: [using_forms]
-                  
-            authentication_providers:
-              description: |+
-                           'Authentication Configuration for required authentication providers/schemes.
-                            One or more of these can be created'
-              type: array
-              items:
-                  description: 'Create config for a single authentication provider of a particular type'
-                  type: object 
-                  properties:
-                    name:
-                      description: 'Name for this provider, has to be unique, referenced by authentication policies'
-                      type: string
-                      maxLength: 127
-
-                    oauth:
-                      description: 'Authentication provided by external oAuth provider' 
-                      type: object 
-                      properties:
-                          issuer:
-                              description: 'Identity of the server whose tokens are to be accepted'
-                              type: string
-                              maxLength: 127
-                          audience:
-                              description: 'Audience for which token sent by Authorization server is applicable'
-                              type: array
-                              items:
-                                type: string
-                                maxLength: 127
-                          jwks_uri:
-                              description: |+
-                                          'URL of the endpoint that contains JWKs (Json Web Key) for 
-                                           JWT (Json Web Token) verification'
-                              type: string
-                              maxLength: 127
-                          introspect_url:
-                              description: ' URL of the introspection server'
-                              type: string
-                              maxLength: 127
-                          client_credentials:
-                              description: |+
-                                           'secrets object that contains Client Id and secret as known 
-                                            to Introspection server'
-                              type: string
-                              maxLength: 253
-                          token_in_hdr:
-                              description: |+
-                                           'custom header name where token is present,
-                                            default is Authorization header'
-                              type: array
-                              items:
-                                type: string
-                                maxLength: 127
-                              maxItems: 2
-                          token_in_param:
-                              description: 'query parameter name where token is present'
-                              type: array
-                              items:
-                                type: string
-                                maxLength: 127
-                              maxItems: 2
-                          signature_algorithms:
-                              description: 'list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed'
-                              type: array
-                              items:
-                                type: string
-                                enum: ['HS256', 'RS256', 'RS512']
-                          claims_to_save:
-                              description: 'list of claims to be saved, used to create authorization policies'
-                              type: array
-                              items:
-                                type: string
-                                maxLength: 127
-                          metadata_url:
-                              description: 'URL used to get OAUTH/OIDC provider metadata'
-                              type: string
-                              maxLength: 255
-                          user_field:
-                              description: |+
-                                           'Attribute in the token from which username should be extracted. 
-                                            by default, ADC looks at email attribute for user id'
-                              type: string
-                              maxLength: 127
-                          default_group:
-                              description: |+
-                                           'group assigned to the request if authentication succeeds,
-                                            this is in addition to any extracted groups from token'
-                              type: string
-                              maxLength: 63
-                          grant_type:
-                              description: 'used to specify the type of flow to the token end point, defaults to CODE'
-                              type: array
-                              items:
-                                type: string
-                                enum: ['CODE','PASSWORD']
-                          pkce:
-                              description: 'specify whether to enable Proof Key Code Exchange, defaults to ENABLED'
-                              type: string
-                              enum: ['ENABLED', 'DISABLED']
-                          token_ep_auth_method:
-                              description: |+
-                                           'authentication method to be used with token end point, 
-                                            defaults to client_secret_post'
-                              type: string
-                              enum: ['client_secret_post', 'client_secret_jwt']
-
-                      anyOf:
-                      - properties:
-                        required : [jwks_uri]
-                      - properties:
-                        required : [introspect_url, client_credentials]
-                      - properties:
-                        required : [metadata_url]
-
-                    ldap:
-                      description: 'LDAP authentication provider'
-                      type: object
-                      properties:
-                          server_ip:
-                              description: 'IP address assigned to the LDAP server'
-                              type: string
-                          server_name:
-                              description: 'LDAP server name as a FQDN'
-                              type: string
-                              maxLength: 127
-                          server_port:
-                              description: 'Port on which the LDAP server accepts connections. Default is 389'
-                              type: integer
-                              minimum: 1
-                              maximum: 65535
-                          base:
-                              description: |+
-                                           'Base (node) from which to start LDAP searches. If the LDAP server is
-                                            running locally, the default value of base is dc=netscaler, dc=com'
-                              type: string
-                              maxLength: 127
-                          server_login_credentials:
-                              description: |+
-                                           'Kubernetes secret object providing credentials to login to LDAP server,
-                                            The secret data should have username and password'
-                              type: string
-                          login_name:
-                              description: |+
-                                           'LDAP login name attribute. The Citrix ADC uses the LDAP login name
-                                            to query external LDAP servers or Active Directories'
-                              type: string
-                              maxLength: 127
-                          security_type:
-                              description: |+
-                                           'Type of security used for communications between the Citrix ADC
-                                            and the LDAP server. Default is TLS'
-                              type: string
-                              enum: ['PLAINTEXT', 'TLS', 'SSL']
-                          validate_server_cert:
-                              description: 'Validate LDAP Server certs. Default is NO'
-                              type: string
-                              enum: ['YES', 'NO']
-                          hostname:
-                              description: |+
-                                           'Hostname for the LDAP server. If validate_server_cert is ON,
-                                            this must be the host name on the certificate from the LDAP
-                                            A hostname mismatch will cause a connection failure'
-                              type: string 
-                              maxLength: 127
-                          sub_attribute_name:
-                              description: 'LDAP group sub-attribute name. Used for group extraction from the LDAP server.'
-                              type: string
-                              maxLength: 31
-                          group_attribute_name:
-                              description: 'LDAP group attribute name. Used for group extraction on the LDAP server.'
-                              type: string
-                              maxLength: 31
-                          search_filter:
-                              description: |+
-                                           'String to be combined with the default LDAP user search string to form the
-                                            search value. For example, if the search filter "vpnallowed=true" is combined
-                                            with the LDAP login name "samaccount" and the user-supplied username is "bob",
-                                            the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)"" 
-                                            (Be sure to enclose the search string in two sets of double quotation marks)'
-                              type: string
-                              maxLength: 255
-                          auth_timeout:
-                              description: |+
-                                           'Number of seconds the Citrix ADC waits for a response from the server
-                                            Default is 3'
-                              type: integer
-                              minimum: 1
-                              maximum: 4294967295
-                          password_change:
-                              description: 'Allow password change requests. Default is DISABLED'
-                              type: string
-                              enum: ['ENABLED', 'DISABLED']
-                          attributes_to_save:
-                              description: |+
-                                           'List of attribute names separated by comma which needs to be fetched
-                                            from LDAP server and stored as key-value pair for the session on ADC'
-                              type: string
-                              maxLength: 2047
-                      oneOf:
-                        - properties:
-                          required: [server_ip]
-                        - properties:
-                          required: [server_name]
-                          
-                    saml:
-                      description: |+
-                                   'SAML authentication provider.
-                                    Currently SAML is supported only with authentication mechanism using forms'
-                      type: object
-                      properties:
-                          metadata_url:
-                              description: 'URL is used for obtaining saml metadata.'
-                              type: string
-                              maxLength: 255
-                          metadata_refresh_interval:
-                              description: |+
-                                           'Interval in minutes for fetching metadata from specified metadata URL.
-                                            Default is 36000'
-                              type: integer
-                              minimum: 1
-                              maximum: 4294967295
-                          signing_cert:
-                              description: 'SSL certificate to sign requests from SP to IDP'
-                              type: object
-                              properties:
-                                  tls_secret:
-                                    type: string
-                                    description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
-                                    pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                                  preconfigured:
-                                    type: string
-                                    maxLength: 63
-                                    description: |+
-                                                 'Preconfigured SSL certkey name on ADC with the
-                                                  certificate and key already added on ADC'                                    
-                              oneOf:
-                              - properties:
-                                required: [tls_secret]
-                              - properties:
-                                required: [preconfigured]
-                          audience:
-                              description: 'Audience for which assertion sent by IdP is applicable'
-                              type: string
-                              maxLength: 127                          
-                          issuer_name:
-                              description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
-                              type: string
-                              maxLength: 63
-                          binding:
-                              description: 'Specifies the transport mechanism of saml message. Default is POST'
-                              type: string
-                              enum: ['REDIRECT', 'POST', 'ARTIFACT']
-                          artifact_resolution_service_url:
-                              description: 'URL of the Artifact Resolution Service on IdP'
-                              type: string
-                              maxLength: 255
-                          logout_binding:
-                              description: 'Specifies the transport mechanism of saml logout.  Default is POST'
-                              type: string
-                              enum: ['REDIRECT', 'POST']
-                          reject_unsigned_assertion:
-                              description: |+
-                                           'Reject unsigned SAML assertions. ON, rejects assertion without signature.
-                                            STRICT ensure that both Response and Assertion are signed. Default is ON'
-                              type: string
-                              enum: ['ON', 'OFF', 'STRICT']                      
-                          user_field:
-                              description: 'SAML user ID, as given in the SAML assertion'
-                              type: string
-                              maxLength: 63
-                          default_authentication_group:
-                              description: |+
-                                           'This is the default group that is chosen when the authentication 
-                                            succeeds in addition to extracted groups'
-                              type: string
-                              maxLength: 63                                                  
-                          skew_time:
-                              description: |+
-                                           'Allowed clock skew in number of minutes on an incoming assertion.
-                                            Default is 5'
-                              type: integer
-                              minimum: 1
-                          attributes_to_save:
-                              description: |+
-                                           'List of attribute names separated by comma which needs to be extracted
-                                            and stored as key-value pair for the session on ADC'
-                              type: string
-                              maxLength: 2047                   
-                      required:
-                        - metadata_url
-
-                    basic_local_db:
-                      description: 'Basic HTTP authentication, user data in local DB of ADC'
-
-                  required:
-                    - name
-
-            authentication_policies:
-              description: 'Authentication policies'
-              type: array
-              items:
-                type: object 
-                description: 'Authentication policy'
+                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+              servicenames:
+                description: |+
+                             'Name of the services for which the policies applied'
+                type: array
+                items:
+                  type: string
+                  maxLength: 63
+              authentication_mechanism:
+                type: object
+                description: |+
+                            'Authentication mechanism. Options: using forms or using request header.
+                             Default is Authentication using request header, when no option is specified'
                 properties:
-                  resource:
-                      type: object 
-                      description: 'endpoint/resource selection criteria'
-                      properties:
-                        path:
-                          description: 'api resource path e.g. /products. '
-                          type: array
-                          items:
-                            type: string
-                            maxLength: 511
-                        method:
-                          type: array
-                          items:
-                            type: string
-                            enum: ['GET', 'PUT', 'POST','DELETE']
-                      required:
-                        - path
-                  provider:
-                    description: 'name of the authentication provider for the policy, empty if no authentication required'
-                    type: array
-                    items:
-                      type: string
-                      maxLength: 127
-                    maxItems: 1
-                required:
-                  - resource
-                  - provider
+                      using_request_header:
+                        description: |+
+                                     'Enable user authentication using request header. Use when the credentials
+                                      or api keys are passed in a header. For example, when using Basic, Digest,
+                                      Bearer authentication or api keys.
+                                      When authentication using forms is provided, this is set to OFF'
 
-            authorization_policies:
-              description: 'Authorization policies'
-              type: array
-              items:
-                type: object 
-                description: 'Authorization policy'
-                properties:
-                  resource:
-                      type: object 
-                      description: 'endpoint/resource selection criteria'
-                      properties:
-                        path:
-                          description: 'api resource path e.g. /products. '
-                          type: array
-                          items:
+                        type: string
+                      using_forms:
+                        type: object
+                        description: 'Enables authentication using forms. Use with user/web authentication.'
+                        properties:
+                          authentication_host:
+                            description: |+
+                                         'Fully qualified domain name (FQDN) for authentication.
+                                          This FQDN should be unique and should resolve to frontend IP of
+                                          ADC with Ingress/service type LoadBalancer (or) vip of Listener CRD'
                             type: string
-                            maxLength: 511
-                        method:
-                          description: ' http method'
-                          type: array
-                          items:
+                            maxLength: 255
+                          authentication_host_cert:
+                            description: |+
+                                         'Name of the SSL certificate to be used with authentication_host.
+                                          This certificate is mandatory while using_forms'
+                            type: object
+                            properties:
+                                tls_secret:
+                                  type: string
+                                  description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                                  pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                                preconfigured:
+                                  type: string
+                                  maxLength: 63
+                                  description: |+
+                                               'Preconfigured SSL certkey name on ADC with the
+                                                certificate and key already added on ADC'
+                            oneOf:
+                            - properties:
+                              required: [tls_secret]
+                            - properties:
+                              required: [preconfigured]
+                          ingress_name:
+                            description: |+
+                                         'Ingress name for which the authentication using forms
+                                          is applicable.'
                             type: string
-                            enum: ['GET', 'PUT', 'POST','DELETE']
-                        claims:
-                          description: 'authorization scopes required for selected resource saved as claims or attributes'
-                          type: array
-                          items:
-                              type: object
-                              properties:
-                                name:
-                                  description: 'name of the claim/attribute to check'
+                            maxLength: 63
+                          lb_service_name:
+                            description: |+
+                                         'Service of type LoadBalancer for which the authentication using forms
+                                          is applicable.'
+                            type: string
+                            maxLength: 63
+                          listener_name:
+                            description: |+
+                                         'Listener CRD name for which the authentication using forms is applicable.'
+                            type: string
+                            maxLength: 63
+                          vip:
+                            description: |+
+                                         'Frontend IP of ingress for which the authentication
+                                          using forms is applicable. This refers to frontend-ip provided
+                                          with Ingress. It is suggested to use vip, if more than one Ingress
+                                          resource use the same frontend-ip'
+                            type: string
+                        required: [authentication_host, authentication_host_cert]
+                        oneOf:
+                        - properties:
+                          required: [ingress_name]
+                        - properties:
+                          required: [lb_service_name]
+                        - properties:
+                          required: [listener_name]
+                        - properties:
+                          required: [vip]
+                oneOf:
+                  - properties:
+                      using_request_header:
+                        enum: ['ON']
+                    required: [using_request_header]
+                  - properties:
+                    required: [using_forms]
+
+              authentication_providers:
+                description: |+
+                             'Authentication Configuration for required authentication providers/schemes.
+                              One or more of these can be created'
+                type: array
+                items:
+                    description: 'Create config for a single authentication provider of a particular type'
+                    type: object
+                    properties:
+                      name:
+                        description: 'Name for this provider, has to be unique, referenced by authentication policies'
+                        type: string
+                        maxLength: 127
+
+                      oauth:
+                        description: 'Authentication provided by external oAuth provider'
+                        type: object
+                        properties:
+                            issuer:
+                                description: 'Identity of the server whose tokens are to be accepted'
+                                type: string
+                                maxLength: 127
+                            audience:
+                                description: 'Audience for which token sent by Authorization server is applicable'
+                                type: array
+                                items:
                                   type: string
                                   maxLength: 127
-                                values:
-                                  description: 'list of claim values required for the request'
-                                  type: array
-                                  items:
+                            jwks_uri:
+                                description: |+
+                                            'URL of the endpoint that contains JWKs (Json Web Key) for
+                                             JWT (Json Web Token) verification'
+                                type: string
+                                maxLength: 127
+                            introspect_url:
+                                description: ' URL of the introspection server'
+                                type: string
+                                maxLength: 127
+                            client_credentials:
+                                description: |+
+                                             'secrets object that contains Client Id and secret as known
+                                              to Introspection server'
+                                type: string
+                                maxLength: 253
+                            token_in_hdr:
+                                description: |+
+                                             'custom header name where token is present,
+                                              default is Authorization header'
+                                type: array
+                                items:
+                                  type: string
+                                  maxLength: 127
+                                maxItems: 2
+                            token_in_param:
+                                description: 'query parameter name where token is present'
+                                type: array
+                                items:
+                                  type: string
+                                  maxLength: 127
+                                maxItems: 2
+                            signature_algorithms:
+                                description: 'list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed'
+                                type: array
+                                items:
+                                  type: string
+                                  enum: ['HS256', 'RS256', 'RS512']
+                            claims_to_save:
+                                description: 'list of claims to be saved, used to create authorization policies'
+                                type: array
+                                items:
+                                  type: string
+                                  maxLength: 127
+                            metadata_url:
+                                description: 'URL used to get OAUTH/OIDC provider metadata'
+                                type: string
+                                maxLength: 255
+                            user_field:
+                                description: |+
+                                             'Attribute in the token from which username should be extracted.
+                                              by default, ADC looks at email attribute for user id'
+                                type: string
+                                maxLength: 127
+                            default_group:
+                                description: |+
+                                             'group assigned to the request if authentication succeeds,
+                                              this is in addition to any extracted groups from token'
+                                type: string
+                                maxLength: 63
+                            grant_type:
+                                description: 'used to specify the type of flow to the token end point, defaults to CODE'
+                                type: array
+                                items:
+                                  type: string
+                                  enum: ['CODE','PASSWORD']
+                            pkce:
+                                description: 'specify whether to enable Proof Key Code Exchange, defaults to ENABLED'
+                                type: string
+                                enum: ['ENABLED', 'DISABLED']
+                            token_ep_auth_method:
+                                description: |+
+                                             'authentication method to be used with token end point,
+                                              defaults to client_secret_post'
+                                type: string
+                                enum: ['client_secret_post', 'client_secret_jwt']
+
+                        anyOf:
+                        - properties:
+                          required : [jwks_uri]
+                        - properties:
+                          required : [introspect_url, client_credentials]
+                        - properties:
+                          required : [metadata_url]
+
+                      ldap:
+                        description: 'LDAP authentication provider'
+                        type: object
+                        properties:
+                            server_ip:
+                                description: 'IP address assigned to the LDAP server'
+                                type: string
+                            server_name:
+                                description: 'LDAP server name as a FQDN'
+                                type: string
+                                maxLength: 127
+                            server_port:
+                                description: 'Port on which the LDAP server accepts connections. Default is 389'
+                                type: integer
+                                minimum: 1
+                                maximum: 65535
+                            base:
+                                description: |+
+                                             'Base (node) from which to start LDAP searches. If the LDAP server is
+                                              running locally, the default value of base is dc=netscaler, dc=com'
+                                type: string
+                                maxLength: 127
+                            server_login_credentials:
+                                description: |+
+                                             'Kubernetes secret object providing credentials to login to LDAP server,
+                                              The secret data should have username and password'
+                                type: string
+                            login_name:
+                                description: |+
+                                             'LDAP login name attribute. The Citrix ADC uses the LDAP login name
+                                              to query external LDAP servers or Active Directories'
+                                type: string
+                                maxLength: 127
+                            security_type:
+                                description: |+
+                                             'Type of security used for communications between the Citrix ADC
+                                              and the LDAP server. Default is TLS'
+                                type: string
+                                enum: ['PLAINTEXT', 'TLS', 'SSL']
+                            validate_server_cert:
+                                description: 'Validate LDAP Server certs. Default is NO'
+                                type: string
+                                enum: ['YES', 'NO']
+                            hostname:
+                                description: |+
+                                             'Hostname for the LDAP server. If validate_server_cert is ON,
+                                              this must be the host name on the certificate from the LDAP
+                                              A hostname mismatch will cause a connection failure'
+                                type: string
+                                maxLength: 127
+                            sub_attribute_name:
+                                description: 'LDAP group sub-attribute name. Used for group extraction from the LDAP server.'
+                                type: string
+                                maxLength: 31
+                            group_attribute_name:
+                                description: 'LDAP group attribute name. Used for group extraction on the LDAP server.'
+                                type: string
+                                maxLength: 31
+                            search_filter:
+                                description: |+
+                                             'String to be combined with the default LDAP user search string to form the
+                                              search value. For example, if the search filter "vpnallowed=true" is combined
+                                              with the LDAP login name "samaccount" and the user-supplied username is "bob",
+                                              the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)""
+                                              (Be sure to enclose the search string in two sets of double quotation marks)'
+                                type: string
+                                maxLength: 255
+                            auth_timeout:
+                                description: |+
+                                             'Number of seconds the Citrix ADC waits for a response from the server
+                                              Default is 3'
+                                type: integer
+                                minimum: 1
+                                maximum: 4294967295
+                            password_change:
+                                description: 'Allow password change requests. Default is DISABLED'
+                                type: string
+                                enum: ['ENABLED', 'DISABLED']
+                            attributes_to_save:
+                                description: |+
+                                             'List of attribute names separated by comma which needs to be fetched
+                                              from LDAP server and stored as key-value pair for the session on ADC'
+                                type: string
+                                maxLength: 2047
+                        oneOf:
+                          - properties:
+                            required: [server_ip]
+                          - properties:
+                            required: [server_name]
+
+                      saml:
+                        description: |+
+                                     'SAML authentication provider.
+                                      Currently SAML is supported only with authentication mechanism using forms'
+                        type: object
+                        properties:
+                            metadata_url:
+                                description: 'URL is used for obtaining saml metadata.'
+                                type: string
+                                maxLength: 255
+                            metadata_refresh_interval:
+                                description: |+
+                                             'Interval in minutes for fetching metadata from specified metadata URL.
+                                              Default is 36000'
+                                type: integer
+                                minimum: 1
+                                maximum: 4294967295
+                            signing_cert:
+                                description: 'SSL certificate to sign requests from SP to IDP'
+                                type: object
+                                properties:
+                                    tls_secret:
+                                      type: string
+                                      description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                                      pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                                    preconfigured:
+                                      type: string
+                                      maxLength: 63
+                                      description: |+
+                                                   'Preconfigured SSL certkey name on ADC with the
+                                                    certificate and key already added on ADC'
+                                oneOf:
+                                - properties:
+                                  required: [tls_secret]
+                                - properties:
+                                  required: [preconfigured]
+                            audience:
+                                description: 'Audience for which assertion sent by IdP is applicable'
+                                type: string
+                                maxLength: 127
+                            issuer_name:
+                                description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
+                                type: string
+                                maxLength: 63
+                            binding:
+                                description: 'Specifies the transport mechanism of saml message. Default is POST'
+                                type: string
+                                enum: ['REDIRECT', 'POST', 'ARTIFACT']
+                            artifact_resolution_service_url:
+                                description: 'URL of the Artifact Resolution Service on IdP'
+                                type: string
+                                maxLength: 255
+                            logout_binding:
+                                description: 'Specifies the transport mechanism of saml logout.  Default is POST'
+                                type: string
+                                enum: ['REDIRECT', 'POST']
+                            reject_unsigned_assertion:
+                                description: |+
+                                             'Reject unsigned SAML assertions. ON, rejects assertion without signature.
+                                              STRICT ensure that both Response and Assertion are signed. Default is ON'
+                                type: string
+                                enum: ['ON', 'OFF', 'STRICT']
+                            user_field:
+                                description: 'SAML user ID, as given in the SAML assertion'
+                                type: string
+                                maxLength: 63
+                            default_authentication_group:
+                                description: |+
+                                             'This is the default group that is chosen when the authentication
+                                              succeeds in addition to extracted groups'
+                                type: string
+                                maxLength: 63
+                            skew_time:
+                                description: |+
+                                             'Allowed clock skew in number of minutes on an incoming assertion.
+                                              Default is 5'
+                                type: integer
+                                minimum: 1
+                            attributes_to_save:
+                                description: |+
+                                             'List of attribute names separated by comma which needs to be extracted
+                                              and stored as key-value pair for the session on ADC'
+                                type: string
+                                maxLength: 2047
+                        required:
+                          - metadata_url
+
+                      basic_local_db:
+                        type: object
+                        description: |+
+                                     'Basic HTTP authentication supported by ADC, user data in local DB of ADC. 
+                                      Users needs to be added on ADC'
+                        properties:
+                          use_local_auth:
+                            description: 'Use ADC authentication'
+                            type: string
+                            enum: ['YES']
+
+                    required:
+                      - name
+
+              authentication_policies:
+                description: 'Authentication policies'
+                type: array
+                items:
+                  type: object
+                  description: 'Authentication policy'
+                  properties:
+                    resource:
+                        type: object
+                        description: 'endpoint/resource selection criteria'
+                        properties:
+                          path:
+                            description: 'api resource path e.g. /products. '
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 511
+                          method:
+                            type: array
+                            items:
+                              type: string
+                              enum: ['GET', 'PUT', 'POST','DELETE']
+                        required:
+                          - path
+                    provider:
+                      description: 'name of the authentication provider for the policy, empty if no authentication required'
+                      type: array
+                      items:
+                        type: string
+                        maxLength: 127
+                      maxItems: 1
+                  required:
+                    - resource
+                    - provider
+
+              authorization_policies:
+                description: 'Authorization policies'
+                type: array
+                items:
+                  type: object
+                  description: 'Authorization policy'
+                  properties:
+                    resource:
+                        type: object
+                        description: 'endpoint/resource selection criteria'
+                        properties:
+                          path:
+                            description: 'api resource path e.g. /products. '
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 511
+                          method:
+                            description: ' http method'
+                            type: array
+                            items:
+                              type: string
+                              enum: ['GET', 'PUT', 'POST','DELETE']
+                          claims:
+                            description: 'authorization scopes required for selected resource saved as claims or attributes'
+                            type: array
+                            items:
+                                type: object
+                                properties:
+                                  name:
+                                    description: 'name of the claim/attribute to check'
                                     type: string
                                     maxLength: 127
-                                  minItems: 1
-                              required:
-                                - name
-                                - values
-                      required:
-                        - claims
+                                  values:
+                                    description: 'list of claim values required for the request'
+                                    type: array
+                                    items:
+                                      type: string
+                                      maxLength: 127
+                                    minItems: 1
+                                required:
+                                  - name
+                                  - values
+                        required:
+                          - claims
 
-          required:
-            - servicenames      
+            required:
+              - servicenames

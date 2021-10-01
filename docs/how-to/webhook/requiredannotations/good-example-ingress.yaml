@@ -1,15 +1,18 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: test-ingress
   annotations:
     ingress.citrix.com/insecure-termination: redirect
     kubernetes.io/ingress.class: citrix-ingress
+  name: test-ingress
 spec:
   rules:
   - http:
       paths:
-      - path: /testpath
-        backend:
-          serviceName: test
-          servicePort: 80
+      - backend:
+          service:
+            name: test
+            port:
+              number: 80
+        path: /testpath
+        pathType: Prefix

@@ -178,7 +178,7 @@ The following example shows a sample YAML file which defines a Role and RoleBind
 
 ```yaml
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 rules:
@@ -203,7 +203,7 @@ rules:
 ---
 
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
   namespace: default
