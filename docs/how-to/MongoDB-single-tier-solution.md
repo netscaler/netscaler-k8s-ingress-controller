@@ -104,21 +104,24 @@ Perform the following steps to deploy the Citrix Ingress solution for MongoDB.
 
    Following is the content for the `tier-1-vpx-ingress.yaml` file. As per the rules specified in this Ingress resource, Citrix ingress controller configures the Citrix ADC VPX to listen for MongoDB traffic at port 27017. As shown in this example, you must specify the service that you have created for MongoDb query routers (for example:`serviceName: mongodb-mongos`) so that the Citrix ADC VPX can route traffic to it. Here, `mongodb-mongos` is the service for MongoDB query routers.
 
-           apiVersion: extensions/v1beta1
-           kind: Ingress
-           metadata:
-            name: vpx-ingress
-            annotations:
-              kubernetes.io/ingress.class: "tier-1-vpx"
-              ingress.citrix.com/insecure-termination: "allow"
-              ingress.citrix.com/insecure-service-type: "mongo"
-              ingress.citrix.com/analyticsprofile: '{"tcpinsight": {"tcpBurstReporting":"DISABLED"}}'
-              ingress.citrix.com/insecure-port: "27017"
-            spec:
-              backend:
-                serviceName: mongodb-mongos 
-                servicePort: 27017
-
+```yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/analyticsprofile: '{"tcpinsight": {"tcpBurstReporting":"DISABLED"}}'
+    ingress.citrix.com/insecure-port: "27017"
+    ingress.citrix.com/insecure-service-type: mongo
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: vpx-ingress
+spec:
+  defaultBackend:
+      service:
+         name: mongodb-mongos
+         port:
+           number: 27017
+```
 
 6. Deploy Citrix ADC observability exporter with Elasticsearch as the endpoint using the [coe-es-mongo.yaml](https://github.com/citrix/citrix-observability-exporter/blob/master/examples/elasticsearch/coe-es-mongodb.yaml) file.
 

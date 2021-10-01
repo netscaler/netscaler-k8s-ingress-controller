@@ -51,7 +51,7 @@ data:
   tls.key: base64 encoded key
 ```
 
-Deploy the YAML using the `kubectl -create <file-name>` command. It creates a Kubernetes secret with a PEM formatted certificate under `tls.crt` key and a PEM formatted private key under `tls.key` key. 
+Deploy the YAML using the `kubectl -create <file-name>` command. It creates a Kubernetes secret with a PEM formatted certificate under `tls.crt` key and a PEM formatted private key under `tls.key` key.
 
 ## Citrix ingress controller default certificate
 
@@ -72,30 +72,30 @@ metadata:
   labels:
     app: cic
 spec:
-      serviceAccountName: cpx
-      containers:
-      - name: cic
-        image: "xxxx"
-        imagePullPolicy: Always
-        args:
-        - --default-ssl-certificate
-          ssl/hotdrink.secret
-        env:
-        # Set Citrix ADM Management IP
-        - name: "NS_IP"
-          value: "xx.xx.xx.xx"
-        # Set port for Nitro
-        - name: "NS_PORT"
-          value: "xx"
-        # Set Protocol for Nitro
-        - name: "NS_PROTOCOL"
-          value: "HTTP"
-        # Set username for Nitro
-        - name: "NS_USER"
-          value: "nsroot"
-        # Set user password for Nitro
-        - name: "NS_PASSWORD"
-          value: "nsroot"
+  serviceAccountName: cpx
+  containers:
+  - name: cic
+    image: "xxxx"
+    imagePullPolicy: Always
+    args:
+    - --default-ssl-certificate
+      ssl/hotdrink.secret
+    env:
+    # Set Citrix ADM Management IP
+    - name: "NS_IP"
+      value: "xx.xx.xx.xx"
+    # Set port for Nitro
+    - name: "NS_PORT"
+      value: "xx"
+    # Set Protocol for Nitro
+    - name: "NS_PROTOCOL"
+      value: "HTTP"
+    # Set username for Nitro
+    - name: "NS_USER"
+      value: "nsroot"
+    # Set user password for Nitro
+    - name: "NS_PASSWORD"
+      value: "nsroot"
 ```
 
 ## Preconfigured certificates
@@ -126,7 +126,8 @@ If the secret name is provided with the host section, Citrix ingress controller 
 spec:
   tls:
   - secretName: fruitjuice.secret
-    hosts: items.fruit.juice
+    hosts:
+    - items.fruit.juice
 ```
 
 ### Without the host section

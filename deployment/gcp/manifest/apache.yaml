@@ -1,10 +1,4 @@
-# If using this on GKE
-# Make sure you have cluster-admin role for your account
-# kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<username of your google account>
-#
-
-#Using a basic apache web server as application for illustration
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apache

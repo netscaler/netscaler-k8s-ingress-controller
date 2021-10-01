@@ -144,12 +144,12 @@ To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is a
 
 ```YAML
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cpx-ingress
   labels:
     app: cpx-ingress
+  name: cpx-ingress
 spec:
   replicas: 1
   selector:
@@ -157,50 +157,54 @@ spec:
       app: cpx-ingress
   template:
     metadata:
-      labels:
-        app: cpx-ingress
       annotations:
         NETSCALER_AS_APP: "True"
+      labels:
+        app: cpx-ingress
     spec:
-      serviceAccountName: cpx
       containers:
-        - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            privileged: true
-          env:
-            - name: "EULA"
-              value: "YES"
-            - name: "NS_PROTOCOL"
-              value: "HTTP"
-            #Define the NITRO port here
-            - name: "NS_PORT"
-              value: "9080"
-          ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
-            - name: nitro-http
-              containerPort: 9080
-            - name: nitro-https
-              containerPort: 9443
-        # Adding exporter as a sidecar
-        - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
-          imagePullPolicy: IfNotPresent
-          args:
-            - "--target-nsip=192.0.0.2"
-            - "--port=8888"
-            - "--secure=no"
-          env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          securityContext:
-            readOnlyRootFilesystem: true
+      - env:
+        - name: EULA
+          value: "YES"
+        - name: NS_PROTOCOL
+          value: HTTP
+        - name: NS_PORT
+          value: "9080"
+        #Define the NITRO port here
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24
+        imagePullPolicy: IfNotPresent
+        name: cpx-ingress
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 9080
+          name: nitro-http
+          protocol: TCP
+        - containerPort: 9443
+          name: nitro-https
+          protocol: TCP
+        securityContext:
+          privileged: true
+      # Adding exporter as a sidecar
+      - args:
+        - --target-nsip=192.0.0.2
+        - --port=8888
+        - --secure=no
+        env:
+        - name: NS_USER
+          value: nsroot
+        - name: NS_PASSWORD
+          value: nsroot
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.8
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        securityContext:
+          readOnlyRootFilesystem: true
+      serviceAccountName: cpx
 ---
 kind: Service
 apiVersion: v1
@@ -224,48 +228,55 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADCCPX.The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
 
 ```YAML
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "0"
+  labels:
+    app: cpx-ew
   name: cpx-ew
 spec:
+  selector:
+    matchLabels:
+      app: cpx-ew
   template:
     metadata:
-      name: cpx-ew
-      labels:
-        app: cpx-ew
       annotations:
         NETSCALER_AS_APP: "True"
+      labels:
+        app: cpx-ew
+      name: cpx-ew
     spec:
-      serviceAccountName: cpx
-      hostNetwork: true
       containers:
-        - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
-          securityContext:
-             privileged: true
-          env:
-          - name: "EULA"
-            value: "yes"
-          - name: "NS_NETMODE"
-            value: "HOST"
-          #- name: "kubernetes_url"
-          #  value: "https://10..xx.xx:6443"
-        # Add exporter as a sidecar
-        - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
-          args:
-            - "--target-nsip=192.168.0.2"
-            - "--port=8888"
-            - "--secure=no"
-          env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          securityContext:
-            readOnlyRootFilesystem: true
-          imagePullPolicy: IfNotPresent
+      - env:
+        - name: EULA
+          value: "yes"
+        - name: NS_NETMODE
+          value: HOST
+        #- name: "kubernetes_url"
+        #  value: "https://10..xx.xx:6443"
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24
+        imagePullPolicy: IfNotPresent
+        name: cpx
+        securityContext:
+          privileged: true
+      # Add exporter as a sidecar
+      - args:
+        - --target-nsip=192.168.0.2
+        - --port=8888
+        - --secure=no
+        env:
+        - name: NS_USER
+          value: nsroot
+        - name: NS_PASSWORD
+          value: nsroot
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.8
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        securityContext:
+          readOnlyRootFilesystem: true
+      serviceAccountName: cpx
 ---
 kind: Service
 apiVersion: v1
