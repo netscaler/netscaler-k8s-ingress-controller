@@ -47,143 +47,6 @@ Based on the type of security checks, you can specify the metadata and use the C
 
 The WAF CRD is available in the Citrix ingress controller GitHub repository at [waf-crd.yaml](./waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Citrix ADC.
 
-The following is the WAF CRD definition:
-
-```yml
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-    name: wafs.citrix.com
-spec:
-    group: citrix.com
-    version: v1
-    names:
-        kind: waf
-        plural: wafs 
-        singular: waf
-    scope: Namespaced
-    subresources:
-        status: {}
-    additionalPrinterColumns:
-      - name: Status
-        type: string
-        description: "Current Status of the CRD"
-        JSONPath: .status.state
-      - name: Message
-        type: string
-        description: "Status Message"
-        JSONPath: .status.status_message
-    validation:
-        openAPIV3Schema:
-            required: [spec]
-            properties:
-                spec:
-                    type: object
-                    properties:
-                        servicenames:
-                            description: "Name of the services to which the waf policies are applied."
-                            type: array
-                            items:
-                                type: string
-                                maxLength: 127
-                        application_type:
-                            description: "Type of applications to protect"
-                            type: array
-                            items
-                                type: string
-                                enum: ["HTML", "JSON", "XML"]
-                        signatures:
-                            description: "Location of external signature file"
-                            type: string
-                        redirect_url:
-                            description: ""
-                            type: string
-                        html_error_object:
-                            description: "Location of customized error page to respond when html or common violation are hit"
-                            type: string
-                        xml_error_object:
-                            description: "Location of customized error page to respond when xml violations are hit"
-                            type: string
-                        json_error_object:
-                            description: "Location of customized error page to respond when json violations are hit"
-                            type: string
-                        ip_reputation:
-                            description: "Enabling IP reputation feature"
-                            oneOf:
-                                - type: string
-                                - type: object
-                        target:
-                            description: "To control what traffic to be inspected by Web Application Firewall. If you do not provide the target, everything will be inspected by default"
-                            type: object
-                            properties:
-                                paths:
-                                    type: array
-                                    description: "List of http urls to inspect"
-                                    items:
-                                        type: string
-                                        description: "URL path"
-                                method:
-                                    type: array
-                                    description: "List of http methods to inspect"
-                                    items:
-                                        type: string
-                                        enum: ["GET", "PUT", "POST","DELETE"]
-                                header:
-                                    type: array
-                                    description: "List of http headers to inspect"
-                                    items:
-                                        type: string
-                                        description: "header name"
-                        security_checks:
-                            description: "To enable/disable application firewall security checks"
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object
-                        settings:
-                            description: "To fine tune application firewall security checks default settings"
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object
-                        relaxations:
-                            description: "Section which contains relaxation rules for known traffic and false positives"
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object
-                        enforcements:
-                            description: "Section which contains enforcement or restriction rules"
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object                                 
-```
-
 ## WAF CRD attributes
 
 The following table lists the various attributes provided in the WAF CRD:
@@ -256,8 +119,9 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
-    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    application_type:
+        - HTML
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -277,7 +141,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -303,7 +168,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     signatures: "http://x.x.x.x/crd/sig.xml"
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
@@ -325,7 +191,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -354,7 +221,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     target:
         path:
@@ -391,7 +259,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
@@ -426,7 +295,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
@@ -450,8 +320,9 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
-    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    application_type:
+        - HTML
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"
@@ -569,7 +440,8 @@ kind: waf
 metadata:
     name: wafiprep
 spec:
-    application_type: html
+    application_type:
+        - html
     servicenames:
         - frontend
     ip_reputation: "on"
@@ -585,7 +457,8 @@ kind: waf
 metadata:
     name: wafiprepcategory
 spec:
-    application_type: html
+    application_type:
+        - html
     servicenames:
         - frontend
     ip_reputation:
@@ -616,7 +489,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: JSON
+    application_type:
+        - JSON
     json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
@@ -651,7 +525,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: JSON
+    application_type:
+        - JSON
     json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
@@ -687,7 +562,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: XML
+    application_type:
+        - XML
     xml_error_object: "http://x.x.x.x/crd/error_page.xml"
     security_checks:
         xml:
@@ -738,7 +614,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: XML
+    application_type:
+        - XML
     xml_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         xml:

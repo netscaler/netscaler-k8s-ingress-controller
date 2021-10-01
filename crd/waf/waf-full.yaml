@@ -5,11 +5,10 @@ metadata:
 spec:
     servicenames:
         - frontend
-    security_level: basic
     application_type:
         - HTML
-        - JSON
         - XML
+        - JSON
     signatures: "http://x.x.x.x/crd/sig.xml"
     redirect_url: "/home.php"    #it can be external url also
     html_error_object: "http://x.x.x.x/crd/error_page.html"
@@ -47,18 +46,21 @@ spec:
           buffer_overflow:
             action: ["block"]
           content_type: "on"
-          cookie_consistency: "on"
-          credit_card: "off"
+          cookie_consistency:
+            action: ["block", "log", "stats"]
+          credit_card: "on"
           multiple_headers:
             action: ["log"]
         html:
-          cross_site_scripting:
+          cross_site_scripting: "off"
+          field_format:
             action: ["block"]
-          field_format: "on"
-          sql_injection: "on"
+          sql_injection:
+            action: ["block", "log"]
           form_field_consistency:
-            action: ["log","block"]
-          csrf: "on"
+            action: ["log", "stats"]
+          csrf:
+            action: ["block", "stats"]
           fileupload_type: "on"
         json:
           dos: "on"
@@ -198,6 +200,10 @@ spec:
             - rule:
                 field_name: query
                 url: search.php
+          #csrf:
+          #  urls:
+          #      - admin.php
+          #      - user_info.db
         json:
           cross_site_scripting:
             - rule:
