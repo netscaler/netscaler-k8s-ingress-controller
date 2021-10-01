@@ -193,7 +193,7 @@ Default back end is a service that handles all traffic that is not matched again
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: Default-Ingress
+  name: default-ingress
   namespace: default
 spec:
   defaultBackend:
