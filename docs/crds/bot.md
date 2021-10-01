@@ -212,13 +212,16 @@ spec:
         - frontend
     redirect_url: "/error_page.html"
     security_checks:
-       trap: ["log","drop"]
-         bindings:
-      trap:
-	  urls:
+       trap:
+         action:
+           - "log"
+           - "drop"
+    bindings:
+      trapinsertion:
+        urls:
           - "/index.html"
-	    - "/submit.php"
-	    - "/login.html"
+          - "/submit.php"
+          - "/login.html"
 ```
 
 **Enable IP reputation to reject requests of a particular category**

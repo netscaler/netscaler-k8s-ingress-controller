@@ -1,0 +1,19 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: trapinsertion
+spec:
+    servicenames:
+        - frontend
+    redirect_url: "/error_page.html"
+    security_checks:
+       trap:
+         action:
+           - "log"
+           - "drop"
+    bindings:
+      trapinsertion:
+        urls:
+          - "/index.html"
+          - "/submit.php"
+          - "/login.html"
