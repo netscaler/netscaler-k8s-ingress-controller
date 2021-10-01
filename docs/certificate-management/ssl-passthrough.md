@@ -27,7 +27,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/frontend-ip: 10.106.143.160
+    ingress.citrix.com/frontend-ip: x.x.x.x
     ingress.citrix.com/insecure-termination: redirect
     ingress.citrix.com/secure-backend: "True"
     ingress.citrix.com/ssl-passthrough: "True"
