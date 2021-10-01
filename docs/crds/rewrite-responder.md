@@ -760,6 +760,10 @@ Modified host name and URL for the requested URL is present in the image shown a
 
 ![Curl output](../media/goto-priority-example.png)
 
+### HTTP callout 
+
+An HTTP callout allows Citrix ADC to generate and send an HTTP or HTTPS request to an external server as part of the policy evaluation and take appropriate action based on the response obtained from the external server. You can use the rewrite and responder CRD to initiate HTTP callout requests from Citrix ADC.For more information, see the [HTTP callout documentation](../how-to/http-callout.md).
+
 ## Related articles
 
 -  Feature Documentation

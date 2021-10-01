@@ -98,9 +98,7 @@ The API Gateway deployment CRD configures the following:
 | ---------- | ----------- |
 | `Repository` | Specifies the Git repository URL.|
 | `Branch` | Specifies the Git branch name (By default, master). |
-| `oas_secret_ref` | Specifies the Git access secret reference as a Kubernetes secret object name. **Note**: When creating a secret, keep the *user name* and *password* as the secret field names for user name and password.|
-| `User_name` | Specifies the Git user name. |
-| `Password` | Specifies the Git password. **Note**: Credentials can be specified as a *git_secret_ref* as mentioned before or as user name and password in plain text format. |
+| `oas_secret_ref` |Specifies the Git access secret reference as a Kubernetes secret object name. **Note:** When creating a secret, keep the `username` and `password` as the secret field names for Git access credentials.|
 | `Files` | The credentials for these OAS URLs can be accessed from the `oas_secret_ref` field or user_name and password field combinations. |
 
 ## API proxy
@@ -157,7 +155,6 @@ Perform the following steps to deploy the API Gateway CRD:
 
 
 ```yml
-
 apiVersion: citrix.com/v1beta1
 kind: apigatewaypolicy
 metadata:
@@ -166,9 +163,7 @@ spec:
     api_definition:
         repository: "https://code.citrite.net/scm/cnn/cic-gitops.git"
         branch: "modify-test-branch"
-        git_secret_ref: "mysecret"
-        user_name: "<username>"
-        password: "<password>"
+        oas_secret_ref: "mysecret"
         files:
             - "test_gitwatcher/petstore.yaml"
             - "test_gitwatcher/playstore.yaml"
@@ -186,7 +181,7 @@ spec:
               method: ["GET", "POST"] 
          upstream:
             service: "pet-service"
-            port: "80"
+            port: 80
          policy_bindings:
             ratelimit:
                 name: "ratelimit-gitops-slow"

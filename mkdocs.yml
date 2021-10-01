@@ -164,6 +164,7 @@ nav:
     - Securing ingress: how-to/secure-ingress.md
     - TCP use cases: how-to/tcp-use-cases.md
     - HTTP use cases: how-to/http-use-cases.md
+    - HTTP call out: how-to/http-callout.md
     - Session affinity: how-to/session-affinity.md
     - Allowlisting or blocklisting IP addresses: how-to/ip-whitelist-blacklist.md
     - Interoperability with ExternalDNS: how-to/integrate-externaldns.md 
