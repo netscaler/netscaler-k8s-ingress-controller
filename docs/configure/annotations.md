@@ -43,25 +43,28 @@ The following table details the smart annotations provided by the Citrix ingress
 The following is a sample Ingress YAML. It includes smart annotations to enable Citrix ADC features using the entities such as, lbvserver, servicegroup, and monitor:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: citrix
   annotations:
-    ingress.citrix.com/insecure-port: '80'
-    ingress.citrix.com/frontend-ip: '192.168.1.1'
+    ingress.citrix.com/frontend-ip: 192.168.1.1
+    ingress.citrix.com/insecure-port: "80"
     ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"LEASTCONNECTION", "persistenceType":"SOURCEIP"}}'
-    ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
     ingress.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'
+    ingress.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'
+  name: citrix
 spec:
   rules:
-  - host:  citrix.org
+  - host: citrix.org
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: citrix-svc
-          servicePort: 80
+      - backend:
+          service:
+            name: citrix-svc
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
 ```
 
 The sample Ingress YAML includes use cases related to the service, `citrix-svc`, and the following table explains the smart annotations used in the sample:
@@ -284,18 +287,20 @@ spec:
 The following is a sample Ingress YAML which includes the configuration for enabling SIP over UDP support using the `ingress.citrix.com/insecure-service-type` annotation. 
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sip-ingress
   annotations:
-    kubernetes.io/ingress.class: "cic-vpx"
-    ingress.citrix.com/insecure-service-type: "sip_udp"
-    ingress.citrix.com/frontend-ip: "1.1.1.1"
+    ingress.citrix.com/frontend-ip: 1.1.1.1
     ingress.citrix.com/insecure-port: "5060"
+    ingress.citrix.com/insecure-service-type: sip_udp
     ingress.citrix.com/lbvserver: '{"asterisk17":{"lbmethod":"CALLIDHASH","persistenceType":"CALLID"}}'
+    kubernetes.io/ingress.class: cic-vpx
+  name: sip-ingress
 spec:
-  backend:
-    serviceName: asterisk17
-    servicePort: 5060
+  defaultBackend:
+    service:
+      name: asterisk17
+      port:
+        number: 5060
 ```

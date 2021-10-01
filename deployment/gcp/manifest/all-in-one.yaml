@@ -1,10 +1,4 @@
-# If using this on GKE
-# Make sure you have cluster-admin role for your account
-# kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<username of your google account>
-#
-
-#Using a basic apache web server as application for illustration
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apache
@@ -41,21 +35,18 @@ spec:
 ---
 #Cluster role required by CPX
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
   - apiGroups: [""]
     resources: ["services/status"]
     verbs: ["patch"]
-  - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create"]
@@ -90,7 +81,7 @@ rules:
 ---
 #Cluster role bindings required by CPX
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 roleRef:
@@ -115,6 +106,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
+  labels:
+    name: cpx-ingress
+    app: cpx-ingress
 spec:
   selector:
     matchLabels:
@@ -125,12 +119,12 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations:
+      annotations: null
     spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-79.64
           securityContext:
              privileged: true
           env:
@@ -163,7 +157,7 @@ spec:
               name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.13.20
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.18.5
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
@@ -221,22 +215,25 @@ spec:
       targetPort: https
 ---
 #Specify the ingress resource
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: citrix-ingress
   annotations:
-   kubernetes.io/ingress.class: "citrix-ingress"
-   ingress.citrix.com/insecure-termination: "allow"
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: citrix-ingress
+  name: citrix-ingress
 spec:
-  tls:
-  - secretName: cert-key
   rules:
   - host: citrix-ingress.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
+      - backend:
+          service:
+            name: apache
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - secretName: cert-key
 ---

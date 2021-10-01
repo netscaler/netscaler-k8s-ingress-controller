@@ -12,23 +12,27 @@ The following is a sample Ingress annotation with analytics profile for HTTP rec
 The following is a sample Ingress configuration with the analytics profile for a web application.
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webserver-ingress
   annotations:
-   ingress.citrix.com/insecure-termination: "allow"
-   ingress.citrix.com/analyticsprofile: '{"webinsight": {"httpurl":"ENABLED", "httpuseragent":"ENABLED", "httphost":"ENABLED", "httpmethod":"ENABLED", "httpcontenttype":"ENABLED"}}'
+    ingress.citrix.com/analyticsprofile: '{"webinsight": {"httpurl":"ENABLED", "httpuseragent":"ENABLED",
+      "httphost":"ENABLED", "httpmethod":"ENABLED", "httpcontenttype":"ENABLED"}}'
+    ingress.citrix.com/insecure-termination: allow
+  name: webserver-ingress
 spec:
-      tls:
-       - secretName: name
-      rules:
-       - http:
-          paths:
-          - path: /
-            backend:
-              serviceName: webserver
-              servicePort: 80
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: webserver
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - secretName: name
 ```
 
 The following is a service annotation:

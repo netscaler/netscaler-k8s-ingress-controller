@@ -1,25 +1,21 @@
-# If using this on GKE
-# Make sure you have cluster-admin role for your account
-# kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<username of your google account>
-#
----
-#Specify the ingress resource
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: citrix-ingress
   annotations:
-   kubernetes.io/ingress.class: "citrix-ingress"
-   ingress.citrix.com/insecure-termination: "allow"
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: citrix-ingress
+  name: citrix-ingress
 spec:
-  tls:
-  - secretName: cert-key
   rules:
   - host: citrix-ingress.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
----
+      - backend:
+          service:
+            name: apache
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - secretName: cert-key

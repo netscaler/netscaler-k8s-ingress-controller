@@ -36,12 +36,12 @@ spec:
 ---
 #Cluster role required by CPX
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
@@ -49,11 +49,14 @@ rules:
     resources: ["services/status"]
     verbs: ["patch"]
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
+    resources: ["events"]
+    verbs: ["create"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -61,10 +64,10 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
-    verbs: ["get", "list", "watch"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
     verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
@@ -72,11 +75,14 @@ rules:
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
 
 ---
 #Cluster role bindings required by CPX
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx
 roleRef:
@@ -96,31 +102,14 @@ metadata:
   name: cpx
   namespace: default
 ---
-#Specify the ingress resource
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: citrix-ingress
-  annotations:
-   kubernetes.io/ingress.class: "citrix-ingress"
-   ingress.citrix.com/insecure-termination: "allow"
-spec:
-  tls:
-  - secretName: cert-key
-  rules:
-  - host: citrix-ingress.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
----
 #Deploy a standalone CPX as an ingress device
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cpx-ingress
+  labels:
+    name: cpx-ingress
+    app: cpx-ingress
 spec:
   selector:
     matchLabels:
@@ -131,12 +120,12 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations:
+      annotations: null
     spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29"
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-79.64
           securityContext:
              privileged: true
           env:
@@ -163,13 +152,16 @@ spec:
             successThreshold: 1
           imagePullPolicy: Always
           volumeMounts:
-            - mountPath: /cpx/conf/
-              name: cpx-volume1
-            - mountPath: /cpx/crash/
-              name: cpx-volume2
+            - mountPath: /var/deviceinfo
+              name: shared-data
+            - mountPath: /cpx/
+              name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.4.392"
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.18.5
+          volumeMounts:
+          - mountPath: /var/deviceinfo
+            name: shared-data
           env:
           - name: "EULA"
             value: "yes"
@@ -198,11 +190,33 @@ spec:
               citrix-ingress
           imagePullPolicy: Always
       volumes:
-      - name: cpx-volume1
+      - name: shared-data
         emptyDir: {}
-      - name: cpx-volume2
+      - name: cpx-volume
         emptyDir: {}
-
+---
+#Specify the ingress resource
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/insecure-termination: allow
+    kubernetes.io/ingress.class: citrix-ingress
+  name: citrix-ingress
+spec:
+  rules:
+  - host: citrix-ingress.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: apache
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - secretName: cert-key
 ---
 #Expose the CPX as a Load-balancer service
 kind: Service

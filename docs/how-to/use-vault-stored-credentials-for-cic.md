@@ -38,7 +38,7 @@ Create a service account for Kubernetes authentication by using the following st
     Following is a part of the sample [cic-k8s-role-service-account.yml](./examples-yamls/cic-k8s-role-service-account.yml) file.
 
 
-        apiVersion: rbac.authorization.k8s.io/v1beta1
+        apiVersion: rbac.authorization.k8s.io/v1
         kind: ClusterRoleBinding
         metadata:
         name: role-tokenreview-binding

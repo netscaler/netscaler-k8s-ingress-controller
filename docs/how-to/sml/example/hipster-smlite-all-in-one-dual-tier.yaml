@@ -65,18 +65,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: emailservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "5000"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: emailservice-ingress
 spec:
-  backend:
-    serviceName: emailservice-headless
-    servicePort: 5000
+  defaultBackend:
+    service:
+      name: emailservice-headless
+      port:
+        number: 5000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -154,18 +156,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: checkoutservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "5050"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: checkoutservice-ingress
 spec:
-  backend:
-    serviceName: checkoutservice-headless
-    servicePort: 5050
+  defaultBackend:
+    service:
+      name: checkoutservice-headless
+      port:
+        number: 5050
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -238,18 +242,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: recommendationservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "8081"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: recommendationservice-ingress
 spec:
-  backend:
-    serviceName: recommendationservice-headless
-    servicePort: 8081
+  defaultBackend:
+    service:
+      name: recommendationservice-headless
+      port:
+        number: 8081
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -335,39 +341,45 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "http"
     ingress.citrix.com/insecure-port: "80"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: http
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: frontend-ingress
 spec:
   rules:
   - host: frontend
     http:
       paths:
       - backend:
-          serviceName: frontend-headless
-          servicePort: 80
+          service:
+            name: frontend-headless
+            port:
+              number: 80
+        pathType: Prefix
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-ns-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "http"
     ingress.citrix.com/insecure-port: "80"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: http
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: frontend-ns-ingress
 spec:
   rules:
   - host: citrix.hipster.smlite
     http:
       paths:
       - backend:
-          serviceName: frontend-headless
-          servicePort: 80
+          service:
+            name: frontend-headless
+            port:
+              number: 80
+        pathType: Prefix
 ---
 apiVersion: v1
 kind: Service
@@ -394,22 +406,25 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-external-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "http"
     ingress.citrix.com/insecure-port: "80"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: http
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: frontend-external-ingress
 spec:
   rules:
   - host: frontend-external
     http:
       paths:
       - backend:
-          serviceName: frontend-external-headless
-          servicePort: 80
+          service:
+            name: frontend-external-headless
+            port:
+              number: 80
+        pathType: Prefix
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -476,18 +491,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: paymentservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "50051"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: paymentservice-ingress
 spec:
-  backend:
-    serviceName: paymentservice-headless
-    servicePort: 50051
+  defaultBackend:
+    service:
+      name: paymentservice-headless
+      port:
+        number: 50051
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -554,18 +571,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: productcatalogservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "3550"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: productcatalogservice-ingress
 spec:
-  backend:
-    serviceName: productcatalogservice-headless
-    servicePort: 3550
+  defaultBackend:
+    service:
+      name: productcatalogservice-headless
+      port:
+        number: 3550
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -641,18 +660,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cartservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "7070"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: cartservice-ingress
 spec:
-  backend:
-    serviceName: cartservice-headless
-    servicePort: 7070
+  defaultBackend:
+    service:
+      name: cartservice-headless
+      port:
+        number: 7070
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -720,18 +741,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: currencyservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "7000"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: currencyservice-ingress
 spec:
-  backend:
-    serviceName: currencyservice-headless
-    servicePort: 7000
+  defaultBackend:
+    service:
+      name: currencyservice-headless
+      port:
+        number: 7000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -798,18 +821,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: shippingservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "50052"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: shippingservice-ingress
 spec:
-  backend:
-    serviceName: shippingservice-headless
-    servicePort: 50052
+  defaultBackend:
+    service:
+      name: shippingservice-headless
+      port:
+        number: 50052
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -875,18 +900,20 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: redis-cart-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "6379"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: redis-cart-ingress
 spec:
-  backend:
-    serviceName: redis-cart-headless
-    servicePort: 6379
+  defaultBackend:
+    service:
+      name: redis-cart-headless
+      port:
+        number: 6379
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -957,20 +984,22 @@ spec:
   selector:
     app: cpx-ingress1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: adservice-ingress
   annotations:
-    ingress.citrix.com/insecure-service-type: "tcp"
     ingress.citrix.com/insecure-port: "9555"
-    kubernetes.io/ingress.class: "tier-2-cpx1"
+    ingress.citrix.com/insecure-service-type: tcp
+    kubernetes.io/ingress.class: tier-2-cpx1
+  name: adservice-ingress
 spec:
-  backend:
-    serviceName: adservice-headless
-    servicePort: 9555
+  defaultBackend:
+    service:
+      name: adservice-headless
+      port:
+        number: 9555
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: citrix
@@ -1081,7 +1110,7 @@ rules:
   - list
   - watch
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: citrix
@@ -1213,25 +1242,28 @@ data:
   username: bnNyb290
   password: bnNyb290
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tier-1-ingress
   annotations:
-     kubernetes.io/ingress.class: "tier-1-vpx"
-     ingress.citrix.com/frontend-ip: "<citrix-adc-vpx-vip>"
+    ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
+    kubernetes.io/ingress.class: tier-1-vpx
+  name: tier-1-ingress
 spec:
   rules:
   - host: citrix.hipster.smlite
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: cpx-ingress1
-          servicePort: 80
+      - backend:
+          service:
+            name: cpx-ingress1
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 rules:
@@ -1272,7 +1304,7 @@ rules:
     verbs: ["get", "list", "watch"]
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 roleRef:

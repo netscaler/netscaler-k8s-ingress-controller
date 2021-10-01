@@ -1,17 +1,18 @@
-#Specify the ingress resource
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: citrix-ingress
   annotations:
-   kubernetes.io/ingress.class: "citrix-ingress"
+    kubernetes.io/ingress.class: citrix-ingress
+  name: citrix-ingress
 spec:
   rules:
   - host: citrix-ingress.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: apache
-          servicePort: 80
----
+      - backend:
+          service:
+            name: apache
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
