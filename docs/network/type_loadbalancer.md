@@ -233,7 +233,7 @@ Perform the following to deploy an `apache` application in your Kubernetes clust
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
 
-        apiVersion: apps/v1beta2
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
           name: apache
@@ -343,7 +343,7 @@ Perform the following:
 1. Create a file named `apache-deployment.yaml` with the following configuration:
    
 
-        apiVersion: apps/v1beta2
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
           name: apache

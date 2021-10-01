@@ -143,6 +143,7 @@ spec:
             name: frontend-hotdrinks
             port:
               number: 80
+        path: /
         pathType: Prefix
   - host: tea
     http:
@@ -152,6 +153,7 @@ spec:
             name: tea-beverage
             port:
               number: 80
+        path: /
         pathType: Prefix
   - host: coffee
     http:
@@ -161,6 +163,7 @@ spec:
             name: coffee-beverage
             port:
               number: 443
+        path: /
         pathType: Prefix
   tls:
   - secretName: hotdrink-secret
