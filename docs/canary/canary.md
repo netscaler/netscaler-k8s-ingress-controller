@@ -462,7 +462,7 @@ This topic contains sample JSON files for Spinnaker pipeline configuration and a
       "manifestArtifactAccount": "embedded-artifact",
       "manifests": [
         {
-          "apiVersion": "extensions/v1beta1",
+          "apiVersion": "apps/v1",
           "kind": "Deployment",
           "metadata": {
             "labels": {
@@ -525,7 +525,7 @@ This topic contains sample JSON files for Spinnaker pipeline configuration and a
       "manifestArtifactAccount": "embedded-artifact",
       "manifests": [
         {
-          "apiVersion": "extensions/v1beta1",
+          "apiVersion": "apps/v1",
           "kind": "Deployment",
           "metadata": {
             "labels": {
