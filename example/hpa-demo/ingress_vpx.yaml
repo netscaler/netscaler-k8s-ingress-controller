@@ -16,4 +16,5 @@ spec:
             name: cpx-builtin
             port:
               number: 6080
+        path: /
         pathType: Prefix
