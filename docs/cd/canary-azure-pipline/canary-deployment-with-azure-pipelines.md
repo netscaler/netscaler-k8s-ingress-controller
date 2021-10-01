@@ -51,6 +51,9 @@ This directory includes the version based application specific deployment YAML f
 
 ![kubernetes_configs](../../media/canary-kubernetes-configs.png)
 
+**Note:** You can download the latest Helm charts from the [Citrix ingress controller Helm charts repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller) and place it under the 
+`cic_helm` directory.
+
 **deployment_configs**
 
 This directory includes the `setup_config` and `teardown_config` JSON files that specify the path of the YAML files available for the specific version of the application to be deployed or brought down during canary deployment. 
