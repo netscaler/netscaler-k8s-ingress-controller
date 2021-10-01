@@ -32,7 +32,7 @@ spec:
     serviceAccountName: cic-k8s-role
     containers:
     - name: cic-k8s-ingress-controller
-      image:"quayio/citrix/citrix-k8s-ingress-controller:latest"
+      image:"quay.io/citrix/citrix-k8s-ingress-controller:latest"
       # specify the ingress classes names to be supportedbyIngress Controller in args section.
       # First line should be --ingress-classes, andeverysubsequent line should be
       # the name of allowed ingress class. In the givenexampletwo classes named
@@ -46,12 +46,12 @@ spec:
 Following is the snippet from an Ingress YAML file where the Ingress class association is depicted. In the given example, an Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If the Citrix ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: web-ingress
   annotations:
-     kubernetes.io/ingress.class: "my-custom-class"
+    kubernetes.io/ingress.class: my-custom-class
+  name: web-ingress
 ```
 
 ## Ingress V1 and IngressClass support
@@ -81,9 +81,9 @@ metadata:
   name: minimal-ingress
 spec:
   ingressClassName: citrix
-  host: abc.com
   rules:
-  - http:
+  - host: abc.com
+    http:
       paths:
       - path: /
         pathType: Prefix
@@ -146,33 +146,6 @@ Following is an example YAML with the  `--update-ingress-status yes` command lin
 
 
 ```yml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: cic-k8s-ingress-controller
-spec:
-  serviceAccountName: cic-k8s-role
-  containers:
-  - name: cic-k8s-ingress-controller
-   image: "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
-env:
-    # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
-    - name: "NS_IP"
-      value: <Citrix ADC management IP>
-    # Set username for Nitro
-    - name: "NS_USER"
-      valueFrom:
-        secretKeyRef:
-          name: nslogin
-          key: username
-    # Set user password for Nitro
-    - name: "NS_PASSWORD"
-      valueFrom:
-        secretKeyRef:
-          name: nslogin
-          key: password
-    - name: "EULA"
-      value: "yes"
 args:
     - --feature-node-watch false
     - --ipam citrix-ipam-controller

@@ -29,7 +29,7 @@ class rbac:
         '''
 
         basicConfigIn = OrderedDict([
-        ("apiVersion", "rbac.authorization.k8s.io/v1beta1"),
+        ("apiVersion", "rbac.authorization.k8s.io/v1"),
         ("kind", "ClusterRole"),
         ("metadata", {
             "name": "%s" % (self.name),
@@ -101,7 +101,7 @@ class rbac:
         '''
 
         basicConfigIn = OrderedDict([
-        ("apiVersion", "rbac.authorization.k8s.io/v1beta1"),
+        ("apiVersion", "rbac.authorization.k8s.io/v1"),
         ("kind", "ClusterRoleBinding"),
         ("metadata", {
             "name": "%s" % (self.name),
