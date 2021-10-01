@@ -6,25 +6,26 @@ spec:
     servicenames:
     - frontend
 
-    auth_providers:
+    authentication_providers:
 
         - name: "local-auth-provider"
-          basic-local-db:
+          basic_local_db:
+             use_local_auth: 'YES'
 
-    auth_policies:
+    authentication_policies:
 
         - resource:
             path:
               - '/orders/'
               - '/shipping/'
             method: [GET, POST]
-          provider: ["local-auth-provider"]    
+          provider: ["local-auth-provider"]
 
         - resource:
             path:
               - '/products/'
             method: [POST]
-          provider: ["local-auth-provider"]    
+          provider: ["local-auth-provider"]
 
           # no auth for these
         - resource:
@@ -37,4 +38,3 @@ spec:
             path:
               -  '/reviews/'
           provider: []
-
