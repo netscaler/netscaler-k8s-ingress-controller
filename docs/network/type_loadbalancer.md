@@ -186,28 +186,35 @@ Perform the following steps to deploy the IPAM controller.
           name: citrix-ipam-controller
 
         ---
-        apiVersion: extensions/v1beta1
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
+          labels:
+            app: citrix-ipam-controller
           name: citrix-ipam-controller
           namespace: kube-system
         spec:
           replicas: 1
+          selector:
+            matchLabels:
+              app: citrix-ipam-controller
           template:
             metadata:
               labels:
                 app: citrix-ipam-controller
             spec:
-              serviceAccountName: citrix-ipam-controller
               containers:
-              - name: citrix-ipam-controller
-                image: quay.io/citrix/citrix-ipam-controller:latest
+              - image: quay.io/citrix/citrix-ipam-controller:latest
+                imagePullPolicy: Always
+                name: citrix-ipam-controller
                 env:
                 # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-              - name: "VIP_RANGE"
-                value: '["10.105.158.195/32", "10.105.158.196/31", "10.105.158.198"]'
+              - imagePullPolicy: IfNotPresent
+                name: VIP_RANGE
                 # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
                 # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
+              serviceAccountName: citrix-ipam-controller
+
 
     The manifest contains two environment variables, `VIP_RANGE` and `VIP_NAMESPACES`. You can specify the appropriate routable IP range with a valid CIDR under the `VIP_RANGE`. If necessary, you can also specify a set of namespaces under  `VIP_NAMESPACES`  so that the IPAM controller allocates addresses only for services from specific namespaces.
 
@@ -226,7 +233,7 @@ Perform the following to deploy an `apache` application in your Kubernetes clust
 1. Create a file named `apache-deployment.yaml` with the following configuration:
 
 
-        apiVersion: apps/v1beta2
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
           name: apache
@@ -336,7 +343,7 @@ Perform the following:
 1. Create a file named `apache-deployment.yaml` with the following configuration:
    
 
-        apiVersion: apps/v1beta2
+        apiVersion: apps/v1
         kind: Deployment
         metadata:
           name: apache

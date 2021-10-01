@@ -11,7 +11,7 @@ The following is an example of a Listener CRD object.
 apiVersion: citrix.com/v1
 kind: Listener
 metadata:
-  name: my-listener 
+  name: my-listener
   namespace: default
 spec:
   certificates:
@@ -26,7 +26,7 @@ spec:
   - preconfigured: second-secret
     # preconfigured certkey name in ADC
   vip: '192.168.0.1' # Virtual IP address to be used, not required when CPX is used as ingress device
-  port: 443 
+  port: 443
   protocol: https
   redirectPort: 80
   secondaryVips:
@@ -54,7 +54,7 @@ spec:
       rhistate: 'ACTIVE'
   routes:
     # Attach the policies from the below Routes
-  - name: domain1-route 
+  - name: domain1-route
     namespace: default
   - name: domain2-route
     namespace: default
@@ -100,14 +100,14 @@ The `Listener.spec` attribute defines the Listener custom resource specification
 The `Listener.certificates` attribute defines the TLS certificate related information for the SSL virtual server.
 
 Following is an example for the `Listener.certificates` attribute.
-
-
+```yml
     certificates:
-        - secret:
-           name: my-secret
-           namespace: demo
-          default: true
-        - preconfigured: configured-secret
+    - secret:
+        name: my-secret
+        namespace: demo
+      default: true
+    - preconfigured: configured-secret
+```
 
 The following table explains the various fields in the `Listener.certificates` attribute.
 
@@ -166,7 +166,7 @@ The following table explains the various fields in the `Listener.action.backend`
 This attribute represents the Kubernetes back end service for the default back end. If the service is of type `NodePort` or `Loadbalancer`, the node IP address and NodePort are used to send the traffic to the back end.
 
 Following is an example for the `Listener.action.backend.kube` attribute.
-
+```yml
         kube:
           service: default-service
           namespace: default
@@ -176,6 +176,7 @@ Following is an example for the `Listener.action.backend.kube` attribute.
               lbmethod: ROUNDROBIN
             servicegroupConfig:
               clttimeout: '20'
+```
 
 The following table explains the various fields in the `Listener.action.backend.kube` attribute.
 
@@ -190,14 +191,14 @@ The following table explains the various fields in the `Listener.action.backend.
 
 This attribute represents the back end configurations of Citrix ADC.
 Following is an example for the `BackendConfig` attribute.
-
-
+```yml
     backendConfig:
      sercureBackend: true
      lbConfig:
        lbmethod: ROUNDROBIN
      servicegroupConfig:
        clttimeout: '20'
+```
 
 The following table explains the various fields in the `BackendConfig` attribute.
 
@@ -208,11 +209,12 @@ The following table explains the various fields in the `BackendConfig` attribute
 | `servicegroupConfig` | Specifies the Citrix ADC service group configurations for the given back end. One can specify the key-value pairs as shown in the example which sets the service group configurations for the back end. For all the valid configurations, see [service group configurations](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/basic/servicegroup/).| object | No       |
 
 ## Listener.action.redirect
-
+```yml
     defaultAction:
       redirect:
        httpsRedirect: true
        responseCode: 302
+```
 
 The following table explains the various fields in the `Listener.action.redirect` attribute.
 
@@ -225,7 +227,7 @@ The following table explains the various fields in the `Listener.action.redirect
 
 ## Listener.policies
 
-This attribute represents the default policies which are used for the Listener when policies are not specified. By using `Listener.policies`, you can customize the TCP, HTTP, and SSL behavior. 
+This attribute represents the default policies which are used for the Listener when policies are not specified. By using `Listener.policies`, you can customize the TCP, HTTP, and SSL behavior.
 
 Following is an example for the `Listener.policies` attribute.
 ```yml
@@ -264,7 +266,7 @@ The following table explains the various fields in the `Listener.policies` attri
 
 ## Listener.policies.tcpprofile
 
-This attribute represents the TCP profile settings for the front-end CS virtual server. 
+This attribute represents the TCP profile settings for the front-end CS virtual server.
 
 Following is an example for the `Listener.policies.tcpprofile` attribute.
 ```yml
@@ -273,6 +275,7 @@ Following is an example for the `Listener.policies.tcpprofile` attribute.
       config:
        sack: "ENABLED"
        nagle: “ENABLED”
+---
     policies:
      tcpprofile:
       preconfigured: test-tcp-profile
@@ -294,7 +297,7 @@ Following is an example for the `Listener.policies.httpprofile` attribute.
      httpprofile:
       config:
        websocket: "ENABLED"
-
+---
     policies:
      httpprofile:
      preconfigured: test-http-profile
@@ -308,7 +311,7 @@ The following table explains the various fields in the `Listener.policies.httppr
 
 ## Listener.policies.sslprofile
 
-This attribute represents the SSL profile for the front-end CS virtual server. 
+This attribute represents the SSL profile for the front-end CS virtual server.
 
 Following is an example for the `Listener.policies.sslprofile` attribute.
 ```yml
@@ -316,7 +319,7 @@ Following is an example for the `Listener.policies.sslprofile` attribute.
      sslprofile:
       config:
        ssl3: "ENABLED"
-
+---
     policies:
      sslprofile:
       preconfigured: test-ssl-profile
@@ -331,7 +334,7 @@ The following table explains the various fields in the `Listener.policies.sslpro
 
 ## Listener.policies.analyticsprofile
 
-This attribute represents the analytics profile that is used to export counters and metrics to Citrix ADC Observability Exporter. By configuring this attribute, you can choose what is to be exported by creating and binding the analytics profile.  
+This attribute represents the analytics profile that is used to export counters and metrics to Citrix ADC Observability Exporter. By configuring this attribute, you can choose what is to be exported by creating and binding the analytics profile.
 
 Following is an example for the `Listener.policies.analyticsprofile` attribute.
 
@@ -342,7 +345,7 @@ Following is an example for the `Listener.policies.analyticsprofile` attribute.
       - type: webinsight
         parameters:
          allhttpheaders: "ENABLED"
-
+---
     policies:
      analyticsprofile:
       preconfigured:

@@ -11,7 +11,7 @@
 
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 rules:
@@ -52,7 +52,7 @@ rules:
     verbs: ["get", "list", "watch"]
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cic-k8s-role
 roleRef:

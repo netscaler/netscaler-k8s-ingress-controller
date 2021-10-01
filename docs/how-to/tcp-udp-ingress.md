@@ -14,34 +14,38 @@ You can also use the standard Kubernetes solution of creating a `service` of `ty
 **Sample:** Ingress definition for TCP-based Ingress.
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: redis-master-ingress
-    annotations:
-        kubernetes.io/ingress.class: “guestbook”
-        ingress.citrix.com/insecure-service-type: “tcp”
-        ingress.citrix.com/insecure-port: “6379”
+  annotations:
+    ingress.citrix.com/insecure-port: "6379"
+    ingress.citrix.com/insecure-service-type: "tcp"
+    kubernetes.io/ingress.class: "guestbook"
+  name: redis-master-ingress
 spec:
-    backend:
-        serviceName: redis-master-pods
-        servicePort: 6379
+  defaultBackend:
+    service:
+      name: redis-master-pods
+      port:
+        number: 6379
 ```
 
 **Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.1.1:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: udp-ingress
-    annotations:
-        ingress.citrix.com/insecure-service-type: “udp”
-        ingress.citrix.com/insecure-port: “5084”
+  annotations:
+    ingress.citrix.com/insecure-port: "5084"
+    ingress.citrix.com/insecure-service-type: "udp"
+  name: udp-ingress
 spec:
-    backend:
-        serviceName: frontend
-        servicePort: udp-53  /* Service port name defined in the service defination */
+  defaultBackend:
+    service:
+      name: frontend
+      port:
+        name: udp-53  # Service port name defined in the service defination
 ```
 
 The following is a sample service definition where the service port name is defined as `udp-53`:
@@ -66,40 +70,44 @@ spec:
 **Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.5.25:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: udp-ingress
-    annotations:
-        ingress.citrix.com/insecure-service-type: “udp”
-        ingress.citrix.com/insecure-port: “5084”
+  annotations:
+    ingress.citrix.com/insecure-port: "5084"
+    ingress.citrix.com/insecure-service-type: "udp"
+  name: udp-ingress
 spec:
-    backend:
-        serviceName: frontend
-        servicePort: 53
+  defaultBackend:
+    service:
+      name: frontend
+      port:
+        number: 53
 ```
 
 ## Load balance Ingress traffic based on TCP over SSL
 
-Citrix ingress controller provides an `‘ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
+Citrix ingress controller provides an `'ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
 
 **Sample:** Ingress definition for TCP over SSL based Ingress.
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: colddrinks-ingress
-    annotations:
-        kubernetes.io/ingress.class: “colddrink”
-        ingress.citrix.com/secure-service-type: “ssl_tcp”
-        ingress.citrix.com/secure_backend: ‘{“frontendcolddrinks”:”True”}’
+  annotations:
+    ingress.citrix.com/secure-service-type: "ssl_tcp"
+    ingress.citrix.com/secure_backend: '{"frontendcolddrinks":"True"}'
+    kubernetes.io/ingress.class: "colddrink"
+  name: colddrinks-ingress
 spec:
-    tls:
-    - secretName: “colddrink-secret”
-    backend:
-        serviceName: frontend-colddrinks
-        servicePort: 443
+  defaultBackend:
+    service:
+      name: frontend-colddrinks
+      port:
+        number: 443
+  tls:
+  - secretName: "colddrink-secret"
 ```
 
 ## Monitor and improve the performance of your TCP or UDP based applications
@@ -111,25 +119,28 @@ Also, the application performance can be improved by using persistence methods s
 Kubernetes. The following is one such example:
 
 ```yml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: mongodb
-    annotations:
-        ingress.citrix.com/insecure-port: “80”
-        ingress.citrix.com/frontend-ip: “192.168.1.1”
-        ingress.citrix.com/csvserver: ‘{“l2conn”:”on”}’
-        ingress.citrix.com/lbvserver: ‘{“mongodb-svc”:{“lbmethod”:”SRCIPDESTIPHASH”}}’
-        ingress.citrix.com/monitor: ‘{“mongodbsvc”:{“type”:”tcp-ecv”}}’
+  annotations:
+    ingress.citrix.com/csvserver: '{"l2conn":"on"}'
+    ingress.citrix.com/frontend-ip: "192.168.1.1"
+    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/lbvserver: '{"mongodb-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'
+    ingress.citrix.com/monitor: '{"mongodbsvc":{"type":"tcp-ecv"}}'
+  name: mongodb
 spec:
-    rules:
-    - host: mongodb.beverages.com
-      http:
-        paths:
-        - path: /
-          backend:
-            serviceName: mongodb-svc
-            servicePort: 80
+  rules:
+  - host: mongodb.beverages.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: mongodb-svc
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
 ```
 
 For more information on the different deployment options supported by the Citrix ingress controller, see [Deployment topologies](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/).
