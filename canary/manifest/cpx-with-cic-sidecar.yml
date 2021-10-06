@@ -28,7 +28,7 @@ spec:
           value: nsroot
         - name: NS_PASSWORD
           value: nsroot
-        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.8
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.9
         imagePullPolicy: Always
         name: exporter
         securityContext:

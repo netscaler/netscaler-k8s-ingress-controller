@@ -105,7 +105,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.9"
       imagePullPolicy: IfNotPresent
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -199,7 +199,7 @@ spec:
           value: nsroot
         - name: NS_PASSWORD
           value: nsroot
-        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.8
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.9
         imagePullPolicy: IfNotPresent
         name: exporter
         securityContext:
@@ -271,7 +271,7 @@ spec:
           value: nsroot
         - name: NS_PASSWORD
           value: nsroot
-        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.8
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.9
         imagePullPolicy: IfNotPresent
         name: exporter
         securityContext:
