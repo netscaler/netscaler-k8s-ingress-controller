@@ -115,7 +115,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.9"
       imagePullPolicy: Always
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -201,7 +201,7 @@ spec:
             - mountPath: /cpx/crash/
               name: cpx-volume2
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.9"
           imagePullPolicy: Always
           args:
             - "--target-nsip=127.0.0.1"
@@ -279,7 +279,7 @@ spec:
           #  value: "https://10..xx.xx:6443"
         # Add exporter as a sidecar
         - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.8"
+          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.9"
           args:
             - "--target-nsip=192.168.0.2"
             - "--port=8888"
