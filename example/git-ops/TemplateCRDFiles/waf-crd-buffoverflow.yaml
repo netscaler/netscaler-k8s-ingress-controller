@@ -1,0 +1,20 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: buffoverflow
+spec:
+    servicenames: []
+    target:
+        path: []
+    application_type: HTML
+    security_checks:
+        common:
+          buffer_overflow: "on"
+          multiple_headers:
+            action: ["block", "log"]
+    settings:
+        common:
+          buffer_overflow:
+            max_cookie_len: 209
+            max_header_len: 2048
+            max_url_len: 4096

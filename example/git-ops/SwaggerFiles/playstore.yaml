@@ -1,0 +1,275 @@
+
+swagger: "2.0"
+info:
+  description: "s a sample server Playground server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Playground"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apicoffeem@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "playground.swagger.io"
+basePath: "/v2"
+tags:
+- name: "play"
+  description: "Everything about your Plays"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "ground"
+  description: "Access to Playground orders"
+- name: "palyer"
+  description: "Operations about palyer"
+  externalDocs:
+    description: "Find out more about our ground"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+
+  /play/tennis:
+    post:
+      tags:
+      - "play"
+      summary: "Add a new play to the ground"
+      description: ""
+      # operationId: "addPlay"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Play object that needs to be added to the ground"
+        required: true
+        schema:
+          $ref: "#/definitions/Play"
+      responses:
+        "405":
+          description: "Invalid input"
+
+  /play/playout:
+    post:
+      tags:
+      - "play"
+      summary: "Add a new play to the ground"
+      description: ""
+      # operationId: "addPlay"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Play object that needs to be added to the ground"
+        required: true
+        schema:
+          $ref: "#/definitions/Play"
+      responses:
+        "405":
+          description: "Invalid input"
+          
+  /play/playin:
+    post:
+      tags:
+      - "play"
+      summary: "Add a new play to the ground"
+      description: ""
+      # operationId: "addPlay"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Play object that needs to be added to the ground"
+        required: true
+        schema:
+          $ref: "#/definitions/Play"
+      responses:
+        "405":
+          description: "Invalid input"
+
+  /play/playId:
+    delete:
+      tags:
+      - "play"
+      summary: "Find play by ID"
+      description: "Returns a single play"
+      # operationId: "getPlayById"
+      parameters:
+      - name: "playId"
+        in: "path"
+        description: "ID of play to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+      responses:
+        "200":
+          description: "successful operation"
+    get:
+      tags:
+      - "play"
+      summary: "Find play by ID"
+      description: "Returns a single play"
+      # operationId: "getPlayById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "playId"
+        in: "path"
+        description: "ID of play to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Play"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Play not found"
+
+securityDefinitions:
+  basicAuth:     # <-- arbitrary name for the security scheme
+    type: basic
+definitions:
+  Order:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      playId:
+        type: "integer"
+        format: "int64"
+      quantity:
+        type: "integer"
+        format: "int32"
+      shipDate:
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+        - "placed"
+        - "approved"
+        - "delivered"
+      complete:
+        type: "boolean"
+        default: false
+    xml:
+      name: "Order"
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  Player:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      palyername:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+      palyerStatus:
+        type: "integer"
+        format: "int32"
+        description: "Player Status"
+    xml:
+      name: "Player"
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+  Play:
+    type: "object"
+    required:
+    - "name"
+    - "photoUrls"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      category:
+        $ref: "#/definitions/Category"
+      name:
+        type: "string"
+        example: "doggie"
+      photoUrls:
+        type: "array"
+        xml:
+          name: "photoUrl"
+          wrapped: true
+        items:
+          type: "string"
+      tags:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        items:
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "play status in the ground"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+    xml:
+      name: "Play"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

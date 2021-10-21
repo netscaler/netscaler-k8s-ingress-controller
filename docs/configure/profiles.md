@@ -1,6 +1,6 @@
 # Configure HTTP, TCP, or SSL profiles on Citrix ADC
 
-Configurations such as, HTTP, TCP, or SSL for a Citrix ADC appliance can be specified using individual entities such as [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#sample-http-configurations), [TCP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html), or [SSL profile](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.html) respectively.  The profile is a collection of settings pertaining to the individual protocols, for example, HTTP profile is a collection of HTTP settings. It offers ease of configuration and flexibility. Instead of configuring the settings on each entity you can configure them in a profile and bind the profile to all the entities that the settings apply to.
+Configurations such as, HTTP, TCP, or SSL for a Citrix ADC appliance can be specified using individual entities such as [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#sample-http-configurations), [TCP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html), or [SSL profile](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.html) respectively. The profile is a collection of settings pertaining to the individual protocols, for example, HTTP profile is a collection of HTTP settings. It offers ease of configuration and flexibility. Instead of configuring the settings on each entity you can configure them in a profile and bind the profile to all the entities that the settings apply to.
 
 Citrix ingress controller enables you to configure HTTP, TCP, or SSL related configuration on the Ingress Citrix ADC using profiles.
 
@@ -61,67 +61,202 @@ The Citrix ingress controller provides the following two smart annotations for S
 > **IMPORTANT:**
 > SSL profile does not enable you to configure SSL certificate.
 
-## Front end configuration
+## Front-end profile configuration using annotations
 
-For the front end configuration (Client Plane) of the Ingress Citrix ADC, you need to create ingress definition that includes HTTP, TCP, or SSL profile based smart annotations. The Citrix ingress controller considers an ingress definition as front end configuration only if the `spec:rules` parameter in the ingress definition is empty.
+HTTP, TCP, and SSL front-end profiles are attached to the client-side content switching virtual server or SSL virtual server. Since there can be multiple ingresses that use the same `frontend-ip` and also use the same content switching virtual server in the front-end, there can be possible conflicts that can arise from the front-end profiles annotation specified in multiple ingresses that share the front-end IP address.
 
->**Note:** Ensure that you do not create separate ingress definitions for each profile. All the profile based smart annotations should be used in the single ingress definition for front end configuration.
+The following are the guidelines for front-end profiles annotations for HTTP, TCP, and SSL.
 
-**Sample Ingress manifest for front end configuration for an HTTP server:**
+- For all ingresses with the same front-end IP address, it is recommended to have the same value for the front-end profile is specified in all ingresses.
+- If there are multiple ingresses that share front-end IP address, one can also create a separate ingress for each front-end IP address with empty rules (referred as the front-end ingress) where one can specify the front-end IP annotation as shown in the following example. You do not need to specify the front-end profile annotation in each ingress definition.
 
-```yml
-#The values for the parameters are for demonstration purpose only.
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+   - To create a front-end ingress for an HTTP type virtual server, see the following example:
+
+            #Sample ingress manifest for the front-end configuration for an HTTP virtual server
+            #The values for the parameters are for demonstration purpose only.
+
+            ```
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: frontend-ingress
+              annotations:
+              # /* The CS virtual server is derived from the combination of
+            insecure-port/secure-port, frontend-ip, and
+            secure-service-type/insecure-service-type annotations. */
+                ingress.citrix.com/insecure-port: "80"
+                ingress.citrix.com/frontend-ip: "x.x.x.x"
+                ingress.citrix.com/frontend-httpprofile:'{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
+                ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" :
+            "enabled"}'
+            spec:
+              rules:
+               # Empty rule
+              - host:
+            ```
+
+   - To create a front-end ingress for SSL type service, see the following example:
+
+           #Sample ingress manifest for the front-end configuration for an SSL virtual server
+           #The values for the parameters are for demonstration purpose only.
+            ```
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: frontend-ingress
+              annotations:
+              #The CS virtual server is derived from the combination of
+              #insecure-port/secure-port, frontend-ip, and
+              #secure-service-type/insecure-service-type annotations.
+                ingress.citrix.com/insecure-port: "80"
+                ingress.citrix.com/secure-port: "443" 
+                ingress.citrix.com/frontend-ip: "x.x.x.x"
+                ingress.citrix.com/frontend-sslprofile:
+            '{"tls13":"enabled", "hsts" : "enabled"}'
+                ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" :
+            "enabled"}'
+            spec:
+              rules:
+              - host:
+                #Presense of tls is considered as a secure service
+              tls:
+              - hosts:
+            ```
+
+- If there are different values for the same front-end profile annotations in multiple ingresses, the following order is used to bind the profiles to the virtual server.
+
+  - If any ingress definition has a front-end annotation with pre-configured profiles, that is bound to the virtual server.
+  - Merge all the (key, values) from different ingresses of the same front-end IP address and use the resultant (key, value) for the front-end profiles smart annotation.
+  - If there is a conflict for the same key due to different values from different ingresses, a value is randomly chosen and other values are ignored. You must avoid having conflicting values.
+- If there is no front-end profiles annotation specified in any of the ingresses which share the front-end IP address, then the global values from the ConfigMap that is `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` is used for the HTTP, TCP, and SSL front-end profiles respectively.
+
+## Global front-end profile configuration using ConfigMap variables
+
+The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variables `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` for HTTP, TCP, and SSL profiles respectively. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition.
+
+### Configuration using FRONTEND_HTTP_PROFILE
+
+The `FRONTEND_HTTP_PROFILE` variable is used for setting the HTTP options for the front-end virtual server (client plane), unless overridden by the `ingress.citrix.com/frontend-httpprofile` smart annotation in the ingress definition.
+
+To use an existing profile on Citrix ADC or use a built-in HTTP profile.
+
+```
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  annotations:
-    # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
-    ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval"
-      : "enabled"}'
-    ingress.citrix.com/frontend-ip: 192.168.1.1
-    ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
-    ingress.citrix.com/insecure-port: "80"
-  name: frontend-ingress
-spec:
-  rules:
-  - {}
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:
+  FRONTEND_HTTP_PROFILE: |
+    preconfigured: nshttp_default_strict_validation
 ```
 
-If you want to configure SSL related parameters to the front end configuration, you need to add the SSL profile based smart annotation and also add the `spec:tls` parameter to the ingress definition:
+Alternatively, you can set the profile parameters as specified as follows. See the [HTTP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nshttpprofile/) for all possible key-values.
 
-```yml
-spec:
-  rules:
-  - host:
-  tls:
-  - hosts: OR
-# - secretName:  #either of hosts or secretName can be given
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:
+  FRONTEND_HTTP_PROFILE: |
+    config:
+      dropinvalreqs: 'ENABLED'
+      websocket: 'ENABLED'
 ```
 
-**Sample Ingress manifest for front end configuration for an SSL server:**
+### Configuration using FRONTEND_TCP_PROFILE
 
-```yml
-#The values for the parameters are for demonstration purpose only.
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+The `FRONTEND_TCP_PROFILE`  variable is used for setting the TCP options for the front-end virtual server (client side), unless overridden by the `ingress.citrix.com/frontend-tcpprofile` smart annotation in the ingress definition.
+
+To use an existing profile on Citrix ADC or use a built-in TCP profile:
+
+
+```
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  annotations:
-  # /* The CS virtual server is derived from the combination of insecure-port/secure-port, frontend-ip, and secure-service-type/insecure-service-type annotations. */
-    ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval"
-      : "enabled"}'
-    ingress.citrix.com/frontend-ip: 1.1.1.1
-    ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls1" : "enabled"}'
-    ingress.citrix.com/frontend-tcpprofile: '{"ws":"enabled", "sack" : "enabled"}'
-    ingress.citrix.com/insecure-port: "80"
-    ingress.citrix.com/secure-port: "443"
-    #ingress.citrix.com/insecure-termination: "redirect"
-  name: admin-ingress
-spec:
-  rules:
-  - {}
-  tls:
-  - {}
-# - secretName:  #either of hosts or secretName can be given
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:
+  FRONTEND_TCP_PROFILE: |
+    preconfigured: nstcp_default_profile
+```
+
+Alternatively, you can set the profile parameters as follows. See the [Citrix ADC TCP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/) for all possible key values.
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:
+  FRONTEND_TCP_PROFILE: |
+    config:
+      sack: 'ENABLED'
+      nagle: 'ENABLED'
+
+```
+
+### Configuration using FRONTEND_SSL_PROFILE
+
+The `FRONTEND_SSL_PROFILE` variable is used for setting the SSL options for the front-end virtual server (client side) unless overridden by the `ingress.citrix.com/frontend-sslprofile` smart annotation in the ingress definition.
+
+**Note:**
+For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling the default profile. The default profile is automatically enabled when  Citrix ADC CPX is used as an ingress device. For more information about the SSL default profile, see the [SSL profile documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+
+To use an existing profile on Citrix ADC or use a built-in SSL profile,
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:
+  FRONTEND_SSL_PROFILE: |
+    preconfigured: ns_default_ssl_profile_frontend
+```
+
+Alternatively, you can set the profile parameters as shown in the following example. See the [SSL profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adm-nitro-api-reference/en/latest/configuration/instances/Citrix-ADC/ns_sslprofile/) for information on all possible key-values.
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:
+  FRONTEND_SSL_PROFILE: |
+    config:
+      tls13: 'ENABLED'
+      hsts: 'ENABLED'
+```
+
+The following example shows binding SSL cipher groups to the SSL profile. The order is as specified in the list with the higher priority is provided to the first in the list and so on. You can use any SSL ciphers available in Citrix ADC or user-created cipher groups in this field. For information about the list of cyphers available in the Citrix ADC, see [Ciphers in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cic-configmap
+  labels:
+    app: citrix-ingress-controller
+data:   
+  FRONTEND_SSL_PROFILE: |
+    config:
+      tls13: 'ENABLED'
+      ciphers:
+      - TLS1.3-AES256-GCM-SHA384
+      - TLS1.3-CHACHA20-POLY1305-SHA256
 ```
 
 ## Back-end configuration
@@ -223,9 +358,7 @@ Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix 
 
 ## Example for applying HTTP, SSL, and TCP profiles
 
-This example shows how to apply HTTP, SSL, or TCP profiles. In this example, two ingress resources are created: one front-end ingress resource for profiles and the other resource for defining the back-end. SSL, HTTP, or TCP profiles must be specified as part of an empty ingress, referred as the front-end ingress. It should not be part of the regular ingress. This empty front-end ingress is required to avoid users providing conflicting values in different ingresses belonging to the same content switching virtual server. You need one front-end ingress per front-end IP port combination.
-
-Sometimes, there may be situations where you want to continue using profiles even after deleting the ingress resource. If there are two ingress resources, decoupling of profiles and back-end resources are possible and the administrator can delete an ingress resource and still keep the profiles. 
+This example shows how to apply HTTP, SSL, or TCP profiles.
 
 To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resource, perform the following steps:
 
@@ -319,10 +452,9 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
           1)  Content-Switching Policy: k8s150-ingress-vpx1_tier-2-adc_443_k8s150-frontend-hotdrinks_tier-2-adc_80_svc    Priority: 200000004   Hits: 0
           Done
 
-
 ### Example: Adding SNI certificate to an SSL virtual server
 
-This example shows how to add a single SNI certificate. In this example, two ingress resources are defined.
+This example shows how to add a single SNI certificate. 
 
 **Note:** For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
