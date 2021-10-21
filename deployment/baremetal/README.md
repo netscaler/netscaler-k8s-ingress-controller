@@ -104,7 +104,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
                                 
          These environment variables define the protocol and port used by the Citrix ingress controller to communicate with the Citrix ADC.
 
-         By default NS_PROTOCOL is HTTP and NS_PORT is 80. Other option is to use HTTPS and port 443.
+         By default NS_PROTOCOL is HTTPS and NS_PORT is 443.
        </details>
        <details>
        <summary>Ingress Class</summary>

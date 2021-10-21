@@ -32,12 +32,14 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 
 You can use Citrix ADC for load balancing Openshift control plane (master nodes). Citrix provides a solution to automate the configuration of Citrix ADC using Terraform instead of manually configuring the Citrix ADC. For more information, see [Citrix ADC as a load balancer for the OpenShift control plane](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/citrix-adc-for-control-plane/README.md).
 
+**Note:**
+OpenShift support of alternate backends is now supported by Citrix ingress controller. Citrix ADC is configured according to the weights provided in the routes definition and traffic is distributed among the service pods based on those weights.
 
 ## Supported Citrix components on OpenShift
 
 | Citrix components | Versions |
 | ----------------- | -------- |
-| Citrix ingress controller | Latest (1.4.0) |
+| Citrix ingress controller | Latest |
 | Citrix ADC VPX | 12.1 50.x and later |
 | Citrix ADC CPX | 13.0–36.28 |
 
@@ -83,6 +85,8 @@ In this deployment, the Citrix ingress controller which runs as a stand-alone po
 You can use the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file for this deployment.
 
 **Note:** The Citrix ADC MPX or VPX can be deployed in *[standalone](https://docs.citrix.com/en-us/citrix-adc/12-1/getting-started-with-citrix-adc.html)*, *[high-availability](https://docs.citrix.com/en-us/citrix-adc/12-1/getting-started-with-citrix-adc/configure-ha-first-time.html)*, or *[clustered](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering.html)* modes.
+
+**Note:** In the latest versions of OpenShift when OVN CNI is used, `—feature-node-watch` might not work. In that case, you must manually configure the static routes on Citrix ADC VPX.
 
 ### Prerequisites
 

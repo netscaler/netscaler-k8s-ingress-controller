@@ -217,6 +217,10 @@ spec:
            - api_key: introspect-auth-provider
 ```
 
+## Sample configuration for deploying Citrix API gateway with GitOps
+
+For a sample configuration for deploying Citrix API gateway with GitOps, see [Sample configuration for deploying Citrix API gateway with GitOps](../../example/git-ops/README.md).
+
 ## Support for web insight based analytics
 
 Web insight based analytics is now supported with the API gateway CRD. When you use GitOps, the following web insight parameters are enabled by default:
@@ -225,4 +229,4 @@ Web insight based analytics is now supported with the API gateway CRD. When you 
 - `httpuseragent`
 - `httphost`
 - `httpmethod`
-- `httpcontenttype`  
+- `httpcontenttype` 

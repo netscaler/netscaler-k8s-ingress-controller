@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echoserver
+spec:
+  selector:
+    matchLabels:
+      app: echoserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: echoserver
+    spec:
+      containers:
+      - image: gcr.io/google_containers/echoserver:1.0
+        imagePullPolicy: Always
+        name: echoserver
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pet-service
+spec:
+  ports:
+  - port: 7030
+    targetPort: 8080
+  selector:
+    app: echoserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  ports:
+  - port: 7040
+    targetPort: 8080
+  selector:
+    app: echoserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: play-service
+spec:
+  ports:
+  - port: 7050
+    targetPort: 8080
+  selector:
+    app: echoserver
