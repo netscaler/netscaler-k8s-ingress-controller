@@ -1,0 +1,62 @@
+apiVersion: citrix.com/v1beta1
+kind: apigatewaypolicy
+metadata:
+  name: apigatewaypolicyinstance
+spec:
+    api_definition:
+        repository: "https://repository.git"
+        branch: "modify-test-branch"
+        oas_secret_ref: "mysecret"
+        files:
+            - "SwaggerFiles/petstore.yaml"
+            - "SwaggerFiles/playstore.yaml"
+
+    api_proxy:
+        ipaddress: "192.2.156.90" 
+        port:  443
+        protocol: "https"
+        secret: cert1
+
+    policies:
+       - name: "p1" 
+         selector:
+            - api: "/pet.*" 
+              method: ["GET", "POST"]  
+         upstream: 
+            service: "pet-service"
+            port: "7030"
+         policy_bindings:
+            ratelimit: 
+                name: "ratelimit-gitops-slow"
+
+       - name: "p2" 
+         selector:
+            - api: "/user.*" 
+              method: ["GET", "POST"]  
+         upstream: 
+            service: "user-service"
+            port: 7040
+         policy_bindings:
+            ratelimit: 
+                name: "ratelimit-gitops-slow"
+
+       - name: "p3" 
+         selector:
+            - tags: ["play"]
+         upstream: 
+            service: "play-service"
+            port: 7050
+         policy_bindings:
+            ratelimit: 
+                name: "ratelimit-gitops"
+            rewritepolicy:
+                name: "prefixurl"
+            waf:
+                name: "buffoverflow"
+            bot:
+                name: "botdefense"
+    aaa:
+       - crd_name: authgitops
+         mappings:
+           - petstore_auth: jwt-auth-provider
+           - api_key: introspect-auth-provider
