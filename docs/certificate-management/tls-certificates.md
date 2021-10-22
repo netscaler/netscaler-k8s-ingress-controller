@@ -59,6 +59,9 @@ The Citrix ingress controller default certificate is used to provide a secret on
 
         --default-ssl-certificate <NAMESPACE>/<SECRET_NAME>
 
+**Note:**
+The Citrix ingress controller default certficate is supported for Openshift routes.
+
 The following is a sample Citrix ingress controller YAML definition file that contains a TLS secret (`hotdrink.secret`) picked from the `ssl` namespace and provided as the Citrix ingress controller default certificate.
 
 !!! note "Note"
