@@ -219,7 +219,7 @@ spec:
 
 ## Sample configuration for deploying Citrix API gateway with GitOps
 
-For a sample configuration for deploying Citrix API gateway with GitOps, see [Sample configuration for deploying Citrix API gateway with GitOps](../../example/git-ops/README.md).
+For a sample configuration for deploying Citrix API gateway with GitOps, see [Sample configuration for deploying Citrix API gateway with GitOps](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/git-ops/README.md).
 
 ## Support for web insight based analytics
 
