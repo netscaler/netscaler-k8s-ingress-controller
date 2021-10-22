@@ -23,7 +23,14 @@ The values for the following environment variables in the Citrix ingress control
 - POD_IPS_FOR_SERVICEGROUP_MEMBERS: Specifies to add the IP address of the pod and port as service group members instead of `NodeIP` and `NodePort` while configuring services of type `LoadBalancer` or `NodePort` on an external tier-1 Citrix ADC.
 
 - IGNORE_NODE_EXTERNAL_IP: Specifies to ignore an external IP address and add an internal IP address for NodeIP while configuring NodeIP for services of type `LoadBalancer` or `NodePort` on an external tier-1 Citrix ADC.
-  
+
+- FRONTEND_HTTP_PROFILE: Sets the HTTP options for the front-end virtual server (client plane), unless overridden by the `ingress.citrix.com/frontend-httpprofile` smart annotation in the ingress definition.
+
+- FRONTEND_TCP_PROFILE: Sets the TCP options for the front-end virtual server (client side), unless overridden by the `ingress.citrix.com/frontend-tcpprofile` smart annotation in the ingress definition.
+
+- FRONTEND_SSL_PROFILE: Sets the SSL options for the front-end virtual server (client side) unless overridden by the `ingress.citrix.com/frontend-sslprofile` smart annotation in the ingress definition.
+
+For more information about profile environment variables (FRONTEND_HTTP_PROFILE, FRONTEND_TCP_PROFILE, and FRONTEND_SSL_PROFILE), see [Configure HTTP, TCP, or SSL profiles on Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/profiles/).
 
 **Note:**
 This is an initial version of the ConfigMap support and currently supports only a few parameters. Earlier, these parameters were configurable through environment variables except the `NS_HTTP2_SERVER_SIDE` parameter.
