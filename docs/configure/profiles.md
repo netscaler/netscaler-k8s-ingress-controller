@@ -97,8 +97,9 @@ The following are the guidelines for front-end profiles annotations for HTTP, TC
 
     - To create a front-end ingress for SSL type service, see the following example:
 
-           #Sample ingress manifest for the front-end configuration for an SSL virtual server
-           #The values for the parameters are for demonstration purpose only.
+            #Sample ingress manifest for the front-end configuration for an SSL virtual server
+            #The values for the parameters are for demonstration purpose only.
+            
             ```
             apiVersion: networking.k8s.io/v1
             kind: Ingress
