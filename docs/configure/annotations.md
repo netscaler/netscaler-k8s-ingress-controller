@@ -38,6 +38,8 @@ The following table details the smart annotations provided by the Citrix ingress
 | monitor | ingress.citrix.com/monitor | `ingress.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
 | csvserver| ingress.citrix.com/csvserver| `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` |
 
+For information on smart annotations for HTTP, TCP, and SSL profiles, see [Configure HTTP, TCP, or SSL profiles on Citrix ADC](profiles.md).
+
 ### Sample ingress YAML with smart annotations
 
 The following is a sample Ingress YAML. It includes smart annotations to enable Citrix ADC features using the entities such as, lbvserver, servicegroup, and monitor:
@@ -78,7 +80,6 @@ The sample Ingress YAML includes use cases related to the service, `citrix-svc`,
 **Note:** When multiple ingresses are sharing the same front-end IP address and port, you cannot have conflicting configurations provided through multiple ingress configurations.
 
 By default, the content switching virtual server does not depend on the state of the target load balancing virtual servers bound to it. The annotation `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` sets the content switching virtual server to consider its state based on the state of the load balancing virtual server bound to it via the content switching policies. 
-
 
 ## Smart annotations for routes
 
