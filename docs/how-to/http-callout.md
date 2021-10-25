@@ -102,11 +102,11 @@ The work flow of a request is explained in the following diagram where each numb
 
 3. Response from the HTTP callout server
 
-4. The URL request is rewritten with a valid path and forwarded to the service (where the valid path is mentioned between the tags <newpath> in the callout response),
+4. The URL request is rewritten with a valid path and forwarded to the service (where the valid path is mentioned between the tags `newpath` in the callout response).
 
 The following is a sample YAML (`path_rewrite`) file.
 
-**Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `path_rewrite` YAML file. 
+**Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `path_rewrite` YAML file.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -142,4 +142,3 @@ spec:
       result_expr: '"HTTP.RES.BODY(500).AFTER_STR(\"<newpath>\").BEFORE_STR(\"</newpath>\")"'
 ```
 
-""'
