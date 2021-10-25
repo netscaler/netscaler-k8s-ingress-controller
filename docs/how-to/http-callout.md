@@ -33,24 +33,24 @@ The following table explains the attributes of the HTTP callout request in the r
 |`result_expr`| Specifies the expression that extracts the callout results from the response sent by the HTTP callout agent. This expression must be a response based expression, that is, it must begin with `HTTP.RES`. The operations in this expression must match the return type. For example, if you configure a return type of `TEXT`, the result expression must be a text based expression. If the return type is `NUM`, the result expression (result_expr) must return a numeric value, as in the following example: `http.res.body(10000).length`|
 |`comment`|Specifies any comments to preserve the information about this HTTP callout.|
 
-## Using the rewrite and responder CRD to validate whether a client IP address is blacklisted
+## Using the rewrite and responder CRD to validate whether a client IP address is blocklisted
 
-This section shows how to initiate an HTTP callout using the rewrite and responder CRD to validate whether a client IP address is blacklisted or not and take appropriate action.
+This section shows how to initiate an HTTP callout using the rewrite and responder CRD to validate whether a client IP address is blocklisted or not and take appropriate action.
 
 The following diagram explains the workflow of a request where each number in the diagram denotes a step in the workflow:
 ![HTTP-call-out](../media/http-callout-modified.png)
 
 1. Client request
 
-2. HTTP callout request to check if the client is blacklisted (The client IP address is sent as a query parameter with the name `Cip`)
+2. HTTP callout request to check if the client is blocklisted (The client IP address is sent as a query parameter with the name `Cip`)
 
 3. Response from the HTTP callout server
 
-4. Request is forwarded to the service if the response in step 3 indicates a safe IP address (the client IP address is not matching with the blacklisted IP addresses on the callout server).
+4. Request is forwarded to the service if the response in step 3 indicates a safe IP address (the client IP address is not matching with the blocklisted IP addresses on the callout server).
 
-5. Respond to the client as `Access denied`, if the response in step 3 indicates a bad IP address (the client IP address is matching with the blacklisted IP addresses on the callout server).
+5. Respond to the client as `Access denied`, if the response in step 3 indicates a bad IP address (the client IP address is matching with the blocklisted IP addresses on the callout server).
 
-The following is a sample YAML file (`ip_validate_responder.yaml`) for validating a blacklisted IP address:
+The following is a sample YAML file (`ip_validate_responder.yaml`) for validating a blocklisted IP address:
 
 **Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `ip_validate_responder` YAML file. 
 
@@ -66,11 +66,11 @@ spec:
       responder-policy:
         respondwith:
           http-payload-string: '"HTTP/1.1 401 Access denied\r\n\r\n"'
-        respond-criteria: 'sys.http_callout("blacklist_callout").CONTAINS("IP Matched")' #Callout name needs to be given in double quotes to pick httpcallout_policy
+        respond-criteria: 'sys.http_callout("blocklist_callout").CONTAINS("IP Matched")' #Callout name needs to be given in double quotes to pick httpcallout_policy
         comment: 'Invalid access'
 
   httpcallout_policy:
-    - name: blacklist_callout
+    - name: blocklist_callout
       server_ip: "192.2.156.160"
       server_port: 80
       http_method: GET
@@ -102,7 +102,7 @@ The work flow of a request is explained in the following diagram where each numb
 
 3. Response from the HTTP callout server
 
-4. The URL request is rewritten with a valid path and forwarded to the service (where the valid path is mentioned between tags <path> and </path> in the callout response)
+4. The URL request is rewritten with a valid path and forwarded to the service (where the valid path is mentioned between the tags <newpath> in the callout response),
 
 The following is a sample YAML (`path_rewrite`) file.
 
@@ -139,6 +139,7 @@ spec:
       - name: path
         expr: 'http.req.url'		
       return_type: TEXT
-      result_expr: '"HTTP.RES.BODY(500).AFTER_STR(\"<path>\").BEFORE_STR(\"</path>\")"'
+      result_expr: '"HTTP.RES.BODY(500).AFTER_STR(\"<newpath>\").BEFORE_STR(\"</newpath>\")"'
 ```
 
+""'
