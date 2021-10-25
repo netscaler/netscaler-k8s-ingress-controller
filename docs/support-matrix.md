@@ -14,6 +14,19 @@ Citrix ingress controller is supported on the following platforms:
 -  Pivotal Container Service (PKS)
 -  Diamanti Enterprise Kubernetes Platform
 
+### Latest support information
+
+For Kubernetes:
+
+- Citrix ingress controller supports `v1` version API.
+
+For Istio and Red Hat OpenShift, the following are the latest validated versions:
+
+| Platform | Latest version (validated)|
+| ------------------- | -------- |
+| Istio service mesh | version 1.11 |
+| Red Hat OpenShift   | version 4.8|
+
 ## Citrix ADC platforms
 
 The following table lists the Citrix ADC platforms supported by the Citrix ingress controller:
@@ -89,7 +102,7 @@ The following table lists the Citrix ingress controller features supported on th
 | [OpenShift Routes](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-openshift/) | 1.1.3 and later | 12.1–51.16 and later | 13.0–36.28 and later |
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 and later | 12.1–51.16 and later | 13.0–36.28 and later |
 |[Simplified canary using Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations) | Version 1.13.15 and later | 11.1–61.7 and later | 12.1–51.16 and later|
-
+|[Cross-origin resource sharing policies](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/cors/)|Version 1.17.13 and later | 11.1–61.7 and later | 12.1–51.16 and later|
 
 ## Container network interfaces (CNIs) for Citrix ADC CPX
 
@@ -105,6 +118,7 @@ The following table lists the Container network interfaces (CNIs) supported by C
 | OVS | 13.0–36.28 |
 | Weave | 12.1–51.16 and later |
 | Cilium| 13-0-71-40 and later  |
+| OVN | 13.0-79.64 and later|
 
 ## Supported container runtime interfaces for Citrix ADC CPX
 

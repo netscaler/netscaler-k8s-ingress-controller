@@ -129,6 +129,7 @@ The following are the guidelines for front-end profiles annotations for HTTP, TC
     - If any ingress definition has a front-end annotation with pre-configured profiles, that is bound to the virtual server.
     - Merge all the (key, values) from different ingresses of the same front-end IP address and use the resultant (key, value) for the front-end profiles smart annotation.
     - If there is a conflict for the same key due to different values from different ingresses, a value is randomly chosen and other values are ignored. You must avoid having conflicting values.
+
 - If there is no front-end profiles annotation specified in any of the ingresses which share the front-end IP address, then the global values from the ConfigMap that is `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` is used for the HTTP, TCP, and SSL front-end profiles respectively.
 
 ## Global front-end profile configuration using ConfigMap variables
