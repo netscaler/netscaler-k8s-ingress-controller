@@ -4,7 +4,7 @@ In a Kubernetes environment, an Ingress is an object that allows access to the K
 
 Citrix provides a solution using Ingress annotations to load balance TCP or UDP based Ingress traffic. When you specify these annotations in the Ingress resource definition, the [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/) configures the Citrix ADC to load balance TCP or UDP based Ingress traffic.
 
-You can use the following [annotations](/docs/configure/annotations.md) in your Kubernetes Ingress resource definition to load balance the TCP or UDP based Ingress traffic:
+You can use the following [annotations](../configure/annotations.md) in your Kubernetes Ingress resource definition to load balance the TCP or UDP based Ingress traffic:
 
 -  `ingress.citrix.com/insecure-service-type`: The annotation enables L4 load balancing with TCP, UDP, or ANY as protocol for Citrix ADC.
 -  `ingress.citrix.com/insecure-port`: The annotation configures the TCP port. The annotation is helpful when micro service access is required on a non-standard port. By default, port 80 is configured.
@@ -115,7 +115,7 @@ spec:
 Application developers can closely monitor the health of TCP or UDP based applications through rich monitors (such as TCP-ECV, UDP-ECV) in Citrix ADC. The ECV (extended content validation) monitors help in checking whether the
 application is returning expected content or not.
 
-Also, the application performance can be improved by using persistence methods such as `Source IP`. You can use these Citrix ADC features through [Smart Annotations](/docs/configure/annotations.md#smart-annotations) in
+Also, the application performance can be improved by using persistence methods such as `Source IP`. You can use these Citrix ADC features through [Smart Annotations](../configure/annotations.md#smart-annotations) in
 Kubernetes. The following is one such example:
 
 ```yml
