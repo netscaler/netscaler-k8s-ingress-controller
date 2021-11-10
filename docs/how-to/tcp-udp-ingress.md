@@ -4,10 +4,12 @@ In a Kubernetes environment, an Ingress is an object that allows access to the K
 
 Citrix provides a solution using Ingress annotations to load balance TCP or UDP based Ingress traffic. When you specify these annotations in the Ingress resource definition, the [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/) configures the Citrix ADC to load balance TCP or UDP based Ingress traffic.
 
-You can use the following [annotations](../configure/annotations.md) in your Kubernetes Ingress resource definition to load balance the TCP or UDP based Ingress traffic:
+You can use the following annotations in your Kubernetes Ingress resource definition to load balance the TCP or UDP based Ingress traffic:
 
 -  `ingress.citrix.com/insecure-service-type`: The annotation enables L4 load balancing with TCP, UDP, or ANY as protocol for Citrix ADC.
 -  `ingress.citrix.com/insecure-port`: The annotation configures the TCP port. The annotation is helpful when micro service access is required on a non-standard port. By default, port 80 is configured.
+
+For more information about annotations, see the [annotations](../configure/annotations.md) page.
 
 You can also use the standard Kubernetes solution of creating a `service` of `type LoadBalancer`  with Citrix ADC. You can find out more about [Service Type LoadBalancer in Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/).
 
