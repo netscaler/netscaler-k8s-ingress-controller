@@ -19,7 +19,7 @@ Use the following command to verify if CPX image is installed in docker images
 
 ```
 root@ubuntu:~# docker images | grep 'citrix-k8s-cpx-ingress'
-quay.io/citrix/citrix-k8s-cpx-ingress                  13.0-36.29          952a04e73101        2 months ago        469 MB
+quay.io/citrix/citrix-k8s-cpx-ingress                  13.0-83.27          952a04e73101        2 months ago        469 MB
 ```
 
 ## Using 'docker run' command to deploy CPX container:
