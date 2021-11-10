@@ -90,7 +90,7 @@ spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx
-          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-58.30
+          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
           securityContext:
              privileged: true
           env:

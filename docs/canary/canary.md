@@ -40,8 +40,8 @@ GitHub has many utilities available for integrating with other tools that form p
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
--  Citrix ingress controller build/version: `quay.io/citrix/citrix-k8s-ingress-controller:1.7.6`.
--  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103`.
+-  Citrix ingress controller build/version: `quay.io/citrix/citrix-k8s-ingress-controller:1.19.6`.
+-  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`.
 -  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
 
 ### Workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution
