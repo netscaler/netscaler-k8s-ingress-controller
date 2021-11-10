@@ -6,4 +6,4 @@ metadata:
 spec:
   containers:
     - name: test-cic
-      image: quay.io/citrix/citrix-k8s-ingress-controller:1.7.6
+      image: quay.io/citrix/citrix-k8s-ingress-controller:1.19.6

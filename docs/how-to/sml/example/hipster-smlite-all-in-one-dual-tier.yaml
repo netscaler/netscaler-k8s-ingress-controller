@@ -1147,7 +1147,7 @@ spec:
       serviceAccountName: citrix
       containers:
       - name: cpx
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
         imagePullPolicy: Always
         securityContext:
           privileged: true
@@ -1173,7 +1173,7 @@ spec:
           failureThreshold: 5
           successThreshold: 1
       - name: cic
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.8.19
+        image: quay.io/citrix/citrix-k8s-ingress-controller:1.19.6
         imagePullPolicy: Always
         env:
         - name: EULA
@@ -1341,7 +1341,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.19.6"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
          - name: "NS_IP"

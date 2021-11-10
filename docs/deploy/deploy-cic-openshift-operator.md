@@ -269,7 +269,7 @@ Perform the following:
     |Parameters | Mandatory or Optional | Default value | Description |
     | ---------- | --------------------- | ------------- | ----------- |
     | license.accept | Mandatory | no | Set `yes` to accept the Citrix ingress controller end user license agreement. |
-    | cpx.image | Mandatory | `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29` | The Citrix ADC CPX image. |
+    | cpx.image | Mandatory | `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27` | The Citrix ADC CPX image. |
     | cpx.pullPolicy | Mandatory | Always | The Citrix ADC CPX image pull policy. |
     | lsIP | Optional | N/A | Provide the Citrix Application Delivery Management (ADM) IP address to license Citrix ADC CPX. For more information, see [Licensing](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/licensing/)|
     | lsPort | Optional | 27000 | Citrix ADM port if a non-default port is used. |

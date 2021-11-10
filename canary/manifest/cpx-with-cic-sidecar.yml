@@ -56,7 +56,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.7.6
+        image: quay.io/citrix/citrix-k8s-ingress-controller:1.19.6
         imagePullPolicy: Always
         name: cic-k8s-ingress-controller
       - args:
@@ -65,7 +65,7 @@ spec:
         - name: EULA
           value: "YES"
         - name: KUBERNETES_TASK_ID
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-47.103
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
         imagePullPolicy: Always
         name: cpx-ingress
         ports:
