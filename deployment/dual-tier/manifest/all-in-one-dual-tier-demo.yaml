@@ -132,7 +132,7 @@ spec:
         - name: EULA
           value: "yes"
         - name: KUBERNETES_TASK_ID
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
         imagePullPolicy: Always
         name: cpx-ingress
         ports:
