@@ -25,7 +25,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-76.29 
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27 
         imagePullPolicy: Always
         name: cpx-ingress
         resources: {}

@@ -1,5 +1,5 @@
 VPX_IP="VPX_IP"
-CPX_IMAGE="quay.io/citrix/citrix-k8s-cpx-ingress:13.0-58.30"
+CPX_IMAGE="quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27"
 CIC_IMAGE="quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
 EXPORTER="quay.io/citrix/citrix-adc-metrics-exporter:1.4.9"
 VPX_PASSWORD="VPX_PASSWORD"

@@ -12,7 +12,7 @@ This guide provides the step-by-step approach to deploy a Citrix ADC CPX on dock
 Use the following command to pull the CPX image from quay
 
 ```
-docker pull quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29 
+docker pull quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27 
 ```
 
 Use the following command to verify if CPX image is installed in docker images
@@ -26,14 +26,14 @@ quay.io/citrix/citrix-k8s-cpx-ingress                  13.0-36.29          952a0
 Use the following command to create a CPX container instance running in bridge mode
 
 ```
-docker run -dt -P --privileged=true -e EULA=yes --ulimit core=-1 --name cpx-hello-world quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29 
+docker run -dt -P --privileged=true -e EULA=yes --ulimit core=-1 --name cpx-hello-world quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27 
 ```
 
 Use the following command to verify if the CPX container is created successfully
 
 ```
 root@ubuntu:~# docker ps | grep cpx-hello-world
-00d58f020a9e        quay.io/citrix/citrix-k8s-cpx-ingress:13.0-36.29   "/var/netscaler/bi..."   5 seconds ago       Up 3 seconds        0.0.0.0:33122->22/tcp, 0.0.0.0:32770->161/udp, 0.0.0.0:33121->9080/tcp, 0.0.0.0:33120->9443/tcp   cpx-hello-world
+00d58f020a9e        quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27   "/var/netscaler/bi..."   5 seconds ago       Up 3 seconds        0.0.0.0:33122->22/tcp, 0.0.0.0:32770->161/udp, 0.0.0.0:33121->9080/tcp, 0.0.0.0:33120->9443/tcp   cpx-hello-world
 ```
 
 If the above verification fails, please check container logs for the error logs
