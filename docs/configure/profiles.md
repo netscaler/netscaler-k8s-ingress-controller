@@ -552,3 +552,36 @@ If multiple SNI certificates need to be bound to the front-end VIP, following is
             backend:
               serviceName: frontend-developers
               servicePort: 80
+
+### Example: Binding SSL cipher group
+
+This example shows how to bind SSL cipher group.
+
+**Note:** For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile.
+
+Set default SSL profile on Citrix ADC using the command `set ssl parameter -defaultProfile ENABLED` before deploying Citrix ingress controller. If you have already deployed Citrix ingress controller, then redeploy it. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+
+For information on supported Ciphers on the Citrix ADC appliances, see [Ciphers available on the Citrix ADC appliances](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
+
+For information about securing cipher, see [securing cipher](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/secure-ingress/#using-cipher-groups).
+
+A sample YAML (cat frontend_ingress.yaml) is provided as follows:
+
+```yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-vpx
+  annotations:
+   kubernetes.io/ingress.class: "citrix"
+   ingress.citrix.com/insecure-termination: "allow"
+   ingress.citrix.com/frontend-ip: "10.221.36.190"
+   ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
+   ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
+   ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled", "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'
+spec:
+  tls:
+  - hosts:
+  rules:
+   - host:
+```
