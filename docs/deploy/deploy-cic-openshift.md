@@ -32,8 +32,40 @@ For information on deploying the Citrix ingress controller to control the OpenSh
 
 You can use Citrix ADC for load balancing Openshift control plane (master nodes). Citrix provides a solution to automate the configuration of Citrix ADC using Terraform instead of manually configuring the Citrix ADC. For more information, see [Citrix ADC as a load balancer for the OpenShift control plane](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/citrix-adc-for-control-plane/README.md).
 
-**Note:**
-OpenShift support of alternate backends is now supported by Citrix ingress controller. Citrix ADC is configured according to the weights provided in the routes definition and traffic is distributed among the service pods based on those weights.
+## Alternate Backend Support
+[OpenShift Alternate backends](https://docs.openshift.com/container-platform/3.7/architecture/networking/routes.html#alternateBackends) is now supported by Citrix ingress controller.
+
+Citrix ADC is configured according to the weights provided in the routes definition and traffic is distributed among the service pods based on those weights.
+
+An example of Route Manifest with Alternate Backend
+
+	
+	kind: Route
+	apiVersion: route.openshift.io/v1
+	metadata:
+	  name: r1 
+	  labels:
+	    name: apache
+	  annotations:
+	    ingress.citrix.com/frontend-ip: "<Frontend-ip>"
+	spec:
+	  host: some.alternate-backends.com
+	  to:
+	    kind: Service
+	    name: apache-1
+	    weight: 30
+	  alternateBackends:
+	    - kind: Service
+	      name: apache-2
+	      weight: 20
+	    - kind: Service
+	      name: apache-3
+	      weight: 50
+	  port:
+	    targetPort: 80
+	  wildcardPolicy: None
+	
+For the above mentioned route, 30% traffic is sent to apache-1, 20% to apache-2 and 50% to apache-3 based on the weights provided in the route manifest. 
 
 ## Supported Citrix components on OpenShift
 
