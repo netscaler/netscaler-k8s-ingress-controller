@@ -37,7 +37,7 @@ You can use Citrix ADC for load balancing Openshift control plane (master nodes)
 
 Citrix ADC is configured according to the weights provided in the routes definition and traffic is distributed among the service pods based on those weights.
 
-An example of Route Manifest with Alternate Backend
+The following is an example of a route manifest with alternate backend:
 
 	
 	kind: Route
@@ -65,7 +65,7 @@ An example of Route Manifest with Alternate Backend
 	    targetPort: 80
 	  wildcardPolicy: None
 	
-For the above mentioned route, 30% traffic is sent to apache-1, 20% to apache-2 and 50% to apache-3 based on the weights provided in the route manifest. 
+For this route, 30 percent of the traffic is sent to the service apache-1 and 20 percent is sent to the service apache2 and 50 percent to the service apache-3 based on weights provided in the route manifest 
 
 ## Supported Citrix components on OpenShift
 
