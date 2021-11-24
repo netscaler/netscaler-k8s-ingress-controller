@@ -106,7 +106,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.19.6
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.20.5
           args:
           - --ingress-classes
               citrix

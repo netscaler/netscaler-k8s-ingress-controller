@@ -85,11 +85,11 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.19.6"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.20.5"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
          - name: "NS_IP"
-           value: "x.x.x.x"
+           value: "10.106.166.116"
          # Set username for Nitro
          - name: "NS_USER"
            valueFrom:
