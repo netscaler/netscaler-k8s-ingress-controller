@@ -1,4 +1,4 @@
-# Traffic management and observability of external services
+# Traffic management for external services
 
 Sometimes, all the available services of an application may not be deployed completely on a single Kubernetes cluster. You may have applications that rely on the services outside of one cluster as well. In this case, micro services need to define an [ExternalName](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) service to resolve the domain name. However, in this approach, you would not be able to get features such as traffic management, policy enforcement, fail over management and so on. As an alternative, you can configure Citrix ADC to resolve the domain names and leverage the features of Citrix ADC.
 
@@ -30,14 +30,14 @@ You can configure Citrix ADC through Citrix ingress controller to create a domai
 
 **Note:** ConfigMaps are used to configure name servers on Citrix ADC only for Citrix ADC VPX. For Citrix ADC CPX, CoreDNS forwards the name resolution request to the upstream DNS server.
 
-### Traffic management and service graph plotting using Citrix ADC CPX
+### Traffic management using Citrix ADC CPX
 
 The following diagram explains Citrix ADC CPX deployment to reach external services. An Ingress is deployed where the external service annotation is specified to configure DNS on Citrix ADC CPX.
 
 **Note:**
 A ConfigMap is used to configure name servers on Citrix ADC VPX.
 
-![Traffic management and observability with Citrix ADC CPX](../media/cpx-traffic.png)
+![Traffic management with Citrix ADC CPX](../media/cpx-traffic.png)
 
 In this deployment:
 
@@ -59,27 +59,11 @@ Following are the steps to configure Citrix ADC CPX to load balance external ser
             - protocol: TCP
               port: 80
 
-1. Define an ingress and specify the external-service annotation as specified in the [dbs-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/load-balance/external/db-ingress.yaml) file. When you specify this annotation, Citrix ingress controller creates DNS servers on Citrix ADC and binds the servers to the corresponding service group.
+1. Define an ingress and specify the external-service annotation as specified in the [dbs-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/load-balance-external/db-ingress.yaml) file. When you specify this annotation, Citrix ingress controller creates DNS servers on Citrix ADC and binds the servers to the corresponding service group.
 
-          apiVersion: networking.k8s.io/v1
-          kind: Ingress
-          metadata:
-            name: dbs-ingress
+
             annotations:
-              kubernetes.io/ingress.class: "cpx-ingress"
               ingress.citrix.com/external-service: '{"external-svc": {"domain": "www.externalsvc.com"}}'
-          spec:
-            rules:
-            - host:  "www.portal.externalsvc.com"
-              http:
-                paths:
-                - backend:
-                    service:
-                      name: my-external-service
-                      port:
-                        number: 30036
-                  path: /
-                  pathType: Prefix
 
 1. Add the IP address of the DNS server on Citrix ADC using ConfigMap.
 
