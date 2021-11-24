@@ -16,13 +16,13 @@ To reach Citrix ADC from microservices, you have to define a headless service wh
     apiversion: v1
     kind: Service
     metadata: 
-     name: external-svc
+      name: external-svc
     spec:
-     selector:
-      app: cpx
-    ports:
-      - protocol: TCP
-        port:80
+      selector:
+        app: cpx
+      ports:
+        - protocol: TCP
+          port: 80
 
 ### Configure Citrix ADC as a domain name resolver using Citrix ingress controller
 
