@@ -1,0 +1,19 @@
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: dbs-ingress
+            annotations:
+              kubernetes.io/ingress.class: "cpx-ingress"
+              ingress.citrix.com/external-service: '{"external-svc": {"domain": "www.externalsvc.com"}}'
+          spec:
+            rules:
+            - host:  "www.portal.externalsvc.com"
+              http:
+                paths:
+                - backend:
+                    service:
+                      name: my-external-service
+                      port:
+                        number: 30036
+                  path: /
+                  pathType: Prefix
