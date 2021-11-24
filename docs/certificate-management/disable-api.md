@@ -1,6 +1,6 @@
 # Disable API server certificate verification
 
-While communicating with the API server from Citrix ingress controller or multicluster ingress, you have the option to disable the API server certificate verification on Citrix ingress controller. This option is useful when you are using custom certificates.
+While communicating with the API server from Citrix ingress controller or multicluster ingress, you have the option to disable the API server certificate verification on Citrix ingress controller.
 
 ## Disable API server certificate verification on Citrix ingress controller or Multi-cluster ingress
 
