@@ -150,6 +150,7 @@ nav:
       - Deploy HTTPs web applications on K8s with CIC and Let's Encrypt using cert-manager: certificate-management/acme.md
       - Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager: certificate-management/vault.md
     - Enable Citrix ADC certificate validation: certificate-management/adc-certificate-validation.md
+    - Disable API server certificate verification: certificate-management/disable-api.md
   - Metrics:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
   - Analytics and observability: analytics.md
@@ -179,6 +180,7 @@ nav:
     - Policy based routing: how-to/pbr.md
     - MongoDB solution: how-to/MongoDB-single-tier-solution.md
     - Canary and blue-green deployment using Azure pipelines: cd/canary-azure-pipline/canary-deployment-with-azure-pipelines.md
+    - Traffic management for external services: how-to/external-load-balance-adc.md
   - Entity name change: entity-name-change.md
 google_analytics:
   - 'UA-59929653-12'
