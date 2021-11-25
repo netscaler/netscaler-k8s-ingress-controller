@@ -169,9 +169,6 @@ spec:
                       ip:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
-                      host:
-                        type: object
-                        x-kubernetes-preserve-unknown-fields: true
                   trapinsertion:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
