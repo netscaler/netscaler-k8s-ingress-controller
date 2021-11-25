@@ -1,18 +1,38 @@
 # Sample configuration for deploying Citrix API gateway with GitOps
 
-This topic provides a sample configuration for deploying Citrix API gateway with GitOps.
-GitOps is supported with the following CRDs for APIs and security information specified in the Swagger files on Git.
+This topic provides a sample configuration for deploying Citrix API gateway with GitOps. GitOps is supported with the following CRDs for APIs and security information specified in the Swagger files on Git.
 
- -  rewritepolicy
+ - rewritepolicy
 
- -  ratelimit
+ - ratelimit
 
- -  authpolicy
+ - authpolicy
 
- -  waf
+ - waf
 
- -  bot
+ - bot
 
+Perform the following steps:
+
+1. Get all the GitOps example YAML files. The following commands can be used to fetch files that are needed for the GitOps example.
+
+        mkdir gitopsdir
+
+        cd gitopsdir
+
+        git init
+
+        git config core.sparsecheckout true
+
+        echo example/git-ops >> .git/info/sparse-checkout
+
+        git remote add -f origin https://github.com/citrix/citrix-k8s-ingress-controller.git
+
+        git pull origin master
+
+        cd example/git-ops/
+
+ 
 1. Create a Kubernetes secret with the login information for your Citrix ADC.
 
         kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
@@ -32,7 +52,7 @@ GitOps is supported with the following CRDs for APIs and security information sp
      
         helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=nslogin,crds.install=true --version 1.18.5
 
-1. Copy the Swagger files provided in the [SwaggerFiles](./SwaggerFiles) folder to the Git repository.
+1. Copy the Swagger files provided in the [SwaggerFiles](./SwaggerFiles) folder to the appropriate Git repository, which will be used to evaluate gitops functionality.
 
 1. Launch a sample application as a service.
 
