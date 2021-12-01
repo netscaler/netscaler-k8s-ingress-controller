@@ -77,9 +77,9 @@ Perform the following:
 
 1.  Update DNS server details in the cloud or on-premises to point your website to the VIP of the Tier-1 Citrix ADC.
 
-    For example: `citrix-ingress.com 10.250.9.1`
+    For example: `citrix-ingress.com 192.10.2.16`
 
-    Where `10.250.9.1` is the VIP of the Tier-1 Citrix ADC and `citrix-ingress.com` is the microservice running in your Kubernetes cluster.
+    Where `192.10.2.16` is the VIP of the Tier-1 Citrix ADC and `citrix-ingress.com` is the microservice running in your Kubernetes cluster.
 
 1.  Access the URL of the microservice to verify the deployment.
 

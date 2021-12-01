@@ -228,7 +228,7 @@ Perform the following:
 
         **Output:**
 
-               1)	k8s-10.0.139.87:80:http (10.0.139.87:80) - HTTP	Type: CONTENT
+               1)	k8s-192.0.139.87:80:http (192.0.139.87:80) - HTTP	Type: CONTENT
                         State: UP
                         Last state change was at Fri Apr 12 14:24:13 2019
                         Time since last state change: 3 days, 03:09:18.920

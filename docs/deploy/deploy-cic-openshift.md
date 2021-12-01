@@ -226,7 +226,7 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 	          oc get hostsubnet
 	 
 	          NAME            HOST           HOST IP        SUBNET
-	          os.example.com  os.example.com 192.168.122.46 10.1.1.0/24
+	          os.example.com  os.example.com 192.168.122.46 192.1.1.0/24
     
  
           From the output of the `oc get hostsubnet` command:
@@ -235,8 +235,8 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
        
 
   
-              <pod_network> = 10.1.1.0
-              Value for subnet = 10.1.1.0/x where x = 24 that means <netmask>= 255.255.255.0
+              <pod_network> = 192.1.1.0
+              Value for subnet = 192.1.1.0/x where x = 24 that means <netmask>= 255.255.255.0
               <gateway> = 192.168.122.46
 
 
