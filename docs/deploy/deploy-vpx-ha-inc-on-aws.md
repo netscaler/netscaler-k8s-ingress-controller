@@ -44,7 +44,7 @@ As the management IP address or NSIP of both the Citrix ADC VPX instances are di
         aws_ssh_public_key="ssh-rsa XXXXXXXX"
         reset_password=true
         new_password="My_V3ry_Str0ng_VPX_Passw0rd_!s_Th!5"
-        cic_config_snip="10.10.10.10"
+        cic_config_snip="198.10.10.10"
 
 The following table provides variables and their description:
 

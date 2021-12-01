@@ -45,10 +45,10 @@ Perform the following after you deploy the Citrix ADC VPX:
  
         add dns nameServer <core-dns-pod-ip-address>
 
-    For example, if the pod IP addresses are 10.244.0.2 and 10.244.0.3, configure the name servers on Citrix ADC VPX as:
+    For example, if the pod IP addresses are 192.244.0.2 and 192.244.0.3, configure the name servers on Citrix ADC VPX as:
 
-        add dns nameServer 10.244.0.3
-        add dns nameServer 10.244.0.2
+        add dns nameServer 192.244.0.3
+        add dns nameServer 192.244.0.2
 
 ## Deploy the Citrix Ingress solution for MongoDB
 

@@ -89,11 +89,11 @@ While installing the Citrix ADC VPX, select the VNet where the AKS cluster is in
 
 3. Log in to the Azure Citrix ADC VPX instance and add the secondary IP as SNIP with the management access enabled using the following command:
 
-        add ip 10.240.0.11 255.255.0.0 -type SNIP -mgmtAccess ENABLED
+        add ip 192.240.0.11 255.255.0.0 -type SNIP -mgmtAccess ENABLED
 
     If the resource exists, you can use the following command to set the management access enabled on the existing resource.
 
-        set ip 10.240.0.11 -mgmtAccess ENABLED
+        set ip 192.240.0.11 -mgmtAccess ENABLED
 
 4. Enable CS, LB, SSL, and GSLB features in the Citrix ADC VPX using the following command:
 
@@ -125,7 +125,7 @@ While installing the Citrix ADC VPX, select the VNet where the AKS cluster is in
 
 1.	Log in to Azure Citrix ADC VPX and configure the ADNS service on the secondary IP address and port 53 using the following command:
 
-        add service Service-ADNS-1 10.240.0.8 ADNS 53
+        add service Service-ADNS-1 192.240.0.8 ADNS 53
 
     Verify the configuration using the following command:
 
@@ -144,13 +144,13 @@ You must create GSLB sites on Citrix ADC VPX deployed on AWS and Azure.
 
         add gslb site aws_site 192.168.197.18 -publicIP 3.139.156.175
 
-        add gslb site azure_site 10.240.0.11 -publicIP 23.100.28.121
+        add gslb site azure_site 192.240.0.11 -publicIP 23.100.28.121
 
 2.	Log in to Azure Citrix ADC VPX and configure GSLB sites. For example:
 
         add gslb site aws_site 192.168.197.18 -publicIP 3.139.156.175
 
-        add gslb site azure_site 10.240.0.11 -publicIP 23.100.28.121
+        add gslb site azure_site 192.240.0.11 -publicIP 23.100.28.121
 
 3.	Verify that the GSLB sync is successful by initiating a sync from any of the sites using the following command:
 
@@ -307,7 +307,7 @@ The application is exposed as type LoadBalancer in both AWS and Azure clusters. 
 
         kubectl get svc apache
         NAME     TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
-        apache   LoadBalancer   10.0.16.231   20.62.235.193   80:32666/TCP   3m2s
+        apache   LoadBalancer   192.0.16.231   20.62.235.193   80:32666/TCP   3m2s
 
 After deploying the application on AWS and Azure clusters, you must configure the GTE custom resource to configure high availability in the multi-cloud clusters.
 
