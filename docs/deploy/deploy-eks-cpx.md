@@ -38,7 +38,7 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in [Elasti
 
     |NAME | TYPE | CLUSTER-IP | EXTERNAL-IP | PORT(S) | AGE |
     | --- | ---| ----| ----| ----| ----|
-    |cpx-ingress |LoadBalancer | 10.7.241.6 |  EXTERNAL-HOSTNAME | 80:32258/TCP,443:32084/TCP | 2m|
+    |cpx-ingress |LoadBalancer | 192.7.241.6 |  EXTERNAL-HOSTNAME | 80:32258/TCP,443:32084/TCP | 2m|
 
 
 1.  Access the application using the following command.

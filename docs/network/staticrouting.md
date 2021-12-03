@@ -39,11 +39,11 @@ Perform the following:
 
     For example,
 
-        add route 10.244.0.0 255.255.255.0 10.106.162.108
+        add route 192.244.0.0 255.255.255.0 192.106.162.108
 
-        add route 10.244.2.0 255.255.255.0 10.106.162.109
+        add route 192.244.2.0 255.255.255.0 192.106.162.109
 
-        add route 10.244.1.0 255.255.255.0 10.106.162.106
+        add route 192.244.1.0 255.255.255.0 192.106.162.106
 
 ## Automatically configure route on the Citrix ADC instance
 

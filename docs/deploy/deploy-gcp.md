@@ -48,9 +48,9 @@ You can get your Google account details using the following command.
 
     |NAME | TYPE | CLUSTER-IP | EXTERNAL-IP | PORT(S) | AGE |
     | --- | ---| ----| ----| ----| ----|
-    |apache | ClusterIP |10.7.248.216 |none |  80/TCP | 2m |
-    |cpx-ingress |LoadBalancer | 10.7.241.6 |  pending | 80:32258/TCP,443:32084/TCP | 2m|
-    |kubernetes |ClusterIP |10.7.240.1 |none | 443/TCP | 22h|
+    |apache | ClusterIP |192.7.248.216 |none |  80/TCP | 2m |
+    |cpx-ingress |LoadBalancer | 192.7.241.6 |  pending | 80:32258/TCP,443:32084/TCP | 2m|
+    |kubernetes |ClusterIP |192.7.240.1 |none | 443/TCP | 22h|
 
 1.  Once the external IP for the load-balancer is available as follows, you can access your resources using the external IP for the load balancer.
 
@@ -58,9 +58,9 @@ You can get your Google account details using the following command.
 
     |Name | Type | Cluster-IP | External IP| Port(s) | Age |
     |-----| -----| -------| -----| -----| ----|
-    |apache| ClusterIP|10.7.248.216|none|80/TCP |3m|
-    |cpx-ingress|LoadBalancer|10.7.241.6|EXTERNAL-IP CREATED|80:32258/TCP,443:32084/TCP|3m|
-    |kubernetes| ClusterIP| 10.7.240.1|none|443/TCP|22h|`
+    |apache| ClusterIP|192.7.248.216|none|80/TCP |3m|
+    |cpx-ingress|LoadBalancer|192.7.241.6|EXTERNAL-IP CREATED|80:32258/TCP,443:32084/TCP|3m|
+    |kubernetes| ClusterIP| 192.7.240.1|none|443/TCP|22h|`
 
     !!! note "Note"
         The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX service YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX.
