@@ -136,7 +136,7 @@ spec:
       targetPort: 8888
 ```
 
-The IP address and the port of the Citrix ADC VPX device needs to be provided in the `--target-nsip` parameter. For example, `--target-nsip=10.0.0.20`.
+The IP address and the port of the Citrix ADC VPX device needs to be provided in the `--target-nsip` parameter. For example, `--target-nsip=192.0.0.20`.
 
 **Citrix ADC CPX Ingress device**:
 

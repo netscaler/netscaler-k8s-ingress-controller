@@ -414,11 +414,11 @@ Perform the following:
 
         kubectl create -f apache-service.yaml
 
-    When you create the service (`apache`), the Citrix ingress controller configures `10.217.212.16` as a virtual IP address (VIP) in Citrix ADC VPX.
+    When you create the service (`apache`), the Citrix ingress controller configures `192.217.212.16` as a virtual IP address (VIP) in Citrix ADC VPX.
 
-6. Access the `apache` service using the IP address (`10.217.212.16`) that you had assigned to the service. Use the `curl` command to access the service:
+6. Access the `apache` service using the IP address (`192.217.212.16`) that you had assigned to the service. Use the `curl` command to access the service:
 
-        curl 10.217.212.16
+        curl 192.217.212.16
 
     The response should be:
 

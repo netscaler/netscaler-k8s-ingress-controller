@@ -88,9 +88,9 @@ In this procedure, Apache web server is used as the sample application.
 
     |NAME|TYPE|CLUSTER-IP|EXTERNAL-IP|PORT(S)| AGE|
     |----|----|-----|-----|----|----|
-    |apache |ClusterIP|10.0.103.3|none|   80/TCP | 2 m|
-    |cpx-ingress |LoadBalancer |10.0.37.255 | pending |80:32258/TCP,443:32084/TCP |2 m|
-    |Kubernetes |ClusterIP | 10.0.0.1 |none |  443/TCP | 22 h |
+    |apache |ClusterIP|192.0.103.3|none|   80/TCP | 2 m|
+    |cpx-ingress |LoadBalancer |192.0.37.255 | pending |80:32258/TCP,443:32084/TCP |2 m|
+    |Kubernetes |ClusterIP | 192.0.0.1 |none |  443/TCP | 22 h |
 
 6.  Once the external IP for the load-balancer is available as follows, you can access your resources using the external IP for the load balancer.
 
@@ -98,9 +98,9 @@ In this procedure, Apache web server is used as the sample application.
 
     |NAME|TYPE|CLUSTER-IP|EXTERNAL-IP|PORT(S)|  AGE|
     |---|---|----|----|----|----|
-    |apache|ClusterIP|10.0.103.3 |none|80/TCP|  3 m|
-    |cpx-ingress |LoadBalancer|10.0.37.255|  EXTERNAL-IP CREATED| 80:32258/TCP,443:32084/TCP |  3 m|
-    |Kubernetes|    ClusterIP|10.0.0.1 |none| 443/TCP| 22 h|
+    |apache|ClusterIP|192.0.103.3 |none|80/TCP|  3 m|
+    |cpx-ingress |LoadBalancer|192.0.37.255|  EXTERNAL-IP CREATED| 80:32258/TCP,443:32084/TCP |  3 m|
+    |Kubernetes|    ClusterIP|192.0.0.1 |none| 443/TCP| 22 h|
 
     **Note:**
     The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
