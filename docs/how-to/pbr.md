@@ -142,7 +142,7 @@ You can verify that the following configurations are added to the ADC by Citrix 
   
   3. Finally, Citrix node controller adds PBRs.
 
-        ![Image](https://user-images.githubusercontent.com/46886297/117265066-7a389c80-ae71-11eb-82ce-247a9ded3b23.png)
+     ![Image](https://user-images.githubusercontent.com/46886297/117265066-7a389c80-ae71-11eb-82ce-247a9ded3b23.png)
      
     Here:
 

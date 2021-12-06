@@ -36,7 +36,7 @@ The following table details the smart annotations provided by the Citrix ingress
 | lbvserver | ingress.citrix.com/lbvserver | `ingress.citrix.com/lbvserver: '{"citrix-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'` |
 | servicegroup | ingress.citrix.com/servicegroup | `ingress.citrix.com/servicegroup: '{"appname":{"cip": "Enabled","cipHeader":"X-Forwarded-For"}}'` |
 | monitor | ingress.citrix.com/monitor | `ingress.citrix.com/monitor: '{"appname":{"type":"http"}}'` |
-| csvserver| ingress.citrix.com/csvserver| `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}` |
+| csvserver| ingress.citrix.com/csvserver| `ingress.citrix.com/csvserver: '{"stateupdate": "ENABLED"}'`|
 
 For information on smart annotations for HTTP, TCP, and SSL profiles, see [Configure HTTP, TCP, or SSL profiles on Citrix ADC](profiles.md).
 
