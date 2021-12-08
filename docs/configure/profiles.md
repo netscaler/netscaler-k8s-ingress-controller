@@ -99,7 +99,7 @@ The following are the guidelines for front-end profiles annotations for HTTP, TC
 
             #Sample ingress manifest for the front-end configuration for an SSL virtual server
             #The values for the parameters are for demonstration purpose only.
-            
+
             ```
             apiVersion: networking.k8s.io/v1
             kind: Ingress
@@ -110,7 +110,7 @@ The following are the guidelines for front-end profiles annotations for HTTP, TC
               #insecure-port/secure-port, frontend-ip, and
               #secure-service-type/insecure-service-type annotations.
                 ingress.citrix.com/insecure-port: "80"
-                ingress.citrix.com/secure-port: "443" 
+                ingress.citrix.com/secure-port: "443"
                 ingress.citrix.com/frontend-ip: "x.x.x.x"
                 ingress.citrix.com/frontend-sslprofile:
             '{"tls13":"enabled", "hsts" : "enabled"}'
@@ -134,7 +134,7 @@ The following are the guidelines for front-end profiles annotations for HTTP, TC
 
 ## Global front-end profile configuration using ConfigMap variables
 
-The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variables `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` for HTTP, TCP, and SSL profiles respectively. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition.
+The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variables `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` for HTTP, TCP, and SSL profiles respectively. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition. Refer [ConfigMap documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
 
 ### Configuration using FRONTEND_HTTP_PROFILE
 
@@ -151,8 +151,9 @@ metadata:
     app: citrix-ingress-controller
 data:
   FRONTEND_HTTP_PROFILE: |
-    preconfigured: nshttp_default_strict_validation
+    preconfigured: my_http_profile
 ```
+In the above example,  `my_http_profile` is pre-existing HTTP profile in citrix ADC
 
 Alternatively, you can set the profile parameters as specified as follows. See the [HTTP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nshttpprofile/) for all possible key-values.
 
@@ -186,8 +187,9 @@ metadata:
     app: citrix-ingress-controller
 data:
   FRONTEND_TCP_PROFILE: |
-    preconfigured: nstcp_default_profile
+    preconfigured: my_tcp_profile
 ```
+In the above example,  `my_tcp_profile` is pre-existing TCP profile in citrix ADC
 
 Alternatively, you can set the profile parameters as follows. See the [Citrix ADC TCP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/) for all possible key values.
 
@@ -224,8 +226,12 @@ metadata:
     app: citrix-ingress-controller
 data:
   FRONTEND_SSL_PROFILE: |
-    preconfigured: ns_default_ssl_profile_frontend
+    preconfigured: my_ssl_profile
 ```
+In the above example,  `my_ssl_profile` is the pre-existing SSL profile in citrix ADC.
+
+**Note:**
+Default front end profile (`ns_default_ssl_profile_frontend`) is not supported using FRONTEND_SSL_PROFILE.preconfigured variable.
 
 Alternatively, you can set the profile parameters as shown in the following example. See the [SSL profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adm-nitro-api-reference/en/latest/configuration/instances/Citrix-ADC/ns_sslprofile/) for information on all possible key-values.
 
@@ -252,7 +258,7 @@ metadata:
   name: cic-configmap
   labels:
     app: citrix-ingress-controller
-data:   
+data:
   FRONTEND_SSL_PROFILE: |
     config:
       tls13: 'ENABLED'
@@ -260,6 +266,7 @@ data:
       - TLS1.3-AES256-GCM-SHA384
       - TLS1.3-CHACHA20-POLY1305-SHA256
 ```
+
 
 ## Back-end configuration
 
@@ -366,7 +373,7 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
 
 1. Define the front-end ingress resource with the required profiles. In this Ingress resource, back-end and TLS is not defined.
 
-   A sample YAML (`ingress1.yaml`) is provided as follows: 
+   A sample YAML (`ingress1.yaml`) is provided as follows:
 
     ```yml
     apiVersion: networking.k8s.io/v1
@@ -385,16 +392,16 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
       - hosts:
       rules:
       - host:
-    ```  
+    ```
 
 1. Deploy the front-end ingress resource.
 
        kubectl create -f ingress1.yaml
 
-1. Define the secondary ingress resource with the same front-end IP address and TLS and the back-end defined which creates the load balancing resource definition. 
+1. Define the secondary ingress resource with the same front-end IP address and TLS and the back-end defined which creates the load balancing resource definition.
 
-   A sample YAML (ingress2.yaml) is provided as follows: 
- 
+   A sample YAML (ingress2.yaml) is provided as follows:
+
       ```yml
       apiVersion: networking.k8s.io/v1
       kind: Ingress
@@ -411,7 +418,7 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
         - host:  hotdrink.beverages.com
           http:
             paths:
-            - path: 
+            - path:
               backend:
                 serviceName: frontend-hotdrinks
                 servicePort: 80
@@ -422,11 +429,11 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
          kubectl create -f ingress2.yaml
 
 
-1. Once the YAMLs are applied the corresponding entities, profiles, and ingress resources are created and they were bound to the ingress resource. 
- 
+1. Once the YAMLs are applied the corresponding entities, profiles, and ingress resources are created and they were bound to the ingress resource.
+
         # show cs vserver <k8s150-10.221.36.190_443_ssl>
-    
-          k8s150-10.221.36.190_443_ssl (10.221.36.190:443) - SSL Type: CONTENT 
+
+          k8s150-10.221.36.190_443_ssl (10.221.36.190:443) - SSL Type: CONTENT
           State: UP
           Last state change was at Thu Apr 22 20:14:44 2021
           Time since last state change: 0 days, 00:10:56.850
@@ -439,11 +446,11 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
           Appflow logging: ENABLED
           State Update: DISABLED
           Default:   Content Precedence: RULE
-          Vserver IP and Port insertion: OFF 
+          Vserver IP and Port insertion: OFF
           L2Conn: OFF Case Sensitivity: ON
           Authentication: OFF
           401 Based Authentication: OFF
-          Push: DISABLED Push VServer: 
+          Push: DISABLED Push VServer:
           Push Label Rule: none
           Persistence: NONE
           Listen Policy: NONE
@@ -456,13 +463,13 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
 
 ### Example: Adding SNI certificate to an SSL virtual server
 
-This example shows how to add a single SNI certificate. 
+This example shows how to add a single SNI certificate.
 
 **Note:** For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
 1. Define the front-end ingress resource with the required profiles. In this Ingress resource, back-end and TLS is not defined.
 
-   A sample YAML (ingress1.yaml) is provided as follows: 
+   A sample YAML (ingress1.yaml) is provided as follows:
 
     ```yml
     apiVersion: networking.k8s.io/v1
@@ -483,20 +490,20 @@ This example shows how to add a single SNI certificate.
       - host:
 
     ```
-   
+
 1. Deploy the front-end ingress resource.
 
         kubectl create -f ingress1.yaml
 
 1. Define the secondary ingress resource with the same front-end IP address defining back-end as well as SNI certificates. If hosts are specified then the certkey specified as the secret name is added as the SNI certificate.
 
-   A sample YAML (ingress2.yaml) is provided as follows: 
- 
+   A sample YAML (ingress2.yaml) is provided as follows:
+
     ```yml
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: ingress-vpx2  
+      name: ingress-vpx2
       annotations:
        kubernetes.io/ingress.class: "vpx"
        ingress.citrix.com/insecure-termination: "allow"
@@ -545,7 +552,7 @@ If multiple SNI certificates need to be bound to the front-end VIP, following is
             backend:
               serviceName: web
               servicePort: 80
-      - host: frontend.agiledevelopers.com 
+      - host: frontend.agiledevelopers.com
         http:
           paths:
           - path: /
