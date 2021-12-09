@@ -310,6 +310,80 @@ The IP address specified (`forward . 10.102.217.149`) is a DNS service configure
 
       forward . ip1 ip2 ip3
 
+## Directing the DNS resolution of pods to Citrix GSLB ADC in OpenShift
+
+When you want the pods in an OpenShift cluster to use the GSLB solution, the DNS operator should be updated to forward the request for a domain (for which GSLB is required) to Citrix GSLB ADC.
+
+      # oc edit dns.operator/default
+
+      apiVersion: operator.openshift.io/v1
+      kind: DNS
+      metadata:
+        name: default
+      spec:
+        servers:
+          - name: gslb-app2
+            zones:
+              - app2.com
+            forwardPlugin:
+              upstreams:
+                - 10.102.217.149
+                - 10.102.218.129:5353
+
+As shown in the example, you need to add the required configuration for your domain if you want a pod to have a GSLB decision for applications hosted behind a domain. Here, the domain name is `app2.com`.
+
+      servers:
+          - name: gslb-app2
+            zones:
+              - app2.com
+            forwardPlugin:
+              upstreams:
+                - 10.102.217.149
+                - 10.102.218.129:5353
+
+The IP addresses specified (`10.102.217.149` and `10.102.218.129:5353`) are DNS services configured in the Citrix GSLB ADC.
+
+
+This configuration can be verified using the below command
+
+      # oc get configmap/dns-default -n openshift-dns -o yaml
+
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        labels:
+          dns.operator.openshift.io/owning-dns: default
+          manager: dns-operator
+        name: dns-default
+        namespace: openshift-dns
+      data:
+        Corefile: |
+          # gslb-app2
+          app2.com:5353 {
+              forward . 10.102.217.149 10.102.218.129:5353
+              errors
+              bufsize 512
+          }
+          .:5353 {
+              bufsize 512
+              errors
+              health {
+                  lameduck 20s
+              }
+              ready
+              kubernetes cluster.local in-addr.arpa ip6.arpa {
+                  pods insecure
+                  fallthrough in-addr.arpa ip6.arpa
+              }
+              prometheus 127.0.0.1:9153
+              forward . /etc/resolv.conf {
+                  policy sequential
+              }
+              cache 900 {
+                  denial 9984 30
+              }
+              reload
+          }
 
 ## GTP CRD definition
 
