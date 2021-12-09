@@ -8,7 +8,6 @@ For implementing a load balancing solution for distributed Kubernetes clusters, 
 
 Citrix provides a multi-cluster ingress and load balancing solution which globally monitors applications, collect, and share metrics across different clusters, and provides intelligent load balancing decisions. It ensures better performance and reliability for your Kubernetes services that are exposed using Ingress or using type LoadBalancer.
 
-
 ## Deployment topology
 
 The following diagram explains a deployment topology for the multi-cluster ingress and load balancing solution for Kubernetes clusters.
@@ -48,8 +47,6 @@ The following deployment types are supported:
 - Static proximity: In a static proximity deployment, an IP-address based static proximity database is used to determine the proximity between the client’s local DNS server and the GSLB sites. The requests are sent to the site that best matches the proximity criteria.
 
 - Round robin: In a round robin deployment, the GSLB device continuously rotates a list of the services that are bound to it. When it receives a request, it assigns the connection to the first service in the list, and then moves that service to the bottom of the list.
-
-
 
 **Note:**
   Currently, IPv6 is not supported.
@@ -343,8 +340,7 @@ As shown in the example, you need to add the required configuration for your dom
 
 The IP addresses specified (`10.102.217.149` and `10.102.218.129:5353`) are DNS services configured in the Citrix GSLB ADC.
 
-
-This configuration can be verified using the below command
+This configuration can be verified using the following command:
 
       # oc get configmap/dns-default -n openshift-dns -o yaml
 
@@ -475,7 +471,6 @@ The following example shows a sample GTP configuration for failover. Using the `
             uri: ''
             respCode: 200
 
-
 ### RTT deployment
 
 Following is a sample global traffic policy for round trip time deployment.
@@ -496,7 +491,6 @@ Following is a sample global traffic policy for round trip time deployment.
           - destination: 'app1.default.west.cluster2'
           monitor:
           - monType: tcp
-
 
 ### Round robin deployment
 
@@ -522,7 +516,6 @@ Following is a sample traffic policy for the round robin deployment. You can use
           - monType: tcp
             uri: ''
             respCode: 200
-
 
 ### Static Proximity
 
