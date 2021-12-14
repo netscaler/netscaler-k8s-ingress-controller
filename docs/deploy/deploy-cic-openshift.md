@@ -176,7 +176,7 @@ The Citrix ingress controller configures a Citrix ADC appliance (MPX or VPX) usi
 
     In the command policy specification provided, special characters which need to be escaped are already omitted to easily copy-paste into the Citrix ADC command line.
 
-    For configuring the command policy from the Citrix ADC Configuration Wizard (GUI), use the following command policy spec.
+    For configuring the command policy from the Citrix ADC configuration wizard (GUI), use the following command policy specification.
 
         ^(?!shell)(?!sftp)(?!scp)(?!batch)(?!source)(?!.*superuser)(?!.*nsroot)(?!install)(?!show\s+system\s+(user|cmdPolicy|file))(?!(set|add|rm|create|export|kill)\s+system)(?!(unbind|bind)\s+system\s+(user|group))(?!diff\s+ns\s+config)(?!(set|unset|add|rm|bind|unbind|switch)\s+ns\s+partition).*|(^install\s*(wi|wf))|(^\S+\s+system\s+file)^(?!shell)(?!sftp)(?!scp)(?!batch)(?!source)(?!.*superuser)(?!.*nsroot)(?!install)(?!show\s+system\s+(user|cmdPolicy|file))(?!(set|add|rm|create|export|kill)\s+system)(?!(unbind|bind)\s+system\s+(user|group))(?!diff\s+ns\s+config)(?!(set|unset|add|rm|bind|unbind|switch)\s+ns\s+partition).*|(^install\s*(wi|wf))|(^\S+\s+system\s+file)
 
