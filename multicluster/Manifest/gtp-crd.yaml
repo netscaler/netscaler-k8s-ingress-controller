@@ -93,6 +93,12 @@ spec:
                           - ROUNDROBIN
                           - STATICPROXIMITY
                           description: "The traffic distribution policy supported in multi-cluster deployment"
+                        sourceIpPersistenceId:
+                          type: integer
+                          minimum: 0
+                          maximum: 65535
+                          multipleOf : 100
+                          description: "Unique SourceIP persistence ID. This enables persistence based on the source IP address for inbound packets"
                         secLbMethod:
                           type: string
                           description: "The traffic distribution policy supported among clusters under a group in local-first, canary or failover"
@@ -144,4 +150,6 @@ spec:
                       type: object
                   type: object
                 type: array
+              status:
+                type: object
             type: object
