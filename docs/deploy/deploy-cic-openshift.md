@@ -119,8 +119,6 @@ You can use the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-i
 
 **Note:** The Citrix ADC MPX or VPX can be deployed in *[standalone](https://docs.citrix.com/en-us/citrix-adc/12-1/getting-started-with-citrix-adc.html)*, *[high-availability](https://docs.citrix.com/en-us/citrix-adc/12-1/getting-started-with-citrix-adc/configure-ha-first-time.html)*, or *[clustered](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering.html)* modes.
 
-**Note:** In the latest versions of OpenShift when OVN CNI is used, `—feature-node-watch` might not work. In that case, you must manually configure the static routes on Citrix ADC VPX.
-
 ### Prerequisites
 
 -  Determine the IP address needed by the Citrix ingress controller to communicate with the Citrix ADC appliance. The IP address might be any one of the following depending on the type of Citrix ADC deployment:

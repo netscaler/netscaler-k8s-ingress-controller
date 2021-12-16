@@ -28,3 +28,57 @@ The following table describes some of the common issues and workarounds.
 |------|-----|-----|
 |Grafana dashboard has no plots|If the graphs on the Grafana dashboards do not have any values plotted, then Grafana is unable to obtain statistics from its datasource.| Check if the Prometheus datasource is saved and working properly. On saving the datasource after providing the Name and IP, a "Data source is working" message appears in green indicating the datasource is reachable and detected. <br>If the dashboard is created using `sample_grafana_dashboard.json`, ensure that the name given to the Prometheus datasource begins with the word "prometheus" in lowercase. <br>Check the Targets page of Prometheus to see if the required target exporter is in `DOWN` state.|
 | DOWN: Context deadline exceeded| If the message appears against any of the exporter targets of Prometheus, then Prometheus is either unable to connect to the exporter or unable to fetch all the metrics within the given `scrape_timeout`.|If you are using Prometheus Operator, `scrape_timeout` is adjusted automatically and the error means that the exporter itself is not reachable. <br>If a standalone Prometheus container or pod is used, try increasing the `scrape_interval` and `scrape_timeout` values in the `/etc/prometheus/prometheus.cfg` file to increase the time interval for collecting the metrics.|
+
+## Troubleshooting - OpenShift feature node watch
+
+**Problem 1**:
+While using OpenShift-ovn CNI `feature-node-watch` is not adding correct routes.
+
+**Description**: Citrix ingress controller looks for Node annotations for fetching the necessary details to add the static routes.
+
+**Workaround**:
+
+1. Make sure that following RBAC permission is provided to Citrix ingress controller along with `route.openshift.io` for Citrix ingress controller to run in the OpenShift environment with OVN CNI.
+
+        - apiGroups: ["config.openshift.io"]
+          resources: ["networks"]
+          verbs: ["get", "list"]
+
+2. Citrix ingress controller looks for the following two annotations added by OVN, make sure that it exists on the 
+cluster nodes.
+
+        "k8s.ovn.org/node-subnets": {\"default\":\"10.128.0.0/23\"}",
+        "k8s.ovn.org/node-primary-ifaddr": "{\"ipv4\":\"x.x.x.x/24\"}"
+
+3. If the annotation does not exist `feature-node-watch`  might not work for OVN CNI. In that case, you must manually configure the static routes on Citrix ADC VPX.
+
+**Problem 2**:
+While using OpenShift-sdn CNI feature-node-watch is not adding correct routes
+
+**Description**: Citrix ingress controller looks for the Hostsubnet CRD for fetching the necessary details to add the static routes.
+
+**Workaround**:
+
+1. Make sure that following RBAC permission is provided to Citrix ingress controller along with  `route.openshift.io` for Citrix ingress controller to run in the OpenShift environment with SDN CNI.
+
+        - apiGroups: ["network.openshift.io"]
+          resources: ["hostsubnets"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["config.openshift.io"]
+          resources: ["networks"]
+          verbs: ["get", "list"]
+2. Citrix ingress controller looks for the following CRD and specification.
+
+            oc get hostsubnets.network.openshift.io <cluster node-name> -ojson
+
+            { "apiVersion": "network.openshift.io/v1",
+                "host": <cluster node-name, 
+                "hostIP": "x.x.x.x",
+                "kind": "HostSubnet",
+                "metadata": {
+            "annotations": {
+                            ...
+            },
+                "subnet": "10.129.0.0/23"
+            }
+3. If the CRD does not exist with the expected specification, `feature-node-watch` might not work for OpenShfit-SDN CNI. In that case, you must manually configure the static routes on Citrix ADC VPX.
