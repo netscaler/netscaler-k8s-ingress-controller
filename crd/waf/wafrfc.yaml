@@ -1,0 +1,14 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: wafrfc
+spec:
+    servicenames:
+        - frontend
+    application_type:
+        - HTML
+    html_error_object: "http://x.x.x.x/crd/error_page.json"
+    settings:
+        common:
+          rfc_profile:
+            name: "APPFW_RFC_BYPASS"
