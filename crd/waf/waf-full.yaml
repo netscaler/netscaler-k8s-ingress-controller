@@ -98,12 +98,17 @@ spec:
             cookie_transform: "on"
             add_cookie_flags: "httpOnly"
             decode_request_cookies: "on"
+          rfc_profile:
+            name: "APPFW_RFC_BYPASS"
+          streaming:
+            value: "on"
         html:
           sql_injection:
             check_sql_wildchars: "on"
             transform_special_chars: "on"
             injection_type: "SQLSplCharORKeyword"
             parse_comments: "ansinested"
+            sql_injection_grammar: "on"
           cross_site_scripting:
             check_complete_urls: "on"
             transform_unsafe_html: "on"
@@ -159,6 +164,8 @@ spec:
               max_len: 128
             string:
               max_len: 1000000
+          sql_injection:
+            sql_injection_grammar: "off"
     relaxations:
         html:
           cross_site_scripting:
