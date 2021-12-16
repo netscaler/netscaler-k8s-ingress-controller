@@ -256,6 +256,10 @@ For a sample configuration of multi-cloud ingress and load balancing solution fo
 
 ## How to direct the DNS resolution of pods to Citrix GSLB ADC
 
+**Note:** This procedure is optional and needed only if the pods within the cluster need to resolve the DNS through the Citrix GSLB ADC.
+
+### When pods are within the Kubernetes cluster
+
 When you want the pods in a Kubernetes cluster to use the GSLB solution, the ConfigMap of the DNS provider should be updated to forward the request for a domain (for which GSLB is required) to Citrix GSLB ADC.
 
 The following example shows how to update the ConfigMap if the DNS provider is CoreDNS.
@@ -307,7 +311,7 @@ The IP address specified (`forward . 10.102.217.149`) is a DNS service configure
 
       forward . ip1 ip2 ip3
 
-## Directing the DNS resolution of pods to Citrix GSLB ADC in OpenShift
+### When pods are within the OpenShift cluster
 
 When you want the pods in an OpenShift cluster to use the GSLB solution, the DNS operator should be updated to forward the request for a domain (for which GSLB is required) to Citrix GSLB ADC.
 
