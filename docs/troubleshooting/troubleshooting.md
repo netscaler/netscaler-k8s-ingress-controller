@@ -31,11 +31,12 @@ The following table describes some of the common issues and workarounds.
 
 ## Troubleshooting - OpenShift feature node watch
 
-Problem: While using OpenShift-ovn CNI `feature-node-watch` is not adding correct routes.
+**Problem 1**:
+While using OpenShift-ovn CNI `feature-node-watch` is not adding correct routes.
 
-Description: Citrix ingress controller looks for Node annotations for fetching the necessary details to add the static routes.
+**Description**: Citrix ingress controller looks for Node annotations for fetching the necessary details to add the static routes.
 
-Workaround:
+**Workaround**:
 
 1. Make sure that following RBAC permission is provided to Citrix ingress controller along with `route.openshift.io` for Citrix ingress controller to run in the OpenShift environment with OVN CNI.
 
@@ -51,12 +52,12 @@ cluster nodes.
 
 3. If the annotation does not exist `feature-node-watch`  might not work for OVN CNI. In that case, you must manually configure the static routes on Citrix ADC VPX.
 
-Problem: While using OpenShift-sdn CNI feature-node-watch is not adding 
-correct routes
+**Problem 2**:
+While using OpenShift-sdn CNI feature-node-watch is not adding correct routes
 
-Description: Citrix ingress controller looks for the Hostsubnet CRD for fetching the necessary details to add the static routes.
+**Description**: Citrix ingress controller looks for the Hostsubnet CRD for fetching the necessary details to add the static routes.
 
-Workaround:
+**Workaround**:
 
 1. Make sure that following RBAC permission is provided to Citrix ingress controller along with  `route.openshift.io` for Citrix ingress controller to run in the OpenShift environment with SDN CNI.
 
