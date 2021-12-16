@@ -397,12 +397,13 @@ The following table explains the GTP CRD attributes.
 |`serviceType: `          |Specifies the protocol to which multi-cluster support is applied.                                                                                                                                                                                                                                                                  |
 | `host `          |                                                                                           Specifies the domain for which multi-cluster support is applied.                                                                                                                                |
 | `trafficPolicy`    | Specifies the traffic distribution policy supported in a multi-cluster deployment. |
+| `sourceIpPersistenceId`| Specifies the unique source IP persistence ID. This attribute enables persistence based on the source IP address for the inbound packets. The `sourceIpPersistenceId ` attribute should be a multiple of 100 and should be unique.  For a sample configuration, see [Example: source IP persistence](#example-source-ip-persistence). |
 | `secLbMethod`    |  Specifies the traffic distribution policy supported among clusters under a group in local-first, canary, or failover.  |
 |  `destination `        | Specifies the Ingress or LoadBalancer service endpoint in each cluster. The destination name should match with the name of GSE.                                                                                      |
 | `weight`               |  Specifies the proportion of traffic to be distributed across clusters. For canary deployment, the proportion is specified as percentage.                                                                                                                                                                                                                                                   |
 |`CIDR`    |Specifies the CIDR to be used in local-first to determine the scope of locality.                                                                                                                                                                                                                                                                                  |
 |`primary`    | Specifies whether the destination is a primary cluster or a backup cluster in the failover deployment.                                                                                                                                                                                                                                                                              |
-|`monType`    |Specifies the type of probe to determine the health of the multi-cluster endpoint.                                                                                                                                                                                                                                                                                  |
+|`monType`    |Specifies the type of probe to determine the health of the multi-cluster endpoint.  When the monitor type is HTTPS, SNI is enabled by default during the TLS handshake.                                                                               |
 |`uri`    |Specifies the path to be probed for the health of the multi-cluster endpoint for HTTP and HTTPS.                                                                                                                                                                                                                                                                                  |
 |`respCode`    |Specifies the response code expected to mark the multi-cluster endpoint as healthy for HTTP and HTTPS.                                                                                                                                                                                                               |
 
@@ -545,3 +546,28 @@ Following is a sample traffic policy for the static proximity deployment.
             uri: ''
             respCode: 200
 
+## Example: source IP persistence
+
+The following traffic policy provides an example for enabling source IP persistence support. Source IP persistence can be enabled by providing the parameter `sourceIpPersistenceId`. The source IP persistence attribute can be enabled with the supported traffic policies.
+
+    apiVersion: "citrix.com/v1beta1"
+    kind: globaltrafficpolicy
+    metadata
+      name: gtp1
+      namespace: default
+    spec:
+      serviceType: 'HTTP'
+      hosts:
+      - host: 'app2.com'
+        policy:
+          trafficPolicy: 'ROUNDROBIN'
+          sourceIpPersistenceId: 300
+          targets:
+          - destination: 'app2.default.east.cluster1'
+            weight: 2
+          - destination: 'app2.default.west.cluster2'
+            weight: 5
+          monitor:
+          - monType: tcp
+            uri: ''
+            respCode: 200
