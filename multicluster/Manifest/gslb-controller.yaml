@@ -6,7 +6,7 @@ spec:
       serviceAccountName: gslb-k8s-role
       containers:
       - name: gslb-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.19.6"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.21.9"
         imagePullPolicy: Always
         env:
         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
