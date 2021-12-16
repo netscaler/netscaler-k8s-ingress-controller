@@ -52,6 +52,9 @@ rules:
   - apiGroups: ["network.openshift.io"]
     resources: ["hostsubnets"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["networks"]
+    verbs: ["get", "list"]
 {{- end }}
 
 ---

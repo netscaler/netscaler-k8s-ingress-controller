@@ -39,6 +39,15 @@ rules:
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["networks"]
+    verbs: ["get", "list"]
+  - apiGroups: ["network.openshift.io"]
+    resources: ["hostsubnets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
 ---
 #Cluster role bindings required by CPX
 kind: ClusterRoleBinding
@@ -137,7 +146,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.19.6
+        image: quay.io/citrix/citrix-k8s-ingress-controller:1.21.9
         imagePullPolicy: Always
         name: cic
 ---

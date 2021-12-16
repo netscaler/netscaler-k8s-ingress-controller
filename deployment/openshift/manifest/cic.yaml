@@ -41,8 +41,14 @@ rules:
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["networks"]
+    verbs: ["get", "list"]
   - apiGroups: ["network.openshift.io"]
     resources: ["hostsubnets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
     verbs: ["get", "list", "watch"]
 
 ---
@@ -91,7 +97,7 @@ spec:
       serviceAccount: citrix
       containers:
       - name: cic
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.19.6"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.21.9"
         securityContext:
            privileged: true
         env:
