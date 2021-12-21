@@ -66,7 +66,7 @@ The Citrix ingress controller configures the Citrix ADC using a system user acco
 
     **Note**: The system user account would have privileges based on the command policy that you define.
 
-    The command policy mentioned in ***step 3*** is similar to the built-in `sysAdmin` command policy with additional permission to upload files.
+    The command policy mentioned in ***step 3*** is similar to the built-in `sysAdmin` command policy with additional permission to upload files.  For more information on command policy, see the [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/system/authentication-and-authorization-for-system-user/user-usergroups-command-policies.html#configure-command-policies).
 
     In the command policy specification provided, special characters which need to be escaped are already omitted to easily copy-paste into the Citrix ADC command line.
 
