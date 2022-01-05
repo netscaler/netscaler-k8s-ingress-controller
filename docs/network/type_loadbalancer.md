@@ -154,17 +154,17 @@ Perform the following steps to deploy the IPAM controller.
           name: citrix-ipam-controller
           namespace: kube-system
         ---
-        kind: ClusterRole
         apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
         metadata:
           name: citrix-ipam-controller
         rules:
-         - apiGroups:
-           - citrix.com
-           resources:
-           - vips
-           verbs:
-           - '*'
+        - apiGroups:
+          - citrix.com
+          resources:
+          - vips
+          verbs:
+          - '*'
         - apiGroups:
           - apiextensions.k8s.io
           resources:
@@ -172,8 +172,8 @@ Perform the following steps to deploy the IPAM controller.
           verbs:
           - '*'
         ---
-        kind: ClusterRoleBinding
         apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
         metadata:
           name: citrix-ipam-controller
         subjects:
@@ -184,7 +184,6 @@ Perform the following steps to deploy the IPAM controller.
           kind: ClusterRole
           apiGroup: rbac.authorization.k8s.io
           name: citrix-ipam-controller
-
         ---
         apiVersion: apps/v1
         kind: Deployment
