@@ -147,74 +147,72 @@ Perform the following steps to deploy the IPAM controller.
 
 1. Create a file named `citrix-ipam-controller.yaml` with the following configuration:
 
-        ---
-        apiVersion: v1
-        kind: ServiceAccount
-        metadata:
-          name: citrix-ipam-controller
-          namespace: kube-system
-        ---
-        kind: ClusterRole
-        apiVersion: rbac.authorization.k8s.io/v1
-        metadata:
-          name: citrix-ipam-controller
-        rules:
-         - apiGroups:
-           - citrix.com
-           resources:
-           - vips
-           verbs:
-           - '*'
-        - apiGroups:
-          - apiextensions.k8s.io
-          resources:
-          - customresourcedefinitions
-          verbs:
-          - '*'
-        ---
-        kind: ClusterRoleBinding
-        apiVersion: rbac.authorization.k8s.io/v1
-        metadata:
-          name: citrix-ipam-controller
-        subjects:
-        - kind: ServiceAccount
-          name: citrix-ipam-controller
-          namespace: kube-system
-        roleRef:
+          ---
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: citrix-ipam-controller
+            namespace: kube-system
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
           kind: ClusterRole
-          apiGroup: rbac.authorization.k8s.io
-          name: citrix-ipam-controller
-
-        ---
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          labels:
-            app: citrix-ipam-controller
-          name: citrix-ipam-controller
-          namespace: kube-system
-        spec:
-          replicas: 1
-          selector:
-            matchLabels:
+          metadata:
+            name: citrix-ipam-controller
+          rules:
+          - apiGroups:
+            - citrix.com
+            resources:
+            - vips
+            verbs:
+            - '*'
+          - apiGroups:
+            - apiextensions.k8s.io
+            resources:
+            - customresourcedefinitions
+            verbs:
+            - '*'
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: citrix-ipam-controller
+          subjects:
+          - kind: ServiceAccount
+            name: citrix-ipam-controller
+            namespace: kube-system
+          roleRef:
+            kind: ClusterRole
+            apiGroup: rbac.authorization.k8s.io
+            name: citrix-ipam-controller
+          ---
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            labels:
               app: citrix-ipam-controller
-          template:
-            metadata:
-              labels:
+            name: citrix-ipam-controller
+            namespace: kube-system
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
                 app: citrix-ipam-controller
-            spec:
-              containers:
-              - image: quay.io/citrix/citrix-ipam-controller:latest
-                imagePullPolicy: Always
-                name: citrix-ipam-controller
-                env:
-                # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-              - imagePullPolicy: IfNotPresent
-                name: VIP_RANGE
-                # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
-                # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
-              serviceAccountName: citrix-ipam-controller
-
+            template:
+              metadata:
+                labels:
+                  app: citrix-ipam-controller
+              spec:
+                serviceAccountName: citrix-ipam-controller
+                containers:
+                - image: quay.io/citrix/citrix-ipam-controller:latest
+                  imagePullPolicy: IfNotPresent
+                  name: citrix-ipam-controller
+                  env:
+                  # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
+                  - name: VIP_RANGE
+                    value: '["`VPX_VIP`"]'
+                  # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
+                  # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
 
     The manifest contains two environment variables, `VIP_RANGE` and `VIP_NAMESPACES`. You can specify the appropriate routable IP range with a valid CIDR under the `VIP_RANGE`. If necessary, you can also specify a set of namespaces under  `VIP_NAMESPACES`  so that the IPAM controller allocates addresses only for services from specific namespaces.
 
