@@ -88,4 +88,4 @@ spec:
               redirect_url:
                 type: string
                 description: "Redirect-URL"
-            required: [servicenames, req_threshold]
+            required: [req_threshold]
