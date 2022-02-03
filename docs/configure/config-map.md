@@ -77,9 +77,9 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
         metadata:
           name: cic-k8s-ingress-controller
         spec:
-          selector:
-            matchLabels:
-              app: cic-k8s-ingress-controller
+            selector:
+              matchLabels:
+                app: cic-k8s-ingress-controller
             replicas: 1
             template:
               metadata:
