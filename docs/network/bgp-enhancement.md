@@ -118,6 +118,9 @@ Perform the following steps to configure BGP RHI support based on the sample top
         metadata:
           name: web-frontend
         spec:
+          selector:
+            matchLabels:
+              app: web-frontend
           replicas: 4
           template:
             metadata:
