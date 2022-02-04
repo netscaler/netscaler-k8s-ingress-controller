@@ -125,7 +125,7 @@ spec:
                           type: string
                           maxLength: 255
                       required: [rewrite-criteria, operation, target, direction]
-                  required: [servicenames, rewrite-policy]
+                  required: [rewrite-policy]
 
               responder-policies:
                 type: array
@@ -225,7 +225,7 @@ spec:
                           maxLength: 255
                       required: [respond-criteria]
                       oneOf: [required: [redirect], required: [respondwith], required: [noop], required: [reset], required: [drop]]
-                  required: [servicenames, responder-policy]
+                  required: [responder-policy]
 
               dataset:
                 type: array
