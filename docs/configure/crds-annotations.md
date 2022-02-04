@@ -7,7 +7,7 @@ The following are the two benefits of this feature:
 -  You can apply a CRD at a per-ingress, per-service level. For example, the same service referred through an internal VIP may have different set of rewrite-responder policies compared to the one exposed outside.
 -  Operations team can create CRD instances without specifying the service names. The application developers can choose the right policies based on their requirements.
 
-Note: Custom resource instances should be created without service names.
+**Note:** CRD instances should be created without service names.
 
 ## Ingress annotation for referring CRDs
 
@@ -41,7 +41,7 @@ The following table explains the annotations and examples for Auth, Bot, WAF, an
 
 | Annotation                       | Examples                         | Description|
 | -------------------              | --------------------------------- |-----------|
-| `ingress.citrix.com/bot_crd`       | `ingress.citrix.com/bot_crd: '{"frontend": "botdefense"}'` | Applies the `botdefense` policy to the traffic incoming to front-end service.|
+| `ingress.citrix.com/bot_crd`       | `ingress.citrix.com/bot_crd: '{"frontend": "botdefense"}'` | Applies the `botdefense` policy to the traffic incoming to the front-end service.|
 | `ingress.citrix.com/auth_crd`      | `ingress.citrix.com/auth_crd: '{"frontend": "authexample"}'` | Applies the `authexample` policy to the front-end service. |
 | `ingress.citrix.com/waf_crd`       | `ingress.citrix.com/waf_crd: "wafbasic"` | Applies the WAF policy `wafbasic` to all services in the Ingress|
 | `ingress.citrix.com/ratelimit_crd` | `ingress.citrix.com/ratelimit_crd: "throttlecoffeeperclientip"` | Applies the rate limit policy `throttlecoffeeperclientip` to all services in the Ingress.|
