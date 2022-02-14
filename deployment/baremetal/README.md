@@ -208,6 +208,10 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <summary>NS_CONFIG_DNS_REC</summary>
         Enables the DNS server configuration on Citrix ADC. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false`. 
        </details>
+       <details>
+       <summary>POD_IPS_FOR_SERVICEGROUP_MEMBERS</summary>
+        By default, while configuring services of type LoadBalancer and NodePort on an external tier-1 Citrix ADC the Citrix ingress controller adds NodeIP and NodePort as service group members. If this variable is set as `True`, pod IP address and port are added instead of NodeIP and NodePort as service group members.
+       </details>
      
 
 1. Deploy the Citrix ingress controller using the `kubectl create` command.
