@@ -10,7 +10,7 @@ The following diagram explains a deployment topology of the multi-cloud ingress 
 
  ![Deployment topology](../media/multi-cloud-ingress-architecture.png)
 
-**Prerequisites**
+### Prerequisites
 
   -  You should be familiar with AWS and Azure.
   -  You should be familiar with Citrix ADC and [Citrix ADC networking](https://docs.citrix.com/en-us/citrix-adc/current-release/networking.html).
@@ -35,21 +35,21 @@ Also, you can install the Citrix ADC VPX instances in a different VPC. In that c
 
 For high availability (HA), you can install two instances of Citrix ADC VPX in HA mode.
 
-1. Install Citrix ADC VPX in AWS. For information on installing Citrix ADC VPX in AWS, see [Deploy Citrix ADC VPX instance on AWS](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws.html#deploy-a-citrix-adc-vpx-instance-on-aws).
+1.  Install Citrix ADC VPX in AWS. For information on installing Citrix ADC VPX in AWS, see [Deploy Citrix ADC VPX instance on AWS](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws.html#deploy-a-citrix-adc-vpx-instance-on-aws).
 
     Citrix ADC VPX requires a secondary public IP address other than the NSIP to run GSLB service sync and ADNS service.
 
-2. Open the AWS console and choose **EC2** > **Network Interfaces** > **VPX primary ENI ID** > **Manage IP addresses**. Click **Assign new IP Address**.
+2.  Open the AWS console and choose **EC2** > **Network Interfaces** > **VPX primary ENI ID** > **Manage IP addresses**. Click **Assign new IP Address**.
 
      ![Manage-ip-address](../media/multi-cloud-manage-ipaddress.png)
 
     After the secondary public IP address has been assigned to the VPX ENI, associate an elastic IP address to it.
 
-3. Choose **EC2** > **Network Interfaces** > **VPX ENI ID** - **Actions** , click **Associate IP Address**. Select an elastic IP address for the secondary IP address and click **Associate**.
+3.  Choose **EC2** > **Network Interfaces** > **VPX ENI ID** - **Actions** , click **Associate IP Address**. Select an elastic IP address for the secondary IP address and click **Associate**.
 
      ![Associate-elastic-ipaddress](../media/multi-cloud-associate-elasticip.png)
 
-4. Log in to the Citrix ADC VPX instance and add the secondary IP address as `SNIP` and enable the management access using the following command:
+4.  Log in to the Citrix ADC VPX instance and add the secondary IP address as `SNIP` and enable the management access using the following command:
 
         add ip 192.168.211.73 255.255.224.0 -mgmtAccess ENABLED -type SNIP
 
@@ -57,17 +57,17 @@ For high availability (HA), you can install two instances of Citrix ADC VPX in H
 
     **Note**: If you are running the Citrix ADC VPX in High Availability (HA) mode, you must perform this configuration in both of the Citrix ADC VPX instances.
 
-5. Enable Content Switching (CS), Load Balancing (LB), Global Server Load Balancing(GSLB), and SSL features in Citrix ADC VPX using the following command:
+5.  Enable Content Switching (CS), Load Balancing (LB), Global Server Load Balancing(GSLB), and SSL features in Citrix ADC VPX using the following command:
 
         enable feature *feature*
 
     **Note**: To enable GSLB, you must have an additional license.
 
-6. Enable port 53 for UDP and TCP in the VPX security group for Citrix ADC VPX to receive DNS traffic. Also enable the TCP port 22 for SSH and the TCP port range 3008–3011 for GSLB metric exchange.
+6.  Enable port 53 for UDP and TCP in the VPX security group for Citrix ADC VPX to receive DNS traffic. Also enable the TCP port 22 for SSH and the TCP port range 3008–3011 for GSLB metric exchange.
 
     For information on adding rules to the security group, see [Adding rules to a security group](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/working-with-security-groups.html#adding-security-group-rule).
 
-7. Add a nameserver to Citrix ADC VPX using the following command:
+7.  Add a nameserver to Citrix ADC VPX using the following command:
 
         add nameserver *nameserver IP*
 
@@ -82,7 +82,7 @@ While installing the Citrix ADC VPX, select the VNet where the AKS cluster is in
 1. Install Citrix ADC VPX in AWS. For information on installing Citrix ADC VPX in AKS, see [Deploy a Citrix ADC VPX instance on Microsoft Azure](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-vpx-on-azure.html).
 
     You must have a SNIP with public IP for GSLB sync and ADNS service. If SNIP already exists, associate a public IP address with it.
-    
+
 2. To associate, choose **Home** > **Resource group** > **VPX instance** > **VPX NIC instance**. Associate a public IP address as shown in the following image. Click **Save** to save the changes.
 
       ![snip](../media/multi-cloud-snip.png)
@@ -103,9 +103,9 @@ While installing the Citrix ADC VPX, select the VNet where the AKS cluster is in
 
 5. Enable the inbound rule for the following ports in the network security group on the Azure portal.
 
-    - TCP: 3008–3011 for GSLB metric exchange
-    - TCP: 22 for SSH
-    - TCP and UDP: 53 for DNS
+    -  TCP: 3008–3011 for GSLB metric exchange
+    -  TCP: 22 for SSH
+    -  TCP and UDP: 53 for DNS
 
 6. Add a nameserver to Citrix ADC VPX using the following command:
 
@@ -135,7 +135,7 @@ While installing the Citrix ADC VPX, select the VNet where the AKS cluster is in
 
     For example, create an 'A' record `ns1.domain.com` pointing to the ADNS service public IP address. NS record for the domain must point to ns1.domain.com.
 
-##	Configure GSLB service in Citrix ADC VPX deployed in AWS and Azure
+## Configure GSLB service in Citrix ADC VPX deployed in AWS and Azure
 
 You must create GSLB sites on Citrix ADC VPX deployed on AWS and Azure.
 
@@ -157,7 +157,7 @@ You must create GSLB sites on Citrix ADC VPX deployed on AWS and Azure.
 
 **Note**: If the initial sync fails, review the security groups on both AWS and Azure to allow the required ports.
 
-##  Apply GTP and GSE CRDs on AWS and Azure Kubernetes clusters
+## Apply GTP and GSE CRDs on AWS and Azure Kubernetes clusters
 
 The global traffic policy (GTP) and global service entry (GSE) CRDs help to configure Citrix ADC for performing GSLB in Kubernetes applications. These CRDs are designed for configuring multi-cluster ingress and load balancing solution for Kubernetes clusters.
 
@@ -176,8 +176,8 @@ The GSE CRD specifies the endpoint information (information about any Kubernetes
 For the GSE CRD definition, see the [GSE CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/multicluster/multi-cluster/#gse-crd-definition). Apply the GSE CRD definition on AWS and Azure Kubernetes clusters using the following command:
 
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/multicluster/Manifest/gse-crd.yaml
- 
-##	Deploy multi-cluster controller
+
+## Deploy multi-cluster controller
 
 Multi-cluster controller helps you to ensure the high availability of the applications across clusters in a multi-cloud environment.
 
@@ -196,7 +196,6 @@ To deploy the multi-cluster controller, perform the following steps:
         kubectl create secret generic secret-1 --from-literal=username=<username> --from-literal=password=<password>
 
     **Note**: You can add a user to Citrix ADC using the `add system user` command.
-
 
 3.	Download the GSLB controller YAML file from [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml).
 
@@ -294,7 +293,7 @@ In this example application deployment scenario, an `https` image of apache is u
 
 The application is exposed as type LoadBalancer in both AWS and Azure clusters. You must run the commands in both AWS and Azure Kubernetes clusters.
 
-1.	Create a deployment of a sample apache application using the following command:
+1. Create a deployment of a sample apache application using the following command:
 
         kubectl create deploy apache --image=httpd:latest port=80
 
@@ -364,7 +363,7 @@ As the GTP CRD is configured for the traffic policy as `FAILOVER`, Citrix ADC VP
 
 You can deploy the multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS with Citrix ADC VPX as GSLB and the same Citrix ADC VPX as ingress device too.
 
-To deploy the multi-cloud multi-cluster ingress and load balancing with Citrix ADC VPX as ingress device, you must complete the following tasks described in the previous sections:
+To deploy the multi-cloud multi-cluster ingress and load balancing with Citrix ADC VPX as the ingress device, you must complete the following tasks described in the previous sections:
 
 1.  [Deploy Citrix ADC VPX in AWS](#deploy-citrix-adc-vpx-in-aws)
 1.	[Deploy Citrix ADC VPX in Azure](#deploy-citrix-adc-vpx-in-azure)
@@ -378,63 +377,49 @@ After completing the preceding tasks, perform the following tasks:
 1.  Configure Citrix ADC VPX as Ingress Device for AWS
 1.  Configure Citrix ADC VPX as Ingress Device for Azure
 
-### Configure Citrix ADC VPX as Ingress Device for AWS
+### Configure Citrix ADC VPX as Ingress device for AWS
 
-#### Create Citrix ADC VPX login credentials using Kubernetes secret
+Perform the following steps:
 
-```
-kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='<instance-id-of-vpx>'
-```
+1.  Create Citrix ADC VPX login credentials using Kubernetes secret
 
-The Citrix ADC VPX password is usually the instance-id of the VPX if you have not changed it.
+        kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='<instance-id-of-vpx>'
 
-#### Configure SNIP in the Citrix ADC VPX
+    The Citrix ADC VPX password is usually the instance-id of the VPX if you have not changed it.
 
-SSH to the Citrix ADC VPX and configure a SNIP, which is the secondary IP of the VPX to which no Elastic IP is assigned
+1.  Configure SNIP in the Citrix ADC VPX by connecting to the Citrix ADC VPX using SSH. SNIP is the secondary IP address of Citrix a VPX to which the elastic IP address is not assigned.
 
-```
-add ns ip 192.168.84.93 255.255.224.0
-```
+        add ns ip 192.168.84.93 255.255.224.0
 
-This is required for Citrix ADC to interact with the pods inside the Kubernetes cluster.
+    This step is required for Citrix ADC to interact with the pods inside the Kubernetes cluster.
 
-#### Update the Citrix ADC VPX management IP and VIP in the Citrix Ingress controller manifest
+1.  Update the Citrix ADC VPX management IP address and VIP in the Citrix ingress controller manifest.
 
-```
-wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
-```
+        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
 
-***If you don't have `wget` installed, you can use `fetch` or `curl`***
+    **Note:** If you do not have `wget` installed, you can use `fetch` or `curl`.
 
-Update the Citrix ADC VPX's primary IP in the `cic.yaml` in the below field
+1.  Update the primary IP address of Citrix ADC VPX in the `cic.yaml` in the following field.
 
-```
-# Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
-- name: "NS_IP"
-  value: "X.X.X.X"
-```
+        # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+         - name: "NS_IP"
+           value: "X.X.X.X"
 
-Update the Citrix ADC VPX VIP in the `cic.yaml` in the below field. This is the private IP to which you have assigned an EIP.
+1.  Update the Citrix ADC VPX VIP in the `cic.yaml` in the following field. This is the private IP address to which you have assigned an elastic IP address
 
-```
-# Set NetScaler VIP for the data traffic
-- name: "NS_VIP"
-  value: "X.X.X.X"
-```
+        # Set NetScaler VIP for the data traffic
+        - name: "NS_VIP"
+          value: "X.X.X.X"
 
-#### Create the Citrix Ingress Controller
+1.  Once you have edited the YAML file with the required values deploy Citrix ingress controller.
 
-Now that we have configure the Citrix Ingress controller with the required values, let's deploy it.
+        kubectl create -f cic.yaml
 
-```
-kubectl create -f cic.yaml
-```
+### Configure Citrix ADC VPX as Ingress device for Azure
 
-### Configure Citrix ADC VPX as Ingress Device for Azure
+Perform the following steps:
 
-Perform the following steps to deploy the Citrix ingress controller.
-
-1.  Create Citrix ADC VPX login credentials using Kubernetes secret.
+1.  Create Citrix ADC VPX login credentials using  Kubernetes secrets.
 
         kubectl create secret  generic nslogin --from-literal=username='<azure-vpx-instance-username>' --from-literal=password='<azure-vpx-instance-password>'
 
@@ -452,35 +437,32 @@ Perform the following steps to deploy the Citrix ingress controller.
 
           show ip <primary-private-ip-addess>
 
-3.  Update the Citrix ADC VPX image URL, management IP, and VIP in the Citrix ingress controller YAML file.
+3.  Update the Citrix ADC VPX image URL, management IP address, and VIP in the Citrix ingress controller YAML file.
 
-    1. Download the Citrix ingress controller YAML file.
+    1.  Download the Citrix ingress controller YAML file.
 
-           wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/cic.yaml
+            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/cic.yaml
 
-       **Note:** If you do not have `wget` installed, you can use the `fetch` or `curl` command.
+        **Note:** If you do not have `wget` installed, you can use the `fetch` or `curl` command.
 
-    2. Update the Citrix ingress controller image with the Azure image URL in the `cic.yaml` file.
+    2.  Update the Citrix ingress controller image with the Azure image URL in the `cic.yaml` file.
 
             - name: cic-k8s-ingress-controller
               # CIC Image from Azure
               image: "<azure-cic-image-url>"
 
-    3. Update the primary IP address of the Citrix ADC VPX in the `cic.yaml` in the following field with the primary private IP address of the Azure VPX instance.
+    3.  Update the primary IP address of the Citrix ADC VPX in the `cic.yaml` with the primary private IP address of the Azure VPX instance.
 
             # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
             - name: "NS_IP"
               value: "X.X.X.X"
 
-
-    1. Update the Citrix ADC VPX VIP in the `cic.yaml` in the following field with the private IP address of the VIP assigned during VPX Azure instance creation.
- 
-       
+    1.  Update the Citrix ADC VPX VIP in the `cic.yaml` with the private IP address of the VIP assigned during VPX Azure instance creation.
 
             # Set NetScaler VIP for the data traffic
             - name: "NS_VIP"
               value: "X.X.X.X"
 
-4. Once you have configured the Citrix ingress controller with the required values, deploy the Citrix ingress controller using the following command.
+4.  Once you have configured Citrix ingress controller with the required values, deploy the Citrix ingress controller using the following command.
 
             kubectl create -f cic.yaml
