@@ -42,9 +42,9 @@ Ensure that:
 
         kubectl get pods --all-namespaces
 
-## Use case: How to securely deliver multi-tenant microservice-based applications using Citrix ADC admin partitions
+## Use case: How to securely deliver multitenant microservice-based applications using Citrix ADC admin partitions
 
-You can isolate ingress traffic between different microservice based applications with the Citrix ADC admin partition using Citrix ingress controller. Citrix ADC admin partition enables multi-tenancy at the software level in a single Citrix ADC instance. Each partition has its own control plane and network plane.
+You can isolate ingress traffic between different microservice based applications with the Citrix ADC admin partition using Citrix ingress controller. Citrix ADC admin partition enables multitenancy at the software level in a single Citrix ADC instance. Each partition has its own control plane and network plane.
 
 You can deploy one instance of Citrix ingress controller in each namespace in a cluster.
 
@@ -52,9 +52,9 @@ For example, imagine you have two namespaces in a Kubernetes cluster and you wan
 
 Citrix ingress controller instances provide configuration instructions to the respective Citrix ADC partitions using the system user account specified in the YAML manifest.
 
-![Citrix ADC managing Kubernetes cluster workload using admin partitions](admin-partition-topology.png)
+![Citrix ADC managing Kubernetes cluster workload using admin partitions](../media/admin-partition-topology.png)
 
-In this example, apache and guestbook sample applications are deployed in two different namespaces (namespace 1 and namespace 2 respectively) in a Kubernetes cluster. Both apache and guestbook application team wants to manage their workload independently and do not want to share resources. Citrix ADC admin partition helps to achieve multi-tenancy and in this example, two partitions (default, partition1) are used to manage both application workload separately.
+In this example, apache and guestbook sample applications are deployed in two different namespaces (namespace 1 and namespace 2 respectively) in a Kubernetes cluster. Both apache and guestbook application team wants to manage their workload independently and do not want to share resources. Citrix ADC admin partition helps to achieve multitenancy and in this example, two partitions (default, partition1) are used to manage both application workload separately.
 
 The following prerequisites apply:
 
