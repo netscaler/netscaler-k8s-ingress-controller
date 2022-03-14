@@ -105,7 +105,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
           serviceAccountName: cic-k8s-role
           containers:
           - name: cic-k8s-ingress-controller
-            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.21.9"
+            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.23.10"
             env:
             # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
               - name: "NS_IP"
