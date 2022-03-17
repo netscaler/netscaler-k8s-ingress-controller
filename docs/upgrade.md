@@ -10,7 +10,7 @@ If you want to upgrade by modifying the **YAML** definition file, perform the fo
 
 1.  Change the version of the Citrix ingress controller and Citrix ADC CPX image under `containers` section to the following:
     -  Citrix ADC CPX version: 13.0-83.27 (`quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`)
-    -  Citrix ingress controller version: 1.19.6 (`quay.io/citrix/citrix-k8s-ingress-controller:1.21.9`)
+    -  Citrix ingress controller version: 1.19.6 (`quay.io/citrix/citrix-k8s-ingress-controller:1.23.10`)
   
 2.  Update the `CluterRole` as follows:
 
@@ -71,7 +71,7 @@ If you want to upgrade Citrix ingress controller to version 1.5.25 by modifying 
                 env: ...
                 args: ...
 
-    You should change the version of the image to version 1.5.25. For example, `quay.io/citrix/citrix-k8s-ingress-controller:1.21.9`.
+    You should change the version of the image to version 1.5.25. For example, `quay.io/citrix/citrix-k8s-ingress-controller:1.23.10`.
 
 2.  Update the `ClusterRole` as follows:
 

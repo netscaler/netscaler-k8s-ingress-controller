@@ -192,7 +192,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.21.9
+        image: quay.io/citrix/citrix-k8s-ingress-controller:1.23.10
         imagePullPolicy: Always
         name: cic
 ---
@@ -329,7 +329,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.21.9"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.23.10"
         env:
         # Set NetScaler Management IP or SNIP in case of HA
         - name: "NS_IP"
