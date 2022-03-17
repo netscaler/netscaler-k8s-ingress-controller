@@ -20,6 +20,10 @@ The values for the following environment variables in the Citrix ingress control
 
 - NS_COOKIE_VERSION: Specifies the persistence cookie version (0 or 1). The default value is `0`.
 
+- NS_DNS_NAMESERVER: Enables adding DNS nameservers on Citrix ADC VPX.
+
+- NS_CONFIG_DNS_REC: Enables addding DNS address records on the Citrix ADC to configure Citrix ADC as a DNS server.
+
 - POD_IPS_FOR_SERVICEGROUP_MEMBERS: Specifies to add the IP address of the pod and port as service group members instead of `NodeIP` and `NodePort` while configuring services of type `LoadBalancer` or `NodePort` on an external tier-1 Citrix ADC.
 
 - IGNORE_NODE_EXTERNAL_IP: Specifies to ignore an external IP address and add an internal IP address for NodeIP while configuring NodeIP for services of type `LoadBalancer` or `NodePort` on an external tier-1 Citrix ADC.
@@ -29,6 +33,8 @@ The values for the following environment variables in the Citrix ingress control
 - FRONTEND_TCP_PROFILE: Sets the TCP options for the front-end virtual server (client side), unless overridden by the `ingress.citrix.com/frontend-tcpprofile` smart annotation in the ingress definition.
 
 - FRONTEND_SSL_PROFILE: Sets the SSL options for the front-end virtual server (client side) unless overridden by the `ingress.citrix.com/frontend-sslprofile` smart annotation in the ingress definition.
+
+- JSONLOG: Set this argument to true if log messages are required in JSON format.
 
 For more information about profile environment variables (FRONTEND_HTTP_PROFILE, FRONTEND_TCP_PROFILE, and FRONTEND_SSL_PROFILE), see [Configure HTTP, TCP, or SSL profiles on Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/profiles/).
 
@@ -125,7 +131,6 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
           NS_PORT: '80'
           NS_COOKIE_VERSION: '0'
           NS_HTTP2_SERVER_SIDE: 'OFF'
-          
 
 6. Reapply the ConfigMap using the following command.
 
