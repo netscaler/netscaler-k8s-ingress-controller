@@ -13,6 +13,7 @@ Citrix ingress controller is supported on the following platforms:
 -  Red Hat OpenShift version 3.11 and later
 -  Pivotal Container Service (PKS)
 -  Diamanti Enterprise Kubernetes Platform
+-  Mirantis Kubernetes Engine
 
 ### Latest support information
 
@@ -26,6 +27,8 @@ For Istio and Red Hat OpenShift, the following are the latest validated versions
 | ------------------- | -------- |
 | Istio service mesh | version 1.11 |
 | Red Hat OpenShift   | version 4.8|
+| Mirantis Kubernetes Engine | version 3.5.2 |
+
 
 ## Citrix ADC platforms
 
