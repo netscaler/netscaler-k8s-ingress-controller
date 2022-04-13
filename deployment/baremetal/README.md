@@ -217,7 +217,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
     This command pulls the latest image and brings up the Citrix ingress controller.
                 
 
-    The official Citrix ingress controller docker image is available at: <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.23.10` </span>
+    The official Citrix ingress controller docker image is available at: <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.24.4` </span>
 
 
 2. Configure reachability to the pod network using one of the following.
