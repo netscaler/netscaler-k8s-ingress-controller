@@ -1,4 +1,4 @@
-# Define authentication and authorization policies on the Ingress Citrix ADC
+# Authentication and authorization policies for Kubernetes with Citrix ADC
 
 Authentication and authorization policies are used to enforce access restrictions to the resources hosted by an application or API server. While you can verify the identity using the authentication policies, authorization policies are used to verify whether a specified request has the necessary permissions to access a resource.
 
@@ -26,10 +26,10 @@ The name of the services for which the authentication and authorization policies
 
 The following authentication mechanisms are supported:
 
-- Using request headers:  
+-  Using request headers:  
 Enables user authentication using the request header. You can use this mechanism when the credentials or API keys are passed in a header (typically Authorization header). For example, you can use authentication using request headers for basic, digest, bearer authentication, or API keys.
 
-- Using forms:
+-  Using forms:
 You can use this mechanism with user or web authentication including the relying party configuration for OpenID connect and the service provider configuration for SAML.
 
 When the authentication mechanism is not specified, the default is authentication using the request header.
@@ -51,7 +51,7 @@ The following are the attributes for forms based authentication.
 
 ### Authentication providers
 
-The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. 
+The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism.
 
 #### Basic authentication
 
@@ -140,7 +140,12 @@ The following are the attributes for LDAP authentication.
 
 The **authentication_policies** allow you to define the traffic selection criteria to apply the authentication mechanism and also to specify the provider that you want to use for the selected traffic.
 
-The following are the attributes for policies:
+Authentication policy supports two formats through which you can specify authentication rules:
+
+-  resource format
+-  expression format
+
+The following are the attributes for policies with resource format:
 
 | Attribute | Description |
 | --------- | ----------- |
@@ -148,19 +153,37 @@ The following are the attributes for policies:
 | `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
 | `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
 
-**Note:** If you want to skip authentication for a specific end point, create a policy with the `provider` attribute set as empty list. Otherwise, the request is denied. 
+The following attributes are for authentication policies with expression format:
+
+| Attribute | Description |
+| --------- | ----------- |
+| `expression` | Specifies Citrix ADC expression to be evaluated based on authentication  |
+| `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
+
+**Note:** If you want to skip authentication for a specific end point, create a policy with the `provider` attribute set as empty list. Otherwise, the request is denied.
 
 ### Authorization policies
 
 Authorization policies allow you to define the traffic selection criteria to apply the authorization requirements for the selected traffic.
 
-The following are the attributes for authorization policies:
+Authorization policy supports two formats through which the you can specify the authorization rules:
+
+-  resource format
+-  expression format
+
+The following are the attributes for authorization policies with resource format:
 
 | Attribute | Description |
 | --------- | ----------- |
 | `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
 | `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. |
 | `claims` | Specifies the claims required to access a specific API endpoint. `name` indicates the claim name and `values` indicate the required permissions. You can have more than one claim. If an empty list is specified, it implies that authorization is not required. </br> **Note:** Any claim that needs to be used for authorization, should be saved as part of authentication.|
+
+The following are the attributes for authorization policies with expression format:
+
+| Attribute | Description |
+| --------- | ----------- |
+| `expression` | Specifies an expression to be evaluated for authorization.   |
 
 **Note:** Citrix ADC requires both authentication and authorization policies for the API traffic. Therefore, you must configure an authorization policy with an authentication policy. Even if you do not have any authorization checks, you must create an authorization policy with empty claims. Otherwise, the request is denied with a 403 error.
 
@@ -294,6 +317,7 @@ spec:
             method: [GET]
             claims: []
 ```
+
 The sample policy definition performs the following:
 
 - Citrix ADC performs JWT verification on the requests to the following:
@@ -303,10 +327,7 @@ The sample policy definition performs the following:
 -	Citrix ADC requires the scope claim with the read permission for **GET** operation on the **orders** endpoint.
 -	Citrix ADC does not need any permissions for **GET** operation on the **shipping** end point.
 
-
-
 For OAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
-
 
           oauth:
             issuer: "https://sts.windows.net/tenant1/"
@@ -439,6 +460,7 @@ spec:
             claims: []
 
 ```
+
 The sample policy definition performs the following:
 
 -	Citrix ADC performs SAML authentication as specified in the provider `saml-auth-provider` for all requests. 
@@ -492,11 +514,12 @@ spec:
             method: []
             claims: []
 ```
+
 The sample policy definition performs the following:
 
--	Citrix ADC performs OIDC authentication (relying party) as specified in the provider “oidc-provider” for all requests.
+-  Citrix ADC performs OIDC authentication (relying party) as specified in the provider “oidc-provider” for all requests.
   **Note:** Granular authentication is not supported for the forms mechanism.
-- Citrix ADC does not require any authorization permissions.
+-  Citrix ADC does not require any authorization permissions.
 
 ### LDAP authentication using the request header
 
@@ -598,12 +621,11 @@ spec:
 ```
 
 The sample policy definition performs the following:
--	Citrix ADC performs the LDAP authentication for entire traffic (all requests).
--	Citrix ADC does not apply any authorization permission.
 
+-  Citrix ADC performs the LDAP authentication for entire traffic (all requests).
+-  Citrix ADC does not apply any authorization permission.
 
 **LDAP_secret.yaml**
-
 
 The following is an example for `LDAP_secret.yaml`.
 
@@ -617,4 +639,43 @@ stringData:
   username: 'ldap_server_username'
   password: 'ldap_server_password'
 
+```
+
+### Example for Citrix ADC expression support with Auth CRD
+
+This example shows how you can specify Citrix ADC expressions along with authentication and authorization policies:
+
+```yaml
+apiVersion: citrix.com/v1beta1
+kind: authpolicy
+metadata:
+  name: authexample
+spec:
+    servicenames:
+    - frontend
+
+    authentication_mechanism:
+      using_request_header: 'ON'
+
+    authentication_providers:
+        - name: "ldap-auth-provider"
+          ldap:
+              
+              server_ip: "192.2.156.160"
+              base: 'dc=aaa,dc=local'
+              login_name: accountname
+              sub_attribute_name: CN
+              server_login_credentials: ldapcredential
+              # "memberof" attribute details are extracted from LDAP server.
+              attributes_to_save: memberof
+
+    authentication_policies:
+        # Perform LDAP authentication for the host hotdrink.beverages.com
+        - expression: 'HTTP.REQ.HOSTNAME.SET_TEXT_MODE(IGNORECASE).EQ("hotdrink.beverages.com")'
+          provider: ["ldap-auth-provider"]
+
+
+    authorization_policies:
+        # ALLOW the session only if the authenticated user is associated with attribute "memberof" having value "grp4"
+        - expression: 'aaa.user.attribute("memberof").contains("grp4")'
 ```
