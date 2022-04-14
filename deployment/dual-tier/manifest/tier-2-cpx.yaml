@@ -146,7 +146,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.23.10
+        image: quay.io/citrix/citrix-k8s-ingress-controller:1.24.4
         imagePullPolicy: Always
         name: cic
 ---
