@@ -6,7 +6,7 @@ info:
   title: "Swagger Playground"
   termsOfService: "http://swagger.io/terms/"
   contact:
-    email: "apiteam@swagger.io"
+    email: "apicoffeem@swagger.io"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -29,7 +29,8 @@ schemes:
 - "https"
 - "http"
 paths:
-  /play:
+
+  /play/tennis:
     post:
       tags:
       - "play"
@@ -52,8 +53,54 @@ paths:
       responses:
         "405":
           description: "Invalid input"
-      security:
-      - basicAuth: []
+
+  /play/playout:
+    post:
+      tags:
+      - "play"
+      summary: "Add a new play to the ground"
+      description: ""
+      # operationId: "addPlay"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Play object that needs to be added to the ground"
+        required: true
+        schema:
+          $ref: "#/definitions/Play"
+      responses:
+        "405":
+          description: "Invalid input"
+          
+  /play/playin:
+    post:
+      tags:
+      - "play"
+      summary: "Add a new play to the ground"
+      description: ""
+      # operationId: "addPlay"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Play object that needs to be added to the ground"
+        required: true
+        schema:
+          $ref: "#/definitions/Play"
+      responses:
+        "405":
+          description: "Invalid input"
 
   /play/playId:
     delete:
@@ -61,7 +108,7 @@ paths:
       - "play"
       summary: "Find play by ID"
       description: "Returns a single play"
-      # operationId: "getPlayById1"
+      # operationId: "getPlayById"
       parameters:
       - name: "playId"
         in: "path"
@@ -80,7 +127,7 @@ paths:
       - "play"
       summary: "Find play by ID"
       description: "Returns a single play"
-      # operationId: "getPlayById2"
+      # operationId: "getPlayById"
       produces:
       - "application/xml"
       - "application/json"
@@ -100,8 +147,6 @@ paths:
           description: "Invalid ID supplied"
         "404":
           description: "Play not found"
-      security:
-      - basicAuth: []
 
 securityDefinitions:
   basicAuth:     # <-- arbitrary name for the security scheme
