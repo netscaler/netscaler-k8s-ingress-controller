@@ -671,7 +671,10 @@ spec:
 
     authentication_policies:
         # Perform LDAP authentication for the host hotdrink.beverages.com
-        - expression: 'HTTP.REQ.HOSTNAME.SET_TEXT_MODE(IGNORECASE).EQ("hotdrink.beverages.com")'
+        - resource:
+            path: []
+            method: []
+          expression: 'HTTP.REQ.HOSTNAME.SET_TEXT_MODE(IGNORECASE).EQ("hotdrink.beverages.com")'
           provider: ["ldap-auth-provider"]
 
 
