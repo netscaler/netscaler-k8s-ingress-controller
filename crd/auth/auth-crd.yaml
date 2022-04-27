@@ -464,6 +464,10 @@ spec:
                               enum: ['GET', 'PUT', 'POST','DELETE']
                         required:
                           - path
+                    expression:
+                      description: 'ADC syntax expression for authentication'
+                      type: string
+                      maxLength: 1229
                     provider:
                       description: 'name of the authentication provider for the policy, empty if no authentication required'
                       type: array
@@ -471,9 +475,9 @@ spec:
                         type: string
                         maxLength: 127
                       maxItems: 1
-                  required:
-                    - resource
-                    - provider
+                  oneOf:
+                    - required: [resource, provider]
+                    - required: [expression, provider]
 
               authorization_policies:
                 description: 'Authorization policies'
@@ -520,6 +524,13 @@ spec:
                                   - values
                         required:
                           - claims
+                    expression:
+                      description: 'ADC syntax expression for authorization'
+                      type: string
+                      maxLength: 1229
+                  oneOf:
+                    - required: [resource]
+                    - required: [expression]
 
             required:
               - servicenames
