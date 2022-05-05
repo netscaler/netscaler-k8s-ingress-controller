@@ -25,8 +25,10 @@ spec:
         # Set log level
         - name: "EULA"
           value: "yes"
+        - name: "NS_PROTOCOL"
+          value: "HTTPS"
         - name: "NS_PORT"
-          value: "80"
+          value: "443"
         - name: "LOGLEVEL"
           value: "DEBUG"
         - name: "NS_NETPROFILE"
