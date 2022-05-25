@@ -71,7 +71,7 @@ Perform the following steps to configure BGP RHI support based on the sample top
           serviceAccountName: cic-k8s-role
           containers:
           - name: cic-k8s-ingress-controller
-            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.24.4"
+            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.25.6"
 
             env:
             # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
