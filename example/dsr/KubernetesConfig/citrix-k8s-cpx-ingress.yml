@@ -58,7 +58,6 @@ subjects:
 - kind: ServiceAccount
   name: cpx-ingress-k8s-role
   namespace: dsr
-apiVersion: rbac.authorization.k8s.io/v1
 
 ---
 
@@ -105,7 +104,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.24.4"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.25.6"
           env:
           - name: "EULA"
             value: "yes"
