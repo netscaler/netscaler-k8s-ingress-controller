@@ -127,7 +127,6 @@ The sample route manifest includes use cases related to the service `citrix-svc`
 | `route.citrix.com/servicegroup: '{"citrix-svc":{"usip":"yes"}}'` | Enables [Use Source IP Mode (USIP)](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing/enabling-use-source-ip-mode.html) on the Citrix ADC device. When you enable USIP on the Citrix ADC, it uses the IP address of the client for communication with the back-end pods. |
 | `route.citrix.com/monitor: '{"citrix-svc":{"type":"http"}}'` | Creates a [custom HTTP monitor](https://docs.citrix.com/en-us/citrix-adc/12-1/load-balancing/load-balancing-custom-monitors.html) for the servicegroup. |
 
-
 ## Service annotations
 
 The following are the service annotations supported by Citrix.
@@ -138,8 +137,6 @@ In service annotations, `index` is the ordered index of the ports in a service s
 |**Annotations**|**Description**|**Example**|
 |---------------|---------------|-----------|
 |`service.citrix.com/service-type-<index>`|Use this annotation to specify the service type for the Citrix ADC entities created. The acceptable values are `TCP`, `HTTP`, `SSL`,`UDP`,`ANY`, `SSL_TCP`, and `SIP_UDP`. | service.citrix.com/service-type-0: ‘SSL’|
-|`service.citrix.com/lbmethod-<index>`| Use this annotation to specify the method for load balancing. The accepted values are: `ROUNDROBIN`, `LEASTCONNECTION`, and `LEASTRESPONSETIME`.| service.citrix.com/lbmethod-0: ‘LEASTCONNECTION’|
-|`service.citrix.com/persistence-<index>`| Use this annotation to specify the persistence type. The accepted values are: `NONE`, `COOKIEINSERT`, `SOURCEIP`, `SRCIPDESTIP`, and `DESTIP`.| service.citrix.com/persistence-0: ‘SOURCEIP’|
 |`service.citrix.com/ssl-certificate-data-<index>`| Use this annotation to specify the server certificate value in the PEM format.|  service.citrix.com/ssl-certificate-data-0: \| <`certificate`>|
 | `service.citrix.com/ssl-key-data-<index>`| Use this annotation to specify the server key value in the PEM format.  | service.citrix.com/ssl-key-data-0: \| <`key`>|
 | `service.citrix.com/ssl-ca-certificate-data-<index>` | Use this annotation to specify the server CA certificate value to verify the client certificate in PEM format.| service.citrix.com/ssl-ca-certificate-data-0: \| <`certificate`> |
