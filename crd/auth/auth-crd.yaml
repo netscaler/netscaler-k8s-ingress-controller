@@ -531,6 +531,3 @@ spec:
                   oneOf:
                     - required: [resource]
                     - required: [expression]
-
-            required:
-              - servicenames
