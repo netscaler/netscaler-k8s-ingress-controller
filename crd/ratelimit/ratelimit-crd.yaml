@@ -88,4 +88,17 @@ spec:
               redirect_url:
                 type: string
                 description: "Redirect-URL"
+              logpackets:
+                type: object
+                description: 'Adds an audit message action. The action specifies whether to log the message, and to which log.'
+                properties:
+                  logexpression:
+                    description: 'Default-syntax expression that defines the format and content of the log message.'
+                    type: string
+                    maxLength: 7991
+                  loglevel:
+                    description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                    type: string
+                    enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+                required: [logexpression, loglevel]
             required: [req_threshold]

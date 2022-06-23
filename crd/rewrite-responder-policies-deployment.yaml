@@ -38,6 +38,9 @@ spec:
           spec:
             type: object
             properties:
+              ingressclass:
+                type: string
+                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               rewrite-policies:
                 type: array
                 items:
