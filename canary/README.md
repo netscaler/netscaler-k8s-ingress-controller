@@ -765,7 +765,11 @@ You can configure canary deployment based on the HTTP request header which is co
 
 ### Canary deployment based on the HTTP request header value
 
-You can also configure canary deployment based on the value of the HTTP request header which is an extension of canary by header. In this deployment, along with the `ingress.citrix.com/canary-by-header:` annotation, you also specify the `ingress.citrix.com/canary-by-header-value:` annotation. When the request header value matches with the value specified in the Ingress annotation `ingress.citrix.com/canary-by-header-value:` the request is routed to the service specified in the canary Ingress.  
+You can also configure canary deployment based on values of the HTTP request header which is an extension of canary by header. In this deployment, along with the `ingress.citrix.com/canary-by-header:` annotation, you also specify the `ingress.citrix.com/canary-by-header-value:` annotation. When the request header value matches with the value specified in the Ingress annotation `ingress.citrix.com/canary-by-header-value:` the request is routed to the service specified in the canary Ingress.  You can specify multiple header values as a list of strings.
+
+Following is a sample annotation for canary deployment based on the HTTP request header values:
+
+ingress.citrix.com/canary-by-header-value: '["canary-header1","canary-header2","canary-header3","canary-header4"]'
 
 ### Configure canary deployment using Ingress annotations
 
@@ -828,3 +832,6 @@ Perform the following steps to deploy a sample application as a canary release.
 For deploying the HTTP header based canary using the Citrix ingress controller, replace the canary annotation `ingress.citrix.com/canary-weight:` with the `ingress.citrix.com/canary-by-header:`  annotation in the `canary-ingress.yaml` file.
 
 For deploying the HTTP header value based canary using the Citrix ingress controller, replace the `ingress.citrix.com/canary-weight:` annotation with the `ingress.citrix.com/canary-by-header:` and `ingress.citrix.com/canary-by-header-value:` annotations in the `canary-ingress.yaml` file.
+
+**Note:**
+You can see the [Canary example YAMLs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/simple-canary) for achieving canary based on the header and canary based on the header value.
