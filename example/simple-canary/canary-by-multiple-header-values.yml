@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: graphql-alpha
+  annotations:
+    kubernetes.io/ingress.class: "citrix-vpx"
+    ingress.citrix.com/frontend-ip: 192.0.2.179
+    ingress.citrix.com/canary-by-header: "TENANT_ID"
+    ingress.citrix.com/canary-by-header-value: '["canary-header1","canary-header2","canary-header3","canary-header4"]'
+spec:
+  tls:
+  - secretName: web-ingress-secret
+    hosts:
+      - cna-api.analytics-daily.cloud.com
+  rules:
+  - host:  cna-api.analytics-daily.cloud.com
+    http:
+      paths:
+      - path: /graphql
+        pathType: Prefix
+        backend:
+          service:
+            name: graphql-alpha
+            port:
+              number: 80
