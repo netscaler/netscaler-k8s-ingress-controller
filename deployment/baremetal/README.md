@@ -205,10 +205,19 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
         Specifies the Citrix ADM IP address for collecting analytics.
        </details>
        <details>
-       <summary>NS_CONFIG_DNS_REC</summary>
-        Enables the DNS server configuration on Citrix ADC. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false`. 
+       <summary>NS_DNS_NAMESERVER</summary>
+        Enables adding DNS nameservers on Citrix ADC VPX.
        </details>
-     
+
+       <details>
+       <summary>NS_CONFIG_DNS_REC</summary>
+        Enables adding DNS records on Citrix ADC for Ingress resources. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
+       </details>
+       
+       <details>
+       <summary>NS_SVC_LB_DNS_REC</summary>
+        Enables adding DNS records on Citrix ADC for services of type LoadBalancer. Possible values are true or false. This variable is configured at the boot time and cannot be changed at runtime. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
+       </details>
 
 1. Deploy the Citrix ingress controller using the `kubectl create` command.
         
