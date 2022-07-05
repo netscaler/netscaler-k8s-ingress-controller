@@ -22,8 +22,6 @@ The values for the following environment variables in the Citrix ingress control
 
 - NS_DNS_NAMESERVER: Enables adding DNS nameservers on Citrix ADC VPX.
 
-- NS_CONFIG_DNS_REC: Enables addding DNS address records on the Citrix ADC to configure Citrix ADC as a DNS server.
-
 - POD_IPS_FOR_SERVICEGROUP_MEMBERS: Specifies to add the IP address of the pod and port as service group members instead of `NodeIP` and `NodePort` while configuring services of type `LoadBalancer` or `NodePort` on an external tier-1 Citrix ADC.
 
 - IGNORE_NODE_EXTERNAL_IP: Specifies to ignore an external IP address and add an internal IP address for NodeIP while configuring NodeIP for services of type `LoadBalancer` or `NodePort` on an external tier-1 Citrix ADC.
