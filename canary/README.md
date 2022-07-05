@@ -769,7 +769,7 @@ You can also configure canary deployment based on values of the HTTP request hea
 
 Following is a sample annotation for canary deployment based on the HTTP request header values:
 
-ingress.citrix.com/canary-by-header-value: '["canary-header1","canary-header2","canary-header3","canary-header4"]'
+ingress.citrix.com/canary-by-header-value: '["value1","value2","value3","value4"]'
 
 ### Configure canary deployment using Ingress annotations
 
