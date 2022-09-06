@@ -27,6 +27,7 @@ Ensure that:
     | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](#prerequisites). |
     | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the partition user that you have created for the Citrix ingress controller. For more details, see [Prerequisites](#prerequisites). |
     | NS_VIP | Mandatory | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
+    |NS_SNIPS| Optional| Specifies the SNIP addresses on the Citrix ADC appliance or the SNIP addresses on a specific admin partition on  the Citrix ADC. |
     | NS_ENABLE_MONITORING | Mandatory | Set the value `Yes` to monitor Citrix ADC.</br> **Note:** Ensure that you disable Citrix ADC monitoring for Citrix ADC with admin partitions. Set the value to `No`. |
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
     | Kubernetes_url | Optional | The kube-apiserver url that Citrix ingress controller uses to register the events. If the value is not specified, Citrix ingress controller uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
@@ -129,7 +130,7 @@ Create two namespaces `ns1` and `ns2` using the following commands:
 
    Ensure that you use the user credentials that is bind to the default partition.
 
-        helm install cic-def-part-ns1 citrix/citrix-ingress-controller --set nsIP=<nsIP of ADC>,license.accept=yes,adcCredentialSecret=nslogin,ingressClass[0]=citrix-def-part-ns1 --namespace ns1
+        helm install cic-def-part-ns1 citrix/citrix-ingress-controller --set nsIP=<nsIP of ADC>,nsSNIPS='[<SNIPs in partition p1>]',license.accept=yes,adcCredentialSecret=nslogin,ingressClass[0]=citrix-def-part-ns1 --namespace ns1
 
 3. Deploy the Ingress resource.
 
