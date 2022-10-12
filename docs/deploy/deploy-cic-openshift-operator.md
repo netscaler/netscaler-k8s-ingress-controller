@@ -21,6 +21,7 @@ Using the Citrix ingress controller Operator you can deploy the Citrix ingress c
 ### Prerequisites
 
 - Deployed [Red Hat OpenShift](https://www.openshift.com) version 4.1 or later.
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 - Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
     - (Standalone appliances) NSIP - The management IP address of a standalone Citrix ADC appliance. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
     - (Appliances in High Availability mode) SNIP - The subnet IP address. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
@@ -84,7 +85,7 @@ Perform the following:
 
    ![Application Service](../media/application_service.png)
 
-4. Create an ingress for the apache application. Navigate to **Networking > Ingress > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
+4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
 
    ![Application Ingress](../media/application_ingress_vpx.png)
 
@@ -111,7 +112,7 @@ Perform the following:
 
    ![Application Pod UP and Running](../media/cic_operator_pod.png)
 
-7. Navigate to **Operators > Installed Operators** and select the **Citrix ingress controller** operator.
+7. Navigate to **Operators > Installed Operators** and select the **Citrix Ingress Controller** operator.
 
    ![Application POD and CIC](../media/cic_installed_operators.png)
 
@@ -124,7 +125,8 @@ Perform the following:
    ![Parameter lists](../media/cic_instance_yaml.png)
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
-   Ensure that you set the `license.accept` parameter to `yes` and provided the IP address of the Citrix ADC VPX instance in the `nsIP` parameter and Kubernetes secret created using Citrix ADC VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. You can choose other avaiable parameter as well depending upon you use-case.
+
+   Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the Citrix ADC VPX instance in the `nsIP` parameter and Kubernetes secret created using Citrix ADC VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. You can choose other available parameters as well depending upon your use-case.
 
    After you have updated the values of the required parameters, click **Create**. Ensure your Citrix Ingress Controller is succesfully deployed and initialised.
 
@@ -139,7 +141,9 @@ Perform the following:
    curl http://citrix-ingress-operator.com --resolve citrix-ingress-operator.com:80:<VIP>
    ```
    The above `curl` command should return:
+   ```
    <html><body><h1>It works!</h1></body></html>
+   ```
 
 #### Delete the Citrix ingress controller Operator.
 1. Navigate to **Operators > Installed Operators > Citrix Ingress Controller** operator. Select **CitrixIngressController** tab inside. After that select the instance you want to delete and then select its **Delete CitrixIngressController** option.
@@ -184,7 +188,7 @@ Perform the following:
 
    ![Application Service](../media/application_service.png)
 
-4. Create an Ingress for the Apache application. Navigate to **Networking > Ingress > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
+4. Create an Ingress for the Apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
 
    ![Application CPX Ingress](../media/application_ingress_cpx.png)
 
@@ -211,27 +215,28 @@ Perform the following:
 
    ![Application Pod UP and Running](../media/cpx_cic_operator_pod.png)
 
-7. Navigate to **Operators > Installed Operators** and select the **Citrix ADC with Ingress Controller** operator.
+7. Navigate to **Operators > Installed Operators** and select the **Citrix ADC CPX with Ingress Controller** operator.
 
-   ![Application POD and CIC](../media/cpx_cic_installed_operators.png)
+   ![Application POD and CPX CIC](../media/cpx_cic_installed_operators.png)
 
 8. Go to the **CitrixCpxWithIngressController** tab, select **Create CitrixCpxWithIngressController** option.
 
    ![Create New](../media/create_cpx_cic_instance.png)
 
-   The Citrix ADC with ingress controller YAML definition is displayed.
+   The Citrix ADC CPX with ingress controller YAML definition is displayed.
 
    ![Parameter lists](../media/cpx_cic_instance_yaml.png)
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cpx-with-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
-   Ensure that you set the `license.accept` parameter to `yes`. We will expose Citrix ADC CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. You can choose other avaiable parameter as well depending upon you use-case.
+
+   Ensure to set the `license.accept` parameter to `yes`. We will expose Citrix ADC CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. You can choose other available parameters as well depending upon your use-case.
 
    After you have updated the values of the required parameters, click **Create**. Ensure your Citrix ADC CPX with Ingress Controller is succesfully deployed and initialised.
 
    ![Parameter lists](../media/cpx_cic_instance_deployed.png)
 
 9. Please attach privileged security context constraints to the serviceaccount of Citrix ADC CPX as it runs as privileged pod by using following commands:
-   1. Get the serviceaccount name used the Citrix ADC CPX using following command:
+   1. Get the serviceaccount name used the Citrix ADC CPX using following command in the namespace where Citrix ADC CPX has been deployed:
       ```
       oc get sa
       ```
@@ -257,13 +262,15 @@ Perform the following:
        curl http://citrix-ingress-operator.com:<NodePort> --resolve citrix-ingress-operator.com:<NodePort>:<Master-Node-IP>
        ```
        The above `curl` command should return:
+       ```
        <html><body><h1>It works!</h1></body></html>
+       ```
 
 #### Delete the Citrix ADC CPX with ingress controller Operator.
 1. Navigate to **Operators > Installed Operators > Citrix ADC CPX with Ingress Controller** operator. Select **CitrixCpxWithIngressController** tab inside. After that select the instance you want to delete and then select its **Delete CitrixCpxWithIngressController** option.
 
    ![Citrix ADC CPX with Ingress Controller Deployment Delete](../media/delete_cpx_cic_instance.png)
 
-2. Navigate to **Operators > Installed Operators** and select **Uninstall Operator** for **Citrix Ingress Controller** operator.
+2. Navigate to **Operators > Installed Operators** and select **Uninstall Operator** for **Citrix CPX with Ingress Controller** operator.
 
    ![Citrix ADC CPX with Ingress Controller Operator Unistall](../media/uninstall_cpx_cic_operator.png)
