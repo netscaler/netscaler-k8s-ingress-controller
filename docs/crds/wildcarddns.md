@@ -15,7 +15,7 @@ Now, you can configure wildcard DNS domains on a Citrix ADC with Citrix ingress 
 
 ## Wildcard DNS CRD definition
 
-The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at [wildcarddnsentry.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/wildcard-dns/wildcarddnsentry.yaml). The **Wildcard DNS CRD provides** attributes for the various options that are required to configure wildcard DNS entries on Citrix ADC.
+The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at [wildcarddnsentry.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml). The **Wildcard DNS CRD provides** attributes for the various options that are required to configure wildcard DNS entries on Citrix ADC.
 
 The following are the attributes provided in the Wildcard DNS CRD:
 
