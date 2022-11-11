@@ -218,6 +218,13 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <summary>NS_SVC_LB_DNS_REC</summary>
         Enables adding DNS records on Citrix ADC for services of type LoadBalancer. Possible values are true or false. This variable is configured at the boot time and cannot be changed at runtime. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
        </details>
+      
+      <details>
+       <summary> OPTIMIZE_ENDPOINT_BINDING</summary>
+      
+       Enables or disables binding of back-end endpoints to a service group in a single API call. This variable is recommended when there are a large number of endpoints (pods) per application. Acceptable values are `True` and `False`. This environment variable is applicable only for Citrix ADC release 13.0–45.7 and higher versions.
+       </details>
+       
 
 1. Deploy the Citrix ingress controller using the `kubectl create` command.
         
