@@ -34,6 +34,8 @@ The values for the following environment variables in the Citrix ingress control
 
 - JSONLOG: Set this argument to true if log messages are required in JSON format.
 
+- NS_ADNS_IPS: Enables configuring Citrix ADC as a DNS server.
+
 For more information about profile environment variables (FRONTEND_HTTP_PROFILE, FRONTEND_TCP_PROFILE, and FRONTEND_SSL_PROFILE), see [Configure HTTP, TCP, or SSL profiles on Citrix ADC](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/profiles/).
 
 **Note:**
