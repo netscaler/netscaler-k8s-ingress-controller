@@ -10,7 +10,7 @@ In this deployment, the Citrix ingress controller runs as a pod that monitors th
 
 ## Citrix ADC CPX with the inbuilt Citrix ingress controller
 
-In this deployment, you deploy Citrix ADC CPX with a builtin Citrix ingress controller agent that configures the Citrix ADC CPX. Citrix ADC CPX runs as pod and does North-South load balancing.
+In this deployment, you deploy Citrix ADC CPX with a built-in Citrix ingress controller agent that configures the Citrix ADC CPX. Citrix ADC CPX runs as pod and does North-South load balancing.
 
 **YAML file for deployment:** ***citrix-k8s-cpx-ingress.yaml***
 
@@ -219,12 +219,17 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
         Enables adding DNS records on Citrix ADC for services of type LoadBalancer. Possible values are true or false. This variable is configured at the boot time and cannot be changed at runtime. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
        </details>
       
-      <details>
+       <details>
        <summary> OPTIMIZE_ENDPOINT_BINDING</summary>
       
        Enables or disables binding of back-end endpoints to a service group in a single API call. This variable is recommended when there are a large number of endpoints (pods) per application. Acceptable values are `True` and `False`. This environment variable is applicable only for Citrix ADC release 13.0–45.7 and higher versions.
        </details>
-       
+
+       <details>
+       <summary> SCOPE</summary>
+        Enables configuring the scope of Citrix ingress controller as `Role` or `ClusterRole` binding.
+        You can set the value of the `SCOPE` environment variable as `local` or `cluster`. When you set this variable as `local`, Citrix ingress controller is deployed with `Role` binding that has limited privileges. You can use this option when you want to deploy Citrix ingress controller with minimal privileges for a particular namespace with `Role` binding. By default, the value of `SCOPE` is set as `cluster` and Citrix ingress controller is deployed with the `ClusterRole` binding.
+       </details>
 
 1. Deploy the Citrix ingress controller using the `kubectl create` command.
         
