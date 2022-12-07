@@ -33,7 +33,7 @@ Citrix ingress controller configures the Citrix ADC appliance (MPX or VPX) using
 -  Configure CS policies and actions
 -  Configure Load Balancing (LB) virtual server
 -  Configure Service groups
--  Cofigure SSl certkeys
+-  Cofigure SSL certkeys
 -  Configure routes
 -  Configure user monitors
 -  Add system file (for uploading SSL certkeys from Kubernetes)
@@ -70,7 +70,6 @@ To create the system user account, perform the following:
 
         ^(?!shell)(?!sftp)(?!scp)(?!batch)(?!source)(?!.*superuser)(?!.*nsroot)(?!install)(?!show\s+system\s+(user|cmdPolicy|file))(?!(set|add|rm|create|export|kill)\s+system)(?!(unbind|bind)\s+system\s+(user|group))(?!diff\s+ns\s+config)(?!(set|unset|add|rm|bind|unbind|switch)\s+ns\s+partition).*|(^install\s*(wi|wf))|(^\S+\s+system\s+file)^(?!shell)(?!sftp)(?!scp)(?!batch)(?!source)(?!.*superuser)(?!.*nsroot)(?!install)(?!show\s+system\s+(user|cmdPolicy|file))(?!(set|add|rm|create|export|kill)\s+system)(?!(unbind|bind)\s+system\s+(user|group))(?!diff\s+ns\s+config)(?!(set|unset|add|rm|bind|unbind|switch)\s+ns\s+partition).*|(^install\s*(wi|wf))|(^\S+\s+system\s+file)
 
-
 1.  Bind the policy to the system user account using the following command:
 
         bind system user cic cic-policy 0
@@ -100,9 +99,9 @@ Perform the following:
     | POD_IPS_FOR_SERVICEGROUP_MEMBERS| Optional| By default, while configuring services of type LoadBalancer and NodePort on an external tier-1 Citrix ADC the Citrix ingress controller adds NodeIP and NodePort as service group members. If this variable is set as `True`, pod IP address and port are added instead of NodeIP and NodePort as service group members.|
     |IGNORE_NODE_EXTERNAL_IP| Optional |While adding NodeIP for services of type LoadBalancer or NodePort on an external tier-1 Citrix ADC, the Citrix ingress controller prioritizes an external IP address over an internal IP address. When you want to prefer an internal IP address over an external IP address for NodeIP, you can set this variable to `True`.|
     |NS_DNS_NAMESERVER | Optional | Enables adding DNS nameservers on Citrix ADC VPX. |
-    | NS_CONFIG_DNS_REC | Optional| Enables adding DNS records on Citrix ADC for Ingress resources. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration. When you set the value as 'true', the corresponding command `add dns addrec <abc.com 1.1.1.1>` is executed on Citrix ADC and an address record (mapping of the domain name to IP address)  is created. For more information, see [Create address records for a domain name](https://docs.citrix.com/en-us/citrix-adc/current-release/dns/configure-dns-resource-records/create-address-records.html#:~:text=Add%20an%20Address%20record%20by%20using%20the%20GUI,and%20create%20an%20Address%20record). |
-  
-   | NS_SVC_LB_DNS_REC | Optional| Enables adding DNS records on Citrix ADC for services of type LoadBalancer. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration. |
+    | NS_CONFIG_DNS_REC | Optional| Enables adding DNS records on Citrix ADC for Ingress resources. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration. When you set the value as 'true', the corresponding command `add dns addrec <abc.com 1.1.1.1>` is executed on Citrix ADC and an address record (mapping of the domain name to IP address) is created. For more information, see [Create address records for a domain name](https://docs.citrix.com/en-us/citrix-adc/current-release/dns/configure-dns-resource-records/create-address-records.html#:~:text=Add%20an%20Address%20record%20by%20using%20the%20GUI,and%20create%20an%20Address%20record). |
+    | NS_SVC_LB_DNS_REC | Optional| Enables adding DNS records on Citrix ADC for services of type LoadBalancer. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration. |
+    | SCOPE      | Optional  |  Enables configuring the scope of Citrix ingress controller as `Role` or `ClusterRole` binding. You can set the value of the `SCOPE` environment variable as `local` or `cluster`. When you set this variable as `local`, Citrix ingress controller is deployed with `Role` binding that has limited privileges. You can use this option when you want to deploy Citrix ingress controller with minimal privileges for a particular namespace with `Role` binding. By default, the value of `SCOPE` is set as `cluster` and Citrix ingress controller is deployed with `ClusterRole` binding. |
 
 2.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 
@@ -182,8 +181,10 @@ A role can be defined within a namespace with a `Role`, or cluster-wide with a `
 
 In Kubernetes, you can create multiple virtual clusters on the same physical cluster. Namespaces provides a way to divide cluster resources between multiple users and useful in environments with many users spread across multiple teams, or projects.
 
-By default, the Citrix ingress controller monitors Ingress resources across all namespaces in the Kubernetes cluster. If multiple teams want to manage the same Citrix ADC, they can deploy a `Role` based Citrix ingress controller to monitor only ingress resources belongs to a specific namespace. This namespace must be same as the namespace you have provided for creating the service account.
+By default, the Citrix ingress controller monitors Ingress resources across all namespaces in the Kubernetes cluster. If multiple teams want to manage the same Citrix ADC, they can deploy a `Role` based Citrix ingress controller to monitor only ingress resources belongs to a specific namespace. This namespace must be the same as the namespace you have provided for creating the service account.
 You need to create a Role and bind the role to the service account for the Citrix ingress controller. In this case, the Citrix ingress controller listens only for events from the specified namespace and then configure the Citrix ADC accordingly.
+
+You can use the `SCOPE` environment variable to configure the scope of Citrix ingress controller as `Role` or `ClusterRole` binding. You can set the value of the `SCOPE` environment variable as `local` or `cluster`. When you set this variable as `local`,  Citrix ingress controller is deployed with minimal privileges for a particular namespace with `Role` binding. By default, the value of `SCOPE` is set as `cluster` and Citrix ingress controller is deployed with the `ClusterRole` binding.
 
 The following example shows a sample YAML file which defines a Role and RoleBinding for deploying a Citrix ingress controller for a specific namespace.
 
@@ -191,44 +192,57 @@ The following example shows a sample YAML file which defines a Role and RoleBind
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: cic-k8s-role
+  name: citrix
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"]
+    resources: ["endpoints", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
-  # services/status is needed to update the loadbalancer IP in service status for integrating
-  # service of type LoadBalancer with external-dns
   - apiGroups: [""]
     resources: ["services/status"]
     verbs: ["patch"]
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
+    resources: ["events"]
+    verbs: ["create"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
-
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots", "corspolicies", "appqoepolicies"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status", "corspolicies/status", "appqoepolicies/status"]
+    verbs: ["patch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["vips"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["route.openshift.io"]
+    resources: ["routes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
 ---
-
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: cic-k8s-role
-  namespace: default
+  name: citrix
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: cic-k8s-role
-
+  name: citrix
 subjects:
 - kind: ServiceAccount
-  name: cic-k8s-role
-  namespace: default
-
----
+  name: citrix
+  namespace: test
 ```
 
 ### Restrictions
