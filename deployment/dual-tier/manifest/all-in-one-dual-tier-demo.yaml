@@ -161,7 +161,7 @@ spec:
               name: cpx-volume
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.28.2
+          image: quay.io/citrix/citrix-k8s-ingress-controller:1.29.5
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
@@ -334,7 +334,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.28.2"
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.29.5"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
          - name: "NS_IP"
