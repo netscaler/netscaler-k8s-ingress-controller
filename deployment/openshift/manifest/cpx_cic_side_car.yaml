@@ -107,6 +107,8 @@ spec:
               name: shared-data
             - mountPath: /cpx/
               name: cpx-volume
+            - mountPath: /cpx/conf
+              name: cpx-volume-conf
           imagePullPolicy: IfNotPresent
         # Add cic as a sidecar
         - name: cic
@@ -114,7 +116,6 @@ spec:
           volumeMounts:
             - mountPath: /var/deviceinfo
               name: shared-data
-          imagePullPolicy: IfNotPresent
           env:
           - name: "EULA"
             value: "yes"
@@ -148,4 +149,6 @@ spec:
         - name: shared-data
           emptyDir: {}
         - name: cpx-volume
+          emptyDir: {}
+        - name: cpx-volume-conf
           emptyDir: {}
