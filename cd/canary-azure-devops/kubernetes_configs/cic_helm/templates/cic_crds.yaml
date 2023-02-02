@@ -1791,7 +1791,7 @@ spec:
                 description: 'Location of customized error page to respond when json violations are hit'
                 type: string
               ip_reputation:
-                type: string
+                type: object
                 x-kubernetes-preserve-unknown-fields: true
                 description: 'Enabling IP reputation feature'
               target:
