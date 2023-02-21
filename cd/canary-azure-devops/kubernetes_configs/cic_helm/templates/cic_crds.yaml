@@ -1146,7 +1146,6 @@ metadata:
 {{- end }}
 spec:
   group: citrix.com
-  version: null
   names:
     kind: Listener
     plural: listeners
@@ -1423,7 +1422,6 @@ metadata:
 {{- end }}
 spec:
   group: citrix.com
-  version: null
   names:
     kind: HTTPRoute
     plural: httproutes
