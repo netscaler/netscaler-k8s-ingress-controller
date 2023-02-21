@@ -4,7 +4,6 @@ metadata:
   name: httproutes.citrix.com
 spec:
   group: citrix.com
-  version: null
   names:
     kind: HTTPRoute
     plural: httproutes
