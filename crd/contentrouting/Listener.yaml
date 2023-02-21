@@ -4,7 +4,6 @@ metadata:
   name: listeners.citrix.com
 spec:
   group: citrix.com
-  version: null
   names:
     kind: Listener
     plural: listeners
