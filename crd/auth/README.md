@@ -150,7 +150,7 @@ The following are the attributes for policies with resource format:
 | Attribute | Description |
 | --------- | ----------- |
 | `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
-| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
+| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
 | `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
 
 The following attributes are for authentication policies with expression format:
@@ -176,7 +176,7 @@ The following are the attributes for authorization policies with resource format
 | Attribute | Description |
 | --------- | ----------- |
 | `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
-| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. |
+| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT. |
 | `claims` | Specifies the claims required to access a specific API endpoint. `name` indicates the claim name and `values` indicate the required permissions. You can have more than one claim. If an empty list is specified, it implies that authorization is not required. </br> **Note:** Any claim that needs to be used for authorization, should be saved as part of authentication.|
 
 The following are the attributes for authorization policies with expression format:
