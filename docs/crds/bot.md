@@ -43,7 +43,7 @@ The following table lists the various attributes provided in the Bot CRD:
 | `signatures` | Location of external bot signature file. |
 | `target` | Determines which traffic to be inspected by the bot. If you do not specify the traffic targeted, every traffic is inspected by default. |
 | `paths` | List of HTTP URLs to be inspected. |
-| `method` | List of HTTP methods to be inspected. |
+| `method` | List of HTTP methods to be inspected. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT.|
 | `header` | List of HTTP headers to be inspected. |
 
 ## Deploy the Bot CRD
