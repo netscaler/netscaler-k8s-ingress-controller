@@ -79,7 +79,7 @@ The following table lists the various attributes provided in the WAF CRD:
 | `ip_reputation` | Enables the IP reputation feature. |
 | `target` | Determines the traffic to be inspected by the WAF. If you do not specify the traffic targeted, all traffic is inspected by default. |
 | `paths` | Specifies the list of HTTP URLs to be inspected. |
-| `method` | Specifies the list of HTTP methods to be inspected. |
+| `method` | Specifies the list of HTTP methods to be inspected. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT.|
 | `header` | Specifies the list of HTTP headers to be inspected. |
 
 
