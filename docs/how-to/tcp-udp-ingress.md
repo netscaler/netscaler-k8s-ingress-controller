@@ -125,7 +125,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/csvserver: '{"l2conn":"on"}'
     ingress.citrix.com/frontend-ip: "192.168.1.1"
     ingress.citrix.com/insecure-port: "80"
     ingress.citrix.com/lbvserver: '{"mongodb-svc":{"lbmethod":"SRCIPDESTIPHASH"}}'
