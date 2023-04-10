@@ -133,7 +133,7 @@ metadata:
     service-type: citrix-adc-monitor
 spec:
   selector:
-    name: exporter-vpx-ingress
+    app: exporter-vpx-ingress
   ports:
     - name: exporter-port
       port: 8888
