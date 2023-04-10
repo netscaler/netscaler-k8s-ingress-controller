@@ -6,6 +6,10 @@ You can use the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-a
 
 Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter).
 
+> **Note:**
+>
+> Citrix ADC metrics exporter supports exporting metrics from the admin partitions of Citrix ADC.
+
 ## Launch prometheus operator
 
 The Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
@@ -89,7 +93,7 @@ This topic describes how to integrate the [Citrix ADC metrics exporter](https://
 
 **Citrix ADC VPX Ingress device**:
 
-To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. To provide the login credentials to access ADC, create a secret and mount the volume at mountpath "/mnt/nslogin".
+To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. To provide the login credentials to access ADC, create a secret and mount the volume at mount path "/mnt/nslogin".
 ```
 kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
 ```
@@ -140,7 +144,7 @@ The IP address and the port of the Citrix ADC VPX device needs to be provided in
 
 **Citrix ADC CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX.The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
+To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
 
 ```YAML
 ---
@@ -225,7 +229,7 @@ Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from
 
 **Citrix ADC CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADCCPX.The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
+To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX. The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
 
 ```YAML
 apiVersion: apps/v1
@@ -324,7 +328,7 @@ spec:
 The `ServiceMonitor` directs Prometheus to detect Exporters in the `default` and `monitoring` namespaces only. To detect Exporters from other namespaces add the names of those namespaces under the `namespaceSelector:` field.
 
 !!! note "Note"
-    If the Exporter that needs to be monitored exists in a namespace other than the `default` or `monitoring` namespace, then additional RBAC privileges must be provided to Prometheus to access those namespaces. The following is sample YAML (`prometheus-clusterRole.yaml`) file the provides Prometheus full access to resources across the namespaces:
+    If the Exporter that needs to be monitored exists in a namespace other than the `default` or `monitoring` namespace, then additional RBAC privileges must be provided to Prometheus to access those namespaces. The following is a sample YAML (`prometheus-clusterRole.yaml`) file that provides Prometheus full access to resources across the namespaces:
 
 ```yml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -350,7 +354,7 @@ To provide additional privileges Prometheus, deploy the sample YAML using the fo
 
     kubectl apply -f prometheus-clusterRole.yaml
 
-### View the metrics in grafana
+### View the metrics in Grafana
 
 The Citrix ADC instances that are detected for monitoring appears in the **Targets** page of the prometheus container. You can be access the **Targets** page using the following URL: `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets`:
 
@@ -358,9 +362,9 @@ The Citrix ADC instances that are detected for monitoring appears in the **Targe
 
 To view the metrics graphically:
 
-1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
+1.  Log into Grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample Grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 
