@@ -4,6 +4,10 @@ Citrix ingress controller is used to automatically configure one or more Citrix 
 
 For Citrix ADC with admin partitions, you must deploy a single instance of Citrix ingress controller for each partition. And, the partition must be associated with a [partition user](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition.html#user-access-and-roles) specific to the Citrix ingress controller instance.
 
+**Note:**
+
+Citrix ADC metrics exporter supports exporting metrics from the admin partitions of Citrix ADC.
+
 ## Prerequisites
 
 Ensure that:
