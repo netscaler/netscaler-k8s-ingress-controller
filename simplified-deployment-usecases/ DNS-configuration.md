@@ -8,17 +8,17 @@ When adding name servers you can specify IP addresses or Virtual IP addresses (V
 
 You can use Citrix ingress controller to configure NetScaler with the following DNS configurations.
 
--  [Configuring NetScaler VPX or MPX as a ADNS server](#configuring-netscaler-vpx-or-mpx-as-a-adns-server)
+-  [Configuring NetScaler VPX or MPX as an ADNS server](#configuring-netscaler-vpx-or-mpx-as-an-adns-server)
 
--  [Configuring DNS Address records in NetScaler VPX or MPX](#Configuring_DNS_Address_records_in_Netscaler_VPX)
+-  [Configuring DNS Address records in NetScaler VPX or MPX](#configuring-netscaler-as-dns-resolver)
 
--  [Configuring DNS Nameserver on NetScaler VPX or MPX](#configure-netscaler-as-a-domain-name-resolver-using-citrix-ingress-controllerConfiguring_DNS_nameserver_on_NetScaler_VPX)
+-  [Configuring DNS Nameserver on NetScaler VPX or MPX](#configuring-dns-nameservers-on-netscaler-vpx-or-mpx)
 
 -  [Configuring Wildcard DNS domains in NetScaler](#configuring-wildcard-domains-in-netscaler-using-citrix-ingress-controller)
 
 -  [Traffic Management of External services](#traffic-management-of-external-services)
 
-## Configuring NetScaler VPX or MPX as a ADNS server
+## Configuring NetScaler VPX or MPX as an ADNS server
 
 Citrix ingress controller can configure NetScaler VPX/MPX as an ADNS server using the ConfigMap variable `NS_ADNS_IPS`.
 
@@ -197,7 +197,7 @@ The following diagram depicts NetScaler CPX deployment to reach external service
 
 **Note:** A ConfigMap is used to configure name servers on NetScaler VPX or MPX.
 
-![Traffic Management of External Services](../media/managing_traffic_of_external_services.png){width=25%}
+![Traffic Management of External Services](../docs/media/cpx-traffic.png)
 
 In this deployment:
 
@@ -281,9 +281,9 @@ metadata:
   name: sample-config
 spec:
   zone:
-    # Domain the wildcard domain name to configured on Netscaler
+    # Domain the wildcard domain name to configured on NetScaler
     domain: configexample.com
-    # DNS address record to be configured on Netscaler with IP and ttl
+    # DNS address record to be configured on NetScaler with IP and ttl
     dnsaddrec:
       domain-ip: 1.1.1.1
       ttl: 3600
@@ -291,7 +291,7 @@ spec:
     dnsaaaarec:
       domain-ip: '2001::.1'
       ttl: 3600
-    # DNS SOA record to be configured in Netscaler with origin-server name, admin contact information, retry count, expiry time, refresh time, etc
+    # DNS SOA record to be configured in NetScaler with origin-server name, admin contact information, retry count, expiry time, refresh time, etc
     soarec:
       origin-server: n2.configexample.com
       contact: admin.configexample.com
@@ -299,37 +299,37 @@ spec:
       refresh: 3600
       retry: 3
       expire: 3600
-    # DNS NS records to be configured in Netscaler with nameserver domain name and ttl 
+    # DNS NS records to be configured in NetScaler with nameserver domain name and ttl 
     nsrec:
       nameserver: n1.configexample.com
       ttl: 3600
 ```
 
-Netscaler Configuration:
+NetScaler Configuration:
 
 ```
-sh soarec
+show soarec
 1)	Domain Name : configexample.com 	ECS Subnet : None               		Origin Server : n2.configexample.com
 	Contact : admin.configexample.com
 	Serial No. : 100	Refresh : 3600 secs	Retry : 3 secs
 	Expire : 3600 secs	Minimum : 5 secs	TTL : 3600 secs
 	Record Type : ADNS
 
-sh nsrec
+show nsrec
 1)	Domain : configexample.com 	ECS Subnet : None               	NameServer : n1.configexample.com
 	TTL : 3600 sec	Record Type : ADNS
 
-sh dns zone
+show dns zone
 	 Zone Name : configexample.com
 	 Proxy Mode : NO
 	 DNSSEC Offload: DISABLED
 
-sh dns addrec
+show dns addrec
 1)	Host Name : *.configexample.com 	ECS Subnet : None                
 	Record Type : ADNS  		TTL : 3600 secs
 	IP Address : 1.1.1.1
 
-sh dns aaaarec
+show dns aaaarec
 1)	Host Name : *.configexample.com 	ECS Subnet : None                
 	Record Type : ADNS  		TTL : 3600 secs
 	IPV6 Address : 2001::1        

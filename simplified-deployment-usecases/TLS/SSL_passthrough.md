@@ -6,7 +6,7 @@ The proxy SSL passthrough configuration does not require the installation of an 
 
 The following diagram explains the SSL passthrough feature.
 
-![SSL Passthrough](../../media/ssl-passthrough.png)
+![SSL Passthrough](../../docs/media/ssl-passthrough.png)
 
 As shown in this diagram, SSL traffic is not terminated at the NetScaler and SSL traffic is passed through the NetScaler to the back end server. SSL certificate at the back end server is used for the SSL handshake.
 
