@@ -1,7 +1,7 @@
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-  name: bottps
+    name: botkeyboardm
 spec:
   servicenames:
     - frontend
@@ -17,14 +17,10 @@ spec:
       - POST
     header:
       - Host
-  security_checks:
-    tps: "ON"
   bindings:
-    tps:
-      geolocation:
-        threshold: 101
-        percentage: 100
-      host:
-        threshold: 10
-        percentage: 100
-        action: ["log", "reset"]
+    - rule:
+        name: kbmexpr
+        expression: 'true'
+    - rule:
+        name: keyboar mouse bot expression
+        expression: 'http.req.url.startswith("/testsite")'

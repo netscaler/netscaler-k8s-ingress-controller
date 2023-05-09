@@ -1,19 +1,29 @@
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: trapinsertion
+  name: trapinsertion
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    security_checks:
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+ 
+  security_checks:
        trap:
-         action:
-           - "log"
-           - "drop"
-    bindings:
-      trapinsertion:
-        urls:
-          - "/index.html"
-          - "/submit.php"
-          - "/login.html"
+         action: ["LOG", "DROP"]
+  bindings:
+    trapinsertion:
+      urls:
+        - /index.html
+        - /submit.php
+        - /login.html
