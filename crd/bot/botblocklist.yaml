@@ -6,7 +6,6 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -30,7 +29,7 @@ spec:
           action: ["drop"]
       - ip:
           value: 10.102.30.40
-            - expression:
-                value:  http.req.url.contains("/robots.txt")
-                action: ["reset","log"]
+      - expression:
+          value:  http.req.url.contains("/robots.txt")
+          action: ["reset","log"]
 

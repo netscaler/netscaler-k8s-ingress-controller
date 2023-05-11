@@ -85,7 +85,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -129,7 +129,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -187,7 +187,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -215,7 +215,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -252,7 +252,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -287,7 +287,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
@@ -321,7 +321,7 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
-  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
   target:
     path:
       - index.html
