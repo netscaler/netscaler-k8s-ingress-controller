@@ -17,6 +17,9 @@ With the Bot CRD, you can configure the bot management security policy for the f
 -  Trap insertion
 -  IP reputation
 -  Rate limit
+-  Captcha
+-  Bot Log Expression
+-  Keyboard And Mouse Based Bot Expression
 
 Based on the type of protections required, you can specify the metadata and use the CRD attributes in the Bot CRD `.yaml` file to define the bot policy.
  
@@ -77,29 +80,40 @@ When you want to define and employ a web bot management policy in Citrix ADC to 
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: botblocklist
+  name: botblocklist
 spec:
-    servicenames:
-        - frontend
-    security_checks:
-        block_list: "ON"
-    bindings:
-        block_list:
-            - subnet:
-                value:
-                    - 172.16.1.0/12
-                    - 172.16.2.0/12
-                    - 172.16.3.0/12
-                    - 172.16.4.0/12
-                action:
-                    - "drop"
-            - ip:
-                value: 10.102.30.40
-            - expression:
-                value:  http.req.url.contains("/robots.txt")
-                action:
-                    - "reset"
-                    - "log"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+
+  security_checks:
+    block_list: "ON"
+  bindings:
+    block_list:
+      - subnet:
+          value:
+            - 172.16.1.0/12
+            - 172.16.2.0/12
+            - 172.16.3.0/12
+            - 172.16.4.0/12
+          action: ["drop"]
+            
+      - ip:
+          value: 10.102.30.40
+      - expression:
+          value:  http.req.url.contains("/robots.txt")
+          action: ["reset","log"]
 ```
 
 **Allow known traffic without bot security checks**
@@ -110,28 +124,38 @@ When you want to avoid security checks for certain traffic such as staging or tr
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: botallowlist
+  name: botallowlist
 spec:
-    servicenames:
-        - frontend
-    security_checks:
-        allow_list: "ON"
-    bindings:
-        allow_list:
-            - subnet:
-                value:
-                    - 172.16.1.0/12
-                    - 172.16.2.0/12
-                    - 172.16.3.0/12
-                    - 172.16.4.0/12
-                action:
-                    - "log"
-            - ip:
-                value: 10.102.30.40
-            - expression:
-                value:  http.req.url.contains("index.html")
-                action:
-                    - "log"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  security_checks:
+    allow_list: "ON"
+  bindings:
+    allow_list:
+      - subnet:
+          value:
+            - 172.16.1.0/12
+            - 172.16.2.0/12
+            - 172.16.3.0/12
+            - 172.16.4.0/12
+          action: ["log"]
+      - ip:
+          value: 10.102.30.40
+      - expression:
+          value:  http.req.url.contains("index.html")
+          action: ["log"]
 ```
 
 **Enable bot signatures to detect bots**
@@ -142,12 +166,12 @@ Citrix provides thousands of inbuilt signatures to detect bots based on user age
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: botsignatures
+  name: botsignatures
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://10.106.102.242/ganeshka/bot_sig.json"
 ```
 
 **Enable the bot device fingerprint and customize the action**
@@ -158,16 +182,24 @@ Device fingerprinting involves inserting a JavaScript snippet in the HTML respon
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: botdfp
+  name: botdfp
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    security_checks:
-       device_fingerprint:
-           action:
-               - "log"
-               - "drop"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  security_checks:
+    device_fingerprint: "ON"
 ```
 
 **Enable the bot TPS and customize the action**
@@ -178,24 +210,33 @@ If the bot TPS is configured, it detects incoming traffic as bots if the maximum
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: bottps
+  name: bottps
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    security_checks:
-        tps: "ON"
-    bindings:
-        tps:
-            geolocation:
-                threshold: 101
-                percentage: 100
-            host:
-                threshold: 10
-                percentage: 100
-                action:
-                    - "log"
-                    - "mitigation"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  security_checks:
+    tps: "ON"
+  bindings:
+    tps:
+      geolocation:
+        threshold: 101
+          percentage: 100
+      host:
+        threshold: 10
+        percentage: 100
+        action: ["log", "reset"]
 ```
 
 **Enable the trap insertion protection and customize the action**
@@ -206,22 +247,31 @@ Detects and blocks automated bots by advertising a trap URL in the client respon
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: trapinsertion
+  name: trapinsertion
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    security_checks:
-       trap:
-         action:
-           - "log"
-           - "drop"
-    bindings:
-      trapinsertion:
-        urls:
-          - "/index.html"
-          - "/submit.php"
-          - "/login.html"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  security_checks:
+    trap:
+      action: ["log", "drop"]
+  bindings:
+    trapinsertion:
+      urls:
+        - "/index.html"
+        - "/submit.php"
+        - "/login.html"
 ```
 
 **Enable IP reputation to reject requests of a particular category**
@@ -232,22 +282,31 @@ The following is an example of a Bot CRD configuration for enabling only specifi
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: botiprepcategory
+  name: botiprepcategory
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    security_checks:
-       reputation: "ON"
-    bindings:
-      reputation:
-        categories: 
-            - SPAM_SOURCES:
-                action:
-                    - "log"
-                    - "redirect"
-            - MOBILE_THREATS
-            - SPAM_SOURCES
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  security_checks:
+    reputation: "ON"
+  bindings:
+    reputation:
+      categories: 
+        - SPAM_SOURCES:
+            action: ["log", "redirect"]
+        - MOBILE_THREATS
+        - SPAM_SOURCES
 ```
 **Enable rate limit to control request rate**
 
@@ -262,6 +321,17 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
+  signatures: "http://x.x.x.x/ganeshka/bot_sig.json"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
   security_checks:
     ratelimit: "ON"
   bindings:
@@ -277,7 +347,6 @@ spec:
       - ip:
           rate: 2000
           timeslice: 1000
-          action:
-              - "log"
-              - "reset"
+          action: ["log", "redirect"]
 ```
+

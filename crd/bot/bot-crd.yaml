@@ -86,10 +86,10 @@ spec:
                   block_list:
                     type: string
                     enum: ['ON', 'OFF']
-                  device_fingerprint:     
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  dfp_bot_mobile:
+                  device_fingerprint:
+                    type: string
+                    enum: ['ON', 'OFF']
+                  device_fingerprint_action:     
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   headless_browser:
