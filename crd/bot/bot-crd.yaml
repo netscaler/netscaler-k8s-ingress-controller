@@ -94,7 +94,7 @@ spec:
                     x-kubernetes-preserve-unknown-fields: true
                   headless_browser:
                     type: string
-                    enum: ['ON','OFF']
+                    enum: ['ON','OFf']
                   reputation:
                     type: string
                     enum: ['ON', 'OFF']
