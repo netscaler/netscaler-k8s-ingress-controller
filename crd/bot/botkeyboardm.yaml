@@ -1,7 +1,7 @@
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-  name: trapinsertion
+    name: botkeyboardm
 spec:
   servicenames:
     - frontend
@@ -16,13 +16,10 @@ spec:
       - POST
     header:
       - Host
- 
-  security_checks:
-       trap:
-         action: ["LOG", "DROP"]
   bindings:
-    trapinsertion:
-      urls:
-        - /index.html
-        - /submit.php
-        - /login.html
+    - rule:
+        name: kbmexpr
+        expression: 'true'
+    - rule:
+        name: keyboar mouse bot expression
+        expression: 'http.req.url.startswith("/testsite")'

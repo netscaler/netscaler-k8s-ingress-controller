@@ -1,7 +1,7 @@
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-  name: trapinsertion
+    name: botlogexpression
 spec:
   servicenames:
     - frontend
@@ -16,13 +16,13 @@ spec:
       - POST
     header:
       - Host
- 
-  security_checks:
-       trap:
-         action: ["LOG", "DROP"]
   bindings:
-    trapinsertion:
-      urls:
-        - /index.html
-        - /submit.php
-        - /login.html
+    logexp:
+      - rule:
+          name: logehkp
+          expression: 'HTTP.REQ.URL'
+          comment: xkhresfffff
+      - rule:
+          name: logexpression bot expr
+          expression: 'true'
+          comment: expred
