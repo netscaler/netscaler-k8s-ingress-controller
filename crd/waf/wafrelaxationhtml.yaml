@@ -5,6 +5,34 @@ metadata:
 spec:
     servicenames:
         - frontend
+    application_type:
+        - HTML
+    redirect_url: "/home.php"    #it can be external url also
+    ip_reputation:
+        action: block
+        threat-categories:
+            - SPAM_SOURCES
+            - WINDOWS_EXPLOITS
+            - WEB_ATTACKS
+            - BOTNETS
+            - SCANNERS
+            - DOS
+            - REPUTATION
+            - PHISHING
+            - PROXY
+            - NETWORK
+            - CLOUD_PROVIDERS
+            - MOBILE_THREATS
+    target:
+        path:
+            - index.html
+            - payment.php
+            - login.php
+        method:
+            - GET
+            - POST
+        header:
+            - Host
     security_checks:
         common:
           allow_url: "on"
@@ -18,10 +46,12 @@ spec:
           cross_site_scripting:
             action: ["block"]
           field_format: "on"
-          sql_injection: "on"
+          sql_injection:
+            action: ["block", "log"]
           form_field_consistency:
             action: ["log","block"]
-          csrf: "on"
+          csrf:
+            action: ["block", "stats"]
           fileupload_type: "on"
     relaxations:
         html:
@@ -46,6 +76,7 @@ spec:
                 is_value_regex: true
                 enabled: false
                 comment: "user comment for relaxation rule"
+          sql_injection:
             - rule:
                 field_name: username
                 url: login.php
