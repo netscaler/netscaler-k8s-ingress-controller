@@ -64,7 +64,7 @@ spec:
                         type: array
                         items:
                           type: string
-                          enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT', 'UNKNOWN_METHOD']
+                          enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                       header_name:
                         description: "HTTP header that identifies the unique API client for e.g. X-apikey"
                         type: string

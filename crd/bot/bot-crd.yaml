@@ -69,7 +69,7 @@ spec:
                     description: "List of http methods to inspect"
                     items:
                       type: string
-                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT', 'UNKNOWN_METHOD']
+                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                   header:
                     type: array
                     description: "List of http headers to inspect"
