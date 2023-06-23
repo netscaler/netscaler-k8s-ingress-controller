@@ -18,7 +18,7 @@ If metrics need to be extracted from NetScaler, NetScaler observability exporter
 
 ## Installing NetScaler Operator
 
-For installing NetScaler operator, login to OpenShift cluster console. Then navigate to **Operators > OperatorHub**, select **Certified** source from the left panel and then select the **Netscaler Operator**, and click **Install**.
+For installing NetScaler operator, login to OpenShift cluster console. Then navigate to **Operators > OperatorHub**, select **Certified** source from the left panel and then select the **NetScaler Operator**, and click **Install**.
 
    ![NetScaler Operator](../media/ns_operator_hub.png)
 
@@ -29,7 +29,7 @@ For installing NetScaler operator, login to OpenShift cluster console. Then navi
    -  **All namespaces on the cluster (default)** - Allows the NetScaler operator to subscribe to every namespace present on the OpenShift cluster and hence allows you to initiate the instance of NetScaler operator from any namespace on the cluster.
    -  **A specific namespace on the cluster** - Allows the NetScaler operator to subscribe to the selected namespace on the OpenShift cluster. You can initiate the NetScaler operator instance on the selected namespace only.
 
-   For the demonstration purpose, you can subscribe the NetScaler ingress controller operator to the default namespace.
+   For the demonstration purpose, you can subscribe the NetScaler operator to the default namespace.
 
    ![NetScaler Operator Subscription](../media/ns_operator_subscription_1.png)
 
@@ -43,7 +43,7 @@ For installing NetScaler operator, login to OpenShift cluster console. Then navi
 
 ## Deploy NetScaler Ingress Controller using NetScaler Operator
 
-Using the NetScaler operator you can deploy the NetScaler ingress controller (NIC) as standalone pod in the OpenShift cluster. The NIC configures the NetScaler VPX or MPX which is deployed outside the OpenShift cluster and acts as an ingress for the applications running in the OpenShift cluster. The following diagram explains the topology:
+Using the NetScaler operator you can deploy the NetScaler ingress controller as standalone pod in the OpenShift cluster. The NetScaler ingress controller configures the NetScaler VPX or MPX which is deployed outside the OpenShift cluster and acts as an ingress for the applications running in the OpenShift cluster. The following diagram explains the topology:
 
 ![Topology](../media/vpx_topology.png)
 
@@ -62,7 +62,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller (NI
   kubectl create secret generic nslogin --from-literal=username='nic' --from-literal=password='mypassword'
   ```
 
-### Steps to deploy NetScaler ingress controller for apache application
+### Steps to deploy NetScaler Ingress Controller for apache application
 
 1. Log on to OpenShift 4.x Cluster console.
 
@@ -120,7 +120,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller (NI
    <html><body><h1>It works!</h1></body></html>
    ```
 
-### Steps to delete NetScaler ingress controller
+### Steps to delete NetScaler Ingress Controller
 1. Navigate to **Operators > Installed Operators > NetScaler Operator**. Select **NetScaler Ingress Controller** tab inside. After that select the instance you want to delete and then select its **Delete NetScalerIngressController** option.
 
    ![NetScaler Ingress Controller Deployment Delete](../media/delete_nic_instance.png)
@@ -129,7 +129,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller (NI
 
 Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX with the NetScaler ingress controller as a sidecar. The NetScaler Ingress controller configures the NetScaler CPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology.
 
-![CPX Topology](../media/CPX_nic_topology.png)
+![CPX Topology](../media/CPX_cic_topology.png)
 
 ### Prerequisites
 
@@ -221,7 +221,7 @@ Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX w
 
 NetScaler Observability Exporter is a container which collects metrics and transactions from NetScaler and transforms them to suitable formats (such as JSON, AVRO) for supported endpoints. You can export the data collected by NetScaler observability exporter to the desired endpoint for analysis and get valuable insights at a microservices level for applications proxied by NetScalers.
 
-###Prerequisites
+### Prerequisites
 
 - Deployed [Red Hat Openshift](https://www.openshift.com) version 4.1 or later.
 - To enable Tracing, set ns_tracing.enabled to true and ns_tracing.server to the tracer endpoint like zipkin.default.cluster.svc.local:9411/api/v1/spans. Default value for Zipkin server is zipkin:9411/api/v1/spans.
