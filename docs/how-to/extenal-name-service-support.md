@@ -43,7 +43,7 @@ The following is a sample `ExternalName` service definition to access the `mysql
 kind: Service
 apiVersion: v1
 metadata:
-  name: mysql
+  name: dbservice
   namespace: namespace1
 spec:
   type: ExternalName
