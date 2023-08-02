@@ -6,13 +6,13 @@ In Dual-tier deployments, the second tier is within the Kubernetes Cluster (usin
 
 ## Single-Tier topology
 
-In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the (North-South) traffic from the clients to microservices inside the cluster. The Citrix ingress controller is deployed as a standalone pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.
+In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the (north-south) traffic from the clients to microservices inside the cluster. The Citrix ingress controller is deployed as a standalone pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.
 
 ![Single-tier](media/singletopology.png)
 
 ## Dual-Tier topology
 
-In Dual-Tier topology, Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix ingress controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Citrix ADC CPX pods configures the associated Citrix ADC CPX in the same pod.
+In Dual-Tier topology, Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (north-south) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix ingress controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Citrix ADC CPX pods configures the associated Citrix ADC CPX in the same pod.
 
 ![Dual-tier](media/dualtier.png)
 
@@ -48,7 +48,7 @@ Following are some of the scenarios when service mesh lite topology is recommend
 
 -  When you need both the north-south and the east-west traffic management for microservices.
 -  When you need the east-west traffic management through a proxy deployed as a standalone proxy and not as sidecar proxies to microservices.
--  When you need the proxy inside the Kubernetes cluster to perform both North-South and East-West traffic management.
+-  When you need the proxy inside the Kubernetes cluster to perform both north-south and east-west traffic management.
 -  When you need the benefits of service mesh, but wants a lighter and simpler solution.
 
 ## Services of type LoadBalancer
@@ -75,25 +75,25 @@ For more information, see [Expose services of type NodePort](network/nodeport.md
 
 ## Guidelines for choosing the topology
 
-The following information helps you to choose the right deployment among the three topologies unified ingress and dual tier, and service mesh lite based on your needs.
+The following information helps you to choose the right deployment among the topologies Single-Tier and Dual-tier based on your needs.
 
-### Single tier (Unified Ingress)
+### Single-Tier (Unified Ingress)
 
-Following are some of the scenarios when unified ingress topology is recommended and the benefits:
+Following are some of the scenarios when Single-Tier (unified ingress) topology is recommended and the benefits:
 
 -  Easy to start and adopt because you can use the existing NetScaler as the ingress proxy in front of the Kubernetes cluster.
 -  When the Network team manages both NetScaler and the Kubernetes deployment.
 -  Your workload running as microservices is less and a Kubernetes proxy inside the Kubernetes cluster is not required.
--  More suitable for North-South traffic deployments.
+-  More suitable for north-south traffic deployments.
 
-### Dual tier
+### Dual-Tier
 
-Following are some of the scenarios when dual-tier ingress topology is preferred and the benefits:
+Following are some of the scenarios when Dual-Tier ingress topology is preferred and the benefits:
 
 -  When you have significant workload running as microservices there is a need for a proxy inside the Kubernetes cluster.
 -  When the external proxy (managed by the network team) and Kubernetes proxies (managed by platform team) are managed by two different teams.
 -  You need segregation of functions for proxies external to Kubernetes and for proxies inside Kubernetes. For example, WAF, and SSL offload on external NetScaler and policy enforcement and rate limiting on the Kubernetes proxy.
--  The proxy inside the Kubernetes cluster performs North-South traffic management only.
+-  The proxy inside the Kubernetes cluster performs north-south traffic management only.
 
 ## Deployment using Helm charts and the Citrix deployment builder
 
