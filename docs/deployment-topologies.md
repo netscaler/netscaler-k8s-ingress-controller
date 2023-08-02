@@ -2,7 +2,7 @@
 
 Citrix ADCs can be combined in powerful and flexible topologies that complement organizational boundaries. Dual-tier deployments employ high-capacity hardware or virtualized Citrix ADCs (Citrix ADC MPX and VPX) in the first tier to offload security functions and implement relatively static organizational policies while segmenting control between network operators and Kubernetes operators.
 
-In Dual-tier deployments, the second tier is within the Kubernetes Cluster (using the Citrix ADC CPX) and is under control of the service owners. This setup provides stability for network operators, while allowing Kubernetes users to implement high-velocity changes. Single-tier topologies are suited to organizations that need to handle high rates of change.
+In Dual-tier deployments, the second tier is within the Kubernetes Cluster (using the Citrix ADC CPX) and is under the control of the service owners. This setup provides stability for network operators, while allowing Kubernetes users to implement high-velocity changes. Single-tier topologies are suited to organizations that need to handle high rates of change.
 
 ## Single-Tier topology
 
@@ -28,20 +28,28 @@ Kubernetes clusters in public clouds such as [Amazon Web Services (AWS)](https:/
 
 ## Service mesh lite
 
-An Ingress solution (either hardware or virtualized or containerized) typically performs L7 proxy functions for north-south (N-S) traffic. The Service Mesh lite architecture uses the same Ingress solution to manage east-west traffic as well.
+An Ingress solution typically performs layer 7 proxy functions for traffic from client to microservices inside the Kubernetes cluster (north-south traffic). The Service mesh lite architecture uses the same Ingress solution to manage the traffic across services with in the Kubernetes cluster (east-west traffic) as well. Typically a service mesh solution is used for managing east-west traffic, but it is heavier and complex to manage. Service mesh lite solution is a simplified version of the service mesh architecture and ideal when there is a need to manage both north-south and east-west traffic management. In a service mesh, there are as many sidecar proxies as the number of applications. But, in the service mesh lite architecture, a proxy is deployed as a standalone proxy managing multiple East-West connections. Hence, the Service mesh lite solution is lighter compared to a service mesh
+because the number of proxies required are less.
 
-In a standard Kubernetes deployment, east-west (E-W) traffic traverses the built-in KubeProxy deployed in each node. [Kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy) being a L4 proxy can only do TCP/UDP based load balancing without the benefits of L7 proxy.
+In a standard Kubernetes deployment, east-west traffic traverses the built-in kube-proxy deployed in each node. [Kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy) being a L4 proxy can only do TCP/UDP based load balancing without the benefits of L7 proxy.
 
-Citrix ADC (MPX, VPX, or CPX) can provide such benefits for E-W traffic such as:
+Citrix ADC (MPX, VPX, or CPX) can provide such benefits for east-west traffic such as:
 
 -  Mutual TLS or SSL offload
--  Content based routing, allow or block traffic based on HTTP or HTTPS header parameters
+-  Content based routing, allow, or block traffic based on HTTP or HTTPS header parameters
 -  Advanced load balancing algorithms (for example, least connections, least response time and so on.)
 -  Observability of east-west traffic through measuring golden signals (errors, latencies, saturation, or traffic volume). [Citrix ADM’s](https://docs.citrix.com/en-us/citrix-application-delivery-management-service.html) Service Graph is an observability solution to monitor and debug microservices.
 
 For more information, see [Service mesh lite](deploy/service-mesh-lite.md).  
 
 ![Dual-tier-Hairpin-mode](media/dual-tier-topology-with-hairpin-E-W.png)
+
+Following are some of the scenarios when service mesh lite topology is recommended:
+
+-  When you need both the north-south and the east-west traffic management for microservices.
+-  When you need the east-west traffic management through a proxy deployed as a standalone proxy and not as sidecar proxies to microservices.
+-  When you need the proxy inside the Kubernetes cluster to perform both North-South and East-West traffic management.
+-  When you need the benefits of service mesh, but wants a lighter and simpler solution.
 
 ## Services of type LoadBalancer
 
@@ -65,6 +73,28 @@ For more information, see [Expose services of type NodePort](network/nodeport.md
 
 ![Services of type NodePort](media/type-nodeport.png)
 
+## Guidelines for choosing the topology
+
+The following information helps you to choose the right deployment among the three topologies unified ingress and dual tier, and service mesh lite based on your needs.
+
+### Single tier (Unified Ingress)
+
+Following are some of the scenarios when unified ingress topology is recommended and the benefits:
+
+-  Easy to start and adopt because you can use the existing NetScaler as the ingress proxy in front of the Kubernetes cluster.
+-  When the Network team manages both NetScaler and the Kubernetes deployment.
+-  Your workload running as microservices is less and a Kubernetes proxy inside the Kubernetes cluster is not required.
+-  More suitable for North-South traffic deployments.
+
+### Dual tier
+
+Following are some of the scenarios when dual-tier ingress topology is preferred and the benefits:
+
+-  When you have significant workload running as microservices there is a need for a proxy inside the Kubernetes cluster.
+-  When the external proxy (managed by the network team) and Kubernetes proxies (managed by platform team) are managed by two different teams.
+-  You need segregation of functions for proxies external to Kubernetes and for proxies inside Kubernetes. For example, WAF, and SSL offload on external NetScaler and policy enforcement and rate limiting on the Kubernetes proxy.
+-  The proxy inside the Kubernetes cluster performs North-South traffic management only.
+
 ## Deployment using Helm charts and the Citrix deployment builder
 
 For deploying Citrix cloud native topologies, there are various options available using YAML and Helm charts. Helm charts are one of the easiest ways for deployment in a Kubernetes environment. When you deploy using the Helm charts, you can use a `values.yaml` file to specify the values of the configurable parameters instead of providing each parameter as an argument.
@@ -76,17 +106,18 @@ The following topologies are supported by the Citrix deployment builder:
 -  Single-Tier
 
     -  Ingress
-   
+
     -  Service type LoadBalancer
 
 -  Dual-Tier
-   
+
     -  Citrix ADC CPX as NodePort
-   
+
     -  Citrix ADC CPX as service of type LoadBalancer
- 
+
 -  Multi-cluster Ingress
 
 -  Service mesh
 
 For detailed information on how to use the Citrix deployment builder, see the [Citrix deployment builder blog](https://www.citrix.com/blogs/2021/03/02/citrix-deployment-builder-simplifying-citrix-cloud-native-deployments/#).
+
