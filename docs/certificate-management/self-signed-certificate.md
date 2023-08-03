@@ -11,7 +11,7 @@ You can link it to the Kubernetes secret and use that secret in the Ingress for 
         openssl req -new -key cert_key.pem -out cert_csr.pem -subj "/CN=example.com"
         openssl x509 -req -in cert_csr.pem -sha256 -days 365 -extensions v3_ca -signkey cert_key.pem -CAcreateserial -out cert_cert.pem
 
-**Note:** Here, `example.com` is used for reference.You must replace `example.com` with the required domain name.
+**Note:** Here, `example.com` is used for reference. You must replace `example.com` with the required domain name.
 
 **Note:** In the example, the generated certificate has a validity of one year as the days are mentioned as 365.
 
