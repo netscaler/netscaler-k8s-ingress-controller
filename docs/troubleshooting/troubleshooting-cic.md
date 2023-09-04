@@ -4,9 +4,9 @@ You can use te following tools available with Citrix ingress controller to help 
 
 ## Kubectl plug-in for NetScaler
 
-NetScaler provides a [kubectl plug-in](https://github.com/netscaler/modern-apps-toolkit/tree/main/netscaler-k8s-plugin) to inspect ingress controller deployments and aids in troubleshooting operations. You can inspect the NetScaler configuration and related Kubernetes components using the subcommands available with this plug-in.
+NetScaler provides a [kubectl plug-in](https://github.com/netscaler/modern-apps-toolkit/tree/main/netscaler-plugin) to inspect ingress controller deployments and aids in troubleshooting operations. You can inspect the NetScaler configuration and related Kubernetes components using the subcommands available with this plug-in.
 
-Using the [support subcommand](https://github.com/netscaler/modern-apps-toolkit/tree/main/netscaler-k8s-plugin#support-command) you can get NetScaler (show techsupport) and ingress controller support bundle.
+Using the [support subcommand](https://github.com/netscaler/modern-apps-toolkit/tree/main/netscaler-plugin#support-command) you can get NetScaler (show techsupport) and ingress controller support bundle.
 
 You can collect and share the support bundle information with the support team for faster resolution.
 
