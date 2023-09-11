@@ -72,14 +72,14 @@ spec:
                 - TCP
                 - UDP
                 - ANY
-                description: "Protocol supported in multi-cluster deployment"
+                description: "Protocol supported in gslb deployment"
               hosts:
                 items:
                   required: ["host","policy"]
                   properties:
                     host:
                       type: string
-                      description: "Domain for which multi-cluster support will be applied"
+                      description: "Domain for which gslb support will be applied"
                     policy:
                       required: ["targets","trafficPolicy"]
                       properties:
@@ -92,7 +92,7 @@ spec:
                           - RTT
                           - ROUNDROBIN
                           - STATICPROXIMITY
-                          description: "The traffic distribution policy supported in multi-cluster deployment"
+                          description: "The traffic distribution policy supported in gslb deployment"
                         sourceIpPersistenceId:
                           type: integer
                           minimum: 0
@@ -138,13 +138,13 @@ spec:
                                 - tcp
                                 - http
                                 - https
-                                description: "Type of probe to determine the health of multi-cluster endpoint"
+                                description: "Type of probe to determine the health of gslb endpoint"
                               uri:
                                 type: string
-                                description: "Path to be probed for the health of multi-cluster endpoint in case of http and https"
+                                description: "Path to be probed for the health of gslb endpoint in case of http and https"
                               respCode:
                                 type: integer
-                                description: "Response code expected to mark the multi-cluster endpoint healthy in case of http and https"
+                                description: "Response code expected to mark the gslb endpoint healthy in case of http and https"
                             type: object
                           type: array
                       type: object
