@@ -378,7 +378,7 @@ This configuration can be verified using the following command:
 
 ## GTP CRD definition
 
-GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml))
+GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml)
 
 The following table explains the GTP CRD attributes.
 
