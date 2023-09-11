@@ -165,7 +165,7 @@ The global traffic policy (GTP) and global service entry (GSE) CRDs help to conf
 
 The GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, and local-first), GSLB domain, health monitor for the ingress, and service type.
 
-For GTP CRD definition, see the [GTP CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/gslb/gslb/#gtp-crd-definition). Apply the GTP CRD definition on AWS and Azure Kubernetes clusters using the following command:
+For GTP CRD definition, see the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb/gslb.md#gtp-crd-definition). Apply the GTP CRD definition on AWS and Azure Kubernetes clusters using the following command:
 
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/gslb/Manifest/gtp-crd.yaml
 
@@ -173,7 +173,7 @@ For GTP CRD definition, see the [GTP CRD](https://developer-docs.citrix.com/proj
 
 The GSE CRD specifies the endpoint information (information about any Kubernetes object that routes traffic into the cluster) in each cluster. The global service entry automatically picks the external IP address of the application, which routes traffic into the cluster. If the external IP address of the routes change, the global service entry picks a newly assigned IP address and configure the gslb endpoints of Citrix ADCs accordingly.
 
-For the GSE CRD definition, see the [GSE CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/gslb/gslb/#gse-crd-definition). Apply the GSE CRD definition on AWS and Azure Kubernetes clusters using the following command:
+For the GSE CRD definition, see the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb/gslb.md#gse-crd-definition). Apply the GSE CRD definition on AWS and Azure Kubernetes clusters using the following command:
 
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/gslb/Manifest/gse-crd.yaml
 
