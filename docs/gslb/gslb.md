@@ -68,7 +68,7 @@ The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [
 
 GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
+The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
 
