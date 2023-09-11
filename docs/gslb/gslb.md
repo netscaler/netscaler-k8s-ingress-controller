@@ -62,13 +62,13 @@ The following CRDs are introduced to support the Citrix ADC configuration for pe
 
 GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
 
-The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml).
+The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml).
 
 ### GSE CRD
 
 GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
+The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
 
@@ -96,7 +96,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
      **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
 
-3.  Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml).
+3.  Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-controller.yaml).
 
 4.  Edit the GSLB controller YAML file and update the following values as per the requirements of each cluster.
 
@@ -155,11 +155,11 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
         kubectl apply -f gslb-controller.yaml
 
-6.  Deploy the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
+6.  Deploy the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
 
         kubectl create -f  gtp-crd.yaml
 
-7.  Deploy the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml) definition YAML file using the following command.
+7.  Deploy the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml) definition YAML file using the following command.
 
         kubectl create -f  gse-crd.yaml
 
@@ -378,7 +378,7 @@ This configuration can be verified using the following command:
 
 ## GTP CRD definition
 
-GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml))
+GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml))
 
 The following table explains the GTP CRD attributes.
 
@@ -400,7 +400,7 @@ The following table explains the GTP CRD attributes.
 
 ## GSE CRD definition
 
-GSE CRD definition is available at [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
+GSE CRD definition is available at [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 ## Examples: Global traffic policy deployments
 

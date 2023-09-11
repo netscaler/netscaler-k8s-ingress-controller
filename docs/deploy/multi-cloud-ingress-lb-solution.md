@@ -165,17 +165,17 @@ The global traffic policy (GTP) and global service entry (GSE) CRDs help to conf
 
 The GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, and local-first), GSLB domain, health monitor for the ingress, and service type.
 
-For GTP CRD definition, see the [GTP CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/multicluster/multi-cluster/#gtp-crd-definition). Apply the GTP CRD definition on AWS and Azure Kubernetes clusters using the following command:
+For GTP CRD definition, see the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/#gtp-crd-definition). Apply the GTP CRD definition on AWS and Azure Kubernetes clusters using the following command:
 
-    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/multicluster/Manifest/gtp-crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/gslb/Manifest/gtp-crd.yaml
 
 **GSE CRD**
 
 The GSE CRD specifies the endpoint information (information about any Kubernetes object that routes traffic into the cluster) in each cluster. The global service entry automatically picks the external IP address of the application, which routes traffic into the cluster. If the external IP address of the routes change, the global service entry picks a newly assigned IP address and configure the multi-cluster endpoints of Citrix ADCs accordingly.
 
-For the GSE CRD definition, see the [GSE CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/multicluster/multi-cluster/#gse-crd-definition). Apply the GSE CRD definition on AWS and Azure Kubernetes clusters using the following command:
+For the GSE CRD definition, see the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/#gse-crd-definition). Apply the GSE CRD definition on AWS and Azure Kubernetes clusters using the following command:
 
-    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/multicluster/Manifest/gse-crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/gslb/Manifest/gse-crd.yaml
 
 ## Deploy GSLB controller
 
@@ -187,7 +187,7 @@ To deploy the multi-cluster controller, perform the following steps:
 
 1. Create an RBAC for the multi-cluster ingress controller on the AWS and Azure Kubernetes clusters.
 
-        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/multicluster/Manifest/gslb-rbac.yaml
+        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/gslb/Manifest/gslb-rbac.yaml
 
 2. Create the secrets on the AWS and Azure clusters using the following command: 
 
@@ -197,7 +197,7 @@ To deploy the multi-cluster controller, perform the following steps:
 
     **Note**: You can add a user to Citrix ADC using the `add system user` command.
 
-3.	Download the GSLB controller YAML file from [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml).
+3.	Download the GSLB controller YAML file from [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-controller.yaml).
 
 4. Apply the `gslb-controller.yaml` in an AWS cluster using the following command:
 
@@ -242,7 +242,7 @@ To deploy the multi-cluster controller, perform the following steps:
            name: secret-1
            key: password
 
-    Apply the [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml) in the Azure cluster using the following command:
+    Apply the [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-controller.yaml) in the Azure cluster using the following command:
 
         kubectl apply -f  gslb-controller.yaml
 
