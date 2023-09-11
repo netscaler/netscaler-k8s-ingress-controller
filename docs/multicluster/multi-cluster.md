@@ -62,7 +62,7 @@ The following CRDs are introduced to support the Citrix ADC configuration for pe
 
 GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
 
-The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml).
+The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml).
 
 ### GSE CRD
 
@@ -85,7 +85,7 @@ For GSE CRD auto generation in the case of Ingress, host name should exactly mat
 
 Perform the following steps to deploy the Citrix global load balancing solution for geographically distributed Kubernetes clusters.
 
-1.  Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-rbac.yaml) file.
+1.  Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-rbac.yaml) file.
 
         kubectl apply -f gslb-rbac.yaml
 
@@ -96,7 +96,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
      **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
 
-3.  Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gslb-controller.yaml).
+3.  Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-controller.yaml).
 
 4.  Edit the GSLB controller YAML file and update the following values as per the requirements of each cluster.
 
@@ -155,11 +155,11 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
         kubectl apply -f gslb-controller.yaml
 
-6.  Deploy the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
+6.  Deploy the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
 
         kubectl create -f  gtp-crd.yaml
 
-7.  Deploy the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml) definition YAML file using the following command.
+7.  Deploy the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml) definition YAML file using the following command.
 
         kubectl create -f  gse-crd.yaml
 
@@ -378,29 +378,29 @@ This configuration can be verified using the following command:
 
 ## GTP CRD definition
 
-GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gtp-crd.yaml))
+GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml))
 
 The following table explains the GTP CRD attributes.
 
 | Field               | Description                                                                                                                                                                                                                                                                                                                        |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |   `ipType`                                                                                     |Specifies the DNS record type as A or AAAA. Currently, only  `A` record type is supported                                                                                                                                                                                   |
-|`serviceType:`          |Specifies the protocol to which multi-cluster support is applied.                                                                                                                                                                                                                                                                  |
-| `host`          |                                                                                           Specifies the domain for which multi-cluster support is applied.                                                                                                                                |
-| `trafficPolicy`    | Specifies the traffic distribution policy supported in a multi-cluster deployment. |
+|`serviceType:`          |Specifies the protocol to which gslb support is applied.                                                                                                                                                                                                                                                                  |
+| `host`          |                                                                                           Specifies the domain for which gslb support is applied.                                                                                                                                |
+| `trafficPolicy`    | Specifies the traffic distribution policy supported in a gslb deployment. |
 | `sourceIpPersistenceId`| Specifies the unique source IP persistence ID. This attribute enables persistence based on the source IP address for the inbound packets. The `sourceIpPersistenceId` attribute should be a multiple of 100 and should be unique.  For a sample configuration, see [Example: source IP persistence](#example-source-ip-persistence). |
 | `secLbMethod`    |  Specifies the traffic distribution policy supported among clusters under a group in local-first, canary, or failover.  |
 |  `destination `        | Specifies the Ingress or LoadBalancer service endpoint in each cluster. The destination name should match with the name of GSE.                                                                                      |
 | `weight`               |  Specifies the proportion of traffic to be distributed across clusters. For canary deployment, the proportion is specified as percentage.                                                                                                                                                                                                                                                   |
 |`CIDR`    |Specifies the CIDR to be used in local-first to determine the scope of locality.                                                                                                                                                                                                                                                                                  |
 |`primary`    | Specifies whether the destination is a primary cluster or a backup cluster in the failover deployment.                                                                                                                                                                                                                                                                              |
-|`monType`    |Specifies the type of probe to determine the health of the multi-cluster endpoint.  When the monitor type is HTTPS, SNI is enabled by default during the TLS handshake.                                                                               |
-|`uri`    |Specifies the path to be probed for the health of the multi-cluster endpoint for HTTP and HTTPS.                                                                                                                                                                                                                                                                                  |
-|`respCode`    |Specifies the response code expected to mark the multi-cluster endpoint as healthy for HTTP and HTTPS.                                                                                                                                                                                                               |
+|`monType`    |Specifies the type of probe to determine the health of the gslb endpoint.  When the monitor type is HTTPS, SNI is enabled by default during the TLS handshake.                                                                               |
+|`uri`    |Specifies the path to be probed for the health of the gslb endpoint for HTTP and HTTPS.                                                                                                                                                                                                                                                                                  |
+|`respCode`    |Specifies the response code expected to mark the gslb endpoint as healthy for HTTP and HTTPS.                                                                                                                                                                                                               |
 
 ## GSE CRD definition
 
-GSE CRD definition is available at [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
+GSE CRD definition is available at [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 ## Examples: Global traffic policy deployments
 

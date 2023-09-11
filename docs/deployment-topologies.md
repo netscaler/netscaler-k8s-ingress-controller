@@ -115,7 +115,7 @@ The following topologies are supported by the Citrix deployment builder:
 
     -  Citrix ADC CPX as service of type LoadBalancer
 
--  Multi-cluster Ingress
+-  gslb Ingress
 
 -  Service mesh
 

@@ -1,6 +1,6 @@
 # Policy based routing support for multiple Kubernetes clusters
 
-When you are using a single Citrix ADC to load balance multiple Kubernetes clusters, the Citrix ingress controller adds pod CIDR networks through static routes. These routes establish networking connectivity between Kubernetes pods and Citrix ADC. However, when the pod CIDRs overlap there may be route conflicts. Citrix ADC supports policy based routing (PBR) to address the networking conflicts in such scenarios. In PBR, decisions are taken based on the criteria that you specify. Typically, a next hop is specified where you send the selected packets. In a multi-cluster Kubernetes environment, PBR is implemented by reserving a subnet IP address (SNIP) for each Kubernetes cluster or the Citrix Ingress Controller. Using net profile, the SNIP is bound to all service groups created by the same Citrix ingress controller. For all the traffic generated from service groups belonging to the same cluster, the source IP address is the same SNIP.
+When you are using a single Citrix ADC to load balance multiple Kubernetes clusters, the Citrix ingress controller adds pod CIDR networks through static routes. These routes establish networking connectivity between Kubernetes pods and Citrix ADC. However, when the pod CIDRs overlap there may be route conflicts. Citrix ADC supports policy based routing (PBR) to address the networking conflicts in such scenarios. In PBR, decisions are taken based on the criteria that you specify. Typically, a next hop is specified where you send the selected packets. In a gslb Kubernetes environment, PBR is implemented by reserving a subnet IP address (SNIP) for each Kubernetes cluster or the Citrix Ingress Controller. Using net profile, the SNIP is bound to all service groups created by the same Citrix ingress controller. For all the traffic generated from service groups belonging to the same cluster, the source IP address is the same SNIP.
 
 Following is a sample topology where PBR is configured for two Kubernetes clusters which are load balanced using a Citrix ADC VPX or MPX.
 
@@ -101,7 +101,7 @@ You can configure PBR using the [Citrix node controller](https://github.com/citr
 
 Perform the following steps to configure PBR using the Citrix node controller:
 
-1. While starting the Citrix node controller, provide the `CLUSTER_NAME` as an environment variable. Specifying this variable indicates that it is a multi-cluster deployment and the Citrix node controller configures PBR instead of static routes.  
+1. While starting the Citrix node controller, provide the `CLUSTER_NAME` as an environment variable. Specifying this variable indicates that it is a gslb deployment and the Citrix node controller configures PBR instead of static routes.  
     
     Example:
 
