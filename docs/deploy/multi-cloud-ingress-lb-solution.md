@@ -181,7 +181,7 @@ For the GSE CRD definition, see the [GSE CRD](https://github.com/citrix/citrix-k
 
 GSLB controller helps you to ensure the high availability of the applications across clusters in a multi-cloud environment.
 
-You can install the multi-cluster controller on the AWS and Azure clusters. GSLB controller listens to GTP and GSE CRDs and configures the Citrix ADC for GSLB that provides high availability across multiple regions in a multi-cloud environment.
+You can install the GSLB controller on the AWS and Azure clusters. GSLB controller listens to GTP and GSE CRDs and configures the Citrix ADC for GSLB that provides high availability across multiple regions in a multi-cloud environment.
 
 To deploy the gslb controller, perform the following steps:
 
@@ -370,7 +370,7 @@ To deploy the multi-cloud gslb ingress and load balancing with Citrix ADC VPX as
 1.	[Configure ADNS service on Citrix ADC VPX deployed in AWS and AKS](#configure-adns-service-on-citrix-adc-vpx-deployed-in-aws-and-aks)
 1.	[Configure GSLB service on Citrix ADC VPX deployed in AWS and AKS](#configure-gslb-service-on-citrix-adc-vpx-deployed-in-aws-and-aks)
 1.  [Apply GTP and GSE CRDs on AWS and Azure Kubernetes clusters](#apply-gtp-and-gse-crds-on-aws-and-azure-kubernetes-clusters)
-1.	[Deploy the multi-cluster controller](#deploy-gslb-controller)
+1.	[Deploy the GSLB controller](#deploy-gslb-controller)
 
 After completing the preceding tasks, perform the following tasks:
 
