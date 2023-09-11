@@ -1,8 +1,8 @@
-# Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters
+# Multi-cloud and GSLB solution with Amazon EKS and Microsoft AKS clusters
 
 You can deploy multiple instances of the same application across multiple clouds provided by different cloud providers. This multi-cloud strategy helps you to ensure resiliency, high availability, and proximity. A multi-cloud approach also allows you to take advantage of the best of each cloud provider by reducing the risks such as vendor lock-in and cloud outages.
 
-You can deploy the multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS.
+You can deploy the multi-cloud and GSLB solution with Amazon EKS and Microsoft AKS.
 
 ## Deployment topology
 
@@ -16,16 +16,16 @@ The following diagram explains a deployment topology of the multi-cloud ingress 
   -  You should be familiar with Citrix ADC and [Citrix ADC networking](https://docs.citrix.com/en-us/citrix-adc/current-release/networking.html).
   -  Instances of the same application must be deployed in Kubernetes clusters on Amazon EKS and Microsoft AKS.
 
-## Deploy multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters
+## Deploy multi-cloud and GSLB solution with Amazon EKS and Microsoft AKS clusters
 
-To deploy the multi-cloud multi-cluster ingress and load balancing solution, you must perform the following tasks.
+To deploy the multi-cloud GSLB solution, you must perform the following tasks.
 
 1.	Deploy Citrix ADC VPX in AWS.
 1.	Deploy Citrix ADC VPX in Azure.
 1.	Configure ADNS service on Citrix ADC VPX deployed in AWS and AKS.
 1.	Configure GSLB service on Citrix ADC VPX deployed in AWS and AKS.
 1.  Apply GTP and GSE CRDs on AWS and Azure Kubernetes clusters.
-1.	Deploy the multi-cluster controller.
+1.	Deploy the GSLB controller.
 
 ## Deploy Citrix ADC VPX in AWS
 
@@ -57,7 +57,7 @@ For high availability (HA), you can install two instances of Citrix ADC VPX in H
 
     **Note**: If you are running the Citrix ADC VPX in High Availability (HA) mode, you must perform this configuration in both of the Citrix ADC VPX instances.
 
-5.  Enable Content Switching (CS), Load Balancing (LB), Global Server Load Balancing(GSLB), and SSL features in Citrix ADC VPX using the following command:
+5.  Enable Content Switching (CS), Load Balancing (LB), Global Server Load Balancing (GSLB), and SSL features in Citrix ADC VPX using the following command:
 
         enable feature *feature*
 
@@ -159,7 +159,7 @@ You must create GSLB sites on Citrix ADC VPX deployed on AWS and Azure.
 
 ## Apply GTP and GSE CRDs on AWS and Azure Kubernetes clusters
 
-The global traffic policy (GTP) and global service entry (GSE) CRDs help to configure Citrix ADC for performing GSLB in Kubernetes applications. These CRDs are designed for configuring multi-cluster ingress and load balancing solution for Kubernetes clusters.
+The global traffic policy (GTP) and global service entry (GSE) CRDs help to configure Citrix ADC for performing GSLB in Kubernetes applications. These CRDs are designed for configuring GSLB solution for Kubernetes clusters.
 
 **GTP CRD**
 
@@ -177,11 +177,11 @@ For the GSE CRD definition, see the [GSE CRD](https://developer-docs.citrix.com/
 
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/multicluster/Manifest/gse-crd.yaml
 
-## Deploy multi-cluster controller
+## Deploy GSLB controller
 
-Multi-cluster controller helps you to ensure the high availability of the applications across clusters in a multi-cloud environment.
+GSLB controller helps you to ensure the high availability of the applications across clusters in a multi-cloud environment.
 
-You can install the multi-cluster controller on the AWS and Azure clusters. Multi-cluster controller listens to GTP and GSE CRDs and configures the Citrix ADC for GSLB that provides high availability across multiple regions in a multi-cloud environment.
+You can install the multi-cluster controller on the AWS and Azure clusters. GSLB controller listens to GTP and GSE CRDs and configures the Citrix ADC for GSLB that provides high availability across multiple regions in a multi-cloud environment.
 
 To deploy the multi-cluster controller, perform the following steps:
 
@@ -361,7 +361,7 @@ As the GTP CRD is configured for the traffic policy as `FAILOVER`, Citrix ADC VP
 
 ## Citrix ADC VPX as ingress and GSLB device for Amazon EKS and Microsoft AKS clusters
 
-You can deploy the multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS with Citrix ADC VPX as GSLB and the same Citrix ADC VPX as ingress device too.
+You can deploy the multi-cloud and GSLB solution with Amazon EKS and Microsoft AKS with Citrix ADC VPX as GSLB and the same Citrix ADC VPX as ingress device too.
 
 To deploy the multi-cloud multi-cluster ingress and load balancing with Citrix ADC VPX as the ingress device, you must complete the following tasks described in the previous sections:
 
@@ -370,7 +370,7 @@ To deploy the multi-cloud multi-cluster ingress and load balancing with Citrix A
 1.	[Configure ADNS service on Citrix ADC VPX deployed in AWS and AKS](#configure-adns-service-on-citrix-adc-vpx-deployed-in-aws-and-aks)
 1.	[Configure GSLB service on Citrix ADC VPX deployed in AWS and AKS](#configure-gslb-service-on-citrix-adc-vpx-deployed-in-aws-and-aks)
 1.  [Apply GTP and GSE CRDs on AWS and Azure Kubernetes clusters](#apply-gtp-and-gse-crds-on-aws-and-azure-kubernetes-clusters)
-1.	[Deploy the multi-cluster controller](#deploy-multi-cluster-controller)
+1.	[Deploy the multi-cluster controller](#deploy-gslb-controller)
 
 After completing the preceding tasks, perform the following tasks:
 
