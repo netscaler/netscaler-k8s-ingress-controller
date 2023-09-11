@@ -1,8 +1,8 @@
 # Disable API server certificate verification
 
-While communicating with the API server from Citrix ingress controller or multicluster ingress, you have the option to disable the API server certificate verification on Citrix ingress controller.
+While communicating with the API server from Citrix ingress controller or gslb ingress, you have the option to disable the API server certificate verification on Citrix ingress controller.
 
-## Disable API server certificate verification on Citrix ingress controller or Multi-cluster ingress
+## Disable API server certificate verification on Citrix ingress controller or gslb ingress
 
 When you deploy Citrix ingress controller using YAML, you can disable the API server certificate verification by providing the following argument in the [Citrix ingress controller deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
 

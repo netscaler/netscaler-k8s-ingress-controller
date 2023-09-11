@@ -104,8 +104,8 @@ nav:
     #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
     #- Deploy the Citrix ADC Integrated Canary Deployment Solution in Google cloud Platform:
     #- Troubleshooting: 
-  - Multi-cluster ingress and load balancing solution: multicluster/multi-cluster.md
-  - Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters: deploy/multi-cloud-ingress-lb-solution.md 
+  - gslb ingress and load balancing solution: gslb/gslb.md
+  - Multi-cloud and gslb ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters: deploy/multi-cloud-ingress-lb-solution.md 
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
