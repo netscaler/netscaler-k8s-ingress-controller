@@ -1,4 +1,4 @@
-# Multi-cluster ingress and load balancing solution using the Citrix ingress controller
+# NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters
 
 ## Overview
 
@@ -6,17 +6,17 @@ For ensuring high availability, proximity based load balancing, and scalability,
 
 For implementing a load balancing solution for distributed Kubernetes clusters, the health of applications across clusters needs to be monitored globally. You need to monitor application availability and performance, update the application status across clusters, collect statistics from endpoints in data centers, and share the statistics across data centers.
 
-Citrix provides a multi-cluster ingress and load balancing solution which globally monitors applications, collect, and share metrics across different clusters, and provides intelligent load balancing decisions. It ensures better performance and reliability for your Kubernetes services that are exposed using Ingress or using type LoadBalancer.
+NetScaler provides a GSLB controller for applications deployed in distributed Kubernetes clusters which globally monitors applications, collect, and share metrics across different clusters, and provides intelligent load balancing decisions. It ensures better performance and reliability for your Kubernetes services that are exposed using Ingress or using type LoadBalancer.
 
 ## Deployment topology
 
-The following diagram explains a deployment topology for the multi-cluster ingress and load balancing solution for Kubernetes clusters.
+The following diagram explains a deployment topology for the NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters for Kubernetes clusters.
 
 **Note:** Services of type LoadBalancer (available for bare metal clusters using Citrix ADC) are also supported.
 
-![Multi-cluster-deployment](../media/multi-cluster-updated.png)
+![gslb-controller-deployment](../media/multi-cluster-updated.png)
 
-This diagram shows a sample topology with two data centers and each data center contains multiple Kubernetes clusters. For data center 1, Citrix ADC CPX is deployed as the Ingress load balancer in each Kubernetes cluster. For data center 2, HAProxy is deployed as the load balancer in each Kubernetes cluster. Citrix multi-cluster ingress and load balancing solution for Kubernetes load balances across the ingresses.
+This diagram shows a sample topology with two data centers and each data center contains multiple Kubernetes clusters. For data center 1, Citrix ADC CPX is deployed as the Ingress load balancer in each Kubernetes cluster. For data center 2, HAProxy is deployed as the load balancer in each Kubernetes cluster. Citrix NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters for Kubernetes load balances across the ingresses.
 
 **Note:** Any ingress solution, including third party solutions such as Istio ingress gateway as well as the Citrix ingress controller with Citrix ADC MPX, VPX, or BLX is supported. This topology is just a sample deployment.
 
@@ -26,7 +26,7 @@ The global server load balancing (GSLB) configuration synchronization option of 
 
 Each cluster in the deployment runs an instance of the GSLB Kubernetes controller. GSLB controller is the module responsible for the configuration of the Citrix ADC GSLB device. The GSLB controller configures the GSLB master device for the applications deployed in their respective cluster. The GSLB master device pushes the GSLB configuration to the remaining GSLB subordinate devices using the GSLB sync feature. When you synchronize a GSLB configuration, the configurations on all the GSLB sites participating in the GSLB setup are made similar to the configuration on the master site.
 
-The multi-cluster ingress and load balancing solution can be applied for any Kubernetes object which is used to route traffic into the cluster.
+The NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters can be applied for any Kubernetes object which is used to route traffic into the cluster.
 
 The following global load balancing methods are supported:
 
@@ -51,7 +51,7 @@ The following deployment types are supported:
 **Note:**
   Currently, IPv6 is not supported.
 
-## CRDs for configuring Multi-cluster ingress and load balancing solution for Kubernetes clusters
+## CRDs for configuring NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters
 
 The following CRDs are introduced to support the Citrix ADC configuration for performing GSLB of Kubernetes applications.
 
@@ -68,14 +68,14 @@ The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [
 
 GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-The GSE CRD Spec is available in the citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
+The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/multicluster/Manifest/gse-crd.yaml)
 
 The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
 
 **Note:**
 For GSE CRD auto generation in the case of Ingress, host name should exactly match with the host name specified in the GTP CRD instance. For both Ingress and service of type `LoadBalancer`, the GSE CRD is generated only for the first port specified.
 
-## Deploy Citrix Multi-cluster ingress and load balancing solution
+## Deploy Citrix NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters
 
 ### Prerequisites**
 
@@ -223,7 +223,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
           kubectl create -f  service-example.yaml
 
-     Following is a sample service.
+     The following is a sample service.
 
           apiVersion: v1
           kind: Service
@@ -243,7 +243,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
               ingress:
               - ip: 10.102.217.72
 
-For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Citrix ADC, see the [Multi-cloud and multi-cluster ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md).
+For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Citrix ADC, see the [Multi-cloud and NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md).
 
 ## How to direct the DNS resolution of pods to Citrix GSLB ADC
 
@@ -441,7 +441,6 @@ You can use the failover deployment when you want to deploy applications in an a
 In a failover deployment, the application is deployed in multiple clusters and these clusters are grouped into an active cluster group (group1) and a passive cluster group (group2). At any time, only one set of clusters is active while the other set remains passive. When all the clusters in group1 are unavailable, the clusters in group2 moves to the active state. When any of the clusters in group1 becomes available at a later point, group1 moves to the active state and group2 moves to the passive state.
 
 The following example shows a sample GTP configuration for failover. Using the `primary` field, you can specify which cluster belongs to the active group and which cluster belongs to the passive group. The default value for the field is `True` indicating that the cluster belongs to the active group. You can use the `weight` field to direct more client requests to a specific cluster within a group than the other clusters if the configured method is round robin. The `monitor` parameter in the global traffic policy is used to configure the monitor in the Citrix ADC. The monitor can be bound to endpoints in each cluster to probe their health.
-
 
     apiVersion: "citrix.com/v1beta1"
     kind: globaltrafficpolicy
