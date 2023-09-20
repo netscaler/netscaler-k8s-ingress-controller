@@ -197,4 +197,4 @@ servicePorts:
 
 The following is a sample configuration for deployments using the OpenShift Operator. The service port definitions are highlighted in green color.
 
-![Service port](service-port-definition.png).
+![Service port](../media/service-port-definition.png)
