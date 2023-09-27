@@ -46,7 +46,7 @@ kubectl create namespace netscaler
 
 kubectl create secret generic nslogin --from-literal=username='Citrix ingress controller' --from-literal=password='mypassword' -n netscaler
 
-helm install Citrix ingress controller citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
+helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
 
 ```
 
@@ -67,7 +67,7 @@ The following commands can be used to deploy the Citrix ingress controller with 
 ```
 helm repo add citrix https://citrix.github.io/citrix-helm-charts/
 
-helm install Citrix ingress controller citrix/citrix-cloud-native -f values.yaml 
+helm install cic citrix/citrix-cloud-native -f values.yaml 
 ```
 
 ### Deploy Citrix ingress controller for NetScaler VPX or MPX using the YAML manifest
@@ -130,7 +130,7 @@ kubectl create namespace netscaler
 
 kubectl create secret generic nslogin --from-literal=username='Citrix ingress controller' --from-literal=password='mypassword' -n netscaler
 
-helm install Citrix ingress controller citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --set openshift=true --namespace netscaler
+helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --set openshift=true --namespace netscaler
 
 oc adm policy add-scc-to-user privileged system:serviceaccount:<namespace>:<service-account-name>
 
@@ -217,7 +217,7 @@ Following are the minimal steps needed to deploy Citrix ingress controller for N
 
         kubectl create secret generic nslogin --from-literal=username='Citrix ingress controller' --from-literal=password='mypassword' -n netscaler
 
-        helm install Citrix ingress controller citrix/citrix-ingress-controller --set nsIP=<NSIP-i.e.-primary-private-ip-addess-of-VPX> --set nsVIP=<private-IP-address-of-the-VIP-assigned-during-VPX-Azure-instance-creation> --set image=<azure-Citrix ingress controller-image-url-from-step-1> --set license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
+        helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP-i.e.-primary-private-ip-addess-of-VPX> --set nsVIP=<private-IP-address-of-the-VIP-assigned-during-VPX-Azure-instance-creation> --set image=<azure-Citrix ingress controller-image-url-from-step-1> --set license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
 
         ```
 
@@ -316,7 +316,7 @@ kubectl create namespace netscaler
 
 kubectl create secret generic nslogin --from-literal=username='Citrix ingress controller' --from-literal=password='mypassword' -n netscaler
 
-helm install Citrix ingress controller citrix/citrix-ingress-controller --set nsIP=<NSIP-of-VPX-instance_OR_SNIP-with-management-access-enabled> --set nsVIP=<private-IP-address-of-the-VIP-assigned-during-VPX-instance-creation> --set license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
+helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP-of-VPX-instance_OR_SNIP-with-management-access-enabled> --set nsVIP=<private-IP-address-of-the-VIP-assigned-during-VPX-instance-creation> --set license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
 ```
 
 ### Deploy Citrix ingress controller and NetScaler CPX on GKE
