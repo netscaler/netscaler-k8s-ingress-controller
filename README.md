@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./license/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/citrix/citrix-k8s-ingress-controller.svg)](https://github.com/citrix/citrix-k8s-ingress-controller/stargazers)
 [![HitCount](http://hits.dwyl.com/citrix/citrix-k8s-ingress-controller.svg)](http://hits.dwyl.com/citrix/citrix-k8s-ingress-controller)
-
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/netscaler)](https://artifacthub.io/packages/search?repo=netscaler)
 ---
 
 # Citrix ingress controller
