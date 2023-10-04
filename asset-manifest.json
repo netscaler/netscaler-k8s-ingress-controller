@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.css": "/citrix-k8s-ingress-controller/static/css/main.1355a2df.chunk.css",
-    "main.js": "/citrix-k8s-ingress-controller/static/js/main.f4fd00b4.chunk.js",
-    "main.js.map": "/citrix-k8s-ingress-controller/static/js/main.f4fd00b4.chunk.js.map",
-    "runtime-main.js": "/citrix-k8s-ingress-controller/static/js/runtime-main.9750e250.js",
-    "runtime-main.js.map": "/citrix-k8s-ingress-controller/static/js/runtime-main.9750e250.js.map",
-    "static/css/2.b5ac0d14.chunk.css": "/citrix-k8s-ingress-controller/static/css/2.b5ac0d14.chunk.css",
-    "static/js/2.f894d5f7.chunk.js": "/citrix-k8s-ingress-controller/static/js/2.f894d5f7.chunk.js",
-    "static/js/2.f894d5f7.chunk.js.map": "/citrix-k8s-ingress-controller/static/js/2.f894d5f7.chunk.js.map",
-    "index.html": "/citrix-k8s-ingress-controller/index.html",
-    "precache-manifest.f28c08b7925503b84e69d6c6366bca3f.js": "/citrix-k8s-ingress-controller/precache-manifest.f28c08b7925503b84e69d6c6366bca3f.js",
-    "service-worker.js": "/citrix-k8s-ingress-controller/service-worker.js",
-    "static/css/2.b5ac0d14.chunk.css.map": "/citrix-k8s-ingress-controller/static/css/2.b5ac0d14.chunk.css.map",
-    "static/css/main.1355a2df.chunk.css.map": "/citrix-k8s-ingress-controller/static/css/main.1355a2df.chunk.css.map",
-    "static/js/2.f894d5f7.chunk.js.LICENSE.txt": "/citrix-k8s-ingress-controller/static/js/2.f894d5f7.chunk.js.LICENSE.txt",
-    "static/media/semantic.min.css": "/citrix-k8s-ingress-controller/static/media/outline-icons.ef60a4f6.woff",
-    "static/media/dualtier.png": "/citrix-k8s-ingress-controller/static/media/dualtier.d3fbd47f.png",
-    "static/media/multicluster.png": "/citrix-k8s-ingress-controller/static/media/multicluster.163e0e3b.png",
-    "static/media/servicemesh.png": "/citrix-k8s-ingress-controller/static/media/servicemesh.4c6e2edd.png",
-    "static/media/single.png": "/citrix-k8s-ingress-controller/static/media/single.adbb155f.png"
+    "main.css": "/netscaler-k8s-ingress-controller/static/css/main.1355a2df.chunk.css",
+    "main.js": "/netscaler-k8s-ingress-controller/static/js/main.5ed3f8a5.chunk.js",
+    "main.js.map": "/netscaler-k8s-ingress-controller/static/js/main.5ed3f8a5.chunk.js.map",
+    "runtime-main.js": "/netscaler-k8s-ingress-controller/static/js/runtime-main.e30d27d9.js",
+    "runtime-main.js.map": "/netscaler-k8s-ingress-controller/static/js/runtime-main.e30d27d9.js.map",
+    "static/css/2.0a8d4493.chunk.css": "/netscaler-k8s-ingress-controller/static/css/2.0a8d4493.chunk.css",
+    "static/js/2.311e7531.chunk.js": "/netscaler-k8s-ingress-controller/static/js/2.311e7531.chunk.js",
+    "static/js/2.311e7531.chunk.js.map": "/netscaler-k8s-ingress-controller/static/js/2.311e7531.chunk.js.map",
+    "index.html": "/netscaler-k8s-ingress-controller/index.html",
+    "precache-manifest.f9e5c8fa441acf42dabf4c567fcfa1c4.js": "/netscaler-k8s-ingress-controller/precache-manifest.f9e5c8fa441acf42dabf4c567fcfa1c4.js",
+    "service-worker.js": "/netscaler-k8s-ingress-controller/service-worker.js",
+    "static/css/2.0a8d4493.chunk.css.map": "/netscaler-k8s-ingress-controller/static/css/2.0a8d4493.chunk.css.map",
+    "static/css/main.1355a2df.chunk.css.map": "/netscaler-k8s-ingress-controller/static/css/main.1355a2df.chunk.css.map",
+    "static/js/2.311e7531.chunk.js.LICENSE.txt": "/netscaler-k8s-ingress-controller/static/js/2.311e7531.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/netscaler-k8s-ingress-controller/static/media/outline-icons.ef60a4f6.woff",
+    "static/media/dualtier.png": "/netscaler-k8s-ingress-controller/static/media/dualtier.d3fbd47f.png",
+    "static/media/multicluster.png": "/netscaler-k8s-ingress-controller/static/media/multicluster.163e0e3b.png",
+    "static/media/servicemesh.png": "/netscaler-k8s-ingress-controller/static/media/servicemesh.4c6e2edd.png",
+    "static/media/single.png": "/netscaler-k8s-ingress-controller/static/media/single.adbb155f.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.9750e250.js",
-    "static/css/2.b5ac0d14.chunk.css",
-    "static/js/2.f894d5f7.chunk.js",
+    "static/js/runtime-main.e30d27d9.js",
+    "static/css/2.0a8d4493.chunk.css",
+    "static/js/2.311e7531.chunk.js",
     "static/css/main.1355a2df.chunk.css",
-    "static/js/main.f4fd00b4.chunk.js"
+    "static/js/main.5ed3f8a5.chunk.js"
   ]
 }
