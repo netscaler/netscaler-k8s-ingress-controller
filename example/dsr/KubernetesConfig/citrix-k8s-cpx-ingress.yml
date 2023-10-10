@@ -88,7 +88,7 @@ spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.1-49.13"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.1-49.15"
           securityContext:
              privileged: true
           env:
@@ -104,7 +104,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.35.6"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.36.5"
           env:
           - name: "EULA"
             value: "yes"

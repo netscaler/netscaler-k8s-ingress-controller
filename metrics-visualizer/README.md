@@ -181,7 +181,7 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.1-49.13"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.1-49.15"
           tty: true
           securityContext:
             privileged: true
@@ -267,7 +267,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.1-49.13"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.1-49.15"
           securityContext: 
              privileged: true
           env:
