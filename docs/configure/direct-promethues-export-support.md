@@ -74,7 +74,7 @@ To enable NetScaler ingress controller to configure NetScaler VPX or MPX to supp
 
 2.  Create a system user with read only access for NetScaler VPX. For more details on the user creation, see the [NetScaler Prometheus integration documentation](https://docs.netscaler.com/en-us/citrix-adc/current-release/observability/prometheus-integration#configure-read-only-prometheus-access-for-a-non-super-user).
 
-3.  Add a scrape job under `scrape_configs` in the prometheus [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) for enabling Prometheus to scrape from NetScaler VPX. For a sample Prometheus scrape job, see [Prometheus configuration](https://docs.netscaler.com/en-us/citrix-adc/current-release/observability/prometheus-integration#prometheus-configuration).
+3.  Add a scrape job under `scrape_configs` in the [prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) for enabling Prometheus to scrape from NetScaler VPX. For a sample Prometheus scrape job, see [Prometheus configuration](https://docs.netscaler.com/en-us/citrix-adc/current-release/observability/prometheus-integration#prometheus-configuration).
 
 **Note:**
 The scrape configuration section specifies a set of targets and configuration parameters describing how to scrape them. For more information on NetScaler specific parameters used in the configuration, see the [NetScaler documentation](https://docs.netscaler.com/en-us/citrix-adc/current-release/observability/prometheus-integration#install-and-configure-prometheus-for-metrics-export-from-netscaler).
