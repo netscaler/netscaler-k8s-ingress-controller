@@ -24,37 +24,40 @@ To enable NetScaler ingress controller to configure NetScaler CPX to support dir
     -  `nsic.prometheusCredentialSecret`: Specifies the Kubernetes secret name for creating the read only user for native Prometheus support.
     -  `analyticsConfig.timeseries.metrics.enableNativeScrape`: Set this value to `true` for directly exporting metrics to Prometheus
 
-3.  Add a new Prometheus job under `scrape_configs` in the [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) to configure Prometheus for directly exporting from a NetScaler CPX pod. For more information, see [kubernetes_sd_config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config). A sample Prometheus job is given as follows:
+3.  Add the appropriate Prometheus scrape job under `scrape_configs` in the Prometheus configuration depending on the Prometheus deployment.
+    -  If your Prometheus server is outside the Kubernetes cluster, add a scrape job under `scrape_configs` in the [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/). For a sample Prometheus scrape job, see the [Prometheus integration documentation](https://docs.netscaler.com/en-us/citrix-adc/current-release/observability/prometheus-integration#prometheus-configuration).
 
-    ```
-            - job_name: 'kubernetes-cpx'
-            scheme: http
-            metrics_path: /nitro/v1/config/systemfile
-            params:
-                args: ['filename:metrics_prom_ns_analytics_time_series_profile.log,filelocation:/var/nslog']
-                format: ['prometheus']
-            basic_auth:
-                username:  # Prometheus username set in nsic.prometheusCredentialSecret
-                password:  # Prometheus password set in nsic.prometheusCredentialSecret
-            scrape_interval: 30s
-            kubernetes_sd_configs:
-            - role: pod
-            relabel_configs:
-            - source_labels: [__meta_kubernetes_pod_annotation_netscaler_prometheus_scrape]
-                action: keep
-                regex: true
-            - source_labels: [__address__, __meta_kubernetes_pod_annotation_netscaler_prometheus_port]
-                action: replace
-                regex: ([^:]+)(?::\d+)?;(\d+)
-                replacement: $1:$2
-                target_label: __address__
-            - source_labels: [__meta_kubernetes_namespace]
-                action: replace
-                target_label: kubernetes_namespace
-            - source_labels: [__meta_kubernetes_pod_name]
-                action: replace
-                target_label: kubernetes_pod_name
-    ```
+    -  If your Prometheus server is within the same Kubernetes cluster, add a new Prometheus job to configure Prometheus for directly exporting from a NetScaler CPX pod. For more information, see [kubernetes_sd_config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config). A sample Prometheus job is given as follows:
+
+            ```
+                    - job_name: 'kubernetes-cpx'
+                    scheme: http
+                    metrics_path: /nitro/v1/config/systemfile
+                    params:
+                        args: ['filename:metrics_prom_ns_analytics_time_series_profile.log,filelocation:/var/nslog']
+                        format: ['prometheus']
+                    basic_auth:
+                        username:  # Prometheus username set in nsic.prometheusCredentialSecret
+                        password:  # Prometheus password set in nsic.prometheusCredentialSecret
+                    scrape_interval: 30s
+                    kubernetes_sd_configs:
+                    - role: pod
+                    relabel_configs:
+                    - source_labels: [__meta_kubernetes_pod_annotation_netscaler_prometheus_scrape]
+                        action: keep
+                        regex: true
+                    - source_labels: [__address__, __meta_kubernetes_pod_annotation_netscaler_prometheus_port]
+                        action: replace
+                        regex: ([^:]+)(?::\d+)?;(\d+)
+                        replacement: $1:$2
+                        target_label: __address__
+                    - source_labels: [__meta_kubernetes_namespace]
+                        action: replace
+                        target_label: kubernetes_namespace
+                    - source_labels: [__meta_kubernetes_pod_name]
+                        action: replace
+                        target_label: kubernetes_pod_name
+            ```
 
 **Note:**
 For more information on Prometheus integration, see the [NetScaler Prometheus integration documentation](https://docs.netscaler.com/en-us/citrix-adc/current-release/observability/prometheus-integration).
