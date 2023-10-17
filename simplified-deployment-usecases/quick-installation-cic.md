@@ -44,7 +44,7 @@ helm repo add netscaler https://netscaler.github.io/netscaler-helm-charts/
 
 kubectl create namespace netscaler 
 
-kubectl create secret generic nslogin --from-literal=username='NetScaler ingress controller' --from-literal=password='mypassword' -n netscaler
+kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password> -n netscaler
 
 helm install nsic netscaler/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
 
@@ -81,7 +81,7 @@ Use the following commands for YAML deployment:
 ```
 kubectl create namespace netscaler 
 
-kubectl create secret generic nslogin --from-literal=username='NetScaler ingress controller' --from-literal=password='mypassword' -n netscaler
+kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password> -n netscaler
 
 kubectl create -n netscaler -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
