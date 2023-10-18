@@ -129,7 +129,7 @@ You can use the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-i
 
     You can directly pass the user name and password as environment variables to the Citrix ingress controller or use OpenShift secrets (recommended). If you want to use OpenShift secrets, create a secret for the user name and password using the following command:
 
-        oc create secret generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+        oc create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
 #### Create a system user account for the Citrix ingress controller in Citrix ADC
 

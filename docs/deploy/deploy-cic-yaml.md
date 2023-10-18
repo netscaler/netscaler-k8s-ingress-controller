@@ -23,7 +23,7 @@ Use the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8
 
     You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
 
-        kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+        kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
 #### Create System User Account for Citrix ingress controller in Citrix ADC
 
