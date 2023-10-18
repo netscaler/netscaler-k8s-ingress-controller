@@ -28,7 +28,7 @@ Use the [citrix-ingress-controller](https://artifacthub.io/packages/helm/citrix/
 
     You can directly pass the user name and password or use Kubernetes secrets. If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
 
-        kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+        kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
 #### Create a system user account for the Citrix ingress controller in Citrix ADC
 

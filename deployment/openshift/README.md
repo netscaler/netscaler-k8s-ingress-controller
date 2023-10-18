@@ -96,7 +96,7 @@ You can use the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-i
 
     After creating a system user for Citrix ADC, you can create an OpenShift secret using the following command:
 
-        oc create secret generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+        oc create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
 ## Deploy the Citrix ingress controller as a pod in an OpenShift cluster
 

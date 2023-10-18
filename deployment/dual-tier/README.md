@@ -37,7 +37,7 @@ Perform the following:
 
        You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
        ```
-       kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+       kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<password>
        ```
 
     5. Configure your on-premises firewall or security groups on your cloud to allow inbound traffic to the ports required for Citrix ADC. The Setup process uses port 80 and port 443, you can modify these ports based on your requirement.
