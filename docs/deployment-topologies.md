@@ -99,7 +99,7 @@ Following are some of the scenarios when Dual-Tier ingress topology is preferred
 
 For deploying Citrix cloud native topologies, there are various options available using YAML and Helm charts. Helm charts are one of the easiest ways for deployment in a Kubernetes environment. When you deploy using the Helm charts, you can use a `values.yaml` file to specify the values of the configurable parameters instead of providing each parameter as an argument.
 
-You can generate the `values.yaml` file for Citrix cloud native deployments using the [Citrix deployment builder](https://citrix.github.io/citrix-k8s-ingress-controller/), which is a GUI.
+You can generate the `values.yaml` file for Citrix cloud native deployments using the [Citrix deployment builder](https://netscaler.github.io/netscaler-k8s-ingress-controller/), which is a GUI.
 
 The following topologies are supported by the Citrix deployment builder:
 
