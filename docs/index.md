@@ -36,7 +36,7 @@ For traffic between microservices inside the Kubernetes cluster (East-West traff
 
 ### Service of type LoadBalancer on bare metal clusters
 
-There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Ingress controller and Citrix ADC. For more information, see [Expose services of type LoadBalancer](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/).
+There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Ingress controller and Citrix ADC. For more information, see [Expose services of type LoadBalancer](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/network/type-loadbalancer.html).
 
 ## Deploy Citrix ADC ingress controller
 
