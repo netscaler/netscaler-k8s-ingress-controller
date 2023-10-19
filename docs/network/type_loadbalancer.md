@@ -82,7 +82,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
 2. Edit the Citrix ingress controller YAML file:
   
-    - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Citrix ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
 
     - Specify the IPAM controller as an argument using the following:
 
@@ -139,7 +139,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
-    For more information on how to deploy the Citrix ingress controller, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    For more information on how to deploy the Citrix ingress controller, see the [Deploy Citrix ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
 
 ### Step3: Deploy the IPAM controller
 
