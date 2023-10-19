@@ -160,7 +160,7 @@ Follow the steps in [Deploy the NetScaler ingress controller using OpenShift Ope
 
 #### Deploy NetScaler ingress controller for NetScaler CPX using the OpenShift operator
 
-Follow the steps in [Deploy the NetScaler ingress controller as a sidecar with NetScaler CPX](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/deploy/Citrix-ingress-controller-openshift-operator.html#deploy-the-citrix-ingress-controller-as-a-sidecar-with-citrix-adc-cpx) to deploy the NetScaler ingress controller for NetScaler CPX.
+Follow the steps in [Deploy the NetScaler ingress controller as a sidecar with NetScaler CPX](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-openshift-operator#deploy-the-netscaler-ingress-controller-as-a-sidecar-with-netscaler-cpx.html) to deploy the NetScaler ingress controller for NetScaler CPX.
 
 ## Deployment of NetScaler ingress controller on public clouds
 

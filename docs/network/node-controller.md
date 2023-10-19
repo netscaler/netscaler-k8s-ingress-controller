@@ -18,7 +18,7 @@ Citrix provides a [node controller](https://github.com/citrix/citrix-k8s-node-co
 
             wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-    2.  Edit the `citrix-k8s-ingress-controller.yaml` file and enter the values for the environmental variables. For more information, see [Deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    2.  Edit the `citrix-k8s-ingress-controller.yaml` file and enter the values for the environmental variables. For more information, see [Deploy the Citrix ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
 
 
     3.  Once you update the environment variables, save the YAML file and deploy it using the following command:

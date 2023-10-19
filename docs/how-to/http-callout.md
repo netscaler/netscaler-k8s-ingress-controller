@@ -2,7 +2,7 @@
 
 An HTTP callout allows Citrix ADC to generate and send an HTTP or HTTPS request to an external server (callout agent) as part of the policy evaluation. The information that is retrieved from the server (callout agent) can be analyzed by advanced policy expressions and an appropriate action can be performed. For more information about the HTTP callout, see the [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/appexpert/http-callout.html).
 
-You can initiate the HTTP callout through the following expressions with the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) provided by Citrix:
+You can initiate the HTTP callout through the following expressions with the [rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml) provided by Citrix:
 
 - `sys.http_callout()`: This expression is used for blocking the call when the httpcallout agent response needs to be evaluated.
 
@@ -52,7 +52,7 @@ The following diagram explains the workflow of a request where each number in th
 
 The following is a sample YAML file (`ip_validate_responder.yaml`) for validating a blocklisted IP address:
 
-**Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `ip_validate_responder` YAML file. 
+**Note:** You must deploy the [rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml) before deploying the `ip_validate_responder` YAML file. 
 
 ```yml
 apiVersion: citrix.com/v1
@@ -106,7 +106,7 @@ The work flow of a request is explained in the following diagram where each numb
 
 The following is a sample YAML (`path_rewrite`) file.
 
-**Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `path_rewrite` YAML file.
+**Note:** You must deploy the [rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml) before deploying the `path_rewrite` YAML file.
 
 ```yml
 apiVersion: citrix.com/v1
