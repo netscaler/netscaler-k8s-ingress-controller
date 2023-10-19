@@ -100,7 +100,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
         - NS_PASSWORD
   
         
-      For more information, see [Deploy the Citrix ingress controller using YAML](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
+      For more information, see [Deploy the Citrix ingress controller using YAML](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml#deploy-netscaler-ingress-controller-as-a-standalone-pod-in-the-kubernetes-cluster-for-netscaler-mpx-or-vpx-appliances.html).
 
    3. Save the YAML file and deploy the Citrix Ingress Controller.
 
