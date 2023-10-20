@@ -314,7 +314,7 @@ helm repo add netscaler https://netscaler.github.io/netscaler-helm-charts/
 
 kubectl create namespace netscaler
 
-kubectl create secret generic nslogin --from-literal=username='NetScaler ingress controller' --from-literal=password='mypassword' -n netscaler
+kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password> -n netscaler
 
 helm install nsic netscaler/citrix-ingress-controller --set nsIP=<NSIP-of-VPX-instance_OR_SNIP-with-management-access-enabled> --set nsVIP=<private-IP-address-of-the-VIP-assigned-during-VPX-instance-creation> --set license.accept=yes,crds.install=true,ingressClass[0]=netscaler --set adcCredentialSecret=nslogin --namespace netscaler
 ```
