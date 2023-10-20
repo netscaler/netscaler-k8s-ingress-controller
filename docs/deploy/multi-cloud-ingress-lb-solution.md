@@ -383,7 +383,7 @@ Perform the following steps:
 
 1.  Create Citrix ADC VPX login credentials using Kubernetes secret
 
-        kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='<instance-id-of-vpx>'
+        kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<instance-id-of-vpx>
 
     The Citrix ADC VPX password is usually the instance-id of the VPX if you have not changed it.
 
@@ -421,7 +421,7 @@ Perform the following steps:
 
 1.  Create Citrix ADC VPX login credentials using  Kubernetes secrets.
 
-        kubectl create secret  generic nslogin --from-literal=username='<azure-vpx-instance-username>' --from-literal=password='<azure-vpx-instance-password>'
+        kubectl create secret  generic nslogin --from-literal=username=<azure-vpx-instance-username> --from-literal=password=<azure-vpx-instance-password>
 
      **Note:** The Citrix ADC VPX user name and password should be the same as the credentials set while creating Citrix ADC VPX on Azure.
 
