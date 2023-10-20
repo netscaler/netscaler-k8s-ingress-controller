@@ -69,7 +69,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
          Create secrets on Kubernetes for NS_USER and NS_PASSWORD
          Kubernetes secrets can be created by using the `kubectl create secret` command.  
 
-                 kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='nsroot'
+                 kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
          >**Note:** If you are using a different secret name rather than `nslogin`, you have to update the `name` field in the YAML file.
 
