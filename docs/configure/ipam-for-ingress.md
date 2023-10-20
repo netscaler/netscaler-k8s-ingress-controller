@@ -171,6 +171,10 @@ Perform the following steps to deploy a sample application and Ingress resource.
 
         kubectl create -f guestbook-ingress.yaml
 
+**Note:** For Ingress without any frontend-ip annotation, the order of IP assignment is as follows:
+-  If the default `NS_VIP` environment variable is provided, Citrix ingress controller makes a request to IPAM controller only if the range-name (`ingress.citrix.com/ipam-range:`) is provided in the ingress. If the annotation is not provided, `NS_VIP` is used for that ingress.
+-  If the default `NS_VIP` environment variable is not provided, Citrix ingress controller always make a request to IPAM controller for IP assignment.
+
 **Multiple IP address allocations**
 
 For Ingress resources, an IP address can be allocated multiple times since multiple ingress resources may be handled by a single csvserver. If the specified IP range has only a single IP address, it is allocated multiple times. But, if the named IP range consists of multiple IP addresses, only one of them is constantly allocated.
