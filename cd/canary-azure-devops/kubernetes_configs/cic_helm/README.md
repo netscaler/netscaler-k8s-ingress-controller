@@ -56,7 +56,7 @@ This Helm chart deploys Citrix ingress controller in the [Kubernetes](https://ku
     You can pass user name and password using Kubernetes secrets. Create a Kubernetes secret for the user name and password using the following command:
 
     ```
-       kubectl create secret generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+       kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
     ```
 
 #### Create system User account for Citrix ingress controller in Citrix ADC
@@ -186,7 +186,7 @@ The following components are installed:
 
    1. Create secret using Citrix ADC VPX credentials, which will be used by Citrix ingress controller for configuring Citrix ADC VPX/MPX:
 
-	kubectl create secret generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+	kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
    2. Deploy Citrix ingress controller using helm command:
 
