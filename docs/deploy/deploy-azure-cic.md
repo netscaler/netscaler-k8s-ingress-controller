@@ -43,7 +43,7 @@ Perform the following steps to deploy the Citrix ingress controller.
 1. Create Citrix ADC VPX login credentials using Kubernetes secret.
 
     
-        kubectl create secret  generic nslogin --from-literal=username='<azure-vpx-instance-username>' --from-literal=password='<azure-vpx-instance-password>'
+        kubectl create secret  generic nslogin --from-literal=username=<azure-vpx-instance-username> --from-literal=password=<azure-vpx-instance-password>
     
    **Note:** The Citrix ADC VPX user name and password should be the same as the credentials set while creating Citrix ADC VPX on Azure.
 

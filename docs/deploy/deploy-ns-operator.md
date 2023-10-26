@@ -59,7 +59,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 
   You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
   ```
-  kubectl create secret generic nslogin --from-literal=username='nic' --from-literal=password='mypassword'
+  kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
   ```
 
 ### Steps to deploy NetScaler Ingress Controller for apache application
