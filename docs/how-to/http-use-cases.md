@@ -6,8 +6,8 @@ The following table lists the HTTP use cases with sample annotations:
 
 | Use case | Sample annotation |
 | -------- | ----------------- |
-| [Configuring HTTP/2](#configuring-http2) | `ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled"}'` </br> </br>`ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled"}'` </br></br> `ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled", "altsvc":"enabled"}'` |
-| [Handling HTTP session timeouts](#handling-http-session-timeouts) | `ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "reqtimeoutaction":"drop"}}'` </br> </br> `ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "adptimeout" : "enable"}}'` </br> </br>  `ingress.citrix.com/backend-httpprofile: '{"apache":{"reusepooltimeout" : "20000"}}'` |
+| [Configuring HTTP/2](#configuring-http2) | `ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled"}'` </br> </br>`ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled"}'` </br></br> `ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled", "altsvc":"enabled"}}'` |
+| [Handling HTTP session timeouts](#handling-http-session-timeouts) | `ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "reqtimeoutaction":"drop"}'` </br> </br> `ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "adptimeout" : "enable"}'` </br> </br>  `ingress.citrix.com/backend-httpprofile: '{"apache":{"reusepooltimeout" : "20000"}}'` |
 
 ## Configuring HTTP/2
 
@@ -31,7 +31,7 @@ In this method, a client directly starts communicating to a server in HTTP/2 ins
 
 Using the annotations for HTTP profiles, you can configure the direct HTTP/2 method on the Ingress Citrix ADC. The following is a sample annotation of HTTP profile to configure the direct HTTP/2 method on the Ingress Citrix ADC:
 
-    ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled"}'
+    ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled"}}'
 
 ### Direct HTTP/2 using Alternative Service (ALT-SVC)
 
@@ -39,7 +39,7 @@ In this method, a server advertises that it supports HTTP/2 to a client by inclu
 
 The following is a sample annotation of HTTP profile to configure the direct HTTP/2 using alternative service (ALT-SVC) method on the Ingress Citrix ADC:
 
-    ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled", "altsvc":"enabled"}'
+    ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled", "altsvc":"enabled"}}'
 
 ## Handling HTTP session timeouts
 
@@ -60,7 +60,7 @@ Using the `reqTimeoutAction` parameter you can specify the type of action that m
 
 Using the annotations for HTTP profiles, you can configure the HTTP request timeout and HTTP request timeout action. The following is a sample annotation of HTTP profile to configure the HTTP request timeout and HTTP request timeout action on the Ingress Citrix ADC:
 
-    ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "reqtimeoutaction":"drop"}}'
+    ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "reqtimeoutaction":"drop"}'
 
 ### adptTimeout
 
@@ -68,7 +68,7 @@ Instead of using a set timeout value for the requested sessions, you can also en
 
 Using annotations for HTTP profiles, you can enable or disable the `adpttimeout` parameter as follows:
 
-    ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "adptimeout" : "enable"}}'
+    ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "adptimeout" : "enable"}'
 
 ### reusePoolTimeout
 
