@@ -7,7 +7,7 @@ The following table lists the HTTP use cases with sample annotations:
 | Use case | Sample annotation |
 | -------- | ----------------- |
 | [Configuring HTTP/2](#configuring-http2) | `ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled"}'` </br> </br>`ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled"}'` </br></br> `ingress.citrix.com/backend-httpprofile: '{"apache":{"http2direct" : "enabled", "altsvc":"enabled"}'` |
-| [Handling HTTP session timeouts](#handling-http-session-timeouts) | `ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "reqtimeoutaction":"drop"}}'` </br> </br> `ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "adptimeout" : "enable"}}'` </br> </br>  `ingress.citrix.com/backend-httpprofile: '{"apache":{"reusepooltimeout" : "20000"}}'` |
+| [Handling HTTP session timeouts](#handling-http-session-timeouts) | `ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "reqtimeoutaction":"drop"}'` </br> </br> `ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "adptimeout" : "enable"}'` </br> </br>  `ingress.citrix.com/backend-httpprofile: '{"apache":{"reusepooltimeout" : "20000"}}'` |
 
 ## Configuring HTTP/2
 
@@ -60,7 +60,7 @@ Using the `reqTimeoutAction` parameter you can specify the type of action that m
 
 Using the annotations for HTTP profiles, you can configure the HTTP request timeout and HTTP request timeout action. The following is a sample annotation of HTTP profile to configure the HTTP request timeout and HTTP request timeout action on the Ingress Citrix ADC:
 
-    ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "reqtimeoutaction":"drop"}}'
+    ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "reqtimeoutaction":"drop"}'
 
 ### adptTimeout
 
