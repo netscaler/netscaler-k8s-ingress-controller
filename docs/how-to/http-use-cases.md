@@ -68,7 +68,7 @@ Instead of using a set timeout value for the requested sessions, you can also en
 
 Using annotations for HTTP profiles, you can enable or disable the `adpttimeout` parameter as follows:
 
-    ingress.citrix.com/frontend-httpprofile: '{"apache":{"reqtimeout" : "10", "adptimeout" : "enable"}}'
+    ingress.citrix.com/frontend-httpprofile: '{"reqtimeout" : "10", "adptimeout" : "enable"}'
 
 ### reusePoolTimeout
 
