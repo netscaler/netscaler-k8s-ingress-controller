@@ -30,7 +30,7 @@ Using the Citrix ingress controller Operator you can deploy the Citrix ingress c
 
   You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
   ```
-  kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
+  kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<mypassword>
   ```
         
 #### Specify the allowed image registries to access by operators and pods

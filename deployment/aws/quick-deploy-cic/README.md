@@ -63,7 +63,7 @@ Assign two secondary IPs when creating the Citrix ADC VPX
 #### Create Citrix ADC VPX login credentials using Kubernetes secret
 
 ```
-kubectl create secret  generic nslogin --from-literal=username='nsroot' --from-literal=password='<instance-id-of-vpx>'
+kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<instance-id-of-vpx>
 ```
 
 The Citrix ADC VPX password is usually the instance-id of the VPX if you have not changed it.

@@ -55,7 +55,7 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
 6.  Create a Kubernetes secret for the Tier-1 Citrix ADC.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create secret  generic nslogin --from-literal=username='citrix-adc-username' --from-literal=password='citrix-adc-password'
+        kubectl --kubeconfig user-cluster-1-kubeconfig create secret  generic nslogin --from-literal=username=<citrix-adc-username> --from-literal=password=<citrix-adc-password>
 
 7. Deploy the Citrix ingress controller as a Tier-1 ingress controller.
 
