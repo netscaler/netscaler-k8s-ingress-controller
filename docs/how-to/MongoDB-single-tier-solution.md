@@ -62,7 +62,7 @@ Perform the following steps to deploy the Citrix Ingress solution for MongoDB.
 
 1. Create a Kubernetes secret with the user name and password for Citrix ADC VPX.
 
-        kubectl create secret  generic nslogin --from-literal=username='username' --from-literal=password='mypassword'
+        kubectl create secret  generic nslogin --from-literal=username=<username> --from-literal=password=<mypassword>
 
 1. Download the [cic-configmap.yaml](https://raw.githubusercontent.com/citrix/citrix-observability-exporter/master/examples/elasticsearch/cic-configmap.yaml) file and then deploy it using the following command.
 
