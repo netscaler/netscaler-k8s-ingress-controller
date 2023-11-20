@@ -21,6 +21,8 @@ spec:
             urls:
                 - payment.php
                 - cover.php
+    enforcements:
+        common:
           block_url:
             urls:
                 - "^[^?]*(passwd|passwords?)([.][^/?]*)?([?].*)?$"
