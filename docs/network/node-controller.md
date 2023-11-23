@@ -10,6 +10,10 @@ Citrix provides a [node controller](https://github.com/citrix/citrix-k8s-node-co
 
 ![CIC with CNC](../media/cic-cnc.png)
 
+> **Note:**
+>
+> NetScaler Node Controller does not work in a setup where a NetScaler cluster is configured as an ingress device. NetScaler Node Controller requires to establish a Virtual Extensible LAN (VXLAN) tunnel between NetScaler and Kubernetes nodes to configure routes and creating a VXLAN on a NetScaler cluster is not supported.
+
 **To establish network connectivity using Citrix node controller:**
 
 1.  Deploy the Citrix ingress controller. Perform the following:
