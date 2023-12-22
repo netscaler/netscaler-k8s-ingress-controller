@@ -121,7 +121,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
    ```
 
 > **NOTE:**
-  Please make sure pod network in OpenShift cluster is reachable from NetScaler VPX if you are using service of type ClusterIP for your application. We have option to do this automatically using NSIC, see [this](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/310ae7eb1c8bdea57faa7f4556979a76822e23ec/docs/network/staticrouting.md)
+  Please make sure pod network in OpenShift cluster is reachable from NetScaler VPX/MPX if you are using service of type ClusterIP for your application. We have option to do this automatically using NSIC, see [this](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/310ae7eb1c8bdea57faa7f4556979a76822e23ec/docs/network/staticrouting.md)
 
 ### Steps to delete NetScaler Ingress Controller
 1. Navigate to **Operators > Installed Operators > NetScaler Operator**. Select **NetScaler Ingress Controller** tab inside. After that select the instance you want to delete and then select its **Delete NetScalerIngressController** option.
