@@ -7,12 +7,12 @@
               ingress.citrix.com/external-service: '{"external-svc": {"domain": "www.externalsvc.com"}}'
           spec:
             rules:
-            - host:  "www.portal.externalsvc.com"
+            - host:  "www.externalsvc.com"
               http:
                 paths:
                 - backend:
                     service:
-                      name: my-external-service
+                      name: external-svc
                       port:
                         number: 30036
                   path: /
