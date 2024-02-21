@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: tier-1-vpx
+  annotations: {}
   name: vpx-ingress
 spec:
+  ingressClassName: tier-1-vpx
   rules:
   - host: citrix-ingress.com
     http:
@@ -16,3 +16,11 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-1-vpx
+spec:
+  controller: citrix.com/ingress-controller
+---
