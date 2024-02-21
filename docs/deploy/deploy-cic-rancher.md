@@ -26,7 +26,7 @@ Perform the following steps to deploy the Citrix ingress controller as a sidecar
 
 1.  Download the `citrix-k8s-cpx-ingress.yaml` file using the following command.
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+        wget  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
 
 1.  On the Rancher GUI cluster page, select Clusters from Global view.
 1.  From the Clusters page, open the cluster that you want to access.
@@ -51,7 +51,7 @@ Ensure that you complete all the [prerequisites](deploy-cic-yaml.md#prerequisite
 
 1.  Download the  `citrix-k8s-ingress-controller.yaml` file using the following command:
 
-        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+        wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
 1.  Edit the `citrix-k8s-ingress-controller.yaml` file and enter the values of the environment variable using the information in [Deploy Citrix ingress controller as a pod](deploy-cic-yaml.md#deploy-citrix-ingress-controller-as-a-pod).
 

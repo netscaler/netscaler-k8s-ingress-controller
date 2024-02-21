@@ -24,7 +24,7 @@ You must perform the following prerequisites:
 
 1. Clone the `citrix-k8s-ingress-controller` repository from GitHub using the following command.
 
-       git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+       git clone https://github.com/netscaler/netscaler-k8s-ingress-controller.git
     
 1. After cloning, change your directory using the following command.
 

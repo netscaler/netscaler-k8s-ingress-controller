@@ -7,7 +7,7 @@
 ## **Bring up the application**
   Deploy frontend, redis master and slave micro services.   
   ```
-    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-all-in-one.yaml
+    kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/guestbook/guestbook-all-in-one.yaml
   ```
 
 ## **Choose the  deployment**
@@ -16,7 +16,7 @@
    Follow [Deployment](../../docs/deploy) guide to deploy citrix ingress controller
 ######    1.2. Download the guestbook-ingress.yaml
    ```
-   wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml
+   wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml
    ```
 ######    1.3. Update the guestbook-ingress.yaml
    Update `guestbook-ingress.yaml` with a valid virtual IP. Annotation for frontend ip is `ingress.citrix.com/frontend-ip`.
@@ -30,7 +30,7 @@
    Follow [Deployment](../../docs/deploy) guide to deploy the CPX with citrix ingress controller
 ######    2.2 Create an ingress resource by following command
    ```
-    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml 
+    kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml 
    ```
 
 ##  **Test the application**

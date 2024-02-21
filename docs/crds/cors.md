@@ -14,7 +14,7 @@ Before a web browser allowing Javascript to issue a POST to a URL, it performs a
 
 ## CORS CRD definition
 
-The CORS CRD is available in the Citrix ingress controller GitHub repo at: [cors-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/cors/cors-crd.yaml). The CORS CRD provides attributes for the various options that are required to define the CORS policy on the Ingress Citrix ADC that acts as an API gateway. The required attributes include: `servicenames`, `allow_origin`, `allow_methods`, and `allow_headers`.
+The CORS CRD is available in the Citrix ingress controller GitHub repo at: [cors-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/cors/cors-crd.yaml). The CORS CRD provides attributes for the various options that are required to define the CORS policy on the Ingress Citrix ADC that acts as an API gateway. The required attributes include: `servicenames`, `allow_origin`, `allow_methods`, and `allow_headers`.
 
 The following are the attributes provided in the CORS CRD:
 
@@ -31,7 +31,7 @@ The following are the attributes provided in the CORS CRD:
 
 Perform the following to deploy the CORS CRD:
 
-1.  Download the [CORS CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/cors/cors-crd.yaml).
+1.  Download the [CORS CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/cors/cors-crd.yaml).
 
 2.  Deploy the CORS CRD using the following command:
 

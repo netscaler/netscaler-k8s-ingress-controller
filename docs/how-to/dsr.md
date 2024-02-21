@@ -30,12 +30,12 @@ This section contains steps to create configurations required on the ingress dev
 
 1. Create a namespace for DSR using the following command.
 	
-	    kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/dsr_namespace.yaml
+	    kubectl apply -f  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/dsr_namespace.yaml
 
 1. Create a ConfigMap using the following command.
 
 	
-        kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/cpx_config.yaml  -n dsr
+        kubectl apply -f  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/cpx_config.yaml  -n dsr
      
     **Note:** In this example, the Citrix Node Controller network is configured as 192.168.1.0/24. Hence, the command to create IP tunnel is provided as `add iptunnel  dsr 192.168.1.254  255.255.255.0 *`. You need to specify the value according to your CNC configuration.
    
@@ -43,7 +43,7 @@ This section contains steps to create configurations required on the ingress dev
 2. Deploy Citrix ADC CPX on the namespace `dsr`.
 
 	
-	    kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-cpx-ingress.yml  -n dsr
+	    kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-cpx-ingress.yml  -n dsr
 
 ###  Deploying a sample application on the Kubernetes cluster
 
@@ -51,14 +51,14 @@ Perform the steps in this section to deploy a sample application on Kubernetes c
 
 1. Deploy the guestbook application using the following command.
 
-        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml  -n dsr 
+        kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml  -n dsr 
 
 1. Expose the guestbook application using Ingress.
 
 	 1. Download the guestbook ingress YAML file using the following command.
 
 	
-	        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml
+	        wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml
 	
 
 	1. Edit and provide the DSR IP or public IP address through which you access your application using the ```ingress.citrix.com/frontend-ip:``` annotations.
@@ -90,7 +90,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
    1. Download the Citrix Ingress Controller YAML file using the following command.
 	
-            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
+            wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
 
 
    2. Edit the YAML file and update the following values for Citrix Ingress Controller.
@@ -109,7 +109,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
    4. Create DSR configuration on Tier-1 ADC by creating an ingress resource for the Tier-2 Citrix ADC CPX.
 	
-	        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/vpx-ingress.yaml 
+	        wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/vpx-ingress.yaml 
 	
    5. Edit the YAML file and provide the DSR or public IP address through which user access your application using the ```ingress.citrix.com/frontend-ip:``` annotation. This IP address must be same as the IP address you have specified in step 2.
 	

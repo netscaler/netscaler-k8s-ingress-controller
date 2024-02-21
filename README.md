@@ -1,6 +1,6 @@
 [![Docker Repository on Quay](https://quay.io/repository/citrix/citrix-k8s-ingress-controller/status "Docker Repository on Quay")](https://quay.io/repository/citrix/citrix-k8s-ingress-controller)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./license/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/citrix/citrix-k8s-ingress-controller.svg)](https://github.com/citrix/citrix-k8s-ingress-controller/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/citrix/citrix-k8s-ingress-controller.svg)](https://github.com/netscaler/netscaler-k8s-ingress-controller/stargazers)
 [![HitCount](http://hits.dwyl.com/citrix/citrix-k8s-ingress-controller.svg)](http://hits.dwyl.com/citrix/citrix-k8s-ingress-controller)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/netscaler)](https://artifacthub.io/packages/search?repo=netscaler)
 ---
@@ -22,14 +22,14 @@ An Ingress Controller is a [controller](https://kubernetes.io/docs/concepts/arch
 
 ## What is the Citrix ingress controller?
 
-Citrix provides an ingress controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures Citrix ADC based on the Ingress resource configuration.
+Citrix provides an ingress controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for [bare metal](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment) deployments. It is built around Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) and automatically configures Citrix ADC based on the Ingress resource configuration.
 
-The Citrix ingress controller can be deployed either by directly using [yamls](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts).
+The Citrix ingress controller can be deployed either by directly using [yamls](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/baremetal) or by [helm charts](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/charts).
 
 ## Features
 
-Features supported by the Citrix ingress controller can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
-The Citrix API Gateway features can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/citrix-api-gateway.md).
+Features supported by the Citrix ingress controller can be found [here](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment).
+The Citrix API Gateway features can be found [here](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/citrix-api-gateway.md).
 
 ## Supported platforms and deployments
 
@@ -41,7 +41,7 @@ For detailed documentation, see the [Citrix ingress controller Live Documentatio
 
 ## Deployment solutions
 
-You can deploy the Citrix ingress controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment).
+You can deploy the Citrix ingress controller in many platforms. For detailed information, see [Deployment Architecture](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment).
 
 ## Examples
 
@@ -50,12 +50,12 @@ Deploy the Guestbook application and use the [Citrix ADC CPX](https://www.citrix
 -  [Quick Deploy using YAML](./example)
 -  [Quick Deploy using Helm](https://github.com/citrix/citrix-helm-charts/tree/master/examples/citrix-cpx-with-ingress-controller)
 -  [Quick Deploy using Kops](./docs/deploy/deploy-cic-kops.md)
--  [Deployment in Google Cloud](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp)
--  [Deployment in Azure Cloud](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/azure)
+-  [Deployment in Google Cloud](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/gcp)
+-  [Deployment in Azure Cloud](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/azure)
 
 ## Release notes
 
-Click [here](https://github.com/citrix/citrix-k8s-ingress-controller/releases) for the release notes of the latest Citrix ingress controller release.
+Click [here](https://github.com/netscaler/netscaler-k8s-ingress-controller/releases) for the release notes of the latest Citrix ingress controller release.
 
 ## Questions and support
 

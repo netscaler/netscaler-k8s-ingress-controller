@@ -33,7 +33,7 @@ Following are examples for built-in TCP profiles.
 
 ## Example: Service of Type load balancer with the TCP profile configuration
 
-In this example, TCP profiles are configured for a sample application `tea-beverage`. This application is deployed and exposed using a service of type LoadBalancer using the [tea-profile-example.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/tcp-profile-typelb/tea-profile-example.yaml) file.
+In this example, TCP profiles are configured for a sample application `tea-beverage`. This application is deployed and exposed using a service of type LoadBalancer using the [tea-profile-example.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/tcp-profile-typelb/tea-profile-example.yaml) file.
 
 For step by step instruction for exposing services of type `LoadBalancer`, see [service of type `LoadBalancer`](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/type_loadbalancer/).
 

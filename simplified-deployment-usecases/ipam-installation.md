@@ -2,7 +2,7 @@
 
 IPAM controller is an application provided by Citrix for IP address management and it runs in parallel to the Citrix ingress controller in the Kubernetes cluster. It automatically allocates IP addresses to services of type LoadBalancer and ingress resources from a specified IP address range.
 
-The IPAM controller requires the [VIP](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/crds/vip.md) custom resource definition (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Citrix ingress controller and the Citrix IPAM controller.
+The IPAM controller requires the [VIP](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/crds/vip.md) custom resource definition (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Citrix ingress controller and the Citrix IPAM controller.
 
 ## Prerequisites
 

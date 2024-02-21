@@ -10,7 +10,7 @@ You can enable logging for observability with the rate limit CRD. Logs are store
 
 ## Rate limit CRD definition
 
-The Rate limit CRD spec is available in the Citrix ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Citrix ADC that acts as an API gateway.
+The Rate limit CRD spec is available in the Citrix ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Citrix ADC that acts as an API gateway.
 
 
 ## Rate limit CRD attributes
@@ -34,7 +34,7 @@ The following table lists the various attributes provided in the Rate limit CRD:
 
 Perform the following to deploy the Rate limit CRD:
 
-1.  Download the CRD ([ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml)).
+1.  Download the CRD ([ratelimit-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml)).
 
 1.  Deploy the Rate limit CRD using the following command:
 

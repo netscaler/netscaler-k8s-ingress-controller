@@ -14,7 +14,7 @@ Perform the following steps to deploy the Citrix ingress controller and configur
 
 1. Download the `citrix-k8s-ingress-controller.yaml` using the following command:
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+        wget  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
 2. Edit the Citrix ingress controller YAML file:
   

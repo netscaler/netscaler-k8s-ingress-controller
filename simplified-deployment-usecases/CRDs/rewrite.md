@@ -24,7 +24,7 @@ Citrix ingress controller supports header and URL modification via [rewrite poli
 
 1.  Apply the rewrite policy CRD definition.
 
-         $ kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml 
+         $ kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml 
 
     **Note:**
     If Ingress controller is deployed via Helm, the setting `crds.install=true` installs all Citrix supported CRD definitions.

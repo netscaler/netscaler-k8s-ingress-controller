@@ -104,7 +104,7 @@ Where, 'ssl_preconf_profile' is the SSL profile that exists on the NetScaler and
 ## Global front-end profile configuration using ConfigMap variables
 
 If there is no front-end profiles annotation specified in any of the ingresses which share the front-end IP address, then the global values from the ConfigMap that is `FRONTEND_SSL_PROFILE` is used for the SSL front-end profiles respectively. The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variable `FRONTEND_SSL_PROFILE` for SSL profiles. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition.
-Refer [ConfigMap documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
+Refer [ConfigMap documentation](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
 
 ### Configuration using FRONTEND_SSL_PROFILE
 

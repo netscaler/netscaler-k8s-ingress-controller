@@ -44,11 +44,11 @@ If you want, you can change route or namespace labels by editing them later. Onc
 
 To deploy CPX with OpenShift router sharding support, perform the following steps:
 
-1.  Download the [cpx_cic_side_car.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml) file using the following command:
+1.  Download the [cpx_cic_side_car.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml) file using the following command:
 
-         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml
+         wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml
 
-2.  Edit the [cpx_cic_side_car.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml) file and specify the route labels and namespace label selectors as environment variables.  
+2.  Edit the [cpx_cic_side_car.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/openshift/manifest/cpx_cic_side_car.yaml) file and specify the route labels and namespace label selectors as environment variables.  
 
     The following example shows how to specify a sample route label and namespace label in the `cpx_cic_side_car.yaml` file. This example selects routes with label "name" values as either abc or xyz and with namespace label as frequency=high.
 
@@ -66,11 +66,11 @@ To deploy CPX with OpenShift router sharding support, perform the following step
 
 To deploy a Citrix ingress controller router plug-in with router sharding, perform the following steps:
 
-1.  Download the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file using the following command:
+1.  Download the [cic.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file using the following command:
 
-        wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml
+        wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml
 
-2.  Edit the [cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file and specify the route labels and namespace label selectors as environment variables.
+2.  Edit the [cic.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/openshift/manifest/cic.yaml) file and specify the route labels and namespace label selectors as environment variables.
 
     The following example shows how to specify a sample route label and namespace label in the `cic.yaml` file. This example selects routes with label "name" values as either abc or xyz and with namespace label as frequency=high.
 

@@ -7,7 +7,7 @@ Custom Resource Definitions (CRDs) are the primary way of configuring policies i
 
 ## AppQoE CRD definition
 
-The AppQoE CRD is available in the Citrix ingress controller GitHub repo at: [appqoe-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/appqoe/appqoe-crd.yaml). The AppQoE CRD provides attributes for the various options that are required to define the AppQoE policy on Citrix ADC.
+The AppQoE CRD is available in the Citrix ingress controller GitHub repo at: [appqoe-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/appqoe/appqoe-crd.yaml). The AppQoE CRD provides attributes for the various options that are required to define the AppQoE policy on Citrix ADC.
 
 The following are the attributes provided in the AppQoE CRD:
 
@@ -24,7 +24,7 @@ The following are the attributes provided in the AppQoE CRD:
 
 Perform the following to deploy the AppQoE CRD:
 
-1.  Download the [AppQoE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/appqoe/appqoe-crd.yaml).
+1.  Download the [AppQoE CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/appqoe/appqoe-crd.yaml).
 
 2.  Deploy the AppQoE CRD using the following command:
 

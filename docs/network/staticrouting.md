@@ -47,18 +47,18 @@ Perform the following:
 
 ## Automatically configure route on the Citrix ADC instance
 
-In the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file, you can use an argument,`feature-node-watch` to automatically configure route on the associated Citrix ADC instance.
+In the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file, you can use an argument,`feature-node-watch` to automatically configure route on the associated Citrix ADC instance.
 
 Set the `feature-node-watch` argument to `true` to enable automatic route configuration.
 
-You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
+You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
 
 ```yml
    spec:
         serviceAccountName: cic-k8s-role
         containers:
         - name: cic-k8s-ingress-controller
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.38.27"
+          image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.38.27"
         # feature-node-watch argument configures route(s) on the Ingress Citrix ADC
         # to provide connectivity to the pod network. By default, this feature is disabled.
         args:
@@ -68,7 +68,7 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
 
 !!! info "Points to Note"
     - By default, the `feature-node-watch` argument is set to `false`. Set the argument to `true` to enable the automatic route configuration.
-    - For automatic route configuration, you must provide permissions to listen to the events of nodes resource type. You can provide the required permissions in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
+    - For automatic route configuration, you must provide permissions to listen to the events of nodes resource type. You can provide the required permissions in the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
 
 ```yml
   kind: ClusterRole

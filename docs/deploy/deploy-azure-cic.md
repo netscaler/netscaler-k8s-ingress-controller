@@ -11,24 +11,24 @@ You should complete the following tasks before performing the steps in the proce
 -  Ensure that you have a Kubernetes cluster up and running.
 
 !!! note "Note"
-    For more information on creating a Kubernetes cluster in AKS, see [Guide to create an AKS cluster](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md).
+    For more information on creating a Kubernetes cluster in AKS, see [Guide to create an AKS cluster](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md).
 
 ## Topology
 
 The following is the sample topology used in this deployment.
 
-![single-tier](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/media/singletopology.png)
+![single-tier](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/docs/media/singletopology.png)
 
 ## Get a Citrix ADC VPX instance from Azure Marketplace
 
 You can create Citrix ADC VPX from the Azure Marketplace.
-For more information on how to create a Citrix ADC VPX instance from Azure Marketplace, see [Get Citrix ADC VPX from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
+For more information on how to create a Citrix ADC VPX instance from Azure Marketplace, see [Get Citrix ADC VPX from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
 
 ## Get the Citrix ingress controller from Azure Marketplace
 
 To deploy the Citrix ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the Citrix ingress controller image.
 
-For more information on how to create a registry and get the image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
+For more information on how to create a registry and get the image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
 
 Once a registry is created, the Citrix ingress controller registry name should be attached to the AKS cluster used for deployment.
 
@@ -72,7 +72,7 @@ Perform the following steps to deploy the Citrix ingress controller.
 
        
 
-          wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/cic.yaml
+          wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/cic.yaml
      
        
 
@@ -117,13 +117,13 @@ Perform the following steps to deploy the Citrix ingress controller.
 1. Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.
 
 
-        kubectl create -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/apache.yaml
+        kubectl create -f  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/apache.yaml
 
 
 1. Create the Ingress resource using the following command.
 
     
-        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/ingress.yaml
+        kubectl create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/ingress.yaml
     
 
 2. To validate your deployment, use the following command.

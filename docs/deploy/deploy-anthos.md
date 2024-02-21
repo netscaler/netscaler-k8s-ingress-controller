@@ -29,13 +29,13 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 1. Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.
 
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/apache.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/apache.yaml
 
    **Note:** In this example, `apache.yaml` is used. You should use the specific YAML file for your application.
 
-2. Deploy Citrix ADC CPX with the sidecar Citrix ingress controller as Tier-2 Ingress device using the [cpx-cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml) file.
+2. Deploy Citrix ADC CPX with the sidecar Citrix ingress controller as Tier-2 Ingress device using the [cpx-cic.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml) file.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml
 
 3. (Optional) Create a self-signed SSL certificate and a key to be used with the Ingress for TLS configuration.
 
@@ -49,9 +49,9 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
         kubectl --kubeconfig user-cluster-1-kubeconfig create secret tls anthos-citrix --cert=$PWD/anthos-citrix-certificate.crt --key=$PWD/anthos-citrix-certificate.key
 
-5. Create an Ingress resource for Tier-2 using the [tier-2-ingress.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/tier-2-ingress.yaml) file.
+5. Create an Ingress resource for Tier-2 using the [tier-2-ingress.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/tier-2-ingress.yaml) file.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/tier-2-ingress.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/tier-2-ingress.yaml
 
 6.  Create a Kubernetes secret for the Tier-1 Citrix ADC.
 
@@ -59,7 +59,7 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
 7. Deploy the Citrix ingress controller as a Tier-1 ingress controller.
 
-   1. Download the [cic.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cic.yaml) file.
+   1. Download the [cic.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cic.yaml) file.
    
    2. Enter the management IP address of Citrix ADC. Update the Tier-1 Citrix ADC's management IP address in the placeholder `Tier-1-Citrix-ADC-IP` specified in the `cic.yaml` file.
    
@@ -69,7 +69,7 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
 8.  Expose Citrix ADC CPX as a Kubernetes service of type `LoadBalancer`.
     
-    1. Download the [cpx-service-type-lb.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cpx-service-type-lb.yaml) file.
+    1. Download the [cpx-service-type-lb.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cpx-service-type-lb.yaml) file.
     
     2. Edit the YAML file and specify the value of `VIP-for-accessing-microservices` as the VIP address which is to be used for accessing the applications inside the cluster. This VIP address is the one set aside to be used as a Load Balancer IP address. 
     
@@ -141,17 +141,17 @@ Perform the following steps to deploy a dual-tier Ingress deployment of Citrix A
 
 1. Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/apache.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/apache.yaml
    
    **Note:** In this example, `apache.yaml` is used. You should use the specific YAML file for your application.
 
-2. Deploy Citrix ADC CPX with the Citrix ingress controller as Tier-2 Ingress using the [cpx-cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml) file.
+2. Deploy Citrix ADC CPX with the Citrix ingress controller as Tier-2 Ingress using the [cpx-cic.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml) file.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml
 
 3. Expose Citrix ADC CPX as a Kubernetes service using the `cpx-service.yaml` file.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-service.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-service.yaml
 
 4. (Optional) Create a self-signed SSL certificate and a key to be used with the Ingress for TLS configuration.
      
@@ -165,9 +165,9 @@ Perform the following steps to deploy a dual-tier Ingress deployment of Citrix A
 
         kubectl --kubeconfig user-cluster-1-kubeconfig create secret tls anthos-citrix --cert=$PWD/anthos-citrix-certificate.crt --key=$PWD/anthos-citrix-certificate.key
 
-6. Create an Ingress resource for Tier-2 using the [tier-2-ingress.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/tier-2-ingress.yaml) file.
+6. Create an Ingress resource for Tier-2 using the [tier-2-ingress.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/tier-2-ingress.yaml) file.
 
-        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/tier-2-ingress.yaml
+        kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/tier-2-ingress.yaml
 
 7.  Create a Kubernetes secret for the Tier-1 Citrix ADC.
 
@@ -175,16 +175,16 @@ Perform the following steps to deploy a dual-tier Ingress deployment of Citrix A
 
 8.  Deploy the Citrix ingress controller as a Tier-1 ingress controller.
 
-    1. Download the [cic.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/cic.yaml) file.
+    1. Download the [cic.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/cic.yaml) file.
    
     2. Enter the management IP address of Citrix ADC. Update the Tier-1 Citrix ADC's management IP address in the placeholder `Tier-1-Citrix-ADC-IP` specified in the `cic.yaml` file.
    
     3. Save and deploy the `cic.yaml` using the following command.
 
                 kubectl --kubeconfig user-cluster-1-kubeconfig create -f cic.yaml
-9.  Create an Ingress resource for Tier-1 using the [tier-1-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
+9.  Create an Ingress resource for Tier-1 using the [tier-1-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
 
-    1. Download the [tier-1-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
+    1. Download the [tier-1-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
     
     2. Edit the YAML file and replace `VIP-Citrix-ADC` with the VIP address which was set aside.
     

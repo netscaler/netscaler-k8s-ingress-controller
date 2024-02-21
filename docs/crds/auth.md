@@ -6,7 +6,7 @@ Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/do
 
 ## Auth CRD definition
 
-The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for the various options that are required to define the authentication policies on the Ingress Citrix ADC.
+The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for the various options that are required to define the authentication policies on the Ingress Citrix ADC.
 
 ## Auth CRD attributes
 
@@ -193,7 +193,7 @@ The following are the attributes for authorization policies with expression form
 
 Perform the following to deploy the Auth CRD:
 
-1.  Download the CRD ([auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml)).
+1.  Download the CRD ([auth-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/auth/auth-crd.yaml)).
 
 2.  Deploy the Auth CRD using the following command:
 
@@ -213,7 +213,7 @@ After you deploy the `.yaml` file, the Citrix ingress controller applies the aut
 
 ### Local auth provider
 
-The following is a sample authentication and authorization policy definition for the local-auth-provider type ([local_auth.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/local_auth.yaml)).
+The following is a sample authentication and authorization policy definition for the local-auth-provider type ([local_auth.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/auth/local_auth.yaml)).
 
 ```yml
 apiVersion: citrix.com/v1beta1

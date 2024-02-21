@@ -22,7 +22,7 @@ Based on the type of protections required, you can specify the metadata and use 
  
 ## Bot CRD definition
 
-The Bot CRD is available in the Citrix ingress controller GitHub repo at [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml). The Bot CRD provides attributes for the various options that are required to define the bot management policies on Citrix ADC.
+The Bot CRD is available in the Citrix ingress controller GitHub repo at [bot-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/bot/bot-crd.yaml). The Bot CRD provides attributes for the various options that are required to define the bot management policies on Citrix ADC.
 
 ## Bot CRD attributes
 
@@ -50,7 +50,7 @@ The following table lists the various attributes provided in the Bot CRD:
 
 Perform the following steps to deploy the Bot CRD:
 
-1. Download the [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml).
+1. Download the [bot-crd.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/bot/bot-crd.yaml).
 2. Deploy the Bot CRD using the following command:
 
 `kubectl create -f bot-crd.yaml`

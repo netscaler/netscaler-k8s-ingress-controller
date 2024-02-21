@@ -10,7 +10,7 @@ This guide details the steps to deploy Citrix Ingress Controller in EKS with Cit
 
 ## Topology:
 
-![](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/media/singletopology.png)
+![](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/docs/media/singletopology.png)
 
 ## Create a AWS managed Kubernetes cluster (EKS) with Citrix ADC VPX
 
@@ -83,7 +83,7 @@ This is required for Citrix ADC to interact with the pods inside the Kubernetes 
 #### Update the Citrix ADC VPX management IP and VIP in the Citrix Ingress controller manifest
 
 ```
-wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
+wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
 ```
 
 ***If you don't have `wget` installed, you can use `fetch` or `curl`***
@@ -121,7 +121,7 @@ In this example, we will deploy an Apache microservice.
 Please  update the image field with the required Apache image.
 
 ```
-wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/apache.yaml
+wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/apache.yaml
 ```
 
 ***If you don't have `wget` installed, you can use `fetch` or `curl`***
@@ -138,7 +138,7 @@ kubectl create -f apache.yaml
 Now let's apply the ingress 
 
 ```
-kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/ingress.yaml
+kubectl create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/ingress.yaml
 ```
 
 ## Test your deployment

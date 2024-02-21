@@ -83,7 +83,7 @@ kubectl create namespace netscaler
 
 kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password> -n netscaler
 
-kubectl create -n netscaler -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+kubectl create -n netscaler -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
 ```
 
@@ -110,7 +110,7 @@ Perform the following steps to deploy NetScaler ingress controller and NetScaler
 ```
 kubectl create namespace netscaler
 
-kubectl create -n netscaler -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+kubectl create -n netscaler -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
 ```
 
 ## Deployments on the OpenShift Platform

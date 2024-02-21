@@ -22,7 +22,7 @@ There are three different ways of matching criteria as explained in the followin
 | `prefix`          | Matches prefix of the incoming request. For example: `/a` matches to `/a/b` and `/a/c`.         |
 | `contains`         | Matches if the incoming request contains the specified keyword. |
 
-This topic contains a sample HTTPRoute CRD object and also explains the various attributes of the HTTPRoute CRD. For the complete CRD definition, see [HTTPRoute.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
+This topic contains a sample HTTPRoute CRD object and also explains the various attributes of the HTTPRoute CRD. For the complete CRD definition, see [HTTPRoute.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
 
 ## HTTP CRD object example
 
@@ -73,7 +73,7 @@ spec:
               lbmethod: ROUNDROBIN
 ```
 
-For more examples, see [HTTP Route Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/HTTPRoute_examples).
+For more examples, see [HTTP Route Examples](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/contentrouting/HTTPRoute_examples).
 
 ## HTTPRoute.spec
 

@@ -35,7 +35,7 @@ data:
 ```
 
 **NOTE:**
- You can also configure NetScaler VPX or MPX as an ADNS server using the environment variable `NS_ADNS_IPS` of [Citrix Ingress Controller deployment](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95).
+ You can also configure NetScaler VPX or MPX as an ADNS server using the environment variable `NS_ADNS_IPS` of [Citrix Ingress Controller deployment](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95).
 
 NetScaler Configuration:
 
@@ -54,7 +54,7 @@ To configure NetScaler as a DNS resolver, you can add the DNS address records us
 
 ### Adding DNS records for Ingress resources
 
-To add DNS records for ingress resources, you need to set the value of the variable `NS_CONFIG_DNS_REC` to `true` in [Citrix Ingress Controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95) deployment at the boot time.
+To add DNS records for ingress resources, you need to set the value of the variable `NS_CONFIG_DNS_REC` to `true` in [Citrix Ingress Controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95) deployment at the boot time.
 Citrix Ingress Controller adds the address records in NetScaler for all the host names specified under the ingresses that are intended to configure NetScaler.
 
 ### Adding DNS records for services of type LoadBalancer
@@ -112,7 +112,7 @@ data:
 ```
 
 **NOTE:**
-You can also configure DNS nameservers on NetScaler VPX/MPX using the environment variable `NS_DNS_NAMESERVER` of [Citrix Ingress Controller deployment](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml).
+You can also configure DNS nameservers on NetScaler VPX/MPX using the environment variable `NS_DNS_NAMESERVER` of [Citrix Ingress Controller deployment](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml).
 
 NetScaler configuration:
 
@@ -250,7 +250,7 @@ Following are the steps to configure NetScaler CPX to load balance external serv
 ## Configuring Wildcard domains in NetScaler using Citrix ingress controller
 
 Using the Wildcard DNS CRD, you can configure wildcard DNS domains on a Netscaler using Citrix Ingress Controller.
-The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at  [wildcarddnsentry.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml) . The Wildcard DNS CRD provides attributes for the various options that are required to configure wildcard DNS entries on NetScaler.
+The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at  [wildcarddnsentry.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml) . The Wildcard DNS CRD provides attributes for the various options that are required to configure wildcard DNS entries on NetScaler.
 
 The following are the attributes provided in the Wildcard DNS CRD:
 
@@ -264,7 +264,7 @@ The following are the attributes provided in the Wildcard DNS CRD:
 
 ### Deploying Wildcard DNS CRD
 
-1.  Deploy the Wildcard DNS CRD definition YAML from [Wildcard DNS YAML](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/wildcard-dns/wildcarddnsentry.yaml)
+1.  Deploy the Wildcard DNS CRD definition YAML from [Wildcard DNS YAML](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/wildcard-dns/wildcarddnsentry.yaml)
 
       kubectl create -f wildcarddns_spec.yaml
 

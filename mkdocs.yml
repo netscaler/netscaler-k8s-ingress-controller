@@ -7,12 +7,12 @@ site_url: https://developer-docs.citrix.com
 
 # Repository
 repo_name: "Citrix ADC ingress controller"
-repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller"
+repo_url: "https://github.com/netscaler/netscaler-k8s-ingress-controller"
 edit_uri: "edit/master/docs"
 
 # Feedback
 
-issues_uri: https://github.com/citrix/citrix-k8s-ingress-controller/issues/new
+issues_uri: https://github.com/netscaler/netscaler-k8s-ingress-controller/issues/new
 assignees_uri:
   - sreejithgs
 labels_uri:
@@ -74,7 +74,7 @@ plugins:
 # Page tree
 nav:
   - Overview: index.md
-  - Release notes: https://github.com/citrix/citrix-k8s-ingress-controller/releases
+  - Release notes: https://github.com/netscaler/netscaler-k8s-ingress-controller/releases
   - Supported platforms and deployments: support-matrix.md
   - Deployment topologies: deployment-topologies.md
   - Deploy Citrix ADC ingress controller: 

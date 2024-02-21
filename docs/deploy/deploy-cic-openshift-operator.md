@@ -21,7 +21,7 @@ Using the Citrix ingress controller Operator you can deploy the Citrix ingress c
 ### Prerequisites
 
 - Deployed [Red Hat OpenShift](https://www.openshift.com) version 4.1 or later.
-- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 - Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
     - (Standalone appliances) NSIP - The management IP address of a standalone Citrix ADC appliance. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
     - (Appliances in High Availability mode) SNIP - The subnet IP address. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
@@ -71,7 +71,7 @@ Perform the following:
 
 2. Deploy an Apache application using the console. Perform the following:
 
-    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
+    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
 
        ![Application Deployment](../media/application_deployment.png)
        > **NOTE:**
@@ -81,11 +81,11 @@ Perform the following:
 
        ![Application pod](../media/application_pods.png)
 
-3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
+3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
    ![Application Service](../media/application_service.png)
 
-4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
+4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
 
    ![Application Ingress](../media/application_ingress_vpx.png)
 
@@ -164,7 +164,7 @@ Using the Citrix ingress controller Operator you can deploy a Citrix ADC CPX wit
 ### Prerequisites
 
 - Deployed [Red Hat Openshift](https://www.openshift.com) version 4.1 or later.
-- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 
 ### Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX using Operators
 
@@ -174,7 +174,7 @@ Perform the following:
 
 2. Deploy an Apache application using the console. Perform the following:
 
-    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
+    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
 
        ![Application Deployment](../media/application_deployment.png)
        > **NOTE:**
@@ -184,11 +184,11 @@ Perform the following:
 
        ![Application pod](../media/application_pods.png)
 
-3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
+3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
    ![Application Service](../media/application_service.png)
 
-4. Create an Ingress for the Apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
+4. Create an Ingress for the Apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
 
    ![Application CPX Ingress](../media/application_ingress_cpx.png)
 

@@ -61,20 +61,20 @@ This section helps to create configurations required on the ingress device for D
 	This creates a namespace called ```dsr```.
 
 	```
-	kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/dsr_namespace.yaml
+	kubectl apply -f  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/dsr_namespace.yaml
 	```
 
 - ### **Create a Configmap.**
 
 	```
-	kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/cpx_config.yaml  -n dsr
+	kubectl apply -f  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/cpx_config.yaml  -n dsr
 	```
 
 - ### **Deploy Citrix CPX ingress controller.**
 
 	Deploy Citrix ADC CPX on namespace ```dsr```.
 	```
-	kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-cpx-ingress.yml  -n dsr
+	kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-cpx-ingress.yml  -n dsr
 	```
 
 <a name="application"></a>
@@ -83,13 +83,13 @@ This section helps to create configurations required on the ingress device for D
 - ### **Deploy the Guestbook application.**
 
 	```
-	  kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml  -n dsr 
+	  kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml  -n dsr 
 	```
 - ### **Expose the guestbook application using ingress.**
 
 	Download the guestbook ingress yaml.
 	```
-	wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml
+	wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/guestbook-all-in-one.yaml
 	```
 	provide the DSR IP/Public IP through which user access your application via ```ingress.citrix.com/frontend-ip:``` annotations.
 	```
@@ -115,12 +115,12 @@ This section helps to create configurations required on the ingress device for D
    
 - ## **Download the Citrix Ingress Controller yaml**
 	```
-            wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
+            wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
 	```
 
 - ## **Provide following Input for Citrix Ingress Controller**
 
-	Provide NS_IP, NS_USER and NS_PASSWORD arguments. Please refer [here](https://github.com/citrix/citrix-k8s-ingress-controller) for more detailed information.
+	Provide NS_IP, NS_USER and NS_PASSWORD arguments. Please refer [here](https://github.com/netscaler/netscaler-k8s-ingress-controller) for more detailed information.
 
 - ## **Deploy the Citrix Ingress Controller**
 
@@ -132,7 +132,7 @@ This section helps to create configurations required on the ingress device for D
 
    Create DSR configuration on Tier-1 ADC by creating ingress resource for the tier-2 cpx. 
 	```
-	wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/vpx-ingress.yaml 
+	wget https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/dsr/KubernetesConfig/vpx-ingress.yaml 
 	```
 	provide the DSR IP/Public IP through which user access your application via ```ingress.citrix.com/frontend-ip:``` annotations. This must be same as what we have given on step 2.
 	```

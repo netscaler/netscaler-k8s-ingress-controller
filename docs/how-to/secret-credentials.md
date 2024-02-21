@@ -146,4 +146,4 @@ spec:
 ## Use Citrix ADC credentials stored in a Hashicorp Vault server
 
 You can also use the Citrix ADC credentials stored in a Hashicorp Vault server for the Citrix ingress controller and push the credentials through a sidecar container.
-For more information, see [Using Citrix ADC credentials stored in a Vault server](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/use-vault-stored-credentials-for-cic.md).
+For more information, see [Using Citrix ADC credentials stored in a Vault server](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/use-vault-stored-credentials-for-cic.md).

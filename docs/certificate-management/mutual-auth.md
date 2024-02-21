@@ -12,7 +12,7 @@ Perform the following steps to apply mutual authentication for Ingress:
 
     **Note:** Make sure that Citrix ingress controller is restarted after enabling the default profile.
 
-2.  Download the [mutual-auth.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/mutual-auth.yaml) file. This YAML file contains the Ingress resource definition and the SSL annotations.
+2.  Download the [mutual-auth.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/mutual-auth.yaml) file. This YAML file contains the Ingress resource definition and the SSL annotations.
 
     The contents of the YAML is as follows:
 

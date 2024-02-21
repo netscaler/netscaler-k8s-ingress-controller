@@ -13,19 +13,19 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 
         kubectl create -f apache.yaml
 
-    >**Note:** In this example, [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/apache.yaml) is used. You must use the specific YAML file for your application.
+    >**Note:** In this example, [apache.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/aws/manifest/apache.yaml) is used. You must use the specific YAML file for your application.
 
 
-2. Deploy Citrix ADC CPX as an Ingress device in the cluster using the [standalone_cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/standalone_cpx.yaml) file.
+2. Deploy Citrix ADC CPX as an Ingress device in the cluster using the [standalone_cpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/aws/manifest/standalone_cpx.yaml) file.
 
         kubectl create -f standalone_cpx.yaml
 
 
-3. Create the Ingress resource using the [cpx_ingress.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller//blob/master/deployment/aws/manifest/cpx_ingress.yaml) following command.
+3. Create the Ingress resource using the [cpx_ingress.yaml](https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller//blob/master/deployment/aws/manifest/cpx_ingress.yaml) following command.
 
         kubectl create -f cpx_ingress.yaml
 
-4. Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the [cpx_service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/cpx_service.yaml) file.
+4. Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the [cpx_service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/aws/manifest/cpx_service.yaml) file.
 
         kubectl create -f cpx_service.yaml
 
@@ -51,7 +51,7 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
     | cpx-ingress | LoadBalancer | 10.0.37.255 | `<External-ip-of-loadbalancer>`| 80:32258/TCP,443:32084/TCP | 2 m  |
     | Kubernetes  | ClusterIP    | 10.0.0.1    | none        | 443/TCP                    | 22 h |
 
-    >**Note:**  The health check for the cloud load-balancer is obtained from the `readinessProbe` configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/cpx_service.yaml) file.</br>
+    >**Note:**  The health check for the cloud load-balancer is obtained from the `readinessProbe` configured in the [Citrix ADC CPX deployment YAML](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/aws/manifest/cpx_service.yaml) file.</br>
     If the health check fails, you must check the `readinessProbe` configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 
@@ -65,9 +65,9 @@ Perform the following steps to deploy Citrix ADC CPX as an Ingress device in an 
 For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
+1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
 
-        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/all-in-one.yaml
+        kubectl create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/aws/manifest/all-in-one.yaml
 
 2. Access the application using the following command.
 

@@ -40,7 +40,7 @@ GitHub has many utilities available for integrating with other tools that form p
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
--  Citrix ingress controller build/version: `quay.io/citrix/citrix-k8s-ingress-controller:1.33.4`.
+-  Citrix ingress controller build/version: `quay.io/netscaler/netscaler-k8s-ingress-controller:1.38.27`.
 -  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`.
 -  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
 
@@ -205,7 +205,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
     1.  To access Spinnaker, in the Cloud Shell, click the **Web Preview icon** and select **Preview on port 8080**.
 
         !!! note "Note"  
-            You can access Spinnaker securely or via HTTP. To expose Spinnaker securely, use the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress.
+            You can access Spinnaker securely or via HTTP. To expose Spinnaker securely, use the [spin-ingress-ssl.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file to deploy the Ingress.
             Once the Spinnaker application is publicly exposed, you can use the domain assigned for Spinnaker or the IP address of the Ingress to access it.
 
 #### Create a Spinnaker pipeline and configure automated canary deployment
@@ -231,18 +231,18 @@ You must complete the following step before deploying the sample application.
 
 Perform the following steps to deploy a sample application as a canary release.
 
-1. Create the necessary RBAC rules for Citrix ADC by deploying the [rbac.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/rbac.yaml) file.
+1. Create the necessary RBAC rules for Citrix ADC by deploying the [rbac.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/rbac.yaml) file.
    
         kubectl apply -f rbac.yaml 
 
 1. You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
 
-    Use the [cpx-with-cic-sidecar.yml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/cpx-with-cic-sidecar.yml) file to deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX. It also deploys Citrix ADC Metrics Exporter on the same pod.
+    Use the [cpx-with-cic-sidecar.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cpx-with-cic-sidecar.yml) file to deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX. It also deploys Citrix ADC Metrics Exporter on the same pod.
     
         kubectl apply -f cpx-with-cic-sidecar.yml 
     
     
-     To deploy the Citrix ingress controller as a stand-alone pod for Citrix ADC VPX or MPX use the [cic-vpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/exporter.yaml) file to deploy Citrix ADC Metrics Exporter.
+     To deploy the Citrix ingress controller as a stand-alone pod for Citrix ADC VPX or MPX use the [cic-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/exporter.yaml) file to deploy Citrix ADC Metrics Exporter.
 
 
         kubectl apply -f cic-vpx.yaml
@@ -251,7 +251,7 @@ Perform the following steps to deploy a sample application as a canary release.
     !!! note "Note"
         Depending on how you are deploying the Citrix ingress controller, you must edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
 
-1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file.
+1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file.
 
 
         kubectl apply -f spin-ingress-ssl.yaml 
@@ -261,19 +261,19 @@ Perform the following steps to deploy a sample application as a canary release.
 
 1. Once Spinnaker is exposed using Citrix ADC, access Spinnaker and perform the steps in [Create a Spinnaker pipeline and configure automated canary deployment](#Create-a-Spinnaker-pipeline-and-configure-automated-canary-deployment) if the steps are not already done. 
  
-1. Deploy the production version of the application using the [production.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/production.yaml) file.
+1. Deploy the production version of the application using the [production.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/production.yaml) file.
    
         kubectl apply -f production.yaml 
 
-1. Create the Ingress resource rule to expose traffic from outside the cluster to services inside the cluster using the [ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/ingress.yaml) file.
+1. Create the Ingress resource rule to expose traffic from outside the cluster to services inside the cluster using the [ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/ingress.yaml) file.
    
         kubectl apply -f ingress.yaml 
 
-1.  Create a Kubernetes service for the application that needs canary deployment using the [service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/service.yaml) file.
+1.  Create a Kubernetes service for the application that needs canary deployment using the [service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/service.yaml) file.
 
         kubectl apply -f service.yaml
 
-1.  Deploy the canary CRD that defines the canary configuration using the [canary-crd-class.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary-crd-class.yaml) file.
+1.  Deploy the canary CRD that defines the canary configuration using the [canary-crd-class.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/canary-crd-class.yaml) file.
 
         kubectl apply -f canary-crd-class.yaml
 
@@ -281,7 +281,7 @@ Perform the following steps to deploy a sample application as a canary release.
     !!! note "Note"
         Once you create the CRD, wait for 10 seconds before you apply the CRD object.
 
-9. Create a CRD object [canary-crd-object.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary-crd-object.yaml) based on the canary CRD for customizing the canary configuration.
+9. Create a CRD object [canary-crd-object.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/canary-crd-object.yaml) based on the canary CRD for customizing the canary configuration.
 
         kubectl apply -f canary-crd-object.yaml
 
@@ -308,7 +308,7 @@ Perform the following steps to deploy a sample application as a canary release.
     !!! note "Note"
         If you are fully automating the canary deployment, deploy canary and baseline versions using the [Deploy (Manifest) stage](https://www.spinnaker.io/guides/user/kubernetes-v2/deploy-manifest/) in Spinnaker pipeline and there is no need to perform this step.
 
-    For manually deploying canary and baseline versions, use [canary.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/canary.yaml) and [baseline.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/canary/manifest/baseline.yaml) files.
+    For manually deploying canary and baseline versions, use [canary.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/canary.yaml) and [baseline.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/baseline.yaml) files.
 
         kubectl apply -f canary.yaml
         kubectl apply -f baseline.yaml
@@ -777,28 +777,28 @@ Perform the following steps to deploy a sample application as a canary release.
 
 1. Deploy the Citrix ingress controller using the steps in [deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
 
-2. Deploy the `Guestbook` application using the [guestbook-deploy.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-deploy.yaml) file.
+2. Deploy the `Guestbook` application using the [guestbook-deploy.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-deploy.yaml) file.
 
         kubectl apply -f guestbook-deploy.yaml
  
-3. Deploy a service to expose the `Guestbook` application using the [guestbook-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-service.yaml) file.
+3. Deploy a service to expose the `Guestbook` application using the [guestbook-service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-service.yaml) file.
 
         kubectl apply -f guestbook-service.yaml
 
 
-4. Deploy the Ingress object for the `Guestbook` application using the [guestbook-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-ingress.yaml) file.
+4. Deploy the Ingress object for the `Guestbook` application using the [guestbook-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-ingress.yaml) file.
 
           kubectl apply -f  guestbook-ingress.yaml
 
-5. Deploy a canary version of the `Guestbook` application using the [canary-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-deployment.yaml) file.
+5. Deploy a canary version of the `Guestbook` application using the [canary-deployment.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/canary-deployment.yaml) file.
    
             kubectl apply –f canary-deployment.yaml
 
-6. Deploy a service to expose the canary version of the `Guestbook` application using the [canary-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-service.yaml) file.
+6. Deploy a service to expose the canary version of the `Guestbook` application using the [canary-service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/canary-service.yaml) file.
 
             kubectl apply –f canary-service.yaml       
 
-7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application using the [canary-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/simple-canary/canary-ingress.yaml) file.
+7. Deploy an Ingress object with annotations for the canary version of the `Guestbook` application using the [canary-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/canary-ingress.yaml) file.
 
 
             kubectl apply –f canary-ingress.yaml
@@ -834,4 +834,4 @@ For deploying the HTTP header based canary using the Citrix ingress controller, 
 For deploying the HTTP header value based canary using the Citrix ingress controller, replace the `ingress.citrix.com/canary-weight:` annotation with the `ingress.citrix.com/canary-by-header:` and `ingress.citrix.com/canary-by-header-value:` annotations in the `canary-ingress.yaml` file.
 
 **Note:**
-You can see the [Canary example YAMLs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/simple-canary) for achieving canary based on the header and canary based on the header value.
+You can see the [Canary example YAMLs](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/simple-canary) for achieving canary based on the header and canary based on the header value.

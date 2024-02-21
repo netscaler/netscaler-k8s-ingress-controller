@@ -32,7 +32,7 @@ spec:
     serviceAccountName: cic-k8s-role
     containers:
     - name: cic-k8s-ingress-controller
-      image:"quay.io/citrix/citrix-k8s-ingress-controller:latest"
+      image:"quay.io/netscaler/netscaler-k8s-ingress-controller:latest"
       # specify the ingress classes names to be supportedbyIngress Controller in args section.
       # First line should be --ingress-classes, andeverysubsequent line should be
       # the name of allowed ingress class. In the givenexampletwo classes named

@@ -20,17 +20,17 @@ Ensure that:
 
 **To deploy the Citrix ingress controller for Citrix ADC with admin partitions:**
 
-1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
+1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+        wget  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-1.  Edit the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and enter the values for the following environmental variables:
+1.  Edit the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and enter the values for the following environmental variables:
 
     | Environment Variable | Mandatory or Optional | Description |
     | ---------------------- | ---------------------- | ----------- |
     | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](#prerequisites). |
     | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the partition user that you have created for the Citrix ingress controller. For more details, see [Prerequisites](#prerequisites). |
-    | NS_VIP | Mandatory | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
+    | NS_VIP | Mandatory | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
     | NS_ENABLE_MONITORING | Mandatory | Set the value `Yes` to monitor Citrix ADC.</br> **Note:** Ensure that you disable Citrix ADC monitoring for Citrix ADC with admin partitions. Set the value to `No`. |
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
     | Kubernetes_url | Optional | The kube-apiserver url that Citrix ingress controller uses to register the events. If the value is not specified, Citrix ingress controller uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |

@@ -21,7 +21,7 @@ To configure an Ingress resource with an IP address from the IPAM controller, pe
 
 Perform the following step to deploy the Citrix VIP CRD which enables communication between the Citrix ingress controller and the IPAM controller.
 
-    kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
+    kubectl create -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/crd/vip/vip.yaml
 
 For more information on VIP CRD, see the VIP [CustomResourceDefinition](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/vip/).
 
@@ -31,7 +31,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
 1. Download the `citrix-k8s-ingress-controller.yaml` file using the following command:
 
-        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+        wget  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
 1. Edit the Citrix ingress controller YAML file:
 
@@ -45,7 +45,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
     Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
 
-    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
+    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
 
     
 
@@ -57,7 +57,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
               serviceAccountName: cic-k8s-role
               containers:
               - name: cic-k8s-ingress-controller
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.38.27"
+                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.38.27"
                 env:
                   - name: "NS_IP"
                     value: "x.x.x.x"
@@ -141,7 +141,7 @@ Perform the following steps to deploy a sample application and Ingress resource.
 
 1. Deploy the Guestbook application using the following command:
 
-        kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-all-in-one.yaml
+        kubectl apply -f https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/example/guestbook/guestbook-all-in-one.yaml
 
 2. Create the guestbook-ingress YAML file with Ingress resource definition to send traffic to the front-end of the guestbook application.
 
