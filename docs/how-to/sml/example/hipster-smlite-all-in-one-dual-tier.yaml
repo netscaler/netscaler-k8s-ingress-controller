@@ -1297,7 +1297,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.38.27
+        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
         imagePullPolicy: Always
         name: cic
       serviceAccountName: citrix
@@ -1532,6 +1532,8 @@ spec:
       containers:
       - name: cic-k8s-ingress-controller
         image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
+        args:
+        - --ingress-classes tier-1-vpx
         env:
         - name: NS_IP
           value: <citrix-adc-vpx-nsip>
@@ -1547,8 +1549,6 @@ spec:
             secretKeyRef:
               key: password
               name: <citrix-adc-vpx-credential-secret>
-        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.38.27
         imagePullPolicy: Always
-        name: cic-k8s-ingress-controller
       serviceAccountName: cic-k8s-role
 ---
