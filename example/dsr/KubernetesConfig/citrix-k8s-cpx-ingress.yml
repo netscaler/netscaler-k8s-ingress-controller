@@ -104,7 +104,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.38.27"
+          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
           env:
           - name: "EULA"
             value: "yes"
