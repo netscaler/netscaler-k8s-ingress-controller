@@ -1530,8 +1530,8 @@ spec:
       name: cic-k8s-ingress-controller
     spec:
       containers:
-      - args:
-        - --ingress-classes tier-1-vpx
+      - name: cic-k8s-ingress-controller
+        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
         env:
         - name: NS_IP
           value: <citrix-adc-vpx-nsip>
