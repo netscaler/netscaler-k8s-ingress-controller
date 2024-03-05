@@ -67,7 +67,7 @@ To request an invitation to participate, provide your email address using this f
 
 For more information about NetScaler cloud native solutions, you can reach out to the NetScaler product team at: **netscaler-appmodernization@cloud.com**
 
-![ ](./docs/media/contact-product-team.png)
+![ ](./docs/media/contact-team.png)
 
 ## Issues
 
