@@ -10,9 +10,11 @@
 ## Description
 
 This repository contains the NetScaler ingress controller built around [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
-##### Participate:
+### Participate:
 
-   You can reach out for any questions via our email: **netscaler-appmodernization@cloud.com** or fill [this](https://podio.com/webforms/22979270/1633242) form.
+   You can reach out for any questions via our email: **netscaler-appmodernization@cloud.com** or fill [this form](https://podio.com/webforms/22979270/1633242).
+
+   For NetScaler team to better understand your Kubernetes / micro-services application deployment architecture. Please fill [this form](https://docs.google.com/forms/d/e/1FAIpQLSd9ueKkfgk-oy8TR1G5cp5HexFwU03kkwx_CvDyOFVFweuXOw/viewform) to enable us serve you better by offering latest NetScaler capabilities.
 
 ## What is an ingress controller?
 
@@ -62,6 +64,8 @@ For questions and support the following channels are available:
 -  [NetScaler Discussion Forum](https://community.citrix.com/forums/forum/8-microservices/)
 
 To request an invitation to participate, provide your email address using this form: [https://podio.com/webforms/22979270/1633242](https://podio.com/webforms/22979270/1633242)
+
+For NetScaler team to better understand your Kubernetes / micro-services application deployment architecture. Please fill [this form](https://docs.google.com/forms/d/e/1FAIpQLSd9ueKkfgk-oy8TR1G5cp5HexFwU03kkwx_CvDyOFVFweuXOw/viewform) to enable us serve you better by offering latest NetScaler capabilities.
 
 For more information about NetScaler cloud native solutions, you can reach out to the NetScaler product team at: **netscaler-appmodernization@cloud.com**
 
