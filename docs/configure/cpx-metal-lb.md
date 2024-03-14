@@ -90,7 +90,7 @@ To install Citrix ADC CPX using the YAML file, perform the following steps:
 
 1. Download the Citrix ADC CPX deployment manifests.
 
-        wget https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml 
+        wget https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml 
 
 2. Edit the Citrix ADC CPX deployment YAML:
 

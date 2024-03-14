@@ -18,7 +18,7 @@ Citrix ADC CPX HPA solution consists of the following components:
 
 - Citrix ADC CPX: Citrix ADC CPX deployed inside the cluster acts as a Tier-2 load balancer for the endpoint application pods. The Citrix ADC CPX pod is running along with the Citrix ingress controller and Citrix ADC metric exporter as sidecars.
 
-- Citrix ingress controller: The [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller) is an ingress controller which is built around the Kubernetes Ingress and automatically configures Citrix ADC based on the Ingress resource configuration. The Citrix ingress controller deployed as a stand-alone pod configures the Citrix ADC VPX and other instances configures Citrix ADC CPXs.
+- Citrix ingress controller: The [Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) is an ingress controller which is built around the Kubernetes Ingress and automatically configures Citrix ADC based on the Ingress resource configuration. The Citrix ingress controller deployed as a stand-alone pod configures the Citrix ADC VPX and other instances configures Citrix ADC CPXs.
 
 - Citrix ADC metrics exporter: The [Citrix ADC metrics exporter]((https://github.com/citrix/citrix-adc-metrics-exporter)) exports the application performance metrics to the open-source monitoring system Prometheus. The Citrix ADC Metrics Exporter collects metrics from Citrix ADC CPX and exposes it in a format that Prometheus can understand.
 
@@ -41,7 +41,7 @@ Perform the following steps to deploy the Citrix ADC CPX HPA solution.
 
 1. Clone the citrix-k8s-ingress-controller repository from GitHub using the following command.
 
-        git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+        git clone https://github.com/netscaler/netscaler-k8s-ingress-controller.git
 
     After cloning, change your directory to the HPA folder with the following command.
 

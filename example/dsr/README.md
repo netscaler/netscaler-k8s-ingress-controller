@@ -120,7 +120,7 @@ This section helps to create configurations required on the ingress device for D
 
 - ## **Provide following Input for Citrix Ingress Controller**
 
-	Provide NS_IP, NS_USER and NS_PASSWORD arguments. Please refer [here](https://github.com/citrix/citrix-k8s-ingress-controller) for more detailed information.
+	Provide NS_IP, NS_USER and NS_PASSWORD arguments. Please refer [here](https://github.com/netscaler/netscaler-k8s-ingress-controller) for more detailed information.
 
 - ## **Deploy the Citrix Ingress Controller**
 

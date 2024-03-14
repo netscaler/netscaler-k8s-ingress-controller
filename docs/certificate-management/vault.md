@@ -145,10 +145,10 @@ Perform the following steps to deploy a sample web application.
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          annotations:
-            kubernetes.io/ingress.class: citrix
+          annotations: {}
           name: kuard
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
@@ -160,6 +160,15 @@ Perform the following steps to deploy a sample web application.
                       number: 80
                 path: /
                 pathType: Prefix
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
   ```
 
     !!! info "Important"
@@ -451,9 +460,9 @@ In this approach, you modify the ingress annotation for the cert-manager to auto
         metadata:
           annotations:
             cert-manager.io/cluster-issuer: vault-issuer
-            kubernetes.io/ingress.class: citrix
           name: kuard
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
@@ -469,6 +478,15 @@ In this approach, you modify the ingress annotation for the cert-manager to auto
           - hosts:
             - kuard.example.com
             secretName: kuard-example-tls
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 ```
 
 
@@ -559,10 +577,10 @@ Perform the following steps to modify the ingress to use the generated secret.
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          annotations:
-            kubernetes.io/ingress.class: citrix
+          annotations: {}
           name: kuard
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
@@ -572,12 +590,21 @@ Perform the following steps to modify the ingress to use the generated secret.
                     name: kuard
                     port:
                       number: 80
-                pathType: Prefix
                 path: /
+                pathType: Prefix
           tls:
           - hosts:
             - kuard.example.com
             secretName: kuard-example-tls
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 ```
 
 1.  Deploy the ingress using the following command.

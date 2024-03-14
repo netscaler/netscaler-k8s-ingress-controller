@@ -14,29 +14,35 @@ The following Ingress configures NetScaler to have a secure connection with the 
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
+          annotations:
+            ingress.citrix.com/backend-ca-secret: '{"service-test": "tls-backend-ca-secret"}'
+            ingress.citrix.com/backend-secret: '{"service-test": "tls-backend-secret"}'
+            ingress.citrix.com/secure-backend: 'True'
           name: ingress-demo
           namespace: netscaler
-          annotations:
-           kubernetes.io/ingress.class: "netscaler"
-           # annotation ingress.citrix.com/secure-backend will enable secure back end communication to the backend service.
-           ingress.citrix.com/secure-backend: "True"
-           # annotation ingress.citrix.com/backend-secret will bind SSL certificate for communicating with backend service
-           ingress.citrix.com/backend-secret: '{"service-test": "tls-backend-secret"}'
-           # annotaion ingress.citrix.com/backend-ca-secret will provide the CA certificate
-           ingress.citrix.com/backend-ca-secret: '{"service-test": "tls-backend-ca-secret"}' 
         spec:
-          tls:
-          - secretName: tls-secret
-            hosts: 
-              - "example.com"
+          ingressClassName: netscaler
           rules:
-          - host:  "example.com"
+          - host: example.com
             http:
               paths:
-              - path: /
-                pathType: Prefix
-                backend:
-                  service: 
+              - backend:
+                  service:
                     name: service-test
-                    port: 
+                    port:
                       number: 443
+                path: /
+                pathType: Prefix
+          tls:
+          - hosts:
+            - example.com
+            secretName: tls-secret
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: netscaler
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+        

@@ -45,7 +45,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
 
     Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
 
-    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
+    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
 
     
 
@@ -57,7 +57,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
               serviceAccountName: cic-k8s-role
               containers:
               - name: cic-k8s-ingress-controller
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
+                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6"
                 env:
                   - name: "NS_IP"
                     value: "x.x.x.x"
@@ -151,21 +151,28 @@ Perform the following steps to deploy a sample application and Ingress resource.
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          name: guestbook-ingress
           annotations:
-        annotations:
-          ingress.citrix.com/ipam-range: "two-ip"
-          #ingress.citrix.com/frontend-ip: "5.5.5.5"
-          kubernetes.io/ingress.class: "cic-vpx"
+            ingress.citrix.com/ipam-range: two-ip
+          name: guestbook-ingress
         spec:
+          ingressClassName: cic-vpx
           rules:
-          - host:  www.guestbook.com
+          - host: www.guestbook.com
             http:
               paths:
-              - path: /
-                backend:
+              - backend:
                   serviceName: frontend
                   servicePort: 80
+                path: /
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: cic-vpx
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 
 3. Deploy the Ingress resource.
 

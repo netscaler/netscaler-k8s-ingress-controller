@@ -11,7 +11,7 @@ You should complete the following tasks before performing the steps in the proce
 -  Ensure that you have a Kubernetes cluster up and running.
 
 !!! note "Note"
-    For more information on creating a Kubernetes cluster in AKS, see [Guide to create an AKS cluster](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md).
+    For more information on creating a Kubernetes cluster in AKS, see [Guide to create an AKS cluster](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md).
 
 ## Topology
 
@@ -22,13 +22,13 @@ The following is the sample topology used in this deployment.
 ## Get a Citrix ADC VPX instance from Azure Marketplace
 
 You can create Citrix ADC VPX from the Azure Marketplace.
-For more information on how to create a Citrix ADC VPX instance from Azure Marketplace, see [Get Citrix ADC VPX from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
+For more information on how to create a Citrix ADC VPX instance from Azure Marketplace, see [Get Citrix ADC VPX from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
 
 ## Get the Citrix ingress controller from Azure Marketplace
 
 To deploy the Citrix ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the Citrix ingress controller image.
 
-For more information on how to create a registry and get the image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
+For more information on how to create a registry and get the image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
 
 Once a registry is created, the Citrix ingress controller registry name should be attached to the AKS cluster used for deployment.
 

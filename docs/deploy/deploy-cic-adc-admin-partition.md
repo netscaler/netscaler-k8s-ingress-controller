@@ -20,17 +20,17 @@ Ensure that:
 
 **To deploy the Citrix ingress controller for Citrix ADC with admin partitions:**
 
-1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
+1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
 
         wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-1.  Edit the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and enter the values for the following environmental variables:
+1.  Edit the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and enter the values for the following environmental variables:
 
     | Environment Variable | Mandatory or Optional | Description |
     | ---------------------- | ---------------------- | ----------- |
     | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](#prerequisites). |
     | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the partition user that you have created for the Citrix ingress controller. For more details, see [Prerequisites](#prerequisites). |
-    | NS_VIP | Mandatory | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
+    | NS_VIP | Mandatory | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
     | NS_ENABLE_MONITORING | Mandatory | Set the value `Yes` to monitor Citrix ADC.</br> **Note:** Ensure that you disable Citrix ADC monitoring for Citrix ADC with admin partitions. Set the value to `No`. |
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
     | Kubernetes_url | Optional | The kube-apiserver url that Citrix ingress controller uses to register the events. If the value is not specified, Citrix ingress controller uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
@@ -140,12 +140,12 @@ Create two namespaces `ns1` and `ns2` using the following commands:
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
+          annotations:
+            ingress.citrix.com/frontend-ip: < ADC VIP IP >
           name: ingress-apache-ns1
           namespace: ns1
-          annotations:
-            kubernetes.io/ingress.class: "citrix-def-part-ns1"
-            ingress.citrix.com/frontend-ip: "< ADC VIP IP >"
         spec:
+          ingressClassName: citrix-def-part-ns1
           rules:
           - host: apache-ns1.com
             http:
@@ -155,8 +155,17 @@ Create two namespaces `ns1` and `ns2` using the following commands:
                     name: apache-ns1
                     port:
                       number: 80
-                pathType: Prefix
                 path: /index.html
+                pathType: Prefix
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix-def-part-ns1
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 
 4. Citrix ingress controller in `ns1` configures the ADC entities in the default partition.
 
@@ -335,11 +344,11 @@ Create two namespaces `ns1` and `ns2` using the following commands:
         kind: Ingress
         metadata:
           annotations:
-          kubernetes.io/ingress.class: citrix-adm-part-ns2
-          ingress.citrix.com/frontend-ip: "<VIP in partition 1>"
+            ingress.citrix.com/frontend-ip: <VIP in partition 1>
           name: guestbook-ingress
           namespace: ns2
         spec:
+          ingressClassName: citrix-adm-part-ns2
           rules:
           - host: www.guestbook.com
             http:
@@ -351,5 +360,14 @@ Create two namespaces `ns1` and `ns2` using the following commands:
                       number: 80
                 path: /
                 pathType: Prefix
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix-adm-part-ns2
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 
 4. Citrix ingress controller in `ns2` configures the ADC entities in partition `p1`.

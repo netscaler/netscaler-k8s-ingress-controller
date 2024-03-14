@@ -85,7 +85,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
         secret "grpc-secret" created
 
-8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Citrix ingress controller.
+8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Citrix ingress controller.
 
    - Create a YAML file for the front-end Ingress configuration and apply it to enable HTTP/2 on the content switching virtual server.
   
@@ -98,16 +98,26 @@ Perform the following steps to enable GRPC support using HTTP2.
           kind: Ingress
           metadata:
             annotations:
-              ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled", "http2direct" : "enabled"}'
+              ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled", "http2direct" :
+                "enabled"}'
               ingress.citrix.com/frontend-ip: 192.0.2.1
-              ingress.citrix.com/secure-port: "443"
-              kubernetes.io/ingress.class: citrix
+              ingress.citrix.com/secure-port: '443'
             name: frontend-ingress
           spec:
+            ingressClassName: citrix
             rules:
             - {}
             tls:
             - {}
+          ---
+          apiVersion: networking.k8s.io/v1
+          kind: IngressClass
+          metadata:
+            name: citrix
+          spec:
+            controller: citrix.com/ingress-controller
+          ---
+
           ```
 
    - Create a YAML file for the back-end Ingress configuration with the following content and apply it to enable HTTP2 on back-end (service group).
@@ -121,12 +131,13 @@ Perform the following steps to enable GRPC support using HTTP2.
           kind: Ingress
           metadata:
             annotations:
-              ingress.citrix.com/backend-httpprofile: '{"grpc-service":{"http2": "enabled", "http2direct" : "enabled"}}'
+              ingress.citrix.com/backend-httpprofile: '{"grpc-service":{"http2": "enabled",
+                "http2direct" : "enabled"}}'
               ingress.citrix.com/frontend-ip: 192.0.2.2
-              ingress.citrix.com/secure-port: "443"
-              kubernetes.io/ingress.class: citrix
+              ingress.citrix.com/secure-port: '443'
             name: grpc-ingress
           spec:
+            ingressClassName: citrix
             rules:
             - host: grpc.example.com
               http:
@@ -142,6 +153,15 @@ Perform the following steps to enable GRPC support using HTTP2.
             - hosts:
               - grpc.example.com
               secretName: grpc-secret
+          ---
+          apiVersion: networking.k8s.io/v1
+          kind: IngressClass
+          metadata:
+            name: citrix
+          spec:
+            controller: citrix.com/ingress-controller
+          ---
+
           ```
 
 3. Test the gRPC traffic using the `grpcurl` command.
@@ -179,7 +199,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
 Perform the following steps to validate the rate limit CRD.
 
-1. Apply the rate limit CRD using the [ratelimit-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/ratelimit/ratelimit-crd.yaml) file.
+1. Apply the rate limit CRD using the [ratelimit-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/ratelimit/ratelimit-crd.yaml) file.
 
        kubectl create -f ratelimit-crd.yaml
 
@@ -225,7 +245,7 @@ Perform the following steps to validate the rate limit CRD.
 
 Perform the following steps to validate the Rewrite and Responder CRD.
 
-1. Apply the Rewrite and Responder CRD using the [rewrite-responder-policies-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) file.
+1. Apply the Rewrite and Responder CRD using the [rewrite-responder-policies-deployment.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) file.
 
        kubectl create -f rewrite-responder-policies-deployment.yaml
 

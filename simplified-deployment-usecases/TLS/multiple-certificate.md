@@ -30,33 +30,42 @@ Here, `tls-example-one.cert` and `tls-example-one.key` is cert/key for `exampleo
 
 Following is the ingress for the two hosts and the hosts are used for SNI matching in the request.
 
-            apiVersion: networking.k8s.io/v1
-            kind: Ingress
-            metadata:
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            annotations: {}
             name: multi-cert-ingress
             namespace: netscaler
-            annotations:
-            kubernetes.io/ingress.class: "netscaler"
-            spec:
-            tls:
-            - hosts:
-                - exampleone.com
-                secretName: tls-example-one
-            - hosts:
-                - exampletwo.com
-                secretName: tls-example-two
+          spec:
+            ingressClassName: netscaler
             rules:
             - host: exampleone.com
-                http:
-                paths:
-                - path: /
-                    backend:
-                    serviceName: example-one
-                    servicePort: 80
+              http: null
+              paths:
+              - backend: null
+                path: /
+                serviceName: example-one
+                servicePort: 80
             - host: exampletwo.com
-                http:
-                paths:
-                - path: /
-                    backend:
-                    serviceName: example-two
-                    servicePort: 80
+              http: null
+              paths:
+              - backend: null
+                path: /
+                serviceName: example-two
+                servicePort: 80
+            tls:
+            - hosts:
+              - host: exampleone.com
+                secretName: tls-example-one
+            - hosts:
+              - host: exampletwo.com
+                secretName: tls-example-two
+          ---
+          apiVersion: networking.k8s.io/v1
+          kind: IngressClass
+          metadata:
+            name: netscaler
+          spec:
+            controller: citrix.com/ingress-controller
+          ---
+          

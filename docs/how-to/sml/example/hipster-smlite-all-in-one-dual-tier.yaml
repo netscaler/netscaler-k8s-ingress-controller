@@ -11,47 +11,47 @@ spec:
       labels:
         app: emailservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/emailservice:v0.1.2
-        ports:
-        - containerPort: 8080
-        env:
+      - env:
         - name: ENABLE_PROFILER
           value: '0'
-        readinessProbe:
-          periodSeconds: 5
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:8080
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.1.2
         livenessProbe:
-          periodSeconds: 5
           exec:
             command:
             - /bin/grpc_health_probe
             - -addr=:8080
+          periodSeconds: 5
+        name: server
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:8080
+          periodSeconds: 5
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: emailservice-headless
 spec:
-  selector:
-    app: emailservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 5000
     targetPort: 8080
-  clusterIP: None
+  selector:
+    app: emailservice
 ---
 apiVersion: v1
 kind: Service
@@ -69,9 +69,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "5000"
+    ingress.citrix.com/insecure-port: '5000'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: emailservice-ingress
 spec:
   defaultBackend:
@@ -79,6 +78,14 @@ spec:
       name: emailservice-headless
       port:
         number: 5000
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -94,21 +101,7 @@ spec:
         app: checkoutservice
     spec:
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.1.2
-        ports:
-        - containerPort: 5050
-        readinessProbe:
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:5050
-        livenessProbe:
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:5050
-        env:
+      - env:
         - name: PORT
           value: '5050'
         - name: PRODUCT_CATALOG_SERVICE_ADDR
@@ -123,26 +116,40 @@ spec:
           value: currencyservice:7000
         - name: CART_SERVICE_ADDR
           value: cartservice:7070
+        image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.1.2
+        livenessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:5050
+        name: server
+        ports:
+        - containerPort: 5050
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:5050
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: checkoutservice-headless
 spec:
-  selector:
-    app: checkoutservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 5050
     targetPort: 5050
-  clusterIP: None
+  selector:
+    app: checkoutservice
 ---
 apiVersion: v1
 kind: Service
@@ -160,9 +167,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "5050"
+    ingress.citrix.com/insecure-port: '5050'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: checkoutservice-ingress
 spec:
   defaultBackend:
@@ -170,6 +176,14 @@ spec:
       name: checkoutservice-headless
       port:
         number: 5050
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -184,51 +198,51 @@ spec:
       labels:
         app: recommendationservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.1.2
-        ports:
-        - containerPort: 8080
-        readinessProbe:
-          periodSeconds: 5
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:8080
-        livenessProbe:
-          periodSeconds: 5
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:8080
-        env:
+      - env:
         - name: PORT
           value: '8080'
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: productcatalogservice:3550
         - name: ENABLE_PROFILER
           value: '0'
+        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.1.2
+        livenessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:8080
+          periodSeconds: 5
+        name: server
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:8080
+          periodSeconds: 5
         resources:
-          requests:
-            cpu: 100m
-            memory: 220Mi
           limits:
             cpu: 200m
             memory: 450Mi
+          requests:
+            cpu: 100m
+            memory: 220Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: recommendationservice-headless
 spec:
-  selector:
-    app: recommendationservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 8081
     targetPort: 8080
-  clusterIP: None
+  selector:
+    app: recommendationservice
 ---
 apiVersion: v1
 kind: Service
@@ -246,9 +260,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "8081"
+    ingress.citrix.com/insecure-port: '8081'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: recommendationservice-ingress
 spec:
   defaultBackend:
@@ -256,6 +269,14 @@ spec:
       name: recommendationservice-headless
       port:
         number: 8081
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -271,27 +292,7 @@ spec:
         app: frontend
     spec:
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/frontend:v0.1.2
-        ports:
-        - containerPort: 8080
-        readinessProbe:
-          initialDelaySeconds: 10
-          httpGet:
-            path: /_healthz
-            port: 8080
-            httpHeaders:
-            - name: Cookie
-              value: shop_session-id=x-readiness-probe
-        livenessProbe:
-          initialDelaySeconds: 10
-          httpGet:
-            path: /_healthz
-            port: 8080
-            httpHeaders:
-            - name: Cookie
-              value: shop_session-id=x-liveness-probe
-        env:
+      - env:
         - name: PORT
           value: '8080'
         - name: PRODUCT_CATALOG_SERVICE_ADDR
@@ -308,26 +309,46 @@ spec:
           value: checkoutservice:5050
         - name: AD_SERVICE_ADDR
           value: adservice:9555
+        image: gcr.io/google-samples/microservices-demo/frontend:v0.1.2
+        livenessProbe:
+          httpGet:
+            httpHeaders:
+            - name: Cookie
+              value: shop_session-id=x-liveness-probe
+            path: /_healthz
+            port: 8080
+          initialDelaySeconds: 10
+        name: server
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            httpHeaders:
+            - name: Cookie
+              value: shop_session-id=x-readiness-probe
+            path: /_healthz
+            port: 8080
+          initialDelaySeconds: 10
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-headless
 spec:
-  selector:
-    app: frontend
+  clusterIP: None
   ports:
   - name: http
     port: 80
     targetPort: 8080
-  clusterIP: None
+  selector:
+    app: frontend
 ---
 apiVersion: v1
 kind: Service
@@ -345,11 +366,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/insecure-port: '80'
     ingress.citrix.com/insecure-service-type: http
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: frontend-ingress
 spec:
+  ingressClassName: tier-2-cpx1
   rules:
   - host: frontend
     http:
@@ -362,14 +383,21 @@ spec:
         pathType: Prefix
 ---
 apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
+---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/insecure-port: '80'
     ingress.citrix.com/insecure-service-type: http
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: frontend-ns-ingress
 spec:
+  ingressClassName: tier-2-cpx1
   rules:
   - host: citrix.hipster.smlite
     http:
@@ -381,18 +409,25 @@ spec:
               number: 80
         pathType: Prefix
 ---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-external-headless
 spec:
-  selector:
-    app: frontend
+  clusterIP: None
   ports:
   - name: http
     port: 80
     targetPort: 8080
-  clusterIP: None
+  selector:
+    app: frontend
 ---
 apiVersion: v1
 kind: Service
@@ -410,11 +445,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "80"
+    ingress.citrix.com/insecure-port: '80'
     ingress.citrix.com/insecure-service-type: http
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: frontend-external-ingress
 spec:
+  ingressClassName: tier-2-cpx1
   rules:
   - host: frontend-external
     http:
@@ -425,6 +460,13 @@ spec:
             port:
               number: 80
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -439,45 +481,45 @@ spec:
       labels:
         app: paymentservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/paymentservice:v0.1.2
-        ports:
-        - containerPort: 50051
-        env:
+      - env:
         - name: PORT
           value: '50051'
-        readinessProbe:
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:50051
+        image: gcr.io/google-samples/microservices-demo/paymentservice:v0.1.2
         livenessProbe:
           exec:
             command:
             - /bin/grpc_health_probe
             - -addr=:50051
+        name: server
+        ports:
+        - containerPort: 50051
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:50051
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: paymentservice-headless
 spec:
-  selector:
-    app: paymentservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 50051
     targetPort: 50051
-  clusterIP: None
+  selector:
+    app: paymentservice
 ---
 apiVersion: v1
 kind: Service
@@ -495,9 +537,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "50051"
+    ingress.citrix.com/insecure-port: '50051'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: paymentservice-ingress
 spec:
   defaultBackend:
@@ -505,6 +546,14 @@ spec:
       name: paymentservice-headless
       port:
         number: 50051
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -519,45 +568,45 @@ spec:
       labels:
         app: productcatalogservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.1.2
-        ports:
-        - containerPort: 3550
-        env:
+      - env:
         - name: PORT
           value: '3550'
-        readinessProbe:
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:3550
+        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.1.2
         livenessProbe:
           exec:
             command:
             - /bin/grpc_health_probe
             - -addr=:3550
+        name: server
+        ports:
+        - containerPort: 3550
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:3550
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: productcatalogservice-headless
 spec:
-  selector:
-    app: productcatalogservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 3550
     targetPort: 3550
-  clusterIP: None
+  selector:
+    app: productcatalogservice
 ---
 apiVersion: v1
 kind: Service
@@ -575,9 +624,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "3550"
+    ingress.citrix.com/insecure-port: '3550'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: productcatalogservice-ingress
 spec:
   defaultBackend:
@@ -585,6 +633,14 @@ spec:
       name: productcatalogservice-headless
       port:
         number: 3550
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -599,54 +655,54 @@ spec:
       labels:
         app: cartservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/cartservice:v0.1.2
-        ports:
-        - containerPort: 7070
-        env:
+      - env:
         - name: REDIS_ADDR
           value: redis-cart:6379
         - name: PORT
           value: '7070'
         - name: LISTEN_ADDR
           value: 0.0.0.0
+        image: gcr.io/google-samples/microservices-demo/cartservice:v0.1.2
+        livenessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:7070
+            - -rpc-timeout=5s
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        name: server
+        ports:
+        - containerPort: 7070
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:7070
+            - -rpc-timeout=5s
+          initialDelaySeconds: 15
         resources:
-          requests:
-            cpu: 200m
-            memory: 64Mi
           limits:
             cpu: 300m
             memory: 128Mi
-        readinessProbe:
-          initialDelaySeconds: 15
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:7070
-            - -rpc-timeout=5s
-        livenessProbe:
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:7070
-            - -rpc-timeout=5s
+          requests:
+            cpu: 200m
+            memory: 64Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: cartservice-headless
 spec:
-  selector:
-    app: cartservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 7070
     targetPort: 7070
-  clusterIP: None
+  selector:
+    app: cartservice
 ---
 apiVersion: v1
 kind: Service
@@ -664,9 +720,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "7070"
+    ingress.citrix.com/insecure-port: '7070'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: cartservice-ingress
 spec:
   defaultBackend:
@@ -674,6 +729,14 @@ spec:
       name: cartservice-headless
       port:
         number: 7070
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -688,46 +751,46 @@ spec:
       labels:
         app: currencyservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.1.2
-        ports:
-        - name: grpc
-          containerPort: 7000
-        env:
+      - env:
         - name: PORT
           value: '7000'
-        readinessProbe:
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:7000
+        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.1.2
         livenessProbe:
           exec:
             command:
             - /bin/grpc_health_probe
             - -addr=:7000
+        name: server
+        ports:
+        - containerPort: 7000
+          name: grpc
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:7000
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: currencyservice-headless
 spec:
-  selector:
-    app: currencyservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 7000
     targetPort: 7000
-  clusterIP: None
+  selector:
+    app: currencyservice
 ---
 apiVersion: v1
 kind: Service
@@ -745,9 +808,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "7000"
+    ingress.citrix.com/insecure-port: '7000'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: currencyservice-ingress
 spec:
   defaultBackend:
@@ -755,6 +817,14 @@ spec:
       name: currencyservice-headless
       port:
         number: 7000
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -770,44 +840,44 @@ spec:
         app: shippingservice
     spec:
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/shippingservice:v0.1.2
-        ports:
-        - containerPort: 50051
-        env:
+      - env:
         - name: PORT
           value: '50051'
-        readinessProbe:
-          periodSeconds: 5
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:50051
+        image: gcr.io/google-samples/microservices-demo/shippingservice:v0.1.2
         livenessProbe:
           exec:
             command:
             - /bin/grpc_health_probe
             - -addr=:50051
+        name: server
+        ports:
+        - containerPort: 50051
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:50051
+          periodSeconds: 5
         resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
           limits:
             cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: shippingservice-headless
 spec:
-  selector:
-    app: shippingservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 50052
     targetPort: 50051
-  clusterIP: None
+  selector:
+    app: shippingservice
 ---
 apiVersion: v1
 kind: Service
@@ -825,9 +895,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "50052"
+    ingress.citrix.com/insecure-port: '50052'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: shippingservice-ingress
 spec:
   defaultBackend:
@@ -835,6 +904,14 @@ spec:
       name: shippingservice-headless
       port:
         number: 50052
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -850,28 +927,28 @@ spec:
         app: redis-cart
     spec:
       containers:
-      - name: redis
-        image: redis:alpine
+      - image: redis:alpine
+        livenessProbe:
+          periodSeconds: 5
+          tcpSocket:
+            port: 6379
+        name: redis
         ports:
         - containerPort: 6379
         readinessProbe:
           periodSeconds: 5
           tcpSocket:
             port: 6379
-        livenessProbe:
-          periodSeconds: 5
-          tcpSocket:
-            port: 6379
-        volumeMounts:
-        - mountPath: /data
-          name: redis-data
         resources:
           limits:
-            memory: 256Mi
             cpu: 125m
+            memory: 256Mi
           requests:
             cpu: 70m
             memory: 200Mi
+        volumeMounts:
+        - mountPath: /data
+          name: redis-data
       volumes:
       - name: redis-data
 ---
@@ -880,13 +957,13 @@ kind: Service
 metadata:
   name: redis-cart-headless
 spec:
-  selector:
-    app: redis-cart
+  clusterIP: None
   ports:
   - name: redis
     port: 6379
     targetPort: 6379
-  clusterIP: None
+  selector:
+    app: redis-cart
 ---
 apiVersion: v1
 kind: Service
@@ -904,9 +981,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "6379"
+    ingress.citrix.com/insecure-port: '6379'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: redis-cart-ingress
 spec:
   defaultBackend:
@@ -914,6 +990,14 @@ spec:
       name: redis-cart-headless
       port:
         number: 6379
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -928,49 +1012,49 @@ spec:
       labels:
         app: adservice
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/google-samples/microservices-demo/adservice:v0.1.2
-        ports:
-        - containerPort: 9555
-        env:
+      - env:
         - name: PORT
           value: '9555'
+        image: gcr.io/google-samples/microservices-demo/adservice:v0.1.2
+        livenessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:9555
+          initialDelaySeconds: 20
+          periodSeconds: 15
+        name: server
+        ports:
+        - containerPort: 9555
+        readinessProbe:
+          exec:
+            command:
+            - /bin/grpc_health_probe
+            - -addr=:9555
+          initialDelaySeconds: 20
+          periodSeconds: 15
         resources:
-          requests:
-            cpu: 200m
-            memory: 180Mi
           limits:
             cpu: 300m
             memory: 300Mi
-        readinessProbe:
-          initialDelaySeconds: 20
-          periodSeconds: 15
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:9555
-        livenessProbe:
-          initialDelaySeconds: 20
-          periodSeconds: 15
-          exec:
-            command:
-            - /bin/grpc_health_probe
-            - -addr=:9555
+          requests:
+            cpu: 200m
+            memory: 180Mi
+      terminationGracePeriodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: adservice-headless
 spec:
-  selector:
-    app: adservice
+  clusterIP: None
   ports:
   - name: grpc
     port: 9555
     targetPort: 9555
-  clusterIP: None
+  selector:
+    app: adservice
 ---
 apiVersion: v1
 kind: Service
@@ -988,9 +1072,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "9555"
+    ingress.citrix.com/insecure-port: '9555'
     ingress.citrix.com/insecure-service-type: tcp
-    kubernetes.io/ingress.class: tier-2-cpx1
   name: adservice-ingress
 spec:
   defaultBackend:
@@ -998,6 +1081,14 @@ spec:
       name: adservice-headless
       port:
         number: 9555
+  ingressClassName: tier-2-cpx1
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-2-cpx1
+spec:
+  controller: citrix.com/ingress-controller
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1140,41 +1231,39 @@ spec:
       app: cpx-ingress1
   template:
     metadata:
-      name: cpx-ingress1
       labels:
         app: cpx-ingress1
+      name: cpx-ingress1
     spec:
-      serviceAccountName: citrix
       containers:
-      - name: cpx
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
-        imagePullPolicy: Always
-        securityContext:
-          privileged: true
-        env:
+      - env:
         - name: EULA
           value: 'yes'
         - name: KUBERNETES_TASK_ID
           value: ''
+        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
+        imagePullPolicy: Always
+        name: cpx
         ports:
-        - name: http
-          containerPort: 80
-        - name: https
-          containerPort: 443
-        - name: nitro-http
-          containerPort: 9080
-        - name: nitro-https
-          containerPort: 9443
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        - containerPort: 9080
+          name: nitro-http
+        - containerPort: 9443
+          name: nitro-https
         readinessProbe:
-          tcpSocket:
-            port: 9080
+          failureThreshold: 5
           initialDelaySeconds: 60
           periodSeconds: 5
-          failureThreshold: 5
           successThreshold: 1
-      - name: cic
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.33.4
-        imagePullPolicy: Always
+          tcpSocket:
+            port: 9080
+        securityContext:
+          privileged: true
+      - args:
+        - --ingress-classes tier-2-cpx1
         env:
         - name: EULA
           value: 'yes'
@@ -1191,13 +1280,13 @@ spec:
         - name: NS_USER
           valueFrom:
             secretKeyRef:
-              name: cpx-ingress1
               key: username
+              name: cpx-ingress1
         - name: NS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: cpx-ingress1
               key: password
+              name: cpx-ingress1
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -1208,8 +1297,10 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        args:
-        - --ingress-classes tier-2-cpx1
+        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
+        imagePullPolicy: Always
+        name: cic
+      serviceAccountName: citrix
 ---
 apiVersion: v1
 kind: Service
@@ -1234,22 +1325,22 @@ spec:
   type: ClusterIP
 ---
 apiVersion: v1
+data:
+  password: bnNyb290
+  username: bnNyb290
 kind: Secret
 metadata:
   name: cpx-ingress1
 type: Opaque
-data:
-  username: bnNyb290
-  password: bnNyb290
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     ingress.citrix.com/frontend-ip: <citrix-adc-vpx-vip>
-    kubernetes.io/ingress.class: tier-1-vpx
   name: tier-1-ingress
 spec:
+  ingressClassName: tier-1-vpx
   rules:
   - host: citrix.hipster.smlite
     http:
@@ -1262,58 +1353,149 @@ spec:
         path: /
         pathType: Prefix
 ---
-kind: ClusterRole
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: tier-1-vpx
+spec:
+  controller: citrix.com/ingress-controller
+---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
   name: cic-k8s-role
 rules:
-  - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps"]
-    verbs: ["get", "list", "watch"]
-  # services/status is needed to update the loadbalancer IP in service status for integrating
-  # service of type LoadBalancer with external-dns
-  - apiGroups: [""]
-    resources: ["services/status"]
-    verbs: ["patch"]
-  - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
-  - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["create"]
-  - apiGroups: ["extensions"]
-    resources: ["ingresses", "ingresses/status"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["apiextensions.k8s.io"]
-    resources: ["customresourcedefinitions"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["apps"]
-    resources: ["deployments"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits", "listeners", "httproutes"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
-    verbs: ["get", "list", "patch"]
-  - apiGroups: ["citrix.com"]
-    resources: ["vips"]
-    verbs: ["get", "list", "watch", "create", "delete"]
-  - apiGroups: ["route.openshift.io"]
-    resources: ["routes"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["config.openshift.io"]
-    resources: ["networks"]
-    verbs: ["get", "list"]
-  - apiGroups: ["network.openshift.io"]
-    resources: ["hostsubnets"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["crd.projectcalico.org"]
-    resources: ["ipamblocks"]
-    verbs: ["get", "list", "watch"]
+- apiGroups:
+  - ''
+  resources:
+  - endpoints
+  - ingresses
+  - pods
+  - secrets
+  - nodes
+  - routes
+  - namespaces
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - services/status
+  verbs:
+  - patch
+- apiGroups:
+  - ''
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - ''
+  resources:
+  - events
+  verbs:
+  - create
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  - ingresses/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - citrix.com
+  resources:
+  - rewritepolicies
+  - canarycrds
+  - authpolicies
+  - ratelimits
+  - listeners
+  - httproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - citrix.com
+  resources:
+  - rewritepolicies/status
+  - canarycrds/status
+  - ratelimits/status
+  - authpolicies/status
+  - listeners/status
+  - httproutes/status
+  verbs:
+  - get
+  - list
+  - patch
+- apiGroups:
+  - citrix.com
+  resources:
+  - vips
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - networks
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - network.openshift.io
+  resources:
+  - hostsubnets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - crd.projectcalico.org
+  resources:
+  - ipamblocks
+  verbs:
+  - get
+  - list
+  - watch
 ---
-kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
 metadata:
   name: cic-k8s-role
 roleRef:
@@ -1336,39 +1518,37 @@ kind: Deployment
 metadata:
   name: cic-k8s-ingress-controller
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: cic-k8s-ingress-controller
-  replicas: 1
   template:
     metadata:
-      name: cic-k8s-ingress-controller
+      annotations: null
       labels:
         app: cic-k8s-ingress-controller
-      annotations:
+      name: cic-k8s-ingress-controller
     spec:
-      serviceAccountName: cic-k8s-role
       containers:
-      - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
+      - args:
+        - --ingress-classes tier-1-vpx
         env:
-         # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
-         - name: "NS_IP"
-           value: "<citrix-adc-vpx-nsip>"
-         - name: "NS_USER"
-           valueFrom:
+        - name: NS_IP
+          value: <citrix-adc-vpx-nsip>
+        - name: NS_USER
+          valueFrom:
             secretKeyRef:
-             name: <citrix-adc-vpx-credential-secret>
-             key: username
-         - name: "LOGLEVEL"
-           value: "INFO"
-         # Set user password for Nitro
-         - name: "NS_PASSWORD"
-           valueFrom:
+              key: username
+              name: <citrix-adc-vpx-credential-secret>
+        - name: LOGLEVEL
+          value: INFO
+        - name: NS_PASSWORD
+          valueFrom:
             secretKeyRef:
-             name: <citrix-adc-vpx-credential-secret>
-             key: password
-        args:
-          - --ingress-classes
-            tier-1-vpx
+              key: password
+              name: <citrix-adc-vpx-credential-secret>
+        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
         imagePullPolicy: Always
+        name: cic-k8s-ingress-controller
+      serviceAccountName: cic-k8s-role
+---

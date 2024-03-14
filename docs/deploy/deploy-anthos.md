@@ -59,7 +59,7 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
 7. Deploy the Citrix ingress controller as a Tier-1 ingress controller.
 
-   1. Download the [cic.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cic.yaml) file.
+   1. Download the [cic.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cic.yaml) file.
    
    2. Enter the management IP address of Citrix ADC. Update the Tier-1 Citrix ADC's management IP address in the placeholder `Tier-1-Citrix-ADC-IP` specified in the `cic.yaml` file.
    
@@ -69,7 +69,7 @@ Perform the following steps to deploy Citrix ADC CPX as a service of type `LoadB
 
 8.  Expose Citrix ADC CPX as a Kubernetes service of type `LoadBalancer`.
     
-    1. Download the [cpx-service-type-lb.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cpx-service-type-lb.yaml) file.
+    1. Download the [cpx-service-type-lb.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cpx-service-type-lb.yaml) file.
     
     2. Edit the YAML file and specify the value of `VIP-for-accessing-microservices` as the VIP address which is to be used for accessing the applications inside the cluster. This VIP address is the one set aside to be used as a Load Balancer IP address. 
     
@@ -175,16 +175,16 @@ Perform the following steps to deploy a dual-tier Ingress deployment of Citrix A
 
 8.  Deploy the Citrix ingress controller as a Tier-1 ingress controller.
 
-    1. Download the [cic.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/cic.yaml) file.
+    1. Download the [cic.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/cic.yaml) file.
    
     2. Enter the management IP address of Citrix ADC. Update the Tier-1 Citrix ADC's management IP address in the placeholder `Tier-1-Citrix-ADC-IP` specified in the `cic.yaml` file.
    
     3. Save and deploy the `cic.yaml` using the following command.
 
                 kubectl --kubeconfig user-cluster-1-kubeconfig create -f cic.yaml
-9.  Create an Ingress resource for Tier-1 using the [tier-1-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
+9.  Create an Ingress resource for Tier-1 using the [tier-1-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
 
-    1. Download the [tier-1-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
+    1. Download the [tier-1-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/tier-1-ingress.yaml) file.
     
     2. Edit the YAML file and replace `VIP-Citrix-ADC` with the VIP address which was set aside.
     

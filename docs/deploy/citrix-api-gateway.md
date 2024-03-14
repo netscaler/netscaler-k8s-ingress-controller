@@ -22,11 +22,11 @@ Using the API gateway offered by Citrix, you can perform the following functiona
 
 Citrix provides the following CRDs for the API gateway:
 
-- [Auth CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/auth/auth-crd.yaml)
-- [Rate limit CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/ratelimit/README.md)
-- [Content routing CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/README.md)
-- [Rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml)
-- [WAF CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml)
+- [Auth CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/auth/auth-crd.yaml)
+- [Rate limit CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/ratelimit/README.md)
+- [Content routing CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/contentrouting/README.md)
+- [Rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml)
+- [WAF CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml)
 
 ## Key benefits of using the API gateway
 

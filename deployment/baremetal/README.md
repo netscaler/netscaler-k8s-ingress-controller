@@ -62,7 +62,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <summary>NS_USER and NS_PASSWORD</summary>
 
          This variable is for authenticating with Citrix ADC if it has non-default user name and password. You can directly pass user name and password or use Kubernetes secrets.
-         For configuring a non-default Citrix ADC user name and password, see [Create a system user account for the Citrix ingress controller in Citrix ADC](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+         For configuring a non-default Citrix ADC user name and password, see [Create a system user account for the Citrix ingress controller in Citrix ADC](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
          Given YAML uses Kubernetes secrets. The following steps help to create secrets to be used in YAML.
 
@@ -238,7 +238,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
     This command pulls the latest image and brings up the Citrix ingress controller.
                 
 
-    The official Citrix ingress controller docker image is available at: <span style="color:red"> `quay.io/citrix/citrix-k8s-ingress-controller:1.33.4` </span>
+    The official Citrix ingress controller docker image is available at: <span style="color:red"> `quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6` </span>
 
 
 2. Configure reachability to the pod network using one of the following.

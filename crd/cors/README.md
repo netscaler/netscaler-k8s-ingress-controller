@@ -31,7 +31,7 @@ The following are the attributes provided in the CORS CRD:
 
 Perform the following to deploy the CORS CRD:
 
-1.  Download the [CORS CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/cors/cors-crd.yaml).
+1.  Download the [CORS CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/cors/cors-crd.yaml).
 
 2.  Deploy the CORS CRD using the following command:
 

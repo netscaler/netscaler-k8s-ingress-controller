@@ -19,7 +19,7 @@ Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can
 
 ## Deploy the Citrix Rewrite and Responder CRD
 
-The Citrix Rewrite and Responder CRD deployment YAML file: [rewrite-responder-policies-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml).
+The Citrix Rewrite and Responder CRD deployment YAML file: [rewrite-responder-policies-deployment.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml).
 
 !!! note "Note"
     Ensure that you do not modify the deployment YAML file.

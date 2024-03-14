@@ -151,4 +151,4 @@ Using the usual ingress load balancing methodology with these changes Citrix ADC
 
 To deploy an application in a Service Mesh lite architecture, you need to perform multiple tasks manually. However, when you want to deploy multiple applications which consist of several microservices, you have an easier way to deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready to deploy YAMLs.
 
-[This](https://github.com/citrix/citrix-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite-script.md) doc provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment from your existing YAMLs using the Citrix provided script.
+[This](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite-script.md) doc provides information on how to generate all the necessary YAMLs for Service Mesh lite deployment from your existing YAMLs using the Citrix provided script.

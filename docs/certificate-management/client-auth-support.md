@@ -49,5 +49,5 @@ Perform the following steps to configure TLS client authentication.
           ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", “clientcert”: “optional”}'
 
       **Note:**
-      The `frontend_sslprofile` only supports the front end Ingress configuration. For more information, see [front end configuration](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md#front-end-configuration).
+      The `frontend_sslprofile` only supports the front end Ingress configuration. For more information, see [front end configuration](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/profiles.md#front-end-configuration).
 

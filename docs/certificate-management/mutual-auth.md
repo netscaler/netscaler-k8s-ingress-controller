@@ -12,7 +12,7 @@ Perform the following steps to apply mutual authentication for Ingress:
 
     **Note:** Make sure that Citrix ingress controller is restarted after enabling the default profile.
 
-2.  Download the [mutual-auth.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/mutual-auth.yaml) file. This YAML file contains the Ingress resource definition and the SSL annotations.
+2.  Download the [mutual-auth.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/mutual-auth.yaml) file. This YAML file contains the Ingress resource definition and the SSL annotations.
 
     The contents of the YAML is as follows:
 
@@ -21,31 +21,41 @@ Perform the following steps to apply mutual authentication for Ingress:
             kind: Ingress
             metadata:
               annotations:
-                ingress.citrix.com/frontend-ip: "A.B.C.D"
-                kubernetes.io/ingress.class: "citrix"
-                ingress.citrix.com/frontend-sslprofile: '{"clientauth": "enabled", "sni": "enabled" }'
-                ingress.citrix.com/secure_backend: '{"apache": "True"}'
+                ingress.citrix.com/backend-ca-secret: '{"apache": "tls-ca"}'
+                ingress.citrix.com/backend-secret: '{"apache": "wildcard-secret"}'
                 ingress.citrix.com/backend-sslprofile: '{"apache":{"serverauth": "enabled", "sni": "enabled"}}'
                 ingress.citrix.com/ca-secret: '{"apache": "tls-ca"}'
-                ingress.citrix.com/backend-secret: '{"apache": "wildcard-secret"}'
-                ingress.citrix.com/backend-ca-secret: '{"apache": "tls-ca"}'
+                ingress.citrix.com/frontend-ip: A.B.C.D
+                ingress.citrix.com/frontend-sslprofile: '{"clientauth": "enabled", "sni": "enabled"
+                  }'
+                ingress.citrix.com/secure_backend: '{"apache": "True"}'
               name: web-ingress
             spec:
-              tls:
-                - secretName: wildcard-secret
-                  hosts:
-                    - "www.guestbook.com"
+              ingressClassName: citrix
               rules:
-                - host: "www.guestbook.com"
-                  http:
-                    paths:
-                      - backend:
-                          service:
-                            name: apache
-                            port:
-                              number: 443
-                        path: /
-                        pathType: ImplementationSpecific
+              - host: www.guestbook.com
+                http:
+                  paths:
+                  - backend:
+                      service:
+                        name: apache
+                        port:
+                          number: 443
+                    path: /
+                    pathType: ImplementationSpecific
+              tls:
+              - hosts:
+                - www.guestbook.com
+                secretName: wildcard-secret
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: citrix
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
+
           ```
 
     In this example:

@@ -292,10 +292,9 @@ kind: Ingress
 metadata:
   annotations:
     ingress.citrix.com/frontend-ip: 1.1.1.1
-    ingress.citrix.com/insecure-port: "5060"
+    ingress.citrix.com/insecure-port: '5060'
     ingress.citrix.com/insecure-service-type: sip_udp
     ingress.citrix.com/lbvserver: '{"asterisk17":{"lbmethod":"CALLIDHASH","persistenceType":"CALLID"}}'
-    kubernetes.io/ingress.class: cic-vpx
   name: sip-ingress
 spec:
   defaultBackend:
@@ -303,4 +302,14 @@ spec:
       name: asterisk17
       port:
         number: 5060
+  ingressClassName: cic-vpx
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: cic-vpx
+spec:
+  controller: citrix.com/ingress-controller
+---
+
 ```
