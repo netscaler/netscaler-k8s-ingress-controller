@@ -24,7 +24,7 @@ The following are the attributes provided in the AppQoE CRD:
 
 Perform the following to deploy the AppQoE CRD:
 
-1.  Download the [AppQoE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/appqoe/appqoe-crd.yaml).
+1.  Download the [AppQoE CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/appqoe/appqoe-crd.yaml).
 
 2.  Deploy the AppQoE CRD using the following command:
 

@@ -120,10 +120,10 @@ Perform the following to deploy a sample web application:
             apiVersion: networking.k8s.io/v1
             kind: Ingress
             metadata:
-              annotations:
-                kubernetes.io/ingress.class: citrix
+              annotations: {}
               name: kuard
             spec:
+              ingressClassName: citrix
               rules:
               - host: kuard.example.com
                 http:
@@ -135,6 +135,14 @@ Perform the following to deploy a sample web application:
                           number: 80
                     path: /
                     pathType: Prefix
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: citrix
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
 ```
 
       **Note:**
@@ -289,9 +297,9 @@ kind: Ingress
 metadata:
   annotations:
     certmanager.io/cluster-issuer: letsencrypt-staging
-    kubernetes.io/ingress.class: citrix
   name: kuard
 spec:
+  ingressClassName: citrix
   rules:
   - host: kuard.example.com
     http:
@@ -301,12 +309,21 @@ spec:
             name: kuard
             port:
               number: 80
-        pathType: Prefix
         path: /
+        pathType: Prefix
   tls:
   - hosts:
     - kuard.example.com
     secretName: kuard-example-tls
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
 ```
 
 The `cert-manager.io/cluster-issuer: "letsencrypt-staging"` annotation tells cert-manager to use the `letsencrypt-staging` cluster-wide issuer to request a certificate from Let's Encrypt's staging servers. Cert-manager creates a `certificate` object that is used to manage the lifecycle of the certificate for `kuard.example.com`. The value for the domain name and challenge method for the certificate object is derived from the ingress object. Cert-manager manages the contents of the secret as long as the Ingress is present in your cluster.
@@ -502,9 +519,9 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-staging
-    kubernetes.io/ingress.class: citrix
   name: kuard
 spec:
+  ingressClassName: citrix
   rules:
   - host: kuard.example.com
     http:
@@ -514,12 +531,21 @@ spec:
             name: kuard
             port:
               number: 80
-        pathType: Prefix
         path: /
+        pathType: Prefix
   tls:
   - hosts:
     - kuard.example.com
     secretName: kuard-example-tls
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
 ```
 
 The cert-manager creates a `Certificate` CRD resource with the DNS01 challenge. It uses credentials specified in the `ClusterIssuer` to create a TXT record in the DNS server for the domain you own. Then, Let's Encypt CA validates the content of the TXT record to complete the challenge.

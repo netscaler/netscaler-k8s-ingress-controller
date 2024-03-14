@@ -4,7 +4,7 @@ The ConfigMap API resource holds key-value pairs of configuration data that can 
 
 ConfigMaps allow you to separate your configurations from your pods and make your workloads portable. Using ConfigMaps, you can easily change and manage your workload configurations and reduce the need to hardcode configuration data to pod specifications.
 
-The Citrix ingress controller supports the configuration command line arguments, and environment variables mentioned in [deploying the Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/README.md). But, you cannot update these configurations at runtime without rebooting the Citrix ingress controller pod. With ConfigMap support, you can update the configuration automatically while keeping the Citrix ingress controller pod running. You do not need to restart the pod after the update.
+The Citrix ingress controller supports the configuration command line arguments, and environment variables mentioned in [deploying the Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/README.md). But, you cannot update these configurations at runtime without rebooting the Citrix ingress controller pod. With ConfigMap support, you can update the configuration automatically while keeping the Citrix ingress controller pod running. You do not need to restart the pod after the update.
 
 ## Supported environment variables in the Citrix ingress controller
 
@@ -75,7 +75,7 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
   
     **Note:** It is mandatory to specify the namespace. If the namespace is not specified, ConfigMap is not considered.
     
-    Following is a sample YAML file for deploying the Citrix ingress controller with the ConfigMap configuration. For the complete YAML file, see [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml).
+    Following is a sample YAML file for deploying the Citrix ingress controller with the ConfigMap configuration. For the complete YAML file, see [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml).
   
 
         apiVersion: apps/v1
@@ -97,7 +97,7 @@ Perform the following to configure ConfigMap support for the Citrix ingress cont
                 serviceAccountName: cic-k8s-role
                 containers:
                 - name: cic-k8s-ingress-controller
-                  image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
+                  image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6"
                   env:
                   # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
                   - name: "NS_IP"

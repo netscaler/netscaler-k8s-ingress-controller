@@ -8,20 +8,20 @@ When you deploy a service in AWS, a load balancer is created automatically and t
 
  You need to specify the service `type` as `LoadBalancer` in the service definition. Setting the `type` field to `LoadBalancer` provisions a load balancer for your service on AWS.
 
-Citrix IPAM controller is used to automatically allocate IP addresses to services of type LoadBalancer from a specified range of IP addresses. For more information about the Citrix solution for services of type LoadBalancer, see [Expose services of type LoadBalancer](https://github.com/citrix/citrix-k8s-ingress-controller/blob/ef929526a1bd23f30a8677d4494c600f21b7b2a8/docs/network/type_loadbalancer.md).
+Citrix IPAM controller is used to automatically allocate IP addresses to services of type LoadBalancer from a specified range of IP addresses. For more information about the Citrix solution for services of type LoadBalancer, see [Expose services of type LoadBalancer](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/ef929526a1bd23f30a8677d4494c600f21b7b2a8/docs/network/type_loadbalancer.md).
 
 You can deploy the Citrix solution for service of type LoadBalancer in AWS using Helm charts or YAML files.
 
 **Prerequisites**
 
  -  Ensure that the Elastic Kubernetes Service (EKS) cluster version 1.18 or later is running.
- -  Ensure that Citrix ADC VPX and EKS are deployed and running in the same VPC. For information about creating Citrix ADC VPX in AWS, see [Create a Citrix ADC VPX instance from AWS Marketplace](https://github.com/citrix/citrix-k8s-ingress-controller/blob/ef929526a1bd23f30a8677d4494c600f21b7b2a8/deployment/aws/quick-deploy-cic/README.md#create-a-citrix-adc-vpx-instance-from-aws-marketplace).
+ -  Ensure that Citrix ADC VPX and EKS are deployed and running in the same VPC. For information about creating Citrix ADC VPX in AWS, see [Create a Citrix ADC VPX instance from AWS Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/ef929526a1bd23f30a8677d4494c600f21b7b2a8/deployment/aws/quick-deploy-cic/README.md#create-a-citrix-adc-vpx-instance-from-aws-marketplace).
 
 ## Deploy Citrix solution for service of type LoadBalancer in AWS using Helm charts
 
 Perform the following steps to configure the Citrix solution for service of type LoadBalancer using Helm charts.
 
-1.  Download the [unified-lb-values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/unified-lb-values.yaml) file and edit the YAML file for specifying the following details:
+1.  Download the [unified-lb-values.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/unified-lb-values.yaml) file and edit the YAML file for specifying the following details:
 
       -  Citrix ADC VPX NSIP. For more information, see [Citrix ingress controller Helm chart](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cloud-native/charts/citrix-ingress-controller)
     
@@ -43,7 +43,7 @@ Perform the following steps to configure the Citrix solution for service of type
 
       1.  Deploy the application and service with the modified annotation using the following command:
 
-              kubectl create -f https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/guestbook-all-in-one-lb.yaml
+              kubectl create -f https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/guestbook-all-in-one-lb.yaml
 
           **Note**: The `guestbook` microservice is a sample used in this procedure. You can deploy an application of your choice. Ensure that the service should be of type LoadBalancer and the service manifest should contain the annotation.
       
@@ -55,7 +55,7 @@ Perform the following steps to configure the Citrix solution for service of type
 
 Perform the following steps to deploy the Citrix solution for service of type LoadBalancer using YAML.
 
-1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and specify the following details.
+1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and specify the following details.
 
       -  [Citrix ADC VPX NSIP](https://docs.citrix.com/en-us/citrix-adc/current-release/networking/ip-addressing/configuring-citrix-adc-owned-ip-addresses/configuring-citrix-adc-ip-address.html)
     
@@ -75,9 +75,9 @@ Perform the following steps to deploy the Citrix solution for service of type Lo
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
 
-    For more information about deploying Citrix VIP CRD, see [Deploy the VIP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/c683c72457e1be74718f72c2f26bbe57105133a2/docs/network/type_loadbalancer.md#step1-deploy-the-vip-crd).
+    For more information about deploying Citrix VIP CRD, see [Deploy the VIP CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/c683c72457e1be74718f72c2f26bbe57105133a2/docs/network/type_loadbalancer.md#step1-deploy-the-vip-crd).
 
-1. Deploy the IPAM controller. For information about deploying the IPAM controller, see [Deploy the IPAM controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/c683c72457e1be74718f72c2f26bbe57105133a2/docs/network/type_loadbalancer.md#step3-deploy-the-ipam-controller).
+1. Deploy the IPAM controller. For information about deploying the IPAM controller, see [Deploy the IPAM controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/c683c72457e1be74718f72c2f26bbe57105133a2/docs/network/type_loadbalancer.md#step3-deploy-the-ipam-controller).
 
    **Note**: Specify the list of Citrix ADC VPX VIPs in the **VIP_RANGE** field of the IPAM deployment YAML file.
 
@@ -89,7 +89,7 @@ Perform the following steps to deploy the Citrix solution for service of type Lo
 
       1.  Deploy the application and service with the modified annotation using the following command.
 
-              kubectl create -f https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/guestbook-all-in-one-lb.yaml
+              kubectl create -f https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/guestbook-all-in-one-lb.yaml
 
           **Note**: The `guestbook` microservice is a sample used in this procedure. You can deploy an application of your choice. Ensure that the service should be of type LoadBalancer and the service manifest should contain the annotation.
       

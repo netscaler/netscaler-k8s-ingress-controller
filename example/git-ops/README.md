@@ -26,7 +26,7 @@ Perform the following steps:
 
         echo example/git-ops >> .git/info/sparse-checkout
 
-        git remote add -f origin https://github.com/citrix/citrix-k8s-ingress-controller.git
+        git remote add -f origin https://github.com/netscaler/netscaler-k8s-ingress-controller.git
 
         git pull origin master
 

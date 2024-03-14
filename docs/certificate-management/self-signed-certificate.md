@@ -34,23 +34,32 @@ Perform the following steps to link the certificate to the Kubernetes secret.
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
+      annotations: {}
       name: ingress-demo
       namespace: netscaler
-      annotations:
-       kubernetes.io/ingress.class: "netscaler"      
     spec:
-      tls:
-      - secretName: tls-secret
-        hosts: 
-          - "example.com"
+      ingressClassName: netscaler
       rules:
-      - host:  "example.com"
+      - host: example.com
         http:
           paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service: 
+          - backend:
+              service:
                 name: service-test
-                port: 
+                port:
                   number: 80
+            path: /
+            pathType: Prefix
+      tls:
+      - hosts:
+        - example.com
+        secretName: tls-secret
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: netscaler
+    spec:
+      controller: citrix.com/ingress-controller
+    ---
+

@@ -27,7 +27,7 @@ Providing the outputs of the commands in this section helps the support team in 
 
 Events are Kubernetes entities which can provide information about the flow of execution on other Kubernetes entities.
 
-Event based debugging for the Citrix ingress controller is enabled at the pod level. To enable event-based debugging, the RBAC cluster role permissions for the pod should be same as the cluster role permissions present in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
+Event based debugging for the Citrix ingress controller is enabled at the pod level. To enable event-based debugging, the RBAC cluster role permissions for the pod should be same as the cluster role permissions present in the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
 
 Use the following command to view the events for the Citrix ingress controller.
 

@@ -134,7 +134,7 @@ The following are the guidelines for front-end profiles annotations for HTTP, TC
 
 ## Global front-end profile configuration using ConfigMap variables
 
-The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variables `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` for HTTP, TCP, and SSL profiles respectively. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition. Refer [ConfigMap documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
+The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variables `FRONTEND_HTTP_PROFILE`, `FRONTEND_TCP_PROFILE`, or `FRONTEND_SSL_PROFILE` for HTTP, TCP, and SSL profiles respectively. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition. Refer [ConfigMap documentation](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
 
 ### Configuration using FRONTEND_HTTP_PROFILE
 
@@ -379,19 +379,28 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: ingress-vpx1
       annotations:
-        kubernetes.io/ingress.class: "vpx"
-        ingress.citrix.com/insecure-termination: "allow"
-        ingress.citrix.com/frontend-ip: "10.221.36.190"
-        ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
         ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
+        ingress.citrix.com/frontend-ip: 10.221.36.190
         ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls13" : "enabled"}'
+        ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
+        ingress.citrix.com/insecure-termination: allow
+      name: ingress-vpx1
     spec:
-      tls:
-      - hosts:
+      ingressClassName: vpx
       rules:
-      - host:
+      - host: null
+      tls:
+      - hosts: null
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: vpx
+    spec:
+      controller: citrix.com/ingress-controller
+    ---
+
     ```
 
 1. Deploy the front-end ingress resource.
@@ -406,22 +415,30 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
       apiVersion: networking.k8s.io/v1
       kind: Ingress
       metadata:
+        annotations: {}
+        ingress.citrix.com/frontend-ip: 10.221.36.190
+        ingress.citrix.com/insecure-termination: allow
         name: ingress-vpx2
-        annotations:
-        kubernetes.io/ingress.class: "vpx"
-        ingress.citrix.com/insecure-termination: "allow"
-        ingress.citrix.com/frontend-ip: "10.221.36.190"
       spec:
-        tls:
-        - secretName: <hotdrink-secret>
+        ingressClassName: vpx
         rules:
-        - host:  hotdrink.beverages.com
+        - host: hotdrink.beverages.com
           http:
             paths:
-            - path:
-              backend:
+            - backend:
                 serviceName: frontend-hotdrinks
                 servicePort: 80
+              path: null
+        tls:
+        - secretName: <hotdrink-secret>
+      ---
+      apiVersion: networking.k8s.io/v1
+      kind: IngressClass
+      metadata:
+        name: vpx
+      spec:
+        controller: citrix.com/ingress-controller
+      ---
       ```
 
 1. Deploy the back-end ingress resource.
@@ -475,19 +492,29 @@ This example shows how to add a single SNI certificate.
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: ingress-vpx1
       annotations:
-       kubernetes.io/ingress.class: "vpx"
-       ingress.citrix.com/insecure-termination: "allow"
-       ingress.citrix.com/frontend-ip: "10.221.36.190"
-       ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
-       ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
-       ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled", "tls13" : "enabled"}'
+        ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval"
+          : "enabled"}'
+        ingress.citrix.com/frontend-ip: 10.221.36.190
+        ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled",
+          "tls13" : "enabled"}'
+        ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
+        ingress.citrix.com/insecure-termination: allow
+      name: ingress-vpx1
     spec:
-      tls:
-      - hosts:
+      ingressClassName: vpx
       rules:
-      - host:
+      - host: null
+      tls:
+      - hosts: null
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: vpx
+    spec:
+      controller: citrix.com/ingress-controller
+    ---
 
     ```
 
@@ -503,24 +530,32 @@ This example shows how to add a single SNI certificate.
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: ingress-vpx2
       annotations:
-       kubernetes.io/ingress.class: "vpx"
-       ingress.citrix.com/insecure-termination: "allow"
-       ingress.citrix.com/frontend-ip: "10.221.36.190"
+        ingress.citrix.com/frontend-ip: 10.221.36.190
+        ingress.citrix.com/insecure-termination: allow
+      name: ingress-vpx2
     spec:
-      tls:
-      - hosts:
-          - hotdrink.beverages.com
-        secretName: hotdrink-secret
+      ingressClassName: vpx
       rules:
       - host: hotdrink.beverages.com
         http:
           paths:
-          - path: /
-            backend:
+          - backend:
               serviceName: web
               servicePort: 80
+            path: /
+      tls:
+      - hosts:
+        - hotdrink.beverages.com
+        secretName: hotdrink-secret
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: vpx
+    spec:
+      controller: citrix.com/ingress-controller
+    ---
     ```
 1. Deploy the secondary ingress resource.
 
@@ -531,34 +566,43 @@ If multiple SNI certificates need to be bound to the front-end VIP, following is
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: ingress-vpx-frontend
       annotations:
-       kubernetes.io/ingress.class: "vpx"
-       ingress.citrix.com/insecure-termination: "allow"
-       ingress.citrix.com/frontend-ip: "10.221.36.190"
+        ingress.citrix.com/frontend-ip: 10.221.36.190
+        ingress.citrix.com/insecure-termination: allow
+      name: ingress-vpx-frontend
     spec:
-      tls:
-      - hosts:
-          - hotdrink.beverages.com
-        secretName: hotdrink-secret
-      - hosts:
-          - frontend.agiledevelopers.com
-        secretName: <frontend-secret>
+      ingressClassName: vpx
       rules:
       - host: hotdrink.beverages.com
         http:
           paths:
-          - path: /
-            backend:
+          - backend:
               serviceName: web
               servicePort: 80
+            path: /
       - host: frontend.agiledevelopers.com
         http:
           paths:
-          - path: /
-            backend:
+          - backend:
               serviceName: frontend-developers
               servicePort: 80
+            path: /
+      tls:
+      - hosts:
+        - hotdrink.beverages.com
+        secretName: hotdrink-secret
+      - hosts:
+        - frontend.agiledevelopers.com
+        secretName: <frontend-secret>
+
+    ---
+
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: vpx
+    spec:
+      controller: citrix.com/ingress-controller
 
 ### Example: Binding SSL cipher group
 
@@ -578,17 +622,28 @@ A sample YAML (cat frontend_ingress.yaml) is provided as follows:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-vpx
   annotations:
-   kubernetes.io/ingress.class: "citrix"
-   ingress.citrix.com/insecure-termination: "allow"
-   ingress.citrix.com/frontend-ip: "10.221.36.190"
-   ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
-   ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval" : "enabled"}'
-   ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled", "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'
+    ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "markconnreqInval"
+      : "enabled"}'
+    ingress.citrix.com/frontend-ip: 10.221.36.190
+    ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled",
+      "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'
+    ingress.citrix.com/frontend-tcpprofile: '{"ws":"disabled", "sack" : "disabled"}'
+    ingress.citrix.com/insecure-termination: allow
+  name: ingress-vpx
 spec:
-  tls:
-  - hosts:
+  ingressClassName: citrix
   rules:
-   - host:
+  - host: null
+  tls:
+  - hosts: null
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---
+
 ```

@@ -165,7 +165,7 @@ spec:
               name: cpx-volume-conf
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/citrix/citrix-k8s-ingress-controller:1.33.4
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
@@ -230,9 +230,9 @@ kind: Ingress
 metadata:
   annotations:
     ingress.citrix.com/insecure-termination: allow
-    kubernetes.io/ingress.class: citrix-ingress
   name: citrix-ingress
 spec:
+  ingressClassName: citrix-ingress
   rules:
   - host: citrix-ingress.com
     http:
@@ -246,4 +246,13 @@ spec:
         pathType: Prefix
   tls:
   - secretName: cert-key
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix-ingress
+spec:
+  controller: citrix.com/ingress-controller
 ---

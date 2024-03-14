@@ -49,9 +49,18 @@ Following is the snippet from an Ingress YAML file where the Ingress class assoc
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: my-custom-class
+  annotations: {}
   name: web-ingress
+spec:
+  ingressClassName: my-custom-class
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: my-custom-class
+spec:
+  controller: citrix.com/ingress-controller
+---
 ```
 
 ## Ingress V1 and IngressClass support

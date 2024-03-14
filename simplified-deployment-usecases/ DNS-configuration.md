@@ -8,15 +8,19 @@ When adding name servers you can specify IP addresses or Virtual IP addresses (V
 
 You can use Citrix ingress controller to configure NetScaler with the following DNS configurations.
 
--  [Configuring NetScaler VPX or MPX as an ADNS server](#configuring-netscaler-vpx-or-mpx-as-an-adns-server)
-
--  [Configuring DNS Address records in NetScaler VPX or MPX](#configuring-netscaler-as-dns-resolver)
-
--  [Configuring DNS Nameserver on NetScaler VPX or MPX](#configuring-dns-nameservers-on-netscaler-vpx-or-mpx)
-
--  [Configuring Wildcard DNS domains in NetScaler](#configuring-wildcard-domains-in-netscaler-using-citrix-ingress-controller)
-
--  [Traffic Management of External services](#traffic-management-of-external-services)
+- [NetScaler DNS configuration using Citrix ingress controller](#netscaler-dns-configuration-using-citrix-ingress-controller)
+  - [Configuring NetScaler VPX or MPX as an ADNS server](#configuring-netscaler-vpx-or-mpx-as-an-adns-server)
+  - [Configuring NetScaler as DNS resolver](#configuring-netscaler-as-dns-resolver)
+    - [Adding DNS records for Ingress resources](#adding-dns-records-for-ingress-resources)
+    - [Adding DNS records for services of type LoadBalancer](#adding-dns-records-for-services-of-type-loadbalancer)
+  - [Configuring DNS Nameservers on NetScaler VPX or MPX](#configuring-dns-nameservers-on-netscaler-vpx-or-mpx)
+  - [Traffic Management of External services](#traffic-management-of-external-services)
+    - [Configure NetScaler as a domain name resolver using Citrix ingress controller](#configure-netscaler-as-a-domain-name-resolver-using-citrix-ingress-controller)
+    - [Configure a service to enable reachability of NetScaler from the Kubernetes cluster](#configure-a-service-to-enable-reachability-of-netscaler-from-the-kubernetes-cluster)
+    - [Configure IP address of DNS server to reach external service endpoints](#configure-ip-address-of-dns-server-to-reach-external-service-endpoints)
+    - [Traffic management using NetScaler CPX](#traffic-management-using-netscaler-cpx)
+  - [Configuring Wildcard domains in NetScaler using Citrix ingress controller](#configuring-wildcard-domains-in-netscaler-using-citrix-ingress-controller)
+    - [Deploying Wildcard DNS CRD](#deploying-wildcard-dns-crd)
 
 ## Configuring NetScaler VPX or MPX as an ADNS server
 
@@ -35,7 +39,7 @@ data:
 ```
 
 **NOTE:**
- You can also configure NetScaler VPX or MPX as an ADNS server using the environment variable `NS_ADNS_IPS` of [Citrix Ingress Controller deployment](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95).
+ You can also configure NetScaler VPX or MPX as an ADNS server using the environment variable `NS_ADNS_IPS` of [Citrix Ingress Controller deployment](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95).
 
 NetScaler Configuration:
 
@@ -54,7 +58,7 @@ To configure NetScaler as a DNS resolver, you can add the DNS address records us
 
 ### Adding DNS records for Ingress resources
 
-To add DNS records for ingress resources, you need to set the value of the variable `NS_CONFIG_DNS_REC` to `true` in [Citrix Ingress Controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95) deployment at the boot time.
+To add DNS records for ingress resources, you need to set the value of the variable `NS_CONFIG_DNS_REC` to `true` in [Citrix Ingress Controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml#L95) deployment at the boot time.
 Citrix Ingress Controller adds the address records in NetScaler for all the host names specified under the ingresses that are intended to configure NetScaler.
 
 ### Adding DNS records for services of type LoadBalancer
@@ -112,7 +116,7 @@ data:
 ```
 
 **NOTE:**
-You can also configure DNS nameservers on NetScaler VPX/MPX using the environment variable `NS_DNS_NAMESERVER` of [Citrix Ingress Controller deployment](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml).
+You can also configure DNS nameservers on NetScaler VPX/MPX using the environment variable `NS_DNS_NAMESERVER` of [Citrix Ingress Controller deployment](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml).
 
 NetScaler configuration:
 
@@ -139,23 +143,32 @@ The value for `ingress.citrix.com/external-service` is a list of external name s
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  annotations:
+    ingress.citrix.com/external-service: '{"my-service": {"domain": "www.external.service.com"}}'
   name: ingress-demo
   namespace: netscaler
-  annotations:
-    kubernetes.io/ingress.class: "netscaler"      
-    ingress.citrix.com/external-service: '{"my-service": {"domain": "www.external.service.com"}}'
 spec:
+  ingressClassName: netscaler
   rules:
-  - host:  "externalservice.com"
+  - host: externalservice.com
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service: 
+      - backend:
+          service:
             name: service-test
-            port: 
+            port:
               number: 80
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: netscaler
+spec:
+  controller: citrix.com/ingress-controller
+---
+
 ```
 
 ### Configure a service to enable reachability of NetScaler from the Kubernetes cluster
@@ -228,14 +241,13 @@ Following are the steps to configure NetScaler CPX to load balance external serv
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: dbs-ingress
       annotations:
-        kubernetes.io/ingress.class: "cpx-ingress"
-        # Special annotation to create DNS servers
         ingress.citrix.com/external-service: '{"external-svc": {"domain": "www.externalsvc.com"}}'
+      name: dbs-ingress
     spec:
+      ingressClassName: cpx-ingress
       rules:
-      - host:  "www.portal.externalsvc.com"
+      - host: www.portal.externalsvc.com
         http:
           paths:
           - backend:
@@ -245,12 +257,21 @@ Following are the steps to configure NetScaler CPX to load balance external serv
                   number: 30036
             path: /
             pathType: Prefix
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: cpx-ingress
+    spec:
+      controller: citrix.com/ingress-controller
+    ---
+
     ```
 
 ## Configuring Wildcard domains in NetScaler using Citrix ingress controller
 
 Using the Wildcard DNS CRD, you can configure wildcard DNS domains on a Netscaler using Citrix Ingress Controller.
-The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at  [wildcarddnsentry.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml) . The Wildcard DNS CRD provides attributes for the various options that are required to configure wildcard DNS entries on NetScaler.
+The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at  [wildcarddnsentry.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml) . The Wildcard DNS CRD provides attributes for the various options that are required to configure wildcard DNS entries on NetScaler.
 
 The following are the attributes provided in the Wildcard DNS CRD:
 

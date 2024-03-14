@@ -1,6 +1,6 @@
 ## Automated deployment of applications in Service Mesh lite
 
-A Service Mesh architecture (such as Istio or LinkerD) is complex to manage. Service Mesh lite architecture is a lightweight version and much simpler to get started to achieve the same requirements. To know more about Service Mesh lite architecture, see [Service Mesh lite](https://github.com/citrix/citrix-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite.md).
+A Service Mesh architecture (such as Istio or LinkerD) is complex to manage. Service Mesh lite architecture is a lightweight version and much simpler to get started to achieve the same requirements. To know more about Service Mesh lite architecture, see [Service Mesh lite](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/smlUpdate/docs/deploy/service-mesh-lite.md).
 
 To deploy an application in a Service Mesh lite architecture using Citrix portfolios, you need to perform the following tasks:
 
@@ -119,7 +119,7 @@ This section provides information on the inputs you need to provide.
         Please give secret-name for TLS certificate:
      
 
-For more information on TLS certificate handling by the Citrix ingress controller, see [TLS certificates handling in the Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/certificate-management/tls-certificates.md).
+For more information on TLS certificate handling by the Citrix ingress controller, see [TLS certificates handling in the Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/certificate-management/tls-certificates.md).
 
 7. If you want to enable Citrix ADCs to send data to the Citrix Application Delivery Management, select 'yes':
 
@@ -213,7 +213,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
     **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, the `smlite-all-in-one.yaml` file will not contain the deployment YAML files of the application. In that case, you must deploy the deployment YAML files in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
 
-    **Note:** This script creates an ingress to expose one of the Citrix ADC CPX (CPX handling your frontend microservice) to the tier-1 Citrix ADC VPX. This ingress contains basic configuration only. So update this ingress if some additonal configuration is required. For more information on features supported by Citrix ingress contoller, see [Citrix ingress controller](https://github.com/citrix/citrix-k8s-ingress-controller).
+    **Note:** This script creates an ingress to expose one of the Citrix ADC CPX (CPX handling your frontend microservice) to the tier-1 Citrix ADC VPX. This ingress contains basic configuration only. So update this ingress if some additonal configuration is required. For more information on features supported by Citrix ingress contoller, see [Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller).
 
 ### Limitations
 

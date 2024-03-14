@@ -31,15 +31,14 @@ This example shows how to apply SSL profiles.
             apiVersion: networking.k8s.io/v1
             kind: Ingress
             metadata:
+              annotations:
+                ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls13" : "enabled"}'
               name: ingress-ssl-profile
               namespace: netscaler
-              annotations:
-                kubernetes.io/ingress.class: "netscaler"
-                # ingress.citrix.com/frontend-sslprofileannotation creates ssl profile for ingress with hsts and tls13 enabled.
-                ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls13" : "enabled"}' 
             spec:
+              ingressClassName: netscaler
               rules:
-              - host: "example.com"
+              - host: example.com
                 http:
                   paths:
                   - backend:
@@ -48,8 +47,17 @@ This example shows how to apply SSL profiles.
                     path: /
               tls:
               - hosts:
-                - "example-test"
+                - example-test
                 secretName: tls-secret
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: netscaler
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
+
 
 ## Example: Binding SSL cipher group
 
@@ -60,15 +68,15 @@ For information about securing cipher, see [securing cipher](https://developer-d
             apiVersion: networking.k8s.io/v1
             kind: Ingress
             metadata:
+              annotations:
+                ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled",
+                  "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'
               name: ingress-ssl-cipher
               namespace: netscaler
-              annotations:
-                kubernetes.io/ingress.class: "netscaler"
-                # ingress.citrix.com/frontend-sslprofile annotation creates ssl profile for ingress with sni, hsts, tls13 and ciphers enabled.
-                ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled", "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'  
             spec:
+              ingressClassName: netscaler
               rules:
-              - host: "example.com"
+              - host: example.com
                 http:
                   paths:
                   - backend:
@@ -77,8 +85,17 @@ For information about securing cipher, see [securing cipher](https://developer-d
                     path: /
               tls:
               - hosts:
-                - "example-test"
+                - example-test
                 secretName: tls-secret
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: netscaler
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
+            
 
 ## Using built-in or existing user-defined SSL profiles on the NetScaler
 
@@ -104,7 +121,7 @@ Where, 'ssl_preconf_profile' is the SSL profile that exists on the NetScaler and
 ## Global front-end profile configuration using ConfigMap variables
 
 If there is no front-end profiles annotation specified in any of the ingresses which share the front-end IP address, then the global values from the ConfigMap that is `FRONTEND_SSL_PROFILE` is used for the SSL front-end profiles respectively. The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variable `FRONTEND_SSL_PROFILE` for SSL profiles. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition.
-Refer [ConfigMap documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
+Refer [ConfigMap documentation](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
 
 ### Configuration using FRONTEND_SSL_PROFILE
 

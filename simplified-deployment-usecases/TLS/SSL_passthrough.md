@@ -22,29 +22,34 @@ SSL passthrough is enabled for all services or host names provided in the Ingres
 
 To configure SSL passthrough on the Ingress NetScaler, you must define the `ingress.citrix.com/ssl-passthrough:` as shown in the following sample Ingress definition. You must also enable TLS for the host as shown in the example.
 
-        apiVersion: networking.k8s.io/v1
-        kind: Ingress
-        metadata:
-        annotations:
-            kubernetes.io/ingress.class: "netscaler"
-             # annotation ingress.citrix.com/insecure-termination will redirect HTTP traffic to secure TLS.
-            ingress.citrix.com/insecure-termination: redirect
-            # annotation ingress.citrix.com/secure-backend will enable secure back end communication to the backend service.
-            ingress.citrix.com/secure-backend: "True"
-            # annotaion ingress.citrix.com/ssl-passthrough will enable SSL passthrough
-            ingress.citrix.com/ssl-passthrough: "True"
-        name: ssl-passthrough-example
-        spec:
-        rules:
-        - host: www.exampletest.com
-            http:
-            paths:
-            - backend:
-                service:
-                    name: example-test
-                    port:
-                    number: 443
-                path: /
-                pathType: Prefix
-        tls:
-        - secretName: tls-example-test
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/insecure-termination: redirect
+    ingress.citrix.com/secure-backend: 'True'
+    ingress.citrix.com/ssl-passthrough: 'True'
+  name: ssl-passthrough-example
+spec:
+  ingressClassName: netscaler
+  rules:
+  - host: www.exampletest.com
+    http: null
+    paths:
+    - backend:
+        path: /
+        pathType: Prefix
+        service:
+          name: example-test
+          number: 443
+          port: null
+  tls:
+  - secretName: tls-example-test
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: netscaler
+spec:
+  controller: citrix.com/ingress-controller
+---

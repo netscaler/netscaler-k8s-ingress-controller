@@ -18,7 +18,7 @@ VPX is present in Tier-1 and load balancing the client requests among the CPX po
 CPX is acting as a load balancer in Tier-2 for the endpoint application pods.
 The CPX pod is running with CIC and Exporter in sidecar.
 #### Citrix Ingress Controller (CIC)
-CIC is an ingress controller which is built around Kubernetes Ingress and automatically configures Citrix ADC based on the Ingress resource configuration. It can be found [here](https://github.com/citrix/citrix-k8s-ingress-controller).
+CIC is an ingress controller which is built around Kubernetes Ingress and automatically configures Citrix ADC based on the Ingress resource configuration. It can be found [here](https://github.com/netscaler/netscaler-k8s-ingress-controller).
 
 There are 2 types of CICs in Figure 2 below. One is used for configuring the VPX and the other one for configuring the CPX where it is running as a sidecar container.
 #### Exporter
@@ -42,7 +42,7 @@ Figure 2. Visual representation of CPX autoscaling with custom metrics from Prom
 ### Step 1: Clone repo and change directory
 Clone the citrix-k8s-ingress-controller repository from Github using the following command.
 
-```git clone https://github.com/citrix/citrix-k8s-ingress-controller.git```
+```git clone https://github.com/netscaler/netscaler-k8s-ingress-controller.git```
 
 After cloning, go to the examples folder with the following command.
 

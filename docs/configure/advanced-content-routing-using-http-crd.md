@@ -33,24 +33,33 @@ Following is a sample Ingress resource named as `sample-ingress.yaml`.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: kuard-ingress
   annotations:
-    ingress.citrix.com/frontend-ip: "x.x.x.x"
-    kubernetes.io/ingress.class: citrix
-    ingress.citrix.com/insecure-termination: "redirect"
+    ingress.citrix.com/frontend-ip: x.x.x.x
+    ingress.citrix.com/insecure-termination: redirect
+  name: kuard-ingress
 spec:
-  tls:
-  - secretName: web-ingress-secret
+  ingressClassName: citrix
   rules:
   - host: kuard.example.com
     http:
       paths:
-      - pathType: ImplementationSpecific
-        backend:
+      - backend:
           resource:
             apiGroup: citrix.com
             kind: HTTPRoute
             name: kuard-example-route
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: web-ingress-secret
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---
+
 ```
 
 After defining the Ingress resource in a YAML file, deploy the YAML file using the following command. Here, `sample-ingress.yaml` is the YAML file definition.

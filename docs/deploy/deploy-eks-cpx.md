@@ -23,7 +23,7 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in [Elasti
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/cpx_ingress.yaml
         
 
-	An Ingress class named **citrix-ingress** is used in this example. Please see our [detailed Ingress class documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/ingress-classes.md).
+	An Ingress class named **citrix-ingress** is used in this example. Please see our [detailed Ingress class documentation](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/ingress-classes.md).
 
 1.  Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the following command.
 
@@ -51,7 +51,7 @@ This topic explains how to deploy Citrix ADC CPX as an ingress device in [Elasti
 For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
+1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/aws/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/manifest/all-in-one.yaml
 

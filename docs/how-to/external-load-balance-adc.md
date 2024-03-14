@@ -59,7 +59,7 @@ Following are the steps to configure Citrix ADC CPX to load balance external ser
             - protocol: TCP
               port: 80
 
-1. Define an ingress and specify the external-service annotation as specified in the [dbs-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/load-balance-external/db-ingress.yaml) file. When you specify this annotation, Citrix ingress controller creates DNS servers on Citrix ADC and binds the servers to the corresponding service group.
+1. Define an ingress and specify the external-service annotation as specified in the [dbs-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/load-balance-external/db-ingress.yaml) file. When you specify this annotation, Citrix ingress controller creates DNS servers on Citrix ADC and binds the servers to the corresponding service group.
 
 
             annotations:

@@ -29,11 +29,11 @@ metadata:
   annotations:
     ingress.citrix.com/frontend-ip: x.x.x.x
     ingress.citrix.com/insecure-termination: redirect
-    ingress.citrix.com/secure-backend: "True"
-    ingress.citrix.com/ssl-passthrough: "True"
-    kubernetes.io/ingress.class: citrix
+    ingress.citrix.com/secure-backend: 'True'
+    ingress.citrix.com/ssl-passthrough: 'True'
   name: hotdrinks-ingress
 spec:
+  ingressClassName: citrix
   rules:
   - host: hotdrinks.beverages.com
     http:
@@ -47,4 +47,13 @@ spec:
         pathType: Prefix
   tls:
   - secretName: beverages
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---
+
 ```

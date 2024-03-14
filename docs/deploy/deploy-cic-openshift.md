@@ -30,7 +30,7 @@ Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix
 
 For information on deploying the Citrix ingress controller to control the OpenShift ingress, see the [Citrix ingress controller for Kubernetes](../index.md).
 
-You can use Citrix ADC for load balancing Openshift control plane (master nodes). Citrix provides a solution to automate the configuration of Citrix ADC using Terraform instead of manually configuring the Citrix ADC. For more information, see [Citrix ADC as a load balancer for the OpenShift control plane](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/citrix-adc-for-control-plane/README.md).
+You can use Citrix ADC for load balancing Openshift control plane (master nodes). Citrix provides a solution to automate the configuration of Citrix ADC using Terraform instead of manually configuring the Citrix ADC. For more information, see [Citrix ADC as a load balancer for the OpenShift control plane](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/citrix-adc-for-control-plane/README.md).
 
 ## Alternate Backend Support
 [OpenShift Alternate backends](https://docs.openshift.com/container-platform/3.7/architecture/networking/routes.html#alternateBackends) is now supported by Citrix ingress controller.
@@ -75,7 +75,7 @@ For this route, 30 percent of the traffic is sent to the service apache-1 and 20
 | Citrix ADC VPX | 12.1 50.x and later |
 | Citrix ADC CPX | 13.0–36.28 |
 
-**Note:** [CRDs](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd) provided for the Citrix ingress controller is not supported for OpenShift routes. You can use OpenShift ingress to use CRDs.
+**Note:** [CRDs](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd) provided for the Citrix ingress controller is not supported for OpenShift routes. You can use OpenShift ingress to use CRDs.
 
 ## Deploy Citrix ADC CPX as a router within the OpenShift cluster
 
@@ -196,10 +196,10 @@ Perform the following steps to deploy the Citrix ingress controller as a pod:
 
     | Environment Variable | Mandatory or Optional | Description |
     | ---------------------- | ---------------------- | ----------- |
-    | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#prerequisites). |
-    | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#prerequisites). |
+    | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/openshift#prerequisites). |
+    | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/openshift#prerequisites). |
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
-    | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress or Route yaml. Not supported for Type Loadbalancer service. |
+    | NS_VIP | Optional | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress or Route yaml. Not supported for Type Loadbalancer service. |
 
 3.  Add the service account to privileged security context constraints (SCC) of OpenShift.
 
@@ -366,12 +366,12 @@ In this example, the Citrix ingress controller is deployed as a router plug-in i
             app: apache-only-ssl
         ---
 
-2.  Deploy the Citrix ingress controller for Citrix ADC VPX as a stand-alone pod in the OpenShift cluster using the steps in [Deploy the Citrix ingress controller as a pod](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#deploy-the-citrix-ingress-controller-as-a-pod-in-an-openshift-cluster).
+2.  Deploy the Citrix ingress controller for Citrix ADC VPX as a stand-alone pod in the OpenShift cluster using the steps in [Deploy the Citrix ingress controller as a pod](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/openshift#deploy-the-citrix-ingress-controller-as-a-pod-in-an-openshift-cluster).
 
         oc create -f cic.yaml
 
     **Note:**
-        To deploy the Citrix ingress controller with Citrix ADC CPX in the OpenShift cluster, perform the steps in [Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#deploy-citrix-adc-cpx-as-a-router-within-the-openshift-cluster).
+        To deploy the Citrix ingress controller with Citrix ADC CPX in the OpenShift cluster, perform the steps in [Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/openshift#deploy-citrix-adc-cpx-as-a-router-within-the-openshift-cluster).
 
 3.  Create an OpenShift route for exposing the application.
 
@@ -391,7 +391,7 @@ In this example, the Citrix ingress controller is deployed as a router plug-in i
 
             oc create -f secured-reencrypt-route.yaml
 
-    To see the contents of the YAML files for OpenShift routes in this example, see [YAML files for routes](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/deployment/openshift#yaml-files-for-routes).
+    To see the contents of the YAML files for OpenShift routes in this example, see [YAML files for routes](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/openshift#yaml-files-for-routes).
 
     **Note:**
         For a secured OpenShift route with passthrough termination, you must include the default certificate.

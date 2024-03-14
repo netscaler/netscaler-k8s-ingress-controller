@@ -1,7 +1,7 @@
 
 # Listener
 
-The Listener CRD represents the endpoint information of the content switching load balancing virtual server. This topic contains a sample Listener CRD object and also explains the various attributes of the Listener CRD. For the complete CRD definition, see [Listener.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
+The Listener CRD represents the endpoint information of the content switching load balancing virtual server. This topic contains a sample Listener CRD object and also explains the various attributes of the Listener CRD. For the complete CRD definition, see [Listener.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
 
 ## Listener CRD object example
 
@@ -77,7 +77,7 @@ spec:
             clttimeout: "20"
 
 ```
-For more examples, see [Listener examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/Listener_examples).
+For more examples, see [Listener examples](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/contentrouting/Listener_examples).
 
 ## Listener.spec
 
