@@ -21,7 +21,7 @@ If `ingress-classes` is specified, then the Ingress Controller accepts only thos
 
 ## Sample YAML configurations with Ingress classes
 
-Following is the snippet from a sample YAML file to associate `ingress-classes` with the Ingress Controller. This configuration works in both cases where the Ingress Controller runs as a standalone pod or runs as a sidecar with Citrix ADC CPX. In the given YAML snippet, the following ingress classes are associated with the Ingress Controller.
+Following is the snippet from a sample YAML file to associate `ingress-classes` with the Ingress Controller. This configuration works in both cases where the Ingress Controller runs as a standalone pod or runs as a sidecar with Netscaler CPX. In the given YAML snippet, the following ingress classes are associated with the Ingress Controller.
 
 -  `my-custom-class`
 
@@ -149,7 +149,7 @@ The Citrix ingress controller uses the following rules to match the Ingresses.
 
 ## Updating the Ingress status for the Ingress resources with the specified IP address
 
-To update the `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Citrix ingress controller with the allocated IP addresses, specify the command line argument `--update-ingress-status yes` when you start the Citrix ingress controller. This feature is only supported for the Citrix ingress controller deployed as a stand-alone pod for managing Citrix ADC VPX or MPX. For Citrix ADC CPXs deployed as sidecars, this feature is not supported.
+To update the `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Citrix ingress controller with the allocated IP addresses, specify the command line argument `--update-ingress-status yes` when you start the Citrix ingress controller. This feature is only supported for the Citrix ingress controller deployed as a stand-alone pod for managing Netscaler VPX or MPX. For Netscaler CPXs deployed as sidecars, this feature is not supported.
 
 Following is an example YAML with the  `--update-ingress-status yes` command line argument enabled.
 
@@ -166,11 +166,11 @@ args:
 
 In Kubernetes, Ingress can be used as a single entry point for exposing multiple applications to the outside world. The Ingress would have an `Address` (`Status.LoadBalancer.IP`) field which is updated after the successful ingress creation. This field is updated with a public IP address or host name through which the Kubernetes application can be reached. In cloud deployments, this field can also be the IP address or host name of a cloud load-balancer.
 
-In cloud deployments, Citrix ADC CPX along with the ingress controller is exposed using a service of `type LoadBalancer` which in turn creates a cloud load-balancer. The cloud load balancer then exposes the Citrix ADC CPX along with the ingress controller. So, the Ingress resources exposed with the Citrix ADC CPX should be updated using the public IP address or host name of the cloud load balancer.
+In cloud deployments, Netscaler CPX along with the ingress controller is exposed using a service of `type LoadBalancer` which in turn creates a cloud load-balancer. The cloud load balancer then exposes the Netscaler CPX along with the ingress controller. So, the Ingress resources exposed with the Netscaler CPX should be updated using the public IP address or host name of the cloud load balancer.
 
-This is applicable even on on-prem deployments. In dual-tier ingress deployments, in which the Citrix ADC CPX is exposed as service type `LoadBalancer` to the tier-1 Citrix ADC VPX ingress, the ingress resources operated by the Citrix ADC CPX is updated with the VIP address.
+This is applicable even on on-prem deployments. In dual-tier ingress deployments, in which the Netscaler CPX is exposed as service type `LoadBalancer` to the tier-1 Netscaler VPX ingress, the ingress resources operated by the Netscaler CPX is updated with the VIP address.
 
-This topic provides information about how to enable the ingress status update for Citrix ADC CPX with the Citrix ingress controller as sidecar deployments.
+This topic provides information about how to enable the ingress status update for Netscaler CPX with the Citrix ingress controller as sidecar deployments.
 
 **Note**:
 
@@ -188,7 +188,7 @@ The following is a sample ingress output after the ingress status update:
 
 ## Enable ingress status update for the sidecar deployments
 
-You can enable the ingress status update feature for side car deployments by specifying the following argument in the Citrix ADC CPX YAML file. You must add the argument to the `args` section of Citrix ADC CPX in the deployment YAML file for Citrix ADC CPX with the Citrix ingress controller.
+You can enable the ingress status update feature for side car deployments by specifying the following argument in the Netscaler CPX YAML file. You must add the argument to the `args` section of Netscaler CPX in the deployment YAML file for Netscaler CPX with the Citrix ingress controller.
 
        
 
@@ -202,7 +202,7 @@ The following table describes the argument for the ingress update in detail
 | `--cpx-service` | Specifies the argument for enabling this feature. |
 | `<namespace>/<name-of-the-type-load-balancer-service-exposing-cpx>`      | Specifies the format in which the argument value to be provided.      |
 | `<namespace>` | Specifies the namespace in which the service is created. |
-| `<name-of-the-type-load-balancer-service-exposing-cpx>` | Specifies the name of the service that exposes Citrix ADC CPX. |
+| `<name-of-the-type-load-balancer-service-exposing-cpx>` | Specifies the name of the service that exposes Netscaler CPX. |
 
 **Note**:
 

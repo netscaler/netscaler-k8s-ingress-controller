@@ -1,8 +1,8 @@
 # Policy based routing support for multiple Kubernetes clusters
 
-When you are using a single Citrix ADC to load balance multiple Kubernetes clusters, the Citrix ingress controller adds pod CIDR networks through static routes. These routes establish networking connectivity between Kubernetes pods and Citrix ADC. However, when the pod CIDRs overlap there may be route conflicts. Citrix ADC supports policy based routing (PBR) to address the networking conflicts in such scenarios. In PBR, decisions are taken based on the criteria that you specify. Typically, a next hop is specified where you send the selected packets. In a gslb Kubernetes environment, PBR is implemented by reserving a subnet IP address (SNIP) for each Kubernetes cluster or the Citrix Ingress Controller. Using net profile, the SNIP is bound to all service groups created by the same Citrix ingress controller. For all the traffic generated from service groups belonging to the same cluster, the source IP address is the same SNIP.
+When you are using a single Netscaler to load balance multiple Kubernetes clusters, the Citrix ingress controller adds pod CIDR networks through static routes. These routes establish networking connectivity between Kubernetes pods and Netscaler. However, when the pod CIDRs overlap there may be route conflicts. Netscaler supports policy based routing (PBR) to address the networking conflicts in such scenarios. In PBR, decisions are taken based on the criteria that you specify. Typically, a next hop is specified where you send the selected packets. In a gslb Kubernetes environment, PBR is implemented by reserving a subnet IP address (SNIP) for each Kubernetes cluster or the Citrix Ingress Controller. Using net profile, the SNIP is bound to all service groups created by the same Citrix ingress controller. For all the traffic generated from service groups belonging to the same cluster, the source IP address is the same SNIP.
 
-Following is a sample topology where PBR is configured for two Kubernetes clusters which are load balanced using a Citrix ADC VPX or MPX.
+Following is a sample topology where PBR is configured for two Kubernetes clusters which are load balanced using a Netscaler VPX or MPX.
 
 ![PBR configuration](../media/pbr.jpg)
 
@@ -62,7 +62,7 @@ The following are the usage guidelines while using ConfigMap for configuring SNI
     - If SNIPs are not provided using the `NS_SNIPS` environment variable, static routes are added since `feature-node-watch` is enabled.
 
 
-### Validate PBR configuration on a Citrix ADC after deploying the Citrix ingress controller
+### Validate PBR configuration on a Netscaler after deploying the Citrix ingress controller
 
 This validation example uses a two node Kubernetes cluster with the Citrix ingress controller deployed along with the following ConfigMap with two SNIPs.
 
@@ -97,7 +97,7 @@ You can verify that the Citrix ingress controller adds the following configurati
 
 ## Configure PBR using the Citrix node controller
 
-You can configure PBR using the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) for multiple Kubernetes clusters. When you are using a single Citrix ADC to load balance multiple Kubernetes clusters with Citrix node controller for networking, the static routes added by it to forward packets to the IP address of the VXLAN tunnel interface may cause route conflicts. To support PBR, Citrix node controller needs to works in conjunction with the Citrix ingress controller to bind the net profile to the service group. 
+You can configure PBR using the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) for multiple Kubernetes clusters. When you are using a single Netscaler to load balance multiple Kubernetes clusters with Citrix node controller for networking, the static routes added by it to forward packets to the IP address of the VXLAN tunnel interface may cause route conflicts. To support PBR, Citrix node controller needs to works in conjunction with the Citrix ingress controller to bind the net profile to the service group. 
 
 Perform the following steps to configure PBR using the Citrix node controller:
 
@@ -115,7 +115,7 @@ Perform the following steps to configure PBR using the Citrix node controller:
         - name: CLUSTER_NAME  
           value: "dev-cluster "
 
-1. Specify the argument `--enable-cnc-pbr` as `True` in the arguments section of the Citrix ingress controller deployment YAML file. When you specify this argument, Citrix ingress controller is aware that the Citrix node controller is configuring PBR on the Citrix ADC.
+1. Specify the argument `--enable-cnc-pbr` as `True` in the arguments section of the Citrix ingress controller deployment YAML file. When you specify this argument, Citrix ingress controller is aware that the Citrix node controller is configuring PBR on the Netscaler.
 
     Example:
 
@@ -124,15 +124,15 @@ Perform the following steps to configure PBR using the Citrix node controller:
 
 **Note:** The value provided for `CLUSTER_NAME` in the Citrix node controller and Citrix ingress controller deployment files should match when they are deployed in the same Kubernetes cluster.
 
-**Note:** The `CLUSTER_NAME` is used while creating the net profile entity and binding it to service groups on Citrix ADC VPX or MPX.
+**Note:** The `CLUSTER_NAME` is used while creating the net profile entity and binding it to service groups on Netscaler VPX or MPX.
 
-### Validate PBR configuration on a Citrix ADC after deploying the Citrix node controller.
+### Validate PBR configuration on a Netscaler after deploying the Citrix node controller.
 
 This validation example uses a two node Kubernetes cluster with Citrix node controller and Citrix ingress controller deployed. 
 
 You can verify that the following configurations are added to the ADC by Citrix node controller:
 
-  1. A net profile is added, with the value of `srcIP` set to the SNIP added by Citrix node controller while creating the VXLAN tunnel network between the Citrix ADC and Kubernetes nodes.
+  1. A net profile is added, with the value of `srcIP` set to the SNIP added by Citrix node controller while creating the VXLAN tunnel network between the Netscaler and Kubernetes nodes.
   
      ![Image](https://user-images.githubusercontent.com/46886297/117264605-03030880-ae71-11eb-81a1-827e58778b2e.png)
 

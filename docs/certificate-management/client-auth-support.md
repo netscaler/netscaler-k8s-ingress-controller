@@ -1,24 +1,24 @@
-# TLS client authentication support in Citrix ADC
+# TLS client authentication support in Netscaler
 
 In TLS client authentication, a server requests a valid certificate from the client for authentication and ensures that it is only accessible by authorized machines and users.
 
-You can enable TLS client authentication using Citrix ADC SSL-based virtual servers. With client authentication enabled on a Citrix ADC SSL virtual server, the Citrix ADC asks for the client certificate during the SSL handshake. The appliance checks the certificate presented by the client for normal constraints, such as the issuer signature and expiration date.
+You can enable TLS client authentication using Netscaler SSL-based virtual servers. With client authentication enabled on a Netscaler SSL virtual server, the Netscaler asks for the client certificate during the SSL handshake. The appliance checks the certificate presented by the client for normal constraints, such as the issuer signature and expiration date.
 
-The following diagram explains the TLS client authentication feature on Citrix ADC.
+The following diagram explains the TLS client authentication feature on Netscaler.
 
 ![TLS client authentication](../media/ssl-client-authentication.png)
 
 TLS client authentication can be set to mandatory, or optional.
 If the SSL client authentication is set as mandatory and the SSL Client does not provide a valid client certificate, then the connection is dropped. A valid client certificate means that it is signed or issued by a specific Certificate Authority, and not expired or revoked.
-If it is marked as optional, then the Citrix ADC requests the client certificate, but the connection is not dropped. The Citrix ADC proceeds with the SSL transaction even if the client does not present a certificate or the certificate is invalid. The optional configuration is useful for authentication scenarios like two-factor authentication.
+If it is marked as optional, then the Netscaler requests the client certificate, but the connection is not dropped. The Netscaler proceeds with the SSL transaction even if the client does not present a certificate or the certificate is invalid. The optional configuration is useful for authentication scenarios like two-factor authentication.
 
 ## Configuring TLS client authentication
 
 Perform the following steps to configure TLS client authentication.
 
-1. Enable the TLS support in Citrix ADC.
+1. Enable the TLS support in Netscaler.
 
-     The Citrix ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Citrix ADC.
+     The Citrix ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Netscaler.
      The following is a sample snippet of the Ingress definition:
 
 

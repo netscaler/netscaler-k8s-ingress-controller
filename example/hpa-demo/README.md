@@ -8,22 +8,22 @@
 Figure 1. HPA with traditional metrics-server
 </p>
 
-## Why custom metrics for Citrix ADC CPX?
-By default, the metrics-server only gives CPU and memory metrics for a pod. To take a better autoscaling judgement based on rich set of counters as provided by Citrix ADC a custom metric based HPA is a better solution like Autoscaling based upon HTTP request or SSL transactions or ADC bandwidth.
+## Why custom metrics for Netscaler CPX?
+By default, the metrics-server only gives CPU and memory metrics for a pod. To take a better autoscaling judgement based on rich set of counters as provided by Netscaler a custom metric based HPA is a better solution like Autoscaling based upon HTTP request or SSL transactions or ADC bandwidth.
 
 ## Components being used:
-#### Citrix ADC VPX
+#### Netscaler VPX
 VPX is present in Tier-1 and load balancing the client requests among the CPX pods in the CPX deployment present in the cluster.
-#### Citrix ADC CPX
+#### Netscaler CPX
 CPX is acting as a load balancer in Tier-2 for the endpoint application pods.
 The CPX pod is running with CIC and Exporter in sidecar.
 #### Citrix Ingress Controller (CIC)
-CIC is an ingress controller which is built around Kubernetes Ingress and automatically configures Citrix ADC based on the Ingress resource configuration. It can be found [here](https://github.com/netscaler/netscaler-k8s-ingress-controller).
+CIC is an ingress controller which is built around Kubernetes Ingress and automatically configures Netscaler based on the Ingress resource configuration. It can be found [here](https://github.com/netscaler/netscaler-k8s-ingress-controller).
 
 There are 2 types of CICs in Figure 2 below. One is used for configuring the VPX and the other one for configuring the CPX where it is running as a sidecar container.
 #### Exporter
 The Exporter is a sidecar container which is exposing the CPX's metrics. Exporter collects the metrics from CPX and exposes it in a format that Prometheus can understand.
-Citrix ADC Metrics Exporter can be found [here](https://github.com/citrix/citrix-adc-metrics-exporter).
+Netscaler Metrics Exporter can be found [here](https://github.com/citrix/citrix-adc-metrics-exporter).
 #### Prometheus
 Prometheus – which is a graduated CNCF project – is used to collect all the metrics from the CPX and expose them using Prometheus-adapter which will be queried by the HPA controller to keep a check on the metrics.
 #### Prometheus-adapter

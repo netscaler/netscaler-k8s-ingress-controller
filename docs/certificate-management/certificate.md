@@ -2,7 +2,7 @@
 
 Citrix ingress controller supports automatic provisioning and renewal of TLS certificates using [cert-manager](https://github.com/jetstack/cert-manager). The `cert-manager` is a native Kubernetes certificate management controller. It issues certificates from different sources, such as [Let’s Encrypt](https://letsencrypt.org/docs/) and [HashiCorp Vault](https://www.hashicorp.com/products/vault/).
 
-As shown in the following diagram, `cert-manager` interacts with the external Certificate Authorities (CA) to sign the certificates and converts it to Kubernetes secrets. These secrets are used by Citrix ingress controller to configure SSL virtual server on the Citrix ADC.
+As shown in the following diagram, `cert-manager` interacts with the external Certificate Authorities (CA) to sign the certificates and converts it to Kubernetes secrets. These secrets are used by Citrix ingress controller to configure SSL virtual server on the Netscaler.
 
 ![Certificate Management](../media/cert-management.png)
 

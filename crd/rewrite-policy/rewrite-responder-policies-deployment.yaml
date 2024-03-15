@@ -381,7 +381,7 @@ spec:
                       type: string
                     full_req_expr:
                       description: |+
-                                   'Exact HTTP request, in the form of an expression, which the Citrix ADC sends
+                                   'Exact HTTP request, in the form of an expression, which the Netscaler sends
                                     to the callout agent. The request expression is constrained by the feature
                                     for which the callout is used. For example, an HTTP.RES expression cannot be
                                     used in a request-time policy bank or in a TCP content switching policy bank.'

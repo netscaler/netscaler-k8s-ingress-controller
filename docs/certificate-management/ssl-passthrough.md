@@ -8,9 +8,9 @@ The following diagram explains the SSL passthrough feature.
 
 ![SSL Passthrough](../media/ssl-passthrough.png)
 
-As shown in this diagram, SSL traffic is not terminated at the Citrix ADC and SSL traffic is passed through the Citrix ADC to the back end server. SSL certificate at the back end server is used for the SSL handshake.
+As shown in this diagram, SSL traffic is not terminated at the Netscaler and SSL traffic is passed through the Netscaler to the back end server. SSL certificate at the back end server is used for the SSL handshake.
 
-The Citrix ingress controller provides the following Ingress annotation that you can use to enable SSL passthrough on the Ingress Citrix ADC:
+The Citrix ingress controller provides the following Ingress annotation that you can use to enable SSL passthrough on the Ingress Netscaler:
 
     ingress.citrix.com/ssl-passthrough: 'True|False'
 
@@ -20,7 +20,7 @@ SSL passthrough is enabled for all services or host names provided in the Ingres
 
 > **Note:** The Citrix ingress controller does not support SSL passthrough for non-hostname based Ingress. Also, SSL passthrough is not valid for default back end Ingress.
 
-To configure SSL passthrough on the Ingress Citrix ADC, you must define the `ingress.citrix.com/ssl-passthrough:` as shown in the following sample Ingress definition. You must also enable TLS for the host as shown in the example.
+To configure SSL passthrough on the Ingress Netscaler, you must define the `ingress.citrix.com/ssl-passthrough:` as shown in the following sample Ingress definition. You must also enable TLS for the host as shown in the example.
 
 ```yml
 apiVersion: networking.k8s.io/v1

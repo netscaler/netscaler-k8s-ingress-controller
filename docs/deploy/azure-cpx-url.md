@@ -1,15 +1,15 @@
-# Get Citrix ADC CPX from Azure Marketplace
+# Get Netscaler CPX from Azure Marketplace
 
-This topic explains the steps to generate a URL for the Citrix ADC CPX image in Azure Marketplace. You can use this URL in the YAML file to deploy Citrix ADC CPX in the Azure Kubernetes cluster.
+This topic explains the steps to generate a URL for the Netscaler CPX image in Azure Marketplace. You can use this URL in the YAML file to deploy Netscaler CPX in the Azure Kubernetes cluster.
 
 **Prerequisites**
 
 - A valid Azure Marketplace account and subscription
 
 
-## Generate a URL for the Citrix ADC CPX image in Azure Marketplace
+## Generate a URL for the Netscaler CPX image in Azure Marketplace
 
-Perform the following steps to generate a URL for the Citrix ADC CPX image in Azure Marketplace.
+Perform the following steps to generate a URL for the Netscaler CPX image in Azure Marketplace.
 
 1. Log in to your [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us) account.
 
@@ -23,11 +23,11 @@ Perform the following steps to generate a URL for the Citrix ADC CPX image in Az
    
    - Review details and then click **Create**.
     
-   **Note:** The resource group of the cluster and the Citrix ADC CPX registry must be the same. If the Kubernetes cluster where you want to deploy the Citrix ADC CPX exists, then the same resource group should be used for the Citrix ADC CPX registry. If the Kubernetes cluster does not exist, create a resource group and then create a cluster with this new resource group.
+   **Note:** The resource group of the cluster and the Netscaler CPX registry must be the same. If the Kubernetes cluster where you want to deploy the Netscaler CPX exists, then the same resource group should be used for the Netscaler CPX registry. If the Kubernetes cluster does not exist, create a resource group and then create a cluster with this new resource group.
    
      <img src="../media/azurem-image-cpx2.png" width="500">
 
-3. Select [Citrix ADC CPX](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixadccpx-13-0?tab=Overview) on Azure Marketplace.
+3. Select [Netscaler CPX](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixadccpx-13-0?tab=Overview) on Azure Marketplace.
 
    <img src="../media/azurem-image-cpx3.png" width="500">
    
@@ -37,7 +37,7 @@ Perform the following steps to generate a URL for the Citrix ADC CPX image in Az
   
      <img src="../media/azurem-image-cpx4.png" width="500">
 
-4. Create a Citrix ADC CPX image registry with the resource group created in step 2.
+4. Create a Netscaler CPX image registry with the resource group created in step 2.
 
    <img src="../media/azurem-image-cpx5.png" width="500">
 
@@ -77,4 +77,4 @@ Perform the following steps to generate a URL for the Citrix ADC CPX image in Az
    
      For example, `azurecpxreg.azurecr.io/citrix/citrix-k8s-cpx-ingress-13-0:latest`
      
-     Copy the image URL and replace as image in the Citrix ADC CPX YAML file.
+     Copy the image URL and replace as image in the Netscaler CPX YAML file.

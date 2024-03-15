@@ -3,7 +3,7 @@
 2. [When to use DSR architecture?](#when)
 3. [Who should read this?](#who)
 4. [DSR Network Topology and Traffic flow](#topology)
-5. [DSR Configuration for cloud-native apps using Citrix ADC](#conf)
+5. [DSR Configuration for cloud-native apps using Netscaler](#conf)
 	1. [Tier-2 Configurations](#ingress)
 	2. [Deploying Application on Kubernetes Cluster](#application)
 	3. [Establish Network connectivity between Tier-1 and Tier-2](#cnc)
@@ -47,9 +47,9 @@ There is an external load-balancer that distributes the traffic to the ingress c
 ![](./images/DSR_Traffic_FLow.png)
 
 <a name="conf"></a>
-# **DSR Configuration for cloud native apps using Citrix ADC**
+# **DSR Configuration for cloud native apps using Netscaler**
 
-This section provides step by step guide to deploy the Application for Direct Server Return using Citrix ADC.
+This section provides step by step guide to deploy the Application for Direct Server Return using Netscaler.
 
 <a name="ingress"></a>
 ## **1. Tier-2 Configurations.**
@@ -72,7 +72,7 @@ This section helps to create configurations required on the ingress device for D
 
 - ### **Deploy Citrix CPX ingress controller.**
 
-	Deploy Citrix ADC CPX on namespace ```dsr```.
+	Deploy Netscaler CPX on namespace ```dsr```.
 	```
 	kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-cpx-ingress.yml  -n dsr
 	```

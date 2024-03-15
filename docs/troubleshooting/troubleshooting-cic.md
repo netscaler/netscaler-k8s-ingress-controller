@@ -35,7 +35,7 @@ Use the following command to view the events for the Citrix ingress controller.
 
 You can view the events under the events section.
 
-In this example, the Citrix ADC has been deliberately made unreachable and the same information can be seen under the events section.
+In this example, the Netscaler has been deliberately made unreachable and the same information can be seen under the events section.
 
             kubectl describe pods cic-vpx-functionaltest -n functionaltest
 
@@ -50,11 +50,11 @@ In this example, the Citrix ADC has been deliberately made unreachable and the s
             Normal   Started    33m   kubelet, rak-asp4-node2             Started container cic-vpx-functionaltest
             Normal   Scheduled  33m   default-scheduler                   Successfully assigned functionaltest/cic-vpx-functionaltest to rak-asp4-node2
 
-            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  CONNECTED: Citrix ADC:<Citrix ADC IP>:80
-            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  SUCCESS: Test LB Vserver Creation on Citrix ADC:
-            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  SUCCESS: ENABLING INIT features on Citrix ADC:
-            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  SUCCESS: GET Default VIP from Citrix ADC:
-            Warning  Created    17s   CIC ENGINE, cic-vpx-functionaltest  UNREACHABLE: Citrix ADC: Check Connectivity::<Citrix ADC IP>:80
+            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  CONNECTED: Netscaler:<Netscaler IP>:80
+            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  SUCCESS: Test LB Vserver Creation on Netscaler:
+            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  SUCCESS: ENABLING INIT features on Netscaler:
+            Normal   Created    33m   CIC ENGINE, cic-vpx-functionaltest  SUCCESS: GET Default VIP from Netscaler:
+            Warning  Created    17s   CIC ENGINE, cic-vpx-functionaltest  UNREACHABLE: Netscaler: Check Connectivity::<Netscaler IP>:80
 
 You can use the events section to check the flow of events within the Citrix ingress controller. Events provide information on the flow of events. For further debugging, you should check the logs of the Citrix ingress controller pod.
 

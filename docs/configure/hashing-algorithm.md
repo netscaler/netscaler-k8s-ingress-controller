@@ -1,10 +1,10 @@
 # Configuring consistent hashing algorithm using Citrix ingress controller
 
-Load balancing algorithms define the criteria that the Citrix ADC appliance uses to select the service to which to redirect each client request. Different load balancing algorithms use different criteria and consistent hashing is one the load balancing algorithms supported by Citrix ADC.
+Load balancing algorithms define the criteria that the Netscaler appliance uses to select the service to which to redirect each client request. Different load balancing algorithms use different criteria and consistent hashing is one the load balancing algorithms supported by Netscaler.
 Consistent hashing algorithms are often used to load balance when the back-end is a caching server to achieve stateless persistency.
-Consistent hashing can ensure that when a cache server is removed, only the requests cached in that specific server is rehashed and the rest of the requests are not affected. For more information on the consistent hashing algorithm, see the [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/load-balancing/load-balancing-customizing-algorithms/hashing-methods.html#consistent-hashing-algorithms).
+Consistent hashing can ensure that when a cache server is removed, only the requests cached in that specific server is rehashed and the rest of the requests are not affected. For more information on the consistent hashing algorithm, see the [Netscaler documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/load-balancing/load-balancing-customizing-algorithms/hashing-methods.html#consistent-hashing-algorithms).
 
-You can now configure the consistent hashing algorithm on Citrix ADC using Citrix ingress controller. This configuration is enabled with in the Citrix ingress controller using a ConfigMap.
+You can now configure the consistent hashing algorithm on Netscaler using Citrix ingress controller. This configuration is enabled with in the Citrix ingress controller using a ConfigMap.
 
 ## Configure hashing algorithm
 

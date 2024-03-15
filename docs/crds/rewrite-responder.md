@@ -6,13 +6,13 @@ In a Kubernetes environment, to deploy specific layer 7 policies to handle scena
 -  Blocking a set of IP addresses to mitigate DDoS attacks
 -  Imposing HTTP to HTTPS
 
-Requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
+Requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Netscaler device to deploy these policies.
 
-Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with the Citrix ingress controller to automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.
+Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with the Citrix ingress controller to automate the configurations and deployment of these policies on the Netscalers used as Ingress devices.
 
-The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Citrix ADCs. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
+The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Netscalers. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
 
-Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, pat sets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Citrix ADC, see [Rewrite policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html) and [Responder policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html).
+Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, pat sets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Netscaler, see [Rewrite policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html) and [Responder policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html).
 
 !!! note "Note"
     The Rewrite and Responder CRD is not supported for OpenShift routes. You can use OpenShift ingress to use Rewrite and Responder CRD.
@@ -35,13 +35,13 @@ For example,
 
 ## Rewrite and Responder CRD attributes
 
-The **CRD** provides attributes for various options required to define the rewrite and responder policies. Also, it provides attributes for dataset, pat set, string map, and audit logs to use within the rewrite and responder policies. These CRD attributes correspond to **Citrix ADC** command and attribute respectively.
+The **CRD** provides attributes for various options required to define the rewrite and responder policies. Also, it provides attributes for dataset, pat set, string map, and audit logs to use within the rewrite and responder policies. These CRD attributes correspond to **Netscaler** command and attribute respectively.
 
 ### Rewrite policy
 
-The following table lists the **CRD** attributes that you can use to define a rewrite policy. Also, the table lists the corresponding Citrix ADC command and attributes.
+The following table lists the **CRD** attributes that you can use to define a rewrite policy. Also, the table lists the corresponding Netscaler command and attributes.
 
-| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |
+| **CRD attribute** | **Netscaler command** | **Netscaler attribute** |
 | ----------------- | ---------------------- | ------------------------ |
 | rewrite-criteria | Add rewrite policy | rule |
 | default-action | Add rewrite policy | undefAction |
@@ -54,9 +54,9 @@ The following table lists the **CRD** attributes that you can use to define a re
 
 ### Responder policy
 
-The following table lists the **CRD** attributes that you can use to define a responder policy. Also, the table lists the corresponding Citrix ADC command and attributes.
+The following table lists the **CRD** attributes that you can use to define a responder policy. Also, the table lists the corresponding Netscaler command and attributes.
 
-| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |
+| **CRD attribute** | **Netscaler command** | **Netscaler attribute** |
 | ----------------- | ---------------------- | ------------------------ |
 | Redirect | Add responder action | Type (the value of type) |
 | url | Add responder action | Target |
@@ -72,18 +72,18 @@ The following table lists the **CRD** attributes that you can use to define a re
 
 ### Audit log
 
-The following table lists the **CRD** attributes provide to enable audit log within the rewrite or responder policies. Also, the table lists the corresponding Citrix ADC command and attributes.
+The following table lists the **CRD** attributes provide to enable audit log within the rewrite or responder policies. Also, the table lists the corresponding Netscaler command and attributes.
 
-| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |
+| **CRD attribute** | **Netscaler command** | **Netscaler attribute** |
 | ----------------- | ---------------------- | ------------------------ |
 | Logexpression | Add audit message action | stringBuilderExpr |
 | Loglevel | Add audit message action | Loglevel |
 
 ### Dataset
 
-The following table lists the **CRD** attributes for dataset that you can use within the rewrite or responder policies. Also, the table lists the corresponding Citrix ADC command and attributes.
+The following table lists the **CRD** attributes for dataset that you can use within the rewrite or responder policies. Also, the table lists the corresponding Netscaler command and attributes.
 
-| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |
+| **CRD attribute** | **Netscaler command** | **Netscaler attribute** |
 | ----------------- | ---------------------- | ------------------------ |
 | Name | Add policy dataset | Name |
 | Type  | Add policy dataset |Type |
@@ -91,14 +91,14 @@ The following table lists the **CRD** attributes for dataset that you can use wi
 
 ### Patset
 
-| **CRD attribute**  | **Citrix ADC command** | **Citrix ADC attribute** |
+| **CRD attribute**  | **Netscaler command** | **Netscaler attribute** |
 | ------------------ | ---------------------- | ------------------------ |
 | Name | Add policy patset | Name |
 | Values | Bind policy patset | string |
 
 ### String map
 
-| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |
+| **CRD attribute** | **Netscaler command** | **Netscaler attribute** |
 | ----------------- | ---------------------- | ------------------------ |
 | Name | Add policy stringmap | Name |
 | Key | Bind policy stringmap | Key |
@@ -108,7 +108,7 @@ The following table lists the **CRD** attributes for dataset that you can use wi
 
 The following table provides information about the `goto-priority-expression` attribute, which is a CRD attribute for binding a group of multiple consecutive policies to services.
 
-| **CRD attribute** | **Citrix ADC command** | **Citrix ADC attribute** |**Supported values**|**Default value**|
+| **CRD attribute** | **Netscaler command** | **Netscaler attribute** |**Supported values**|**Default value**|
 | ----------------- | ---------------------- | ------------------------ |---------------------- |---------------------- |
 | goto-priroty-expression| Bind lb vserver | gotoPriorityExpression|   NEXT and END| End|
 
@@ -129,7 +129,7 @@ In these sections, you need to use the [CRD attributes](#crd-attributes) provide
 
 Also, in the `spec` section, you need to include a `rewrite-policies` section to specify the service or services to which the policy must be applied. For more information, see [Sample policy configurations](#sample-policy-configurations).
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
+After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.
 
 > **Points to note:**
 >
@@ -155,7 +155,7 @@ After you deploy the `.yaml` file, the Citrix ingress controller applies the pol
 
 >**Note:** For more information on how to use the `goto-priority-expression` field, see the example [Modify strings and host name in the requested URL](#Modify-strings-and-hostname-in-the-requested-URL).
 
-Consider a scenario wherein you want to define a policy in Citrix ADC to rewrite all the incoming URLs to `new-url-for-the-application` and send it to the microservices. Create a `.yaml` file called `target-url-rewrite.yaml` and use the appropriate [CRD attributes](#crd-attributes) to define the rewrite policy as follows:
+Consider a scenario wherein you want to define a policy in Netscaler to rewrite all the incoming URLs to `new-url-for-the-application` and send it to the microservices. Create a `.yaml` file called `target-url-rewrite.yaml` and use the appropriate [CRD attributes](#crd-attributes) to define the rewrite policy as follows:
 
 **target-url-rewrite.yaml:**
 
@@ -184,7 +184,7 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
 
     kubectl create -f target-url-rewrite.yaml
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
+After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.
 
 On the master node in the Kubernetes cluster, you can verify the status of created/applied rewrite policy CRD using the following command:
 
@@ -198,11 +198,11 @@ If there are issues while creating or applying the CRD, the same can be debugged
 
     kubectl logs citrixingresscontroller
 
-Also, you can verify whether the configuration is applied on the Citrix ADC by using the following steps.
+Also, you can verify whether the configuration is applied on the Netscaler by using the following steps.
 
-1.	Log on to the Citrix ADC command-line.
+1.	Log on to the Netscaler command-line.
 
-2.	Use the following command to verify if the configuration is applied to the Citrix ADC:
+2.	Use the following command to verify if the configuration is applied to the Netscaler:
 
         show run | grep `lb vserver`
         add lb vserver k8s-citrix_default_80_k8s-citrix-svc_default_80_svc HTTP 0.0.0.0 0 -persistenceType NONE -cltTimeout 180
@@ -242,7 +242,7 @@ spec:
         - '/app3'
 ```
 
-In this example, if Citrix ADC receives any URL that matches the `/app1`, `/app2`, or `/app3` strings defined in the `patset`, Citrix ADC blocks the URL.
+In this example, if Netscaler receives any URL that matches the `/app1`, `/app2`, or `/app3` strings defined in the `patset`, Netscaler blocks the URL.
 
 ### Policy with audit logs enabled
 
@@ -277,7 +277,7 @@ spec:
 
 ### Multiple policy configurations
 
-You can add multiple policy configurations in a single `.yaml` file and apply the policies to the Citrix ADC device. You need add separate sections for each policy configuration.
+You can add multiple policy configurations in a single `.yaml` file and apply the policies to the Netscaler device. You need add separate sections for each policy configuration.
 
 **multi-policy-config.yaml:**
 
@@ -333,7 +333,7 @@ spec:
           value: '"/internal-app2/"'
 ```
 
-The example contains two responder policies and a rewrite policy, based on these policies the Citrix ADC device performs the following:
+The example contains two responder policies and a rewrite policy, based on these policies the Netscaler device performs the following:
 
 -  Any client request to IP addresses defined in the `redirectIP` dataset, that is, `1.1.1.1` or `2.2.2.2` respectively, the request is redirected to `www.citrix.com`.
 
@@ -762,26 +762,26 @@ Modified host name and URL for the requested URL is present in the image shown a
 
 ### HTTP callout 
 
-An HTTP callout allows Citrix ADC to generate and send an HTTP or HTTPS request to an external server as part of the policy evaluation and take appropriate action based on the response obtained from the external server. You can use the rewrite and responder CRD to initiate HTTP callout requests from Citrix ADC.For more information, see the [HTTP callout documentation](../how-to/http-callout.md).
+An HTTP callout allows Netscaler to generate and send an HTTP or HTTPS request to an external server as part of the policy evaluation and take appropriate action based on the response obtained from the external server. You can use the rewrite and responder CRD to initiate HTTP callout requests from Netscaler.For more information, see the [HTTP callout documentation](../how-to/http-callout.md).
 
 ## Related articles
 
 -  Feature Documentation
 
-    -  [Citrix ADC Rewrite Feature Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html)
+    -  [Netscaler Rewrite Feature Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html)
 
-    -  [Citrix ADC Responder Feature Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html)
+    -  [Netscaler Responder Feature Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html)
 
 -  Developer Documentation
 
-    -  [Citrix ADC Rewrite Policy](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/rewrite/rewrite-policy/rewrite-policy/)
+    -  [Netscaler Rewrite Policy](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/rewrite/rewrite-policy/rewrite-policy/)
 
-    -  [Citrix ADC Rewrite Action](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/rewrite/rewrite-action/rewrite-action/)
+    -  [Netscaler Rewrite Action](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/rewrite/rewrite-action/rewrite-action/)
 
-    -  [Citrix ADC Responder Policy](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/responder/responder-policy/responder-policy/)
+    -  [Netscaler Responder Policy](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/responder/responder-policy/responder-policy/)
 
-    -  [Citrix ADC Responder Action](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/responder/responder-action/responder-action/)
+    -  [Netscaler Responder Action](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/responder/responder-action/responder-action/)
 
-    -  [Citrix ADC Audit Message Action](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/latest/audit/audit-messageaction/audit-messageaction/)
+    -  [Netscaler Audit Message Action](https://developer-docs.citrix.com/projects/netscaler-command-reference/en/latest/audit/audit-messageaction/audit-messageaction/)
 
-    -  [Citrix ADC Policy Dataset](https://docs.citrix.com/en-us/netscaler/12/appexpert/pattern-sets-data-seta/configuring-data-sets.html)
+    -  [Netscaler Policy Dataset](https://docs.citrix.com/en-us/netscaler/12/appexpert/pattern-sets-data-seta/configuring-data-sets.html)

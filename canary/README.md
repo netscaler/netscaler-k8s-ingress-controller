@@ -1,4 +1,4 @@
-# Deploy Citrix ADC-Integrated Canary Deployment Solution
+# Deploy Netscaler-Integrated Canary Deployment Solution
 
 Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After the user validation, the application is rolled out to the larger set of users.
 
@@ -13,11 +13,11 @@ In a deployment using the Canary CRD, canary configuration is applied using a Ku
 
 This section provides information about how to perform Canary deployment using the Canary CRD.
 
-Citrix ADC-Integrated Canary Deployment solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
+Netscaler-Integrated Canary Deployment solution stitches together all components of continuous delivery (CD) and makes canary deployment easier for the application developers. This solution uses [Spinnaker](https://www.spinnaker.io/) as the continuous delivery platform and [Kayenta](https://github.com/spinnaker/kayenta) as the Spinnaker plug-in for canary analysis. Kayenta is an open-source canary analysis service that fetches user-configured metrics from their sources, runs statistical tests, and provides an aggregate score for the canary. The score from statistical tests and counters along with the success criteria is used to promote or fail the canary.
 
-Citrix ADC comes with a rich application-centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Citrix ADC to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Citrix ADC is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta.
+Netscaler comes with a rich application-centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Netscaler to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Netscaler is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta.
 
- [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Citrix ADC policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to baseline and canary leveraging the rich Citrix ADC policy infrastructure.
+ [Netscaler Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Netscaler policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to baseline and canary leveraging the rich Netscaler policy infrastructure.
 
 For example, you can divert traffic from production to canary and baseline using the match expression HTTP.REQ.URL.CONTAINS("citrix india"). The traffic which matches the expression is diverted to canary and baseline and the remaining traffic goes to production.
 
@@ -30,23 +30,23 @@ GitHub has many utilities available for integrating with other tools that form p
 
 -  [Spinnaker](https://www.spinnaker.io/): Spinnaker is an open source, multi-cloud continuous delivery platform for releasing software changes with high velocity and reliance. You can use Spinnaker’s application deployment features to construct and manage continuous delivery workflows. The key deployment management construct in Spinnaker is known as a pipeline. Pipelines in Spinnaker consist of a sequence of actions, known as stages. Spinnaker provides various stages for deploying an application, running a script, performing canary analysis, removing the deployment, and so on. You can integrate Spinnaker with many third-party tools to support many extra functionalities.
 
--  [Prometheus](https://prometheus.io/): Prometheus is an open-source systems monitoring and alerting toolkit. Prometheus is a monitoring system which can maintain a huge amount of data in a time series database. Citrix ADC Metrics exposes the performance metrics to Spinnaker through Prometheus.
+-  [Prometheus](https://prometheus.io/): Prometheus is an open-source systems monitoring and alerting toolkit. Prometheus is a monitoring system which can maintain a huge amount of data in a time series database. Netscaler Metrics exposes the performance metrics to Spinnaker through Prometheus.
 
 -  [Jenkins](https://jenkins.io/): Jenkins is an open source automation server which helps to automate all sorts of tasks related to building, testing, and delivering or deploying software. Jenkins also supports running custom scripts as part of your deployment cycle.
 
--  [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/): Citrix provides an Ingress Controller for Citrix ADC MPX (hardware), Citrix ADC VPX (virtualized), and Citrix ADC CPX (containerized) for bare metal and cloud deployments. The Citrix ingress controller is built around Kubernetes Ingress and automatically configures one or more Citrix ADCs based on the Ingress resource configuration.
+-  [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/): Citrix provides an Ingress Controller for Netscaler MPX (hardware), Netscaler VPX (virtualized), and Netscaler CPX (containerized) for bare metal and cloud deployments. The Citrix ingress controller is built around Kubernetes Ingress and automatically configures one or more Netscalers based on the Ingress resource configuration.
 
 **Software Requirements**
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
 -  Citrix ingress controller build/version: `quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6`.
--  Citrix ADC CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`.
--  Citrix ADC Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
+-  Netscaler CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`.
+-  Netscaler Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
 
-### Workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution
+### Workflow of a Spinnaker pipeline for Netscaler-Integrated Canary Deployment Solution
 
-The following diagram explains the workflow of a Spinnaker pipeline for Citrix ADC-Integrated Canary Deployment Solution.
+The following diagram explains the workflow of a Spinnaker pipeline for Netscaler-Integrated Canary Deployment Solution.
 
 ![Spinnaker_pipeline](../docs/media/spinnaker_pipeline.png))
 
@@ -55,10 +55,10 @@ The following steps explain the workflow specified in the diagram.
 1.  Developers maintain the source code in GitHub, make changes whenever required, and commit the changes to GitHub.
 2.  A webhook is configured in GitHub to listen for the source code changes. Whenever the source code is checked in to GitHub, the webhook is triggered and informs Docker Hub to build the image with the new source code. Once the docker image is created, a separate webhook configured in Docker Hub triggers a Spinnaker pipeline.
 3.  Once the Spinnaker pipeline is triggered, canary and baseline versions of the image are deployed.
-4.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to the canary and baseline versions. Citrix ADC collects the performance statistics and exports the statistics to Prometheus with the help of Citrix ADC Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
+4.  Once the canary and baseline versions are deployed, some percentage of traffic from production is diverted to the canary and baseline versions. Netscaler collects the performance statistics and exports the statistics to Prometheus with the help of Netscaler Metrics Exporter. Prometheus feeds these statistics to Kayenta for canary analysis.
 1.	Kayenta performs a canary analysis based on the performance statistics and generates a score. Based on the score, the canary deployment is termed as success or failure and the image is rolled out or rolled back.
 
-### Deploy the Citrix ADC-Integrated Canary Deployment Solution in Google Cloud Platform
+### Deploy the Netscaler-Integrated Canary Deployment Solution in Google Cloud Platform
 
 This section contains information on setting up Spinnaker, how to create a Spinnaker pipeline, and a sample canary deployment.
 
@@ -143,7 +143,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
                 username: <username>
               password: <password>
 
-    1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and perform the steps.
+    1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Netscaler Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and perform the steps.
 
     1.  To integrate Prometheus with Spinnaker, update the following values in the ``quick-install.yml`` file.
 
@@ -219,7 +219,7 @@ Once you deploy Spinnaker, create a Spinnaker pipeline for an application and co
 
 #### Deploy a sample application for canary
 
-This example shows how to run the canary deployment of a sample application using Citrix ADC-Integrated Canary Deployment Solution. In this example, Citrix ADC CPX, MPX, or VPX is deployed as an Ingress device for a GKE cluster. Citrix ADC generates the performance metrics required for canary analysis.
+This example shows how to run the canary deployment of a sample application using Netscaler-Integrated Canary Deployment Solution. In this example, Netscaler CPX, MPX, or VPX is deployed as an Ingress device for a GKE cluster. Netscaler generates the performance metrics required for canary analysis.
 
 **Prerequisites**
 
@@ -231,18 +231,18 @@ You must complete the following step before deploying the sample application.
 
 Perform the following steps to deploy a sample application as a canary release.
 
-1. Create the necessary RBAC rules for Citrix ADC by deploying the [rbac.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/rbac.yaml) file.
+1. Create the necessary RBAC rules for Netscaler by deploying the [rbac.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/rbac.yaml) file.
    
         kubectl apply -f rbac.yaml 
 
-1. You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
+1. You can either deploy the Citrix ingress controller as a sidecar with Netscaler CPX or as a standalone pod which controls Netscaler VPX or MPX.
 
-    Use the [cpx-with-cic-sidecar.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cpx-with-cic-sidecar.yml) file to deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX. It also deploys Citrix ADC Metrics Exporter on the same pod.
+    Use the [cpx-with-cic-sidecar.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cpx-with-cic-sidecar.yml) file to deploy the Citrix ingress controller as a sidecar with Netscaler CPX. It also deploys Netscaler Metrics Exporter on the same pod.
     
         kubectl apply -f cpx-with-cic-sidecar.yml 
     
     
-     To deploy the Citrix ingress controller as a stand-alone pod for Citrix ADC VPX or MPX use the [cic-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/exporter.yaml) file to deploy Citrix ADC Metrics Exporter.
+     To deploy the Citrix ingress controller as a stand-alone pod for Netscaler VPX or MPX use the [cic-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/exporter.yaml) file to deploy Netscaler Metrics Exporter.
 
 
         kubectl apply -f cic-vpx.yaml
@@ -259,7 +259,7 @@ Perform the following steps to deploy a sample application as a canary release.
     !!! note "Note"
         For more information on creating a TLS certificate for Ingress, see [TLS certificates in Citrix Ingress Controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/certificate-management/tls-certificate-handling/).
 
-1. Once Spinnaker is exposed using Citrix ADC, access Spinnaker and perform the steps in [Create a Spinnaker pipeline and configure automated canary deployment](#Create-a-Spinnaker-pipeline-and-configure-automated-canary-deployment) if the steps are not already done. 
+1. Once Spinnaker is exposed using Netscaler, access Spinnaker and perform the steps in [Create a Spinnaker pipeline and configure automated canary deployment](#Create-a-Spinnaker-pipeline-and-configure-automated-canary-deployment) if the steps are not already done. 
  
 1. Deploy the production version of the application using the [production.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/production.yaml) file.
    
@@ -293,7 +293,7 @@ Perform the following steps to deploy a sample application as a canary release.
       | serviceNames         |  List of services on which this CRD has to be applied                                                                                                                                                                                                                                                                              |
       | deployment          | Specifies the deployment strategy as Kayenta.                                                                                                                                                                                                                                                                                      |
       | percentage          | Specifies the percentage of traffic to be diverted from production to baseline and canary.                                                                                                                                                                                                                                         |
-      | matchExpression (optional)    | Any Citrix ADC supported policy that can be used to define the subset of users to be directed to canary and baseline versions. If x percentage of traffic is configured, then from within subset of users which matches the matchExpression only x percentage of users are diverted to baseline and canary. Remaining users are diverted to production. |
+      | matchExpression (optional)    | Any Netscaler supported policy that can be used to define the subset of users to be directed to canary and baseline versions. If x percentage of traffic is configured, then from within subset of users which matches the matchExpression only x percentage of users are diverted to baseline and canary. Remaining users are diverted to production. |
       |  Spinnaker   | Specifies the Spinnaker pipeline configurations you want to apply for your services.   |
       | domain              |  IP address or domain name of the Spinnaker gate.                                                                                        |                                                            
       | port                |  Port number of the Spinnaker gate.                                                                                                                                                                                                                                                                                                |
@@ -317,7 +317,7 @@ Perform the following steps to deploy a sample application as a canary release.
 
 For troubleshooting the deployment, perform the following steps.
 
-1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Citrix ADC CPX, Citrix ADC Metrics Exporter, Citrix ingress controller.
+1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Netscaler CPX, Netscaler Metrics Exporter, Citrix ingress controller.
 2.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
 3.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
 4.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
@@ -775,7 +775,7 @@ ingress.citrix.com/canary-by-header-value: '["value1","value2","value3","value4"
 
 Perform the following steps to deploy a sample application as a canary release.
 
-1. Deploy the Citrix ingress controller using the steps in [deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX or as a standalone pod which controls Citrix ADC VPX or MPX.
+1. Deploy the Citrix ingress controller using the steps in [deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Citrix ingress controller as a sidecar with Netscaler CPX or as a standalone pod which controls Netscaler VPX or MPX.
 
 2. Deploy the `Guestbook` application using the [guestbook-deploy.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-deploy.yaml) file.
 
@@ -835,7 +835,7 @@ Perform the following steps to deploy a sample application as a canary release.
               ---
               ```
 
-    Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Citrix ADC in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
+    Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Netscaler in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
 
 For deploying the HTTP header based canary using the Citrix ingress controller, replace the canary annotation `ingress.citrix.com/canary-weight:` with the `ingress.citrix.com/canary-by-header:`  annotation in the `canary-ingress.yaml` file.
 

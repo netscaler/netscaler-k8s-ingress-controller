@@ -1,14 +1,14 @@
-# Enable Citrix ADC certificate validation in the Citrix ingress controller
+# Enable Netscaler certificate validation in the Citrix ingress controller
 
-The Citrix ingress controller provides an option to ensure secure communication between the Citrix ingress controller and Citrix ADC by using the HTTPS protocol. You can achieve this by using pre-loaded certificates in the Citrix ADC. As an extra measure to avoid any possible man-in-the-middle (MITM) attack, the Citrix ingress controller also allows you to validate the SSL server certificate provided by the Citrix ADC.
+The Citrix ingress controller provides an option to ensure secure communication between the Citrix ingress controller and Netscaler by using the HTTPS protocol. You can achieve this by using pre-loaded certificates in the Netscaler. As an extra measure to avoid any possible man-in-the-middle (MITM) attack, the Citrix ingress controller also allows you to validate the SSL server certificate provided by the Netscaler.
 
-To enable certificate signature and common name validation of the ADC server certificate by the Citrix ingress controller, security administrators can optionally install signed (or self-signed) certificates in the Citrix ADC and configure the Citrix ingress controller with the corresponding CA certificate bundle. Once the validation is enabled and CA certificate bundles are configured, the Citrix ingress controller starts validating the certificate (including certificate name validation). If the validation fails, the Citrix ingress controller logs the same and none of the configurations are used on an unsecure channel.
+To enable certificate signature and common name validation of the ADC server certificate by the Citrix ingress controller, security administrators can optionally install signed (or self-signed) certificates in the Netscaler and configure the Citrix ingress controller with the corresponding CA certificate bundle. Once the validation is enabled and CA certificate bundles are configured, the Citrix ingress controller starts validating the certificate (including certificate name validation). If the validation fails, the Citrix ingress controller logs the same and none of the configurations are used on an unsecure channel.
 
 This validation is turned off by default and an administrator can chose to enable the validation in the Citrix ingress controller as follows.
 
 ## Prerequisites
 
-- For enabling certificate validation, you must configure a Citrix ADC with proper SSL server certificates (with proper server name or IP address in certificate subject). For more information, see [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-certificates/add-group-certs.html).
+- For enabling certificate validation, you must configure a Netscaler with proper SSL server certificates (with proper server name or IP address in certificate subject). For more information, see [Netscaler documentation](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-certificates/add-group-certs.html).
 
 - The CA certificate for the installed server certificate-key pair is used to configure the Citrix ingress controller to enable validation of these certificates.
 

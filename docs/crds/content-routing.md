@@ -1,8 +1,8 @@
-# Advanced content routing for Kubernetes with Citrix ADC
+# Advanced content routing for Kubernetes with Netscaler
 
 Kubernetes native Ingress offers basic host and path based routing. But, other advanced routing techniques like routing based on header values or query strings is not supported in the Ingress structure. You can expose these features on the Kubernetes Ingress through Ingress annotations, but annotations are complex to manage and validate.
 
-You can expose the advanced content routing abilities provided by Citrix ADC as a custom resource definition (CRD) API for Kubernetes.
+You can expose the advanced content routing abilities provided by Netscaler as a custom resource definition (CRD) API for Kubernetes.
 
 Using content routing CRDs, you can route the traffic based on the following parameters:
 
@@ -12,7 +12,7 @@ Using content routing CRDs, you can route the traffic based on the following par
 - Cookie
 - Query parameters
 - HTTP method
-- Citrix ADC policy expression
+- Netscaler policy expression
 
 **Note:**
 An Ingress resource and content routing CRDs cannot co-exist for the same endpoint (IP address and port). The usage of content routing CRDs with Ingress is not supported.
@@ -31,7 +31,7 @@ A Listener CRD object represents the end-point information like virtual IP addre
 For the full CRD definition, see the [Listener CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/contentrouting/Listener.yaml).
 For complete information on all attributes of the Listener CRD, see [Listener CRD documentation](Listener.md).
 
-Listener CRD supports HTTP, SSL, and TCP profiles. Using these profiles, you can customize the default protocol behavior. Listener CRD also supports the analytics profile which enables Citrix ADC to export the type of transactions or data to different endpoints.
+Listener CRD supports HTTP, SSL, and TCP profiles. Using these profiles, you can customize the default protocol behavior. Listener CRD also supports the analytics profile which enables Netscaler to export the type of transactions or data to different endpoints.
 For more information about profile support for Listener CRD, see the [Profile support for the Listener CRD](../configure/profiles-for-listener-crd.md).
 
 
@@ -49,7 +49,7 @@ For more information about profile support for Listener CRD, see the [Profile su
 ## How to write Listener CRD objects
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the listener configuration in a YAML file. In the YAML file, use `Listener` in the kind field and in the spec section add the listener CRD attributes based on your requirement for the listener configuration.
-After you deploy the YAML file, the Citrix ingress controller applies the listener configuration on the Ingress Citrix ADC device.
+After you deploy the YAML file, the Citrix ingress controller applies the listener configuration on the Ingress Netscaler device.
 
 Following is a sample Listener CRD object definition named as `Listener-crd.yaml`.
 ```yml
@@ -202,7 +202,7 @@ After you have defined the HTTP routes in the YAML file, deploy the YAML file fo
 
 	    Kubectl create -f  Route-crd.yaml
 
-Once you deploy the YAML file, the Citrix ingress controller applies the HTTP route configuration on the Ingress Citrix ADC device.
+Once you deploy the YAML file, the Citrix ingress controller applies the HTTP route configuration on the Ingress Netscaler device.
 
 
 ### Attaching HTTPRoute CRD objects to a Listener CRD object
@@ -229,7 +229,7 @@ In this example, the HTTPRoute CRD object named route1 is evaluated before the H
 
 **Attaching an HTTPRoute CRD object using labels and selector**
 
- You can also attach HTTPRoute objects to a Listener object by using labels and selector. You can specify one or more labels in the Listener CRD object. Any HTTPRoute objects which match the labels are automatically linked to the Listener object and the rules are created in Citrix ADC. When you use this approach, there is no particular order of evaluation between multiple HTTPRoute objects. Only exception is an HTTPRoute object with a default route (a route with just a host name or a '/' path) which is evaluated as the last object.
+ You can also attach HTTPRoute objects to a Listener object by using labels and selector. You can specify one or more labels in the Listener CRD object. Any HTTPRoute objects which match the labels are automatically linked to the Listener object and the rules are created in Netscaler. When you use this approach, there is no particular order of evaluation between multiple HTTPRoute objects. Only exception is an HTTPRoute object with a default route (a route with just a host name or a '/' path) which is evaluated as the last object.
 
 For example, snippet of a listener resource is as follows:
 

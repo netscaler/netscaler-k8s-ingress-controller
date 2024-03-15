@@ -1,7 +1,7 @@
 # Deploying Citrix API gateway using Rancher
 
 Citrix API gateway provides a single entry point for APIs by ensuring secure and reliable access to APIs and microservices on your system. Citrix provides an enterprise-grade API gateway for North-South API traffic for Kubernetes clusters.
-Citrix API gateway integrates with Kubernetes through the Citrix ingress controller and the Citrix ADC (Citrix ADC MPX, VPX, or CPX) deployed as the Ingress Gateway for on-premises and cloud deployments.
+Citrix API gateway integrates with Kubernetes through the Citrix ingress controller and the Netscaler (Netscaler MPX, VPX, or CPX) deployed as the Ingress Gateway for on-premises and cloud deployments.
 
 You can use the Rancher platform to deploy Citrix API gateway. Rancher provides a catalog of application templates that help you to deploy Citrix API gateway.
 
@@ -48,7 +48,7 @@ Perform the following steps to deploy the API gateway on the cluster using the R
 
    - **Namespace:** Specify the namespace where you want to create the Citrix ingress controller. You can also use the **Edit as YAML** option to specify the same in the YAML file.
    - **Accept License:** Select **Yes** to accept the terms and conditions of the Citrix license.
-   - **Login File Name:** Specify the name of the Kubernetes secret. The secret file is used for the Citrix ADC login.
-   - **Citrix ADC IP:**  It is the NSIP or SNIP of the Citrix ADC device. For high availability, specify the SNIP as the IP address.
+   - **Login File Name:** Specify the name of the Kubernetes secret. The secret file is used for the Netscaler login.
+   - **Netscaler IP:**  It is the NSIP or SNIP of the Netscaler device. For high availability, specify the SNIP as the IP address.
 
 6. Click **Preview** to verify the information and click **Launch**.

@@ -2,7 +2,7 @@
 
 IPAM controller is an application provided by Citrix for IP address management and it runs in parallel to the Citrix ingress controller in the Kubernetes cluster. Automatically allocating IP addresses to services of type LoadBalancer from a specified IP address range using the IPAM controller is already supported. Now, you can also assign IP addresses to Ingress resources from a specified range using the IPAM controller.
 
-You can specify IP address ranges in the YAML file while deploying the IPAM controller using YAML. The Citrix ingress controller configures the IP address allocated to the Ingress resource as a virtual IP address (VIP) in Citrix ADC MPX or VPX.
+You can specify IP address ranges in the YAML file while deploying the IPAM controller using YAML. The Citrix ingress controller configures the IP address allocated to the Ingress resource as a virtual IP address (VIP) in Netscaler MPX or VPX.
 
 The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Citrix ingress controller and the IPAM controller.
 
