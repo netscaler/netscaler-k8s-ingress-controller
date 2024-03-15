@@ -2,13 +2,13 @@
 
 The common deployment architectures emerging in K8s environment are of single-tier and dual-tier load balancing.
 
-Citrix ADC with Ingress Controller provides solution for these deployments. The Citrix ingress controller automates the configuration of Citrix ADC load balancing microservices in Kubernetes environment.
+Netscaler with Ingress Controller provides solution for these deployments. The Citrix ingress controller automates the configuration of Netscaler load balancing microservices in Kubernetes environment.
 
 **North-South traffic Load balancing**: North-South traffic is the traffic heading in and out of your Kubernetes Cluster. It is the traffic that comes from the client and hits the frontend microservices.
 
 **East-West traffic Load balancing**: East-West traffic is the traffic from one microservice to another inside the Kubernetes Cluster.
 
-In usual k8s environment the E-W traffic is load balanced by kube-proxy and N-S traffic is load balanced by Ingress load balancer like Citrix ADC.
+In usual k8s environment the E-W traffic is load balanced by kube-proxy and N-S traffic is load balanced by Ingress load balancer like Netscaler.
 
 The E-W traffic can also be load balanced by Ingress load balancer with E-W Hairpin mode.
 
@@ -27,13 +27,13 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
     -  [Smart Annotations](../docs/configure/annotations.md)
 -  Network configuration:
     -  [Static routing](../docs/network/staticrouting.md)
-    -  [Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller](../docs/network/node-controller.md)
+    -  [Establish network between K8s nodes and Ingress Netscaler using Citrix node controller](../docs/network/node-controller.md)
     -  [Expose services using NodePort](../docs/network/nodeport.md)
     -  [Expose services using LoadBalancer](../docs/network/type_loadbalancer.md)
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
 -  [HTTP, TCP, or SSL Profiles support](../docs/configure/profiles.md)
 -  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
--  [Install, link, and update certificates on Citrix ADC using the Citrix ingress controller](../docs/certificate-management/link-ca-certificate-chain.md)
+-  [Install, link, and update certificates on Netscaler using the Citrix ingress controller](../docs/certificate-management/link-ca-certificate-chain.md)
 -  [Rewrite and Responder](../docs/crds/rewrite-responder.md)
 -  [Advanced content routing](../docs/crds/content-routing.md)
 -  [Canary deployment support](../docs/canary/canary.md)
@@ -57,6 +57,6 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [HTTP use cases](../docs/how-to/http-use-cases.md)
 -  [Whitelisting or Blacklisting IP addresses](../docs/how-to/ip-whitelist-blacklist.md)
 -  [Interoperability with ExternalDNS](../docs/how-to/integrate-externaldns.md)
--  [Use Citrix ADC credentials stored in Vault server](../docs/how-to/use-vault-stored-credentials-for-cic.md)
+-  [Use Netscaler credentials stored in Vault server](../docs/how-to/use-vault-stored-credentials-for-cic.md)
 -  [Load balance Ingress traffic to TCP or UDP based application](../docs/how-to/tcp-udp-ingress.md)
 -  [Set up dual-tier deployment](../docs/how-to/deploy-cic-dual-tier.md)

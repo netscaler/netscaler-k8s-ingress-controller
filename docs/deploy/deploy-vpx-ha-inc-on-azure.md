@@ -1,14 +1,14 @@
-# Citrix ADC VPX in High Availability INC mode as ingress for Azure Kubernetes Services
+# Netscaler VPX in High Availability INC mode as ingress for Azure Kubernetes Services
 
-You can deploy Citrix ADC VPX in a high availability (High Availability) INC (Independent Network Configuration) mode in the Azure Kubernetes Services (AKS).
+You can deploy Netscaler VPX in a high availability (High Availability) INC (Independent Network Configuration) mode in the Azure Kubernetes Services (AKS).
 
-In a typical high availability deployment, both the Citrix ADC VPX instances in a high availability pair reside on the same subnet. A high availability deployment can also consist of two VPX instances in which each VPX is in a different network.
+In a typical high availability deployment, both the Netscaler VPX instances in a high availability pair reside on the same subnet. A high availability deployment can also consist of two VPX instances in which each VPX is in a different network.
 
-When the appliances in a high availability pair reside on two different networks, the secondary Citrix ADC VPX must have an independent network configuration. This means that Citrix ADC VPXs on different networks cannot share subnet IP address (SNIP), virtual IP address (VIP), or network routes. This type of configuration, in which the Citrix ADC VPXs in a high availability pair have different configuration parameters, is known as Independent Network Configuration (INC).
+When the appliances in a high availability pair reside on two different networks, the secondary Netscaler VPX must have an independent network configuration. This means that Netscaler VPXs on different networks cannot share subnet IP address (SNIP), virtual IP address (VIP), or network routes. This type of configuration, in which the Netscaler VPXs in a high availability pair have different configuration parameters, is known as Independent Network Configuration (INC).
 
-As the management IP or NSIP of both the Citrix ADC VPXs are different and they cannot share a Subnet IP address, an internal Azure load balancer (ALB) is created whose back-ends point to the primary and secondary VPX's management IP address. This internal ALB's front end IP address is used by CIC in the NS_IP environment variable to configure the Citrix ADCs.
+As the management IP or NSIP of both the Netscaler VPXs are different and they cannot share a Subnet IP address, an internal Azure load balancer (ALB) is created whose back-ends point to the primary and secondary VPX's management IP address. This internal ALB's front end IP address is used by CIC in the NS_IP environment variable to configure the Netscalers.
 
-   ![Unified Ingress Architecture with Citrix ADC VPXs deployed in HA INC mode as Ingress](../media/hainc-azure-aks-az-with-cic.png)
+   ![Unified Ingress Architecture with Netscaler VPXs deployed in HA INC mode as Ingress](../media/hainc-azure-aks-az-with-cic.png)
 
 **Pre-requisites:**
 
@@ -16,22 +16,22 @@ As the management IP or NSIP of both the Citrix ADC VPXs are different and they 
 2. Ensure that you have installed and configured the Azure command line utility `az`. Use the `az login` command login. For information, see [Install the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
 3. Ensure that you have installed the Kubernetes control command line utility `kubectl`.
 
-## Deploy Citrix ADC VPX in high availability INC mode as ingress in Azure Kubernetes Services
+## Deploy Netscaler VPX in high availability INC mode as ingress in Azure Kubernetes Services
 
- To deploy Citrix ADC VPX in high availability INC mode in Azure Kubernetes Services (AKS), you must complete the following tasks:
+ To deploy Netscaler VPX in high availability INC mode in Azure Kubernetes Services (AKS), you must complete the following tasks:
 
-1.  Deploy Citrix ADC VPX in HA INC mode using Terraform
+1.  Deploy Netscaler VPX in HA INC mode using Terraform
 1.  Create an AKS cluster
 1.  Enable VNet peering
 1.  Configure Network Security Group
 1.  Deploy the Citrix ingress controller
 1.  Create a microservice application and expose it using an Ingress
 
-Perform the following steps to deploy Citrix ADC VPX in a high availability INC mode in Azure:
+Perform the following steps to deploy Netscaler VPX in a high availability INC mode in Azure:
 
-### Deploy Citrix ADC VPX in HA INC mode using Terraform
+### Deploy Netscaler VPX in HA INC mode using Terraform
 
-1.  Clone the Citrix ADC Terraform repository using the following command:
+1.  Clone the Netscaler Terraform repository using the following command:
 
         git clone https://github.com/citrix/terraform-cloud-scripts.git
         cd terraform-cloud-scripts/azure/ha_availability_zones
@@ -60,9 +60,9 @@ The following table provides variables and their description:
 | `management_subnet_address_prefix` | Specifies the Management Subnet Address space.                                                            |
 | `client_subnet_address_prefix`     | Specifies the Client Subnet Address space.                                                                |
 | `server_subnet_address_prefix`     | Specifies the Server Subnet Address space.                                                                |
-| `adc_admin_password`               | Specifies a password for the Citrix ADC `nsroot` user.                                             |
+| `adc_admin_password`               | Specifies a password for the Netscaler `nsroot` user.                                             |
 | `controlling_subnet`               | Specifies the CIDR to allow management access.                                                        |
-| `create_ILB_for_management`        | Specify `true` to create an internal Azure load balancer for configuring the Citrix ADC VPX. |
+| `create_ILB_for_management`        | Specify `true` to create an internal Azure load balancer for configuring the Netscaler VPX. |
 
   **Important:** After creating a variable file in accordance with your requirements, ensure to name the file with the suffix `.auto.tfvars`. For example, `my-vpx-ha-deployment.auto.tfvars`.
 
@@ -117,12 +117,12 @@ The following table provides the output variables and their description.
 | ----------------- | ---------------------------------------------------------------------------- |
 | `cic_nsip`          | Specifies the IP address that is to be used in CIC deployment as `NS_IP` the environment variable.                  |
 | `alb_public_ip`     | Specifies the VIP address that is to be used in Ingress as the `ingress.citrix.com/frontend-ip` annotation. |
-| `bastion_public_ip` | Specifies the public IP address of the bastion through which the Citrix ADC can be accessible.  |
-| `private_nsips`     | Specifies the private NSIP of the primary and secondary Citrix ADC.                     |
+| `bastion_public_ip` | Specifies the public IP address of the bastion through which the Netscaler can be accessible.  |
+| `private_nsips`     | Specifies the private NSIP of the primary and secondary Netscaler.                     |
 
 ### Create an AKS Cluster
 
-1.  Create an AKS cluster in the same resource group of the Citrix ADC VPX deployment. Use the following Azure command to create this AKS cluster:
+1.  Create an AKS cluster in the same resource group of the Netscaler VPX deployment. Use the following Azure command to create this AKS cluster:
 
         az aks create --network-plugin azure --resource-group my-ha-inc-rg --name my-aks-with-vpx-ha-inc 
 
@@ -132,9 +132,9 @@ The following table provides the output variables and their description.
 
 ### Enable VNet peering
 
-You can enable VNet peering only if Citrix ADC VPX and AKS are on different VNets. Perform the following steps to enable peering between the VNets.
+You can enable VNet peering only if Netscaler VPX and AKS are on different VNets. Perform the following steps to enable peering between the VNets.
 
-1. Identify the VNet resource IDs of AKS and Citrix ADC VPX.
+1. Identify the VNet resource IDs of AKS and Netscaler VPX.
 
     You can modify the following values in accordance with your deployment.
 
@@ -152,17 +152,17 @@ You can enable VNet peering only if Citrix ADC VPX and AKS are on different VNet
 
         az network vnet peering create -g $resource_group -n my-vpx-to-aks-peer --vnet-name $vpx_vnet_name --remote-vnet $aks_vnet_id --allow-vnet-access --allow-forwarded-traffic
 
-### Configure Network Security Group to allow traffic from Citrix ADC
+### Configure Network Security Group to allow traffic from Netscaler
 
 A network security group contains security rules that allow or deny inbound or outbound network traffic for a VM instance in Azure. For more information, see [Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview). 
 
-When you deploy an AKS cluster, it creates a Network Security Group (NSG) by default for allowing inter-node communication. You can either edit this Network Security Group to allow traffic from Citrix ADC VPX or create a Network Security Group to allow traffic from Citrix ADC VPX to AKS cluster and vice versa. For more information on how to create an NSG or edit an existing NSG, see [Work with Network Security Group](https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group#work-with-network-security-groups).
+When you deploy an AKS cluster, it creates a Network Security Group (NSG) by default for allowing inter-node communication. You can either edit this Network Security Group to allow traffic from Netscaler VPX or create a Network Security Group to allow traffic from Netscaler VPX to AKS cluster and vice versa. For more information on how to create an NSG or edit an existing NSG, see [Work with Network Security Group](https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group#work-with-network-security-groups).
 
 ### Deploy the Citrix ingress controller
 
 1.  Use the following commands to deploy Citrix ingress controller in the Azure managed Kubernetes cluster (AKS) using the helm chart.
 
-        #Create a Kubernetes Secret using Citrix ADC login credentials
+        #Create a Kubernetes Secret using Netscaler login credentials
 
         kubectl create secret generic nslogin --from-literal username=nsroot --from-literal password=$(terraform output -raw adc_admin_password)
 
@@ -172,7 +172,7 @@ When you deploy an AKS cluster, it creates a Network Security Group (NSG) by def
 
 ### Create a sample microservice application and expose it using Ingress
 
-The following steps show how to create a sample Apache microservice and exposes the microservice using Ingress through the Citrix ADC VPX high availability pair.
+The following steps show how to create a sample Apache microservice and exposes the microservice using Ingress through the Netscaler VPX high availability pair.
 
 1.  Use the following command to deploy the Apache microservice:
 
@@ -189,6 +189,6 @@ The following steps show how to create a sample Apache microservice and exposes 
         curl --resolve mysample-testdomain.com:80: $(terraform output -raw alb_public_ip) http://mysample-testdomain.com
         <html><body><h1>It works!</h1></body></html>
 
-Now you have deployed Citrix ADC VPX instances in High Availability INC mode as the ingress for your Azure Kubernetes Services (AKS). You can further use our advanced Citrix ingress controller for features such as SSL termination, Rewrite and Responder functionalities and so on. For information about Citrix ingress controller, see [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
+Now you have deployed Netscaler VPX instances in High Availability INC mode as the ingress for your Azure Kubernetes Services (AKS). You can further use our advanced Citrix ingress controller for features such as SSL termination, Rewrite and Responder functionalities and so on. For information about Citrix ingress controller, see [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
-For information on network architecture for Citrix ADC VPX instances on Microsoft Azure, see [Citrix ADC VPX instances on Microsoft Azure](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-vpx-on-azure/network-architecture-vpx-azur).
+For information on network architecture for Netscaler VPX instances on Microsoft Azure, see [Netscaler VPX instances on Microsoft Azure](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-vpx-on-azure/network-architecture-vpx-azur).

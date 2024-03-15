@@ -1,15 +1,15 @@
 # Upgrade Citrix ingress controller
 
-This topic explains how to upgrade the Citrix ingress controller instance for Citrix ADC CPX with the Citrix ingress controller as sidecar and Citrix ingress controller standalone deployments.
+This topic explains how to upgrade the Citrix ingress controller instance for Netscaler CPX with the Citrix ingress controller as sidecar and Citrix ingress controller standalone deployments.
 
-## Upgrade Citrix ADC CPX with Citrix ingress controller as a sidecar
+## Upgrade Netscaler CPX with Citrix ingress controller as a sidecar
 
-To upgrade a Citrix ADC CPX with the Citrix ingress controller as a sidecar, you can either modify the associated YAML definition file (for example, [citrix-k8s-cpx-ingress.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)) or use the Helm chart.
+To upgrade a Netscaler CPX with the Citrix ingress controller as a sidecar, you can either modify the associated YAML definition file (for example, [citrix-k8s-cpx-ingress.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)) or use the Helm chart.
 
 If you want to upgrade by modifying the **YAML** definition file, perform the following:
 
-1.  Change the version of the Citrix ingress controller and Citrix ADC CPX image under `containers` section to the following:
-    -  Citrix ADC CPX version: 13.0-83.27 (`quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`)
+1.  Change the version of the Citrix ingress controller and Netscaler CPX image under `containers` section to the following:
+    -  Netscaler CPX version: 13.0-83.27 (`quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`)
     -  Citrix ingress controller version: 1.33.4 (`quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6`)
   
 2.  Update the `CluterRole` as follows:

@@ -1,11 +1,11 @@
 # Listener CRD support for Ingress through annotation
 
-Ingress is a standard Kubernetes resource that specifies HTTP routing capability to back-end Kubernetes services. Citrix ingress controller provides various annotations to fine-tune the Ingress parameters for both front-end and back-end configurations. For example, using the `ingress.citrix.com/frontend-ip`  annotation you can specify the front-end listener IP address configured in Citrix ADC by Citrix ingress controller. Similarly, there are other front-end annotations to fine-tune HTTP and SSL parameters. When there are multiple Ingress resources and if they share front-end IP and port, specifying these annotations in each Ingress resource is difficult.
+Ingress is a standard Kubernetes resource that specifies HTTP routing capability to back-end Kubernetes services. Citrix ingress controller provides various annotations to fine-tune the Ingress parameters for both front-end and back-end configurations. For example, using the `ingress.citrix.com/frontend-ip`  annotation you can specify the front-end listener IP address configured in Netscaler by Citrix ingress controller. Similarly, there are other front-end annotations to fine-tune HTTP and SSL parameters. When there are multiple Ingress resources and if they share front-end IP and port, specifying these annotations in each Ingress resource is difficult.
 
 Sometimes, there is a separation of responsibility between network operations professionals (NetOps) and developers. NetOps are responsible for coming up with front-end configurations like front-end IP, certificates, and SSL parameters. Developers are responsible for HTTP routing and back-end configurations. Citrix ingress controller already provides [content routing CRDs](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/contentrouting) such as listener CRD for front-end configurations and `HTTProute` for back-end routing logic.
 Now, Listener CRD can be applied for Ingress resources using an annotation provided by Citrix.
 
-Through this feature, you can use the Listener CRD for your Ingress resource and separate the creation of the front-end configuration from the Ingress definition. Hence, NetOps can separately define the Listener resource to configure front-end IP, certificates, and other front-end parameters (TCP, HTTP, and SSL). Any configuration changes can be applied to the listener resources without changing each Ingress resource. In Citrix ADC, a listener resource corresponds to content switching virtual servers, SSL virtual servers, certkeys and front-end HTTP, SSL, and TCP profiles.
+Through this feature, you can use the Listener CRD for your Ingress resource and separate the creation of the front-end configuration from the Ingress definition. Hence, NetOps can separately define the Listener resource to configure front-end IP, certificates, and other front-end parameters (TCP, HTTP, and SSL). Any configuration changes can be applied to the listener resources without changing each Ingress resource. In Netscaler, a listener resource corresponds to content switching virtual servers, SSL virtual servers, certkeys and front-end HTTP, SSL, and TCP profiles.
 
 **Note:** While using this feature, you must ensure that all ingresses with the same front-end IP and port refer to the same Listener resource. For ingresses that use the same front-end IP and port combinations, one Ingress referring to a listener resource and another ingress referring to the `ingress.citrix.com/frontend-ip` annotation is not supported.
 
@@ -76,9 +76,9 @@ Perform the following steps to deploy a Listener resource for the Ingress:
           rhistate: 'ACTIVE'
     ```
 
-   Here, the Listener resource `my-listener` in the default namespace specifies the front-end configuration such as VIP, secondary VIPs, HTTP profile, TCP profile, SSL profile, and SSL ciphers. It creates a content switching virtual server in Citrix ADC on port 443 for HTTPS traffic, and all HTTP traffic on port 80 is redirected to HTTPS.
+   Here, the Listener resource `my-listener` in the default namespace specifies the front-end configuration such as VIP, secondary VIPs, HTTP profile, TCP profile, SSL profile, and SSL ciphers. It creates a content switching virtual server in Netscaler on port 443 for HTTPS traffic, and all HTTP traffic on port 80 is redirected to HTTPS.
 
-   **Note:** The `vip` field in the Listener resource is not required when Citrix ADC CPX is used as an ingress device. For Citrix ADC VPX, VIP is the same as the pod IP address which is automatically configured by Citrix ingress controller.
+   **Note:** The `vip` field in the Listener resource is not required when Netscaler CPX is used as an ingress device. For Netscaler VPX, VIP is the same as the pod IP address which is automatically configured by Citrix ingress controller.
 
 1. Apply the Listener resource.
 

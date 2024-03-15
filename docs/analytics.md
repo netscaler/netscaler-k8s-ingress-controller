@@ -1,6 +1,6 @@
 # Analytics and observability
 
-Analytics from Citrix ADC instances provides you deep-level insights about application performance which helps you to quickly identify issues and take any necessary action.
+Analytics from Netscaler instances provides you deep-level insights about application performance which helps you to quickly identify issues and take any necessary action.
 
 ## Enabling analytics using annotations in the Citrix ingress controller YAML file
 
@@ -74,14 +74,14 @@ For information about annotations, see the [annotation documentation](https://de
 
 Citrix ADM provides a comprehensive observability solution including analytics on various events happening in the system and a service graph for monitoring services in an easy to use user interface.
 
-Citrix ADM analytics provide an easy and scalable way to get various insights out of the data from Citrix ADC instances to describe, predict, and improve the application performance. You can use one or more analytics features simultaneously on Citrix ADM. For more information on the service graph, see the [service graph documentation](https://docs.citrix.com/en-us/citrix-application-delivery-management-service/application-analytics-and-management/service-graph.html).
+Citrix ADM analytics provide an easy and scalable way to get various insights out of the data from Netscaler instances to describe, predict, and improve the application performance. You can use one or more analytics features simultaneously on Citrix ADM. For more information on the service graph, see the [service graph documentation](https://docs.citrix.com/en-us/citrix-application-delivery-management-service/application-analytics-and-management/service-graph.html).
 
 To use the ADM analytics or service graph:
 
-- You must install an ADM agent and ensure the communication between Citrix ADM and Kubernetes cluster or managed instances in your data center or cloud. It makes Citrix ADC instances discoverable by Citrix ADM.
+- You must install an ADM agent and ensure the communication between Citrix ADM and Kubernetes cluster or managed instances in your data center or cloud. It makes Netscaler instances discoverable by Citrix ADM.
 - Ensure that an appropriate license is available and auto licensing is enabled on ADM. 
 
 ## Analytics with open source tools
 
-Citrix ADC can be integrated with various open source tools for observability using Citrix observability exporter. Citrix observability exporter is a container which collects metrics and transactions from Citrix ADCs and transforms them to suitable formats (such as JSON, AVRO) for supported endpoints. You can export the collected data to the desired endpoint. By analyzing the data, you can get valuable insights at a microservice level for applications proxied by Citrix ADCs.
-For more information on Citrix ADC observability exporter, see the [Citrix ADC observability exporter documentation](https://developer-docs.citrix.com/projects/citrix-observability-exporter/en/latest/).
+Netscaler can be integrated with various open source tools for observability using Citrix observability exporter. Citrix observability exporter is a container which collects metrics and transactions from Netscalers and transforms them to suitable formats (such as JSON, AVRO) for supported endpoints. You can export the collected data to the desired endpoint. By analyzing the data, you can get valuable insights at a microservice level for applications proxied by Netscalers.
+For more information on Netscaler observability exporter, see the [Netscaler observability exporter documentation](https://developer-docs.citrix.com/projects/citrix-observability-exporter/en/latest/).

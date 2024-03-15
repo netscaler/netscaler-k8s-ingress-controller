@@ -5,7 +5,7 @@ For information on TCP profile support on Ingress, see [TCP profile support on I
 
 A TCP profile is a collection of TCP settings. Instead of configuring the settings on each entity, you can configure TCP settings in a profile and bind the profile to all the required entities.
 
-The Citrix ingress controller provides the following service annotations for TCP profile for services of type `LoadBalancer`. You can use these annotations to define the TCP settings for the Citrix ADC.
+The Citrix ingress controller provides the following service annotations for TCP profile for services of type `LoadBalancer`. You can use these annotations to define the TCP settings for the Netscaler.
 
 
 | Service annotation | Description|

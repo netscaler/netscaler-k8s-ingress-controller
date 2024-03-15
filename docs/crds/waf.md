@@ -1,6 +1,6 @@
 # Configure web application firewall policies with the Citrix ingress controller
 
-Citrix provides a Custom Resource Definition (CRD) called the WAF CRD for Kubernetes. You can use the WAF CRD to configure the web application firewall policies with the Citrix ingress controller on the Citrix ADC VPX, MPX, SDX, and CPX. The WAF CRD enables communication between the Citrix ingress controller and Citrix ADC for enforcing web application firewall policies.
+Citrix provides a Custom Resource Definition (CRD) called the WAF CRD for Kubernetes. You can use the WAF CRD to configure the web application firewall policies with the Citrix ingress controller on the Netscaler VPX, MPX, SDX, and CPX. The WAF CRD enables communication between the Citrix ingress controller and Netscaler for enforcing web application firewall policies.
 
 In a Kubernetes deployment, you can enforce a web application firewall policy to protect the server using the WAF CRD. For more information about web application firewall, see [Web application security](https://docs.citrix.com/en-us/citrix-adc/13/application-firewall/introduction/web-application-security.html).
 
@@ -45,7 +45,7 @@ Based on the type of security checks, you can specify the metadata and use the C
  
 ## WAF CRD definition
 
-The WAF CRD is available in the Citrix ingress controller GitHub repository at [waf-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Citrix ADC.
+The WAF CRD is available in the Citrix ingress controller GitHub repository at [waf-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Netscaler.
 
 ## WAF CRD attributes
 
@@ -104,13 +104,13 @@ Perform the following steps to deploy the WAF CRD:
 
 After you have deployed the WAF CRD provided by Citrix in the Kubernetes cluster, you can define the web application firewall policy configuration in a .yaml file. In the .yaml file, use waf in the kind field. In the spec section add the WAF CRD attributes based on your requirements for the policy configuration.
 
-After you deploy the .yaml file, the Citrix ingress controller applies the WAF configuration on the Ingress Citrix ADC device.
+After you deploy the .yaml file, the Citrix ingress controller applies the WAF configuration on the Ingress Netscaler device.
 
 ### Examples
 
 **Enable protection for cross-site scripting and SQL injection attacks**
 
-Consider a scenario in which you want to define and specify a web application firewall policy in the Citrix ADC to enable protection for the cross-site scripting and SQL injection attacks. You can create a .yaml file called `wafhtmlxsssql.yaml` and use the appropriate CRD attributes to define the WAF policy as follows:
+Consider a scenario in which you want to define and specify a web application firewall policy in the Netscaler to enable protection for the cross-site scripting and SQL injection attacks. You can create a .yaml file called `wafhtmlxsssql.yaml` and use the appropriate CRD attributes to define the WAF policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1

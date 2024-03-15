@@ -12,7 +12,7 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
 
 2. Create a resource group under your subscription if the Kubernetes cluster has not been created yet.
    
-   **Note:** The resource group of the cluster and the Citrix ADC CPX registry must be the same. If the Kubernetes cluster where you want to deploy the Citrix ingress controller exists, then the same resource group should be used for the Citrix ingress controller registry. If the Kubernetes cluster does not exist, create a resource group and then create a cluster with this new resource group.
+   **Note:** The resource group of the cluster and the Netscaler CPX registry must be the same. If the Kubernetes cluster where you want to deploy the Citrix ingress controller exists, then the same resource group should be used for the Citrix ingress controller registry. If the Kubernetes cluster does not exist, create a resource group and then create a cluster with this new resource group.
 
    - Enter a name for the Resource group and specify a region.
   

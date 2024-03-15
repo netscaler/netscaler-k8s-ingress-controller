@@ -1,8 +1,8 @@
-# Citrix ADC as a load balancer for the Anthos control plane
+# Netscaler as a load balancer for the Anthos control plane
 
-You can use Citrix ADC for load balancing the Anthos control plane. Citrix provides a solution to automate the configuration of the Citrix ADC using [Terraform](https://www.terraform.io/) instead of manually configuring the Citrix ADC.
+You can use Netscaler for load balancing the Anthos control plane. Citrix provides a solution to automate the configuration of the Netscaler using [Terraform](https://www.terraform.io/) instead of manually configuring the Netscaler.
 
-## Configuring Citrix ADC for the Anthos control plane using Terraform
+## Configuring Netscaler for the Anthos control plane using Terraform
 
 **Prerequisites**
 
@@ -16,11 +16,11 @@ You must perform the following prerequisites:
 
     For installing Terraform on other operating systems, see the [official Terraform installation guide](https://learn.hashicorp.com/terraform/getting-started/install.html).
 
-- Download and install the Citrix ADC Terraform provider plug-in from the [Citrix ADC Terraform Provider Official Repo](https://github.com/citrix/terraform-provider-citrixadc).
+- Download and install the Netscaler Terraform provider plug-in from the [Netscaler Terraform Provider Official Repo](https://github.com/citrix/terraform-provider-citrixadc).
 
     You can download a release from the [releases page](https://github.com/citrix/terraform-provider-citrixadc/releases) and untar the binary into `~/.terraform.d/plugins/`.
 
-### Perform the following steps for configuring Citrix ADC for the Anthos control plane using Terraform.
+### Perform the following steps for configuring Netscaler for the Anthos control plane using Terraform.
 
 1. Clone the `citrix-k8s-ingress-controller` repository from GitHub using the following command.
 
@@ -99,9 +99,9 @@ You must perform the following prerequisites:
 
         terraform apply -auto-approve
 
-## Unconfiguring Citrix ADC (Optional)
+## Unconfiguring Netscaler (Optional)
 
-If the Citrix ADC configuration needs to be removed for some reason, you can use the `terraform destroy` command.
+If the Netscaler configuration needs to be removed for some reason, you can use the `terraform destroy` command.
 
 
     terraform destroy -auto-approve

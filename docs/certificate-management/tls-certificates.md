@@ -1,8 +1,8 @@
 # TLS certificates handling in Citrix ingress controller
 
-Citrix ingress controller provides option to configure TLS certificates for Citrix ADC SSL-based virtual servers. The SSL virtual server intercepts SSL traffic, decrypts it and processes it before sending it to services that are bound to the virtual server.
+Citrix ingress controller provides option to configure TLS certificates for Netscaler SSL-based virtual servers. The SSL virtual server intercepts SSL traffic, decrypts it and processes it before sending it to services that are bound to the virtual server.
 
-By default, SSL virtual server can bind to one default certificate and the application receives the traffic based on the policy bound to the certificate. However, you have the Server Name Indication (SNI) option to bind multiple certificates to a single virtual server. Citrix ADC determines which certificate to present to the client based on the domain name in the TLS handshake.
+By default, SSL virtual server can bind to one default certificate and the application receives the traffic based on the policy bound to the certificate. However, you have the Server Name Indication (SNI) option to bind multiple certificates to a single virtual server. Netscaler determines which certificate to present to the client based on the domain name in the TLS handshake.
 
 Citrix ingress controller handles the certificates in the following three ways:
 
@@ -12,11 +12,11 @@ Citrix ingress controller handles the certificates in the following three ways:
 
 ## Prerequisite
 
-For handling TLS certificates using Citrix ingress controller, you need to [enable TLS support in Citrix ADC](#enable-tls-support-in-citrix-adc-for-the-application) for the application and also if you are using certificates in your Kubernetes deployment then you need to [generate Kubernetes secret using the certificate](#generate-kubernetes-secret).
+For handling TLS certificates using Citrix ingress controller, you need to [enable TLS support in Netscaler](#enable-tls-support-in-citrix-adc-for-the-application) for the application and also if you are using certificates in your Kubernetes deployment then you need to [generate Kubernetes secret using the certificate](#generate-kubernetes-secret).
 
-### Enable TLS support in Citrix ADC for the application
+### Enable TLS support in Netscaler for the application
 
-Citrix Ingress Controller uses the **TLS** section in the ingress definition as an enabler for TLS support with Citrix ADC.
+Citrix Ingress Controller uses the **TLS** section in the ingress definition as an enabler for TLS support with Netscaler.
 
 !!! "Note"
     In case of Default certificate or Preconfigured certificates, you need to add an empty secret in the ***spec.tls.secretname*** field in your ingress definition to enable TLS.
@@ -103,7 +103,7 @@ spec:
 
 ## Preconfigured certificates
 
-Citrix ingress controller allows you to use the certkeys that are already configured on the Citrix ADC. You must provide the details about the certificate using the following annotation in your ingress definition:
+Citrix ingress controller allows you to use the certkeys that are already configured on the Netscaler. You must provide the details about the certificate using the following annotation in your ingress definition:
 
         ingress.citrix.com/preconfigured-certkey : '{"certs": [ {"name": "<name>", "type": "default|sni|ca"} ] }'
 
@@ -114,7 +114,7 @@ You can provide details about multiple certificates as a list within the annotat
 If the type parameter is not provided with the name of a certificate, then it is considered as the default (non-SNI) type.
 
 !!! tip "Important"
-    1.  Ensure that you use this feature in cases where you want to reuse the certificates that are present on the Citrix ADC and bind them to the applications that are managed by Citrix ingress controller.
+    1.  Ensure that you use this feature in cases where you want to reuse the certificates that are present on the Netscaler and bind them to the applications that are managed by Citrix ingress controller.
     1.  Citrix ingress controller does not manage the life cycle of the certificates. That is, it does not create or delete the certificates, but only binds them to the necessary applications.
 
 ## TLS Section in the Ingress YAML
@@ -155,7 +155,7 @@ spec:
 
 1.  If there is a conflict in precedence among the same grade certificates (for example, two ingress files configure a non-host TLS secret each, as default/non-SNI type), then the Citrix ingress controller binds the Citrix ingress controller default certificate as the non-SNI certificate and uses all other certificates with SNI.
 
-1.  Certificate used for secret given under TLS section must have CN name otherwise it does not bind to Citrix ADC.
+1.  Certificate used for secret given under TLS section must have CN name otherwise it does not bind to Netscaler.
 
 1.  If SNI enabled for SSL virtual server then:
 

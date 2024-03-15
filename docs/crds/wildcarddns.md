@@ -1,11 +1,11 @@
 
-# Configuring wildcard DNS domains through Citrix ADC ingress controller
+# Configuring wildcard DNS domains through Netscaler ingress controller
 
 Wildcard DNS domains are used to handle requests for non-existent domains and subdomains. In a DNS zone, you can use wildcard domains to redirect queries for all non-existent domains or subdomains to a particular server, instead of creating a separate Resource Record (RR) for each domain. The most common use of a wildcard DNS domain is to create a zone that can be used to forward mail from the internet to some other mail system.
 
-For more information on wildcard DNS domains, see the [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/dns/supporting-wildcard-dns-domains.html).
+For more information on wildcard DNS domains, see the [Netscaler documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/dns/supporting-wildcard-dns-domains.html).
 
-Now, you can configure wildcard DNS domains on a Citrix ADC with Citrix ingress controller. Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the Wildcard DNS CRD provided by Citrix, you can configure wildcard DNS domains on Citrix ADC with the Citrix ingress controller. The Wildcard DNS CRD enables communication between Citrix ingress controller and Citrix ADC for supporting wild card domains.
+Now, you can configure wildcard DNS domains on a Netscaler with Citrix ingress controller. Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the Wildcard DNS CRD provided by Citrix, you can configure wildcard DNS domains on Netscaler with the Citrix ingress controller. The Wildcard DNS CRD enables communication between Citrix ingress controller and Netscaler for supporting wild card domains.
 
 ## Usage guidelines and restrictions
 
@@ -15,7 +15,7 @@ Now, you can configure wildcard DNS domains on a Citrix ADC with Citrix ingress 
 
 ## Wildcard DNS CRD definition
 
-The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at [wildcarddnsentry.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml). The **Wildcard DNS CRD provides** attributes for the various options that are required to configure wildcard DNS entries on Citrix ADC.
+The Wildcard DNS CRD is available in the Citrix ingress controller GitHub repo at [wildcarddnsentry.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/wildcard-dns/wildcarddnsentry.yaml). The **Wildcard DNS CRD provides** attributes for the various options that are required to configure wildcard DNS entries on Netscaler.
 
 The following are the attributes provided in the Wildcard DNS CRD:
 
@@ -41,7 +41,7 @@ Perform the following to deploy the Wildcard DNS CRD:
 
 After you have deployed the Wildcard DNS CRD provided by Citrix in the Kubernetes cluster, you can define the wildcard DNS related configuration in a `yaml` file. In the `.yaml` file, use `wildcarddnsentry` in the kind field and in the `spec` section add the Wildcard DNS CRD attributes based on your requirement for the policy configuration.
 
-The following is a sample YAML file definition that configures a SOA record, NS record, DNS zone, and address and AAAA Records on Citrix ADC.
+The following is a sample YAML file definition that configures a SOA record, NS record, DNS zone, and address and AAAA Records on Netscaler.
 
 ```
 apiVersion:

@@ -26,7 +26,7 @@ spec:
         # Set kube api-server URL
         - name: "kubernetes_url"
           value: "https://10.x.x.x:6443"
-        # Set Citrix ADC Management IP
+        # Set Netscaler Management IP
         - name: "NS_IP"
           value: "10.x.x.x"
         # Set log level

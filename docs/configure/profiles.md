@@ -1,16 +1,16 @@
-# Configure HTTP, TCP, or SSL profiles on Citrix ADC
+# Configure HTTP, TCP, or SSL profiles on Netscaler
 
-Configurations such as, HTTP, TCP, or SSL for a Citrix ADC appliance can be specified using individual entities such as [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#sample-http-configurations), [TCP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html), or [SSL profile](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.html) respectively. The profile is a collection of settings pertaining to the individual protocols, for example, HTTP profile is a collection of HTTP settings. It offers ease of configuration and flexibility. Instead of configuring the settings on each entity you can configure them in a profile and bind the profile to all the entities that the settings apply to.
+Configurations such as, HTTP, TCP, or SSL for a Netscaler appliance can be specified using individual entities such as [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#sample-http-configurations), [TCP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html), or [SSL profile](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.html) respectively. The profile is a collection of settings pertaining to the individual protocols, for example, HTTP profile is a collection of HTTP settings. It offers ease of configuration and flexibility. Instead of configuring the settings on each entity you can configure them in a profile and bind the profile to all the entities that the settings apply to.
 
-Citrix ingress controller enables you to configure HTTP, TCP, or SSL related configuration on the Ingress Citrix ADC using profiles.
+Citrix ingress controller enables you to configure HTTP, TCP, or SSL related configuration on the Ingress Netscaler using profiles.
 
-## Understand Citrix ADC configuration in Kubernetes environment
+## Understand Netscaler configuration in Kubernetes environment
 
-In a Kubernetes environment, the Ingress Citrix ADC uses [Content Switching (CS)](https://docs.citrix.com/en-us/citrix-adc/13/content-switching.html) virtual server as the front end for external traffic. That is, it is the entity that receives the requests from the client. After processing the request, the CS virtual server passes the request data to a [load balancing (LB)](https://docs.citrix.com/en-us/citrix-adc/13/load-balancing.html) entity. The LB virtual server and the associated service group processes the request data and then forwards it to the appropriate app (microservice).
+In a Kubernetes environment, the Ingress Netscaler uses [Content Switching (CS)](https://docs.citrix.com/en-us/citrix-adc/13/content-switching.html) virtual server as the front end for external traffic. That is, it is the entity that receives the requests from the client. After processing the request, the CS virtual server passes the request data to a [load balancing (LB)](https://docs.citrix.com/en-us/citrix-adc/13/load-balancing.html) entity. The LB virtual server and the associated service group processes the request data and then forwards it to the appropriate app (microservice).
 
-You need to have a separate **front end configuration** for the entities that receive the traffic from the client (highlighted as **Client Plane** in the diagram) and a **back end configuration** for the entities that forward the traffic from the Citrix ADC to the microservices in Kubernetes (highlighted as **Server Plane** in the diagram).
+You need to have a separate **front end configuration** for the entities that receive the traffic from the client (highlighted as **Client Plane** in the diagram) and a **back end configuration** for the entities that forward the traffic from the Netscaler to the microservices in Kubernetes (highlighted as **Server Plane** in the diagram).
 
-![Citrix ADC configuration](../media/adc-deployment.png)
+![Netscaler configuration](../media/adc-deployment.png)
 
 The Citrix ingress controller provides individual smart annotations for the front end and back-end configurations that you can use based on your requirement.
 
@@ -18,18 +18,18 @@ The Citrix ingress controller provides individual smart annotations for the fron
 
 An [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#sample-http-configurations) is a collection of HTTP settings. A default HTTP profile (`nshttp_default_profile`) is configured to set the HTTP configurations that are applied by default, globally to all services and virtual servers.
 
-The Citrix ingress controller provides the following two smart annotations for HTTP profile. You can use these annotations to define the HTTP settings for the Citrix ADC. When you deploy an ingress that includes these annotations, the Citrix ingress controller creates an HTTP profile derived from the default HTTP profile (`nshttp_default_profile`) configured on the Citrix ADC. Then, it applies the parameters that you have provided in the annotations to the new HTTP profile and applies the profile to the Citrix ADC.
+The Citrix ingress controller provides the following two smart annotations for HTTP profile. You can use these annotations to define the HTTP settings for the Netscaler. When you deploy an ingress that includes these annotations, the Citrix ingress controller creates an HTTP profile derived from the default HTTP profile (`nshttp_default_profile`) configured on the Netscaler. Then, it applies the parameters that you have provided in the annotations to the new HTTP profile and applies the profile to the Netscaler.
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
 | `ingress.citrix.com/frontend-httpprofile` | Use this annotation to create the front-end HTTP profile (**Client Plane**) | `ingress.citrix.com/frontend-httpprofile: '{"dropinvalreqs":"enabled", "websocket" : "enabled"}'`  |
-| `ingress.citrix.com/backend-httpprofile` | Use this annotation to create the back-end HTTP profile (**Server Plane**). </br>**Note:** Ensure that you manually enable the HTTP related global parameters on the Citrix ADC. </br> For example, to use HTTP2 at the back end (**Server Plane**), ensure that you can enable `HTTP2Serverside` global parameter in the Citrix ADC. For more information, see [Configurating HTTP2](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations/configuring-http2.html). | `ingress.citrix.com/backend-httpprofile: '{"app-1": {"dropinvalreqs":"enabled", "websocket" : "enabled"}}'`  |
+| `ingress.citrix.com/backend-httpprofile` | Use this annotation to create the back-end HTTP profile (**Server Plane**). </br>**Note:** Ensure that you manually enable the HTTP related global parameters on the Netscaler. </br> For example, to use HTTP2 at the back end (**Server Plane**), ensure that you can enable `HTTP2Serverside` global parameter in the Netscaler. For more information, see [Configurating HTTP2](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations/configuring-http2.html). | `ingress.citrix.com/backend-httpprofile: '{"app-1": {"dropinvalreqs":"enabled", "websocket" : "enabled"}}'`  |
 
 ## TCP profile
 
 A [TCP profile](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html) is a collection of TCP settings. A default TCP profile (`nstcp_default_profile`) is configured to set the TCP configurations that is applied by default, globally to all services and virtual servers.
 
-The Citrix ingress controller provides the following two smart annotations for TCP profile. You can use these annotations to define the TCP settings for the Citrix ADC. When you deploy an ingress that includes these annotations, the Citrix ingress controller creates a TCP profile derived from the default TCP profile (`nstcp_default_profile`) configured on the Citrix ADC. Then, it applies the parameters that you have provided in the annotations to the new TCP profile and applies the profile to the Citrix ADC.
+The Citrix ingress controller provides the following two smart annotations for TCP profile. You can use these annotations to define the TCP settings for the Netscaler. When you deploy an ingress that includes these annotations, the Citrix ingress controller creates a TCP profile derived from the default TCP profile (`nstcp_default_profile`) configured on the Netscaler. Then, it applies the parameters that you have provided in the annotations to the new TCP profile and applies the profile to the Netscaler.
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
@@ -42,14 +42,14 @@ An [SSL profile](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.ht
 
 ### Prerequisites
 
-On the Citrix ADC, by default, SSL profile is not enable on the Ingress Citrix ADC. Ensure that you manually enable SSL profile on the Citrix ADC. Enabling the SSL profile overrides all the existing SSL related setting on the Citrix ADC, for detailed information on SSL profiles, see [SSL profiles](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.html).
+On the Netscaler, by default, SSL profile is not enable on the Ingress Netscaler. Ensure that you manually enable SSL profile on the Netscaler. Enabling the SSL profile overrides all the existing SSL related setting on the Netscaler, for detailed information on SSL profiles, see [SSL profiles](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-profiles.html).
 
 SSL profiles are classified into two categories:
 
 -  **Front end profiles**, containing parameters applicable to the front-end entity. That is, they apply to the entity that receives requests from a client.
 -  **Back-end profiles**, containing parameters applicable to the back-end entity. That is, they apply to the entity that sends client requests to a server.
 
-Once you enable SSL profiles on the Citrix ADC, a default front end profile (`ns_default_ssl_profile_frontend`) is applied to the SSL virtual server and a default back-end profile (`ns_default_ssl_profile_backend`) is applied to the service or service group on the Citrix ADC.
+Once you enable SSL profiles on the Netscaler, a default front end profile (`ns_default_ssl_profile_frontend`) is applied to the SSL virtual server and a default back-end profile (`ns_default_ssl_profile_backend`) is applied to the service or service group on the Netscaler.
 
 The Citrix ingress controller provides the following two smart annotations for SSL profile. You can use these annotations to customize the default front end profile (`ns_default_ssl_profile_frontend`) and back-end profile (`ns_default_ssl_profile_backend`) based on your requirement:
 
@@ -140,7 +140,7 @@ The ConfigMap variable is used for the front-end profile if it is not overridden
 
 The `FRONTEND_HTTP_PROFILE` variable is used for setting the HTTP options for the front-end virtual server (client plane), unless overridden by the `ingress.citrix.com/frontend-httpprofile` smart annotation in the ingress definition.
 
-To use an existing profile on Citrix ADC or use a built-in HTTP profile.
+To use an existing profile on Netscaler or use a built-in HTTP profile.
 
 ```
 apiVersion: v1
@@ -153,7 +153,7 @@ data:
   FRONTEND_HTTP_PROFILE: |
     preconfigured: my_http_profile
 ```
-In the above example,  `my_http_profile` is pre-existing HTTP profile in citrix ADC
+In the above example,  `my_http_profile` is pre-existing HTTP profile in Netscaler
 
 Alternatively, you can set the profile parameters as specified as follows. See the [HTTP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nshttpprofile/) for all possible key-values.
 
@@ -175,7 +175,7 @@ data:
 
 The `FRONTEND_TCP_PROFILE`  variable is used for setting the TCP options for the front-end virtual server (client side), unless overridden by the `ingress.citrix.com/frontend-tcpprofile` smart annotation in the ingress definition.
 
-To use an existing profile on Citrix ADC or use a built-in TCP profile:
+To use an existing profile on Netscaler or use a built-in TCP profile:
 
 
 ```
@@ -189,9 +189,9 @@ data:
   FRONTEND_TCP_PROFILE: |
     preconfigured: my_tcp_profile
 ```
-In the above example,  `my_tcp_profile` is pre-existing TCP profile in citrix ADC
+In the above example,  `my_tcp_profile` is pre-existing TCP profile in Netscaler
 
-Alternatively, you can set the profile parameters as follows. See the [Citrix ADC TCP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/) for all possible key values.
+Alternatively, you can set the profile parameters as follows. See the [Netscaler TCP profile NITRO documentation](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/) for all possible key values.
 
 ```
 apiVersion: v1
@@ -213,9 +213,9 @@ data:
 The `FRONTEND_SSL_PROFILE` variable is used for setting the SSL options for the front-end virtual server (client side) unless overridden by the `ingress.citrix.com/frontend-sslprofile` smart annotation in the ingress definition.
 
 **Note:**
-For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling the default profile. The default profile is automatically enabled when  Citrix ADC CPX is used as an ingress device. For more information about the SSL default profile, see the [SSL profile documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+For the SSL profile to work correctly, you must enable the default profile in Netscaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling the default profile. The default profile is automatically enabled when  Netscaler CPX is used as an ingress device. For more information about the SSL default profile, see the [SSL profile documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
-To use an existing profile on Citrix ADC or use a built-in SSL profile,
+To use an existing profile on Netscaler or use a built-in SSL profile,
 
 ```
 apiVersion: v1
@@ -228,7 +228,7 @@ data:
   FRONTEND_SSL_PROFILE: |
     preconfigured: my_ssl_profile
 ```
-In the above example,  `my_ssl_profile` is the pre-existing SSL profile in citrix ADC.
+In the above example,  `my_ssl_profile` is the pre-existing SSL profile in Netscaler.
 
 **Note:**
 Default front end profile (`ns_default_ssl_profile_frontend`) is not supported using FRONTEND_SSL_PROFILE.preconfigured variable.
@@ -249,7 +249,7 @@ data:
       hsts: 'ENABLED'
 ```
 
-The following example shows binding SSL cipher groups to the SSL profile. The order is as specified in the list with the higher priority is provided to the first in the list and so on. You can use any SSL ciphers available in Citrix ADC or user-created cipher groups in this field. For information about the list of cyphers available in the Citrix ADC, see [Ciphers in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
+The following example shows binding SSL cipher groups to the SSL profile. The order is as specified in the list with the higher priority is provided to the first in the list and so on. You can use any SSL ciphers available in Netscaler or user-created cipher groups in this field. For information about the list of cyphers available in the Netscaler, see [Ciphers in Netscaler](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
 
 ```
 apiVersion: v1
@@ -334,21 +334,21 @@ spec:
   - secretName: hotdrink.secret
 ```
 
-## Using built-in or existing user-defined profiles on the Ingress Citrix ADC
+## Using built-in or existing user-defined profiles on the Ingress Netscaler
 
-You can use the individual smart annotations to configure the built-in profiles or existing user-defined profiles on the Ingress Citrix ADC for the front end and back-end configurations based on your requirement. For more information on built-in profiles, see [Built-in TCP Profiles](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html#built-in-tcp-profiles) and [Built-in HTTP profiles](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#built-in-http-profiles).
+You can use the individual smart annotations to configure the built-in profiles or existing user-defined profiles on the Ingress Netscaler for the front end and back-end configurations based on your requirement. For more information on built-in profiles, see [Built-in TCP Profiles](https://docs.citrix.com/en-us/citrix-adc/13/system/tcp-configurations.html#built-in-tcp-profiles) and [Built-in HTTP profiles](https://docs.citrix.com/en-us/citrix-adc/13/system/http-configurations.html#built-in-http-profiles).
 
-For the front end configuration, you can provide the name of the built-in or existing user-defined profiles on the Ingress Citrix ADC. The following is a sample ingress annotation:
+For the front end configuration, you can provide the name of the built-in or existing user-defined profiles on the Ingress Netscaler. The following is a sample ingress annotation:
 
     ingress.citrix.com/frontend-httpprofile: "http_preconf_profile1"
 
-Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix ADC.
+Where, 'http_preconf_profile1' is the profile that exists on the Ingress Netscaler.
 
-For the back-end configuration, you must provide the name of the built-in or existing profile on the Ingress Citrix ADC and the back-end service name. The following is a sample ingress annotation:
+For the back-end configuration, you must provide the name of the built-in or existing profile on the Ingress Netscaler and the back-end service name. The following is a sample ingress annotation:
 
     ingress.citrix.com/backend-httpprofile: '{"citrix-svc": "http_preconf_profile1"}'
 
-Where, 'http_preconf_profile1' is the profile that exists on the Ingress Citrix ADC and `citrix-svc` is the back-end service name.
+Where, 'http_preconf_profile1' is the profile that exists on the Ingress Netscaler and `citrix-svc` is the back-end service name.
 
 **Sample HTTP profile:**
 
@@ -482,7 +482,7 @@ To create SSL, TCP, and HTTP profiles and bind them to the defined Ingress resou
 
 This example shows how to add a single SNI certificate.
 
-**Note:** For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+**Note:** For the SSL profile to work correctly, you must enable the default profile in Netscaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
 1. Define the front-end ingress resource with the required profiles. In this Ingress resource, back-end and TLS is not defined.
 
@@ -608,11 +608,11 @@ If multiple SNI certificates need to be bound to the front-end VIP, following is
 
 This example shows how to bind SSL cipher group.
 
-**Note:** For the SSL profile to work correctly, you must enable the default profile in Citrix ADC using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile.
+**Note:** For the SSL profile to work correctly, you must enable the default profile in Netscaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile.
 
-Set default SSL profile on Citrix ADC using the command `set ssl parameter -defaultProfile ENABLED` before deploying Citrix ingress controller. If you have already deployed Citrix ingress controller, then redeploy it. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+Set default SSL profile on Netscaler using the command `set ssl parameter -defaultProfile ENABLED` before deploying Citrix ingress controller. If you have already deployed Citrix ingress controller, then redeploy it. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
-For information on supported Ciphers on the Citrix ADC appliances, see [Ciphers available on the Citrix ADC appliances](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
+For information on supported Ciphers on the Netscaler appliances, see [Ciphers available on the Netscaler appliances](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
 
 For information about securing cipher, see [securing cipher](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/secure-ingress/#using-cipher-groups).
 

@@ -1,6 +1,6 @@
 # Configure cross-origin resource sharing policies with Citrix ingress controller
 
-Citrix provides a Custom Resource Definition (CRD) called the CORS CRD for Kubernetes. You can use the CORS CRD to configure the cross-origin resource sharing (CORS) policies with Citrix ingress controller on the Citrix ADC.
+Citrix provides a Custom Resource Definition (CRD) called the CORS CRD for Kubernetes. You can use the CORS CRD to configure the cross-origin resource sharing (CORS) policies with Citrix ingress controller on the Netscaler.
 
 ## What is CORS
 
@@ -14,7 +14,7 @@ Before a web browser allowing Javascript to issue a POST to a URL, it performs a
 
 ## CORS CRD definition
 
-The CORS CRD is available in the Citrix ingress controller GitHub repo at: [cors-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/cors/cors-crd.yaml). The CORS CRD provides attributes for the various options that are required to define the CORS policy on the Ingress Citrix ADC that acts as an API gateway. The required attributes include: `servicenames`, `allow_origin`, `allow_methods`, and `allow_headers`.
+The CORS CRD is available in the Citrix ingress controller GitHub repo at: [cors-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/cors/cors-crd.yaml). The CORS CRD provides attributes for the various options that are required to define the CORS policy on the Ingress Netscaler that acts as an API gateway. The required attributes include: `servicenames`, `allow_origin`, `allow_methods`, and `allow_headers`.
 
 The following are the attributes provided in the CORS CRD:
 
@@ -49,7 +49,7 @@ Perform the following to deploy the CORS CRD:
 
 After you have deployed the CORS CRD provided by Citrix in the Kubernetes cluster, you can define the CORS policy configuration in a `.yaml` file. In the `.yaml` file, use `corspolicy` in the kind field and in the `spec` section add the CORS CRD attributes based on your requirement for the policy configuration.
 
-The following YAML file applies the configured policy to the services listed in the servicenames field. Citrix ADC responds with a 200 OK response code for the pre-flight request if the origin is one of the `allow_origins` ["random1234.com", "hotdrink.beverages.com"]. The response includes configured `allow_methods`, `allow_headers`, and `max_age`.
+The following YAML file applies the configured policy to the services listed in the servicenames field. Netscaler responds with a 200 OK response code for the pre-flight request if the origin is one of the `allow_origins` ["random1234.com", "hotdrink.beverages.com"]. The response includes configured `allow_methods`, `allow_headers`, and `max_age`.
 
 ```yml
 apiVersion: citrix.com/v1beta1
@@ -80,4 +80,4 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
     user@master:~/cors$ kubectl create -f corspolicy-example.yaml
     corspolicy.citrix.com/corspolicy-example created
 
-The Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
+The Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.

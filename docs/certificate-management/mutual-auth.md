@@ -6,7 +6,7 @@ In mutual authentication, two sides of a communication channel verify the identi
 
 Perform the following steps to apply mutual authentication for Ingress:
 
-1.  Enable the default SSL profile on Citrix ADC.
+1.  Enable the default SSL profile on Netscaler.
 
         set ssl parameter -defaultProfile ENABLED
 
@@ -62,7 +62,7 @@ Perform the following steps to apply mutual authentication for Ingress:
 
       -  An application named `apache` is used as the back-end service. You can replace it with the application that you are using.
 
-      -  `wildcard-secret` is the associated Kubernetes secret holding the client certificate. This certificate is used when Citrix ADC acts as a client to send the request to the back end Apache service.
+      -  `wildcard-secret` is the associated Kubernetes secret holding the client certificate. This certificate is used when Netscaler acts as a client to send the request to the back end Apache service.
 
       -  The `tls-ca` secret holds the CA certificate that is used for verification of the client
 certificate
@@ -87,8 +87,8 @@ certificate
 
 -  `ingress.citrix.com/secure-backend: "True"`: Enables secure back end communication to the service.
 
--  `ingress.citrix.com/ca-secret`: Provides a CA certificate for the client certificate verification. This certificate is bound to the front-end SSL virtual server in Citrix ADC.
+-  `ingress.citrix.com/ca-secret`: Provides a CA certificate for the client certificate verification. This certificate is bound to the front-end SSL virtual server in Netscaler.
 
--  `ingress.citrix.com/backend-secret`: Use this annotation if the back-end communication between the Citrix ADC and your workload is on an encrypted channel, and you need the client authentication in your workload. This annotation is bound to the back end SSL service group.
+-  `ingress.citrix.com/backend-secret`: Use this annotation if the back-end communication between the Netscaler and your workload is on an encrypted channel, and you need the client authentication in your workload. This annotation is bound to the back end SSL service group.
 
--  `ingress.citrix.com/backend-ca-secret`: Enables server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Citrix ADC.
+-  `ingress.citrix.com/backend-ca-secret`: Enables server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Netscaler.

@@ -1,6 +1,6 @@
 # Entity name change
 
-While adding the Citrix ADC entities, the Citrix ingress controller maintains unique names per Ingress, service or namespace. Sometimes, it results in Citrix ADC entities with large names even exceeding the name limits in Citrix ADC.
+While adding the Netscaler entities, the Citrix ingress controller maintains unique names per Ingress, service or namespace. Sometimes, it results in Netscaler entities with large names even exceeding the name limits in Netscaler.
 
 Now, the naming format in the Citrix ingress controller is updated to shorten the entity names. In the updated naming format, a part of the entity name is hashed and all the necessary information is provided as part of the entity comments.
 

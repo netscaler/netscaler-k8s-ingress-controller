@@ -4,21 +4,21 @@ You can deploy the Citrix ingress controller in two ways:
 
 ## Citrix ingress controller as a standalone pod
 
-In this deployment, the Citrix ingress controller runs as a pod that monitors the Kubernetes API server and configures Citrix ADC VPX and MPX.
+In this deployment, the Citrix ingress controller runs as a pod that monitors the Kubernetes API server and configures Netscaler VPX and MPX.
 
 **YAML file for deployment:** ***citrix-k8s-ingress-controller.yaml***
 
-## Citrix ADC CPX with the inbuilt Citrix ingress controller
+## Netscaler CPX with the inbuilt Citrix ingress controller
 
-In this deployment, you deploy Citrix ADC CPX with a built-in Citrix ingress controller agent that configures the Citrix ADC CPX. Citrix ADC CPX runs as pod and does North-South load balancing.
+In this deployment, you deploy Netscaler CPX with a built-in Citrix ingress controller agent that configures the Netscaler CPX. Netscaler CPX runs as pod and does North-South load balancing.
 
 **YAML file for deployment:** ***citrix-k8s-cpx-ingress.yaml***
 
-## Deploy Citrix ADC CPX with inbuilt ingress controller on Kubernetes
+## Deploy Netscaler CPX with inbuilt ingress controller on Kubernetes
 
-Perform the following step to deploy a Citrix ADC CPX along with an inbuilt Ingress controller.
+Perform the following step to deploy a Netscaler CPX along with an inbuilt Ingress controller.
 
-   1. Apply the following command to deploy a Citrix ADC CPX with the inbuilt ingress controller.
+   1. Apply the following command to deploy a Netscaler CPX with the inbuilt ingress controller.
       ```
           kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
       ```
@@ -42,7 +42,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
     * Service account
     * Citrix ingress controller pod creation
    
-    First three sections are required for the Citrix ingress controller to monitor Kubernetes events. No changes are required for these sections. The next section defines the environment variables required for the Citrix ingress controller to configure the Citrix ADC.
+    First three sections are required for the Citrix ingress controller to monitor Kubernetes events. No changes are required for these sections. The next section defines the environment variables required for the Citrix ingress controller to configure the Netscaler.
 
  2. Edit the YAML file and update the following environment variables.
 
@@ -50,9 +50,9 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <details>
        <summary>NS_IP</summary>
 
-         This variable is a must for the Citrix ingress controller to configure the Citrix ADC appliance. Provide,
+         This variable is a must for the Citrix ingress controller to configure the Netscaler appliance. Provide,
          ```
-            NSIP for standalone Citrix ADC
+            NSIP for standalone Netscaler
             SNIP for HA (Management access has to be enabled) 
             CLIP for Cluster
          
@@ -61,8 +61,8 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <details>
        <summary>NS_USER and NS_PASSWORD</summary>
 
-         This variable is for authenticating with Citrix ADC if it has non-default user name and password. You can directly pass user name and password or use Kubernetes secrets.
-         For configuring a non-default Citrix ADC user name and password, see [Create a system user account for the Citrix ingress controller in Citrix ADC](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+         This variable is for authenticating with Netscaler if it has non-default user name and password. You can directly pass user name and password or use Kubernetes secrets.
+         For configuring a non-default Netscaler user name and password, see [Create a system user account for the Citrix ingress controller in Netscaler](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
          Given YAML uses Kubernetes secrets. The following steps help to create secrets to be used in YAML.
 
@@ -102,7 +102,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        <summary>NS_PROTOCOL and NS_PORT</summary>
                                 
-         These environment variables define the protocol and port used by the Citrix ingress controller to communicate with the Citrix ADC.
+         These environment variables define the protocol and port used by the Citrix ingress controller to communicate with the Netscaler.
 
          By default NS_PROTOCOL is HTTPS and NS_PORT is 443.
        </details>
@@ -111,7 +111,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
          [Ingress class](../../docs/configure/ingress-classes.md) is used when multiple Ingress load balancers are used to load balance different ingress resources.
 
-         The Citrix ingress controller configures Citrix ADC only with the ingress classes listed under --ingress-classes
+         The Citrix ingress controller configures Netscaler only with the ingress classes listed under --ingress-classes
 
                      args:
                           - --ingress-classes
@@ -134,7 +134,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        ```
        - name: "NS_VIP"
-         value: "<Virtual IP address of Citrix ADC>"
+         value: "<Virtual IP address of Netscaler>"
        ```
 
        </details>
@@ -142,9 +142,9 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        <summary>NS_APPS_NAME_PREFIX</summary>
 
-       The Citrix ingress controller uses the provided prefix to form the application entity name in the Citrix ADC. This variable is useful in scenarios where a Citrix ADC load balances applications from different clusters. Prefix allows you to segregate the Kubernetes cluster configuration.
+       The Citrix ingress controller uses the provided prefix to form the application entity name in the Netscaler. This variable is useful in scenarios where a Netscaler load balances applications from different clusters. Prefix allows you to segregate the Kubernetes cluster configuration.
 
-       By default, the Citrix ingress controller adds **k8s** as a prefix to the Citrix ADC entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed eight characters.
+       By default, the Citrix ingress controller adds **k8s** as a prefix to the Netscaler entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed eight characters.
        **Usage:**
 
        ```
@@ -156,14 +156,14 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        
        <summary>NS_MGMT_USER</summary>
 
-        This is a Citrix ADC CPX specific environment variable that allows you to register the Citrix ADC CPX instances, installed on a Docker host, to Citrix ADM if Citrix ADM does not have default credentials. This environment variable is supported from Citrix ADC CPX 13.0 and later releases.
+        This is a Netscaler CPX specific environment variable that allows you to register the Netscaler CPX instances, installed on a Docker host, to Citrix ADM if Citrix ADM does not have default credentials. This environment variable is supported from Netscaler CPX 13.0 and later releases.
 
        </details>
        <details>
         
        <summary>NS_MGMT_PASS</summary>
 
-        This is a Citrix ADC CPX specific environment variable that allows you to register the Citrix ADC CPX instances, installed on a Docker host, to Citrix ADM if Citrix ADM does not have default credentials. This environment variable is supported from Citrix ADC CPX 13.0 and later releases.
+        This is a Netscaler CPX specific environment variable that allows you to register the Netscaler CPX instances, installed on a Docker host, to Citrix ADM if Citrix ADM does not have default credentials. This environment variable is supported from Netscaler CPX 13.0 and later releases.
 
        </details>
         
@@ -179,25 +179,25 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
         
        <summary>NS_MGMT_SERVER</summary>
 
-        Specifies the Citrix ADM server or the agent IP address that manages the Citrix ADC CPX.
+        Specifies the Citrix ADM server or the agent IP address that manages the Netscaler CPX.
         
        </details>
        <details>
         
        <summary>NS_MGMT_FINGER_PRINT</summary>
 
-        Specifies the fingerprint of the Citrix ADM server or the agent IP address that manages Citrix ADC CPX.
+        Specifies the fingerprint of the Citrix ADM server or the agent IP address that manages Netscaler CPX.
        </details>
         
        <details>
        <summary>NS_HTTP_PORT</summary>
 
-        Specifies the port on which the HTTP service is available in Citrix ADC CPX. It is used by Citrix ADM to trigger NITRO calls to Citrix ADC CPX.
+        Specifies the port on which the HTTP service is available in Netscaler CPX. It is used by Citrix ADM to trigger NITRO calls to Netscaler CPX.
        </details>
        <details>
        <summary>NS_HTTPS_PORT</summary>
 
-        Specify the port on which HTTPS service is available in Citrix ADC CPX. It is used by Citrix ADM to trigger NITRO calls to Citrix ADC CPX.
+        Specify the port on which HTTPS service is available in Netscaler CPX. It is used by Citrix ADM to trigger NITRO calls to Netscaler CPX.
        </details>
        <details>
        <summary>LOGSTREAM_COLLECTOR_IP</summary>
@@ -206,23 +206,23 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        </details>
        <details>
        <summary>NS_DNS_NAMESERVER</summary>
-        Enables adding DNS nameservers on Citrix ADC VPX.
+        Enables adding DNS nameservers on Netscaler VPX.
        </details>
 
        <details>
        <summary>NS_CONFIG_DNS_REC</summary>
-        Enables adding DNS records on Citrix ADC for Ingress resources. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
+        Enables adding DNS records on Netscaler for Ingress resources. This variable is configured at the boot time and cannot be changed at runtime. Possible values are true or false. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
        </details>
        
        <details>
        <summary>NS_SVC_LB_DNS_REC</summary>
-        Enables adding DNS records on Citrix ADC for services of type LoadBalancer. Possible values are true or false. This variable is configured at the boot time and cannot be changed at runtime. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
+        Enables adding DNS records on Netscaler for services of type LoadBalancer. Possible values are true or false. This variable is configured at the boot time and cannot be changed at runtime. The default value is `false` and you need to set it as `true` to enable the DNS server configuration.
        </details>
       
        <details>
        <summary> OPTIMIZE_ENDPOINT_BINDING</summary>
       
-       Enables or disables binding of back-end endpoints to a service group in a single API call. This variable is recommended when there are a large number of endpoints (pods) per application. Acceptable values are `True` and `False`. This environment variable is applicable only for Citrix ADC release 13.0–45.7 and higher versions.
+       Enables or disables binding of back-end endpoints to a service group in a single API call. This variable is recommended when there are a large number of endpoints (pods) per application. Acceptable values are `True` and `False`. This environment variable is applicable only for Netscaler release 13.0–45.7 and higher versions.
        </details>
 
        <details>
@@ -245,14 +245,14 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
     - **Static routing**:
 
-      For seamless functioning of services deployed in the Kubernetes cluster, the Citrix ADC ingress device should be able to reach the underlying overlay network over which pods are running. The
-    `feature-node-watch` argument of the Citrix ingress controller can be used for automatic route configuration on the Citrix ADC towards the pod network.
+      For seamless functioning of services deployed in the Kubernetes cluster, the Netscaler ingress device should be able to reach the underlying overlay network over which pods are running. The
+    `feature-node-watch` argument of the Citrix ingress controller can be used for automatic route configuration on the Netscaler towards the pod network.
     See, [Network Configuration](../../docs/network/staticrouting.md) for more information. 
 
       By default, `feature-node-watch` is false. It must be explicitly set to true if auto route configuration is required.
 
     - **Citrix node controller**:
 
-      If the Kubernetes cluster and the Ingress Citrix ADC are in different subnets, you cannot establish a route between them using static routing. This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Citrix ADC.  
+      If the Kubernetes cluster and the Ingress Netscaler are in different subnets, you cannot establish a route between them using static routing. This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Netscaler.  
 
-      The [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) is a microservice that you can use to create a VXLAN based overlay network between the cluster and the Ingress Citrix ADC device.
+      The [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) is a microservice that you can use to create a VXLAN based overlay network between the cluster and the Ingress Netscaler device.

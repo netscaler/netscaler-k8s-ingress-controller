@@ -22,11 +22,11 @@ Ensure that you have:
 
 -  The domain for which the certificate is requested is publicly accessible.
 -  Enabled RBAC on your Kubernetes cluster.
--  Deployed Citrix ADC MPX, VPX, or CPX deployed in Tier 1 or Tier 2 deployment model.
+-  Deployed Netscaler MPX, VPX, or CPX deployed in Tier 1 or Tier 2 deployment model.
 
-    In the Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC). The Citrix ingress controller running in Kubernetes cluster configures the virtual services for services running on Kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
+    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Citrix ingress controller running in Kubernetes cluster configures the virtual services for services running on Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
 
-    In the Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster. This service is created to forward the traffic to Citrix ADC CPX instances running in the Kubernetes cluster. Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
+    In the Tier 2 deployment model, a TCP service is configured on the Netscaler (VPX/MPX) running outside the Kubernetes cluster. This service is created to forward the traffic to Netscaler CPX instances running in the Kubernetes cluster. Netscaler CPX ends the SSL session and load-balances the traffic to actual service pods.
 
 - Deployed the Citrix ingress controller. Click [here](../deployment-topologies.md#deployment-topologies.html) for various deployment scenarios.
 
@@ -112,7 +112,7 @@ Perform the following to deploy a sample web application:
         NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
         kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-5. Expose this service to outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+5. Expose this service to outside world by creating an Ingress that is deployed on Netscaler CPX or VPX as Content switching virtual server.
 
     **Note:** Ensures that you change the value of `kubernetes.io/ingress.class` to your ingress class on which the Citrix ingress controller is started.
 
@@ -146,7 +146,7 @@ Perform the following to deploy a sample web application:
 ```
 
       **Note:**
-        You must change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
+        You must change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Netscaler CPX or VPX.
 
 6.  Deploy the Ingress using the following command:
 
@@ -157,7 +157,7 @@ Perform the following to deploy a sample web application:
         NAME    HOSTS               ADDRESS   PORTS   AGE
         kuard   kuard.example.com             80      7s
 
-7.  Verify that the Ingress is configured on Citrix ADC CPX or VPX by using the following command:
+7.  Verify that the Ingress is configured on Netscaler CPX or VPX by using the following command:
 
         $ kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
         root@cpx-ingress-55c88788fd-qd4rg:/# cli_script.sh 'show cs vserver'
@@ -590,7 +590,7 @@ Alternatively, you can explicitly create a certificate custom resource definitio
            Normal  Requested  11m    cert-manager  Created new CertificateRequest resource "kuard-example-tls-3030465986"
            Normal  Issued     7m21s  cert-manager  Certificate issued successfully
 
-## Verify certificate in Citrix ADC
+## Verify certificate in Netscaler
 
 Letsencrypt CA successfully validated the domain and issued a new certificate for the domain. A `kubernetes.io/tls` secret is created with the `secretName` specified in the `tls:` field of the Ingress. Also, cert-manager automatically initiates a renewal, 30 days before the expiry.
 
@@ -603,9 +603,9 @@ For HTTP challenge, cert-manager creates a temporary Ingress resource to route t
         NAME                TYPE                DATA   AGE
         kuard-example-tls   kubernetes.io/tls   3      30m
 
-    The Citrix ingress controller picks up the secret and binds the certificate to the content switching virtual server on the Citrix ADC CPX. If there are any intermediate CA certificates, it is automatically linked to the server certificate and presented to the client during SSL negotiation.
+    The Citrix ingress controller picks up the secret and binds the certificate to the content switching virtual server on the Netscaler CPX. If there are any intermediate CA certificates, it is automatically linked to the server certificate and presented to the client during SSL negotiation.
 
-2. Log on to Citrix ADC CPX and verify if the certificate is bound to the SSL virtual server.
+2. Log on to Netscaler CPX and verify if the certificate is bound to the SSL virtual server.
 
         % kubectl exec -it cpx-ingress-55c88788fd-n2x9r bash -c cpx-ingress
         Defaulting container name to cpx-ingress.
@@ -816,6 +816,6 @@ If both `tls.crt` and `tls.key` are populated in the Kubernetes secret, certific
 
 ### Analyze logs from the Citrix ingress controller
 
-If a Kubernetes secret is generated and complete, but it is not uploaded to the Citrix ADC, you can analyze logs from the Citrix ingress controller using the following command.
+If a Kubernetes secret is generated and complete, but it is not uploaded to the Netscaler, you can analyze logs from the Citrix ingress controller using the following command.
 
     % kubectl logs -f cpx-ingress-685c8bc976-zgz8q

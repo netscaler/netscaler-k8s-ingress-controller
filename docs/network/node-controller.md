@@ -1,12 +1,12 @@
-# Establish network between Kubernetes nodes and Ingress Citrix ADC using Citrix node controller
+# Establish network between Kubernetes nodes and Ingress Netscaler using Citrix node controller
 
 In Kubernetes environments, when you expose the services for external access through the Ingress device you need to appropriately configure the network between the Kubernetes nodes and the Ingress device.
 
 Configuring the network is challenging as the pods use private IP addresses based on the CNI framework. Without proper network configuration, the Ingress device cannot access these private IP addresses. Also, manually configuring the network to ensure such reachability is cumbersome in Kubernetes environments.
 
-Also, if the Kubernetes cluster and the Ingress Citrix ADC are in different subnets, you cannot establish a route between them using [Static routing](staticrouting.md). This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Citrix ADC.
+Also, if the Kubernetes cluster and the Ingress Netscaler are in different subnets, you cannot establish a route between them using [Static routing](staticrouting.md). This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Netscaler.
 
-Citrix provides a [node controller](https://github.com/citrix/citrix-k8s-node-controller) that you can use to create a VXLAN based overlay network between the Kubernetes nodes and the Ingress Citrix ADC as shown in the following diagram:
+Citrix provides a [node controller](https://github.com/citrix/citrix-k8s-node-controller) that you can use to create a VXLAN based overlay network between the Kubernetes nodes and the Ingress Netscaler as shown in the following diagram:
 
 ![CIC with CNC](../media/cic-cnc.png)
 

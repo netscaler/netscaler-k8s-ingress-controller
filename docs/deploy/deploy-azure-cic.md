@@ -1,6 +1,6 @@
-# Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX
+# Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Netscaler VPX
 
-This topic explains how to deploy the Citrix ingress controller with Citrix ADC VPX in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy the Citrix ingress controller with Citrix ADC VPX.
+This topic explains how to deploy the Citrix ingress controller with Netscaler VPX in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy the Citrix ingress controller with Netscaler VPX.
 
 The procedure to deploy for both AKS and Azure VM is the same. However, if you are configuring Kubernetes on Azure VMs you need to deploy the CNI plug-in for the Kubernetes cluster.
 
@@ -19,10 +19,10 @@ The following is the sample topology used in this deployment.
 
 ![single-tier](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/docs/media/singletopology.png)
 
-## Get a Citrix ADC VPX instance from Azure Marketplace
+## Get a Netscaler VPX instance from Azure Marketplace
 
-You can create Citrix ADC VPX from the Azure Marketplace.
-For more information on how to create a Citrix ADC VPX instance from Azure Marketplace, see [Get Citrix ADC VPX from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
+You can create Netscaler VPX from the Azure Marketplace.
+For more information on how to create a Netscaler VPX instance from Azure Marketplace, see [Get Netscaler VPX from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
 
 ## Get the Citrix ingress controller from Azure Marketplace
 
@@ -40,24 +40,24 @@ az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-
 
 Perform the following steps to deploy the Citrix ingress controller.
 
-1. Create Citrix ADC VPX login credentials using Kubernetes secret.
+1. Create Netscaler VPX login credentials using Kubernetes secret.
 
     
         kubectl create secret  generic nslogin --from-literal=username=<azure-vpx-instance-username> --from-literal=password=<azure-vpx-instance-password>
     
-   **Note:** The Citrix ADC VPX user name and password should be the same as the credentials set while creating Citrix ADC VPX on Azure.
+   **Note:** The Netscaler VPX user name and password should be the same as the credentials set while creating Netscaler VPX on Azure.
 
-2. Using SSH, configure a SNIP in the Citrix ADC VPX, which is the secondary IP address of the Citrix ADC VPX. This step is required for the Citrix ADC to interact with pods inside the Kubernetes cluster.
+2. Using SSH, configure a SNIP in the Netscaler VPX, which is the secondary IP address of the Netscaler VPX. This step is required for the Netscaler to interact with pods inside the Kubernetes cluster.
 
    
         add ns ip <snip-vpx-instance-private-ip> <vpx-instance-primary-ip-subnet>
     
 
-   -  `snip-vpx-instance-private-ip` is the dynamic private IP address assigned while adding a SNIP during the Citrix ADC VPX instance creation.
+   -  `snip-vpx-instance-private-ip` is the dynamic private IP address assigned while adding a SNIP during the Netscaler VPX instance creation.
 
-   - `vpx-instance-primary-ip-subnet` is the subnet of the primary private IP address of the Citrix ADC VPX instance.
+   - `vpx-instance-primary-ip-subnet` is the subnet of the primary private IP address of the Netscaler VPX instance.
   
-     To verify the subnet of the private IP address, SSH into the Citrix ADC VPX instance and use the following command.
+     To verify the subnet of the private IP address, SSH into the Netscaler VPX instance and use the following command.
 
     
     
@@ -65,7 +65,7 @@ Perform the following steps to deploy the Citrix ingress controller.
     
 
 
-3. Update the Citrix ADC VPX image URL, management IP, and VIP in the Citrix ingress controller YAML file.
+3. Update the Netscaler VPX image URL, management IP, and VIP in the Citrix ingress controller YAML file.
 
 
    1. Download the Citrix ingress controller YAML file.
@@ -86,7 +86,7 @@ Perform the following steps to deploy the Citrix ingress controller.
               image: "<azure-cic-image-url>"
       
 
-   3. Update the primary IP address of the Citrix ADC VPX in the `cic.yaml` in the following field with the primary private IP address of the Azure VPX instance.
+   3. Update the primary IP address of the Netscaler VPX in the `cic.yaml` in the following field with the primary private IP address of the Azure VPX instance.
 
       
      
@@ -95,7 +95,7 @@ Perform the following steps to deploy the Citrix ingress controller.
             value: "X.X.X.X"
       
 
-    1. Update the Citrix ADC VPX VIP in the `cic.yaml` in the following field with the private IP address of the VIP assigned during VPX Azure instance creation.
+    1. Update the Netscaler VPX VIP in the `cic.yaml` in the following field with the private IP address of the VIP assigned during VPX Azure instance creation.
  
        
 
@@ -133,4 +133,4 @@ Perform the following steps to deploy the Citrix ingress controller.
         <html><body><h1>It works!</h1></body></html>
     
 
-    The response is received from the sample microservice (Apache) which is inside the Kubernetes cluster. Citrix ADC VPX has load-balanced the request.
+    The response is received from the sample microservice (Apache) which is inside the Kubernetes cluster. Netscaler VPX has load-balanced the request.

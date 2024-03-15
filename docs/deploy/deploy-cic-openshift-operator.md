@@ -7,26 +7,26 @@ This topic covers information on how to deploy the Citrix ingress controller usi
 
 ## Deployment options
 
-Based on how you want to use Citrix ADC, there are two ways to deploy the Citrix ingress controller in an OpenShift cluster:
+Based on how you want to use Netscaler, there are two ways to deploy the Citrix ingress controller in an OpenShift cluster:
 
-- As a standalone pod in the Kubernetes cluster: In this mode, you can control the Citrix ADC MPX or VPX appliance deployed outside the cluster.
-- As a sidecar container alongside Citrix ADC CPX in the same pod: In this mode, Citrix ingress controller configures the Citrix ADC CPX.
+- As a standalone pod in the Kubernetes cluster: In this mode, you can control the Netscaler MPX or VPX appliance deployed outside the cluster.
+- As a sidecar container alongside Netscaler CPX in the same pod: In this mode, Citrix ingress controller configures the Netscaler CPX.
 
-## Deploy the Citrix ingress controller as a standalone pod in the OpenShift cluster for Citrix ADC MPX or VPX appliances
+## Deploy the Citrix ingress controller as a standalone pod in the OpenShift cluster for Netscaler MPX or VPX appliances
 
-Using the Citrix ingress controller Operator you can deploy the Citrix ingress controller as a standalone pod in the OpenShift cluster. The Citrix Ingress controller configures the Citrix ADC VPX or MPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology:
+Using the Citrix ingress controller Operator you can deploy the Citrix ingress controller as a standalone pod in the OpenShift cluster. The Citrix Ingress controller configures the Netscaler VPX or MPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology:
 
 ![Topology](../media/vpx_topology.png)
 
 ### Prerequisites
 
 - Deployed [Red Hat OpenShift](https://www.openshift.com) version 4.1 or later.
-- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
-- Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
-    - (Standalone appliances) NSIP - The management IP address of a standalone Citrix ADC appliance. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
-    - (Appliances in High Availability mode) SNIP - The subnet IP address. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
-    -  (Appliances in Clustered mode) CLIP - The cluster management IP (CLIP) address for a clustered Citrix ADC deployment. For more information, see [IP addressing for a cluster](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering/cluster-overview/ip-addressing.html)
-- The user name and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. The Citrix ADC appliance must have a system user account (non-default) with certain privileges so that the Citrix ingress controller can configure the Citrix ADC VPX or MPX appliance. For instructions to create the system user account on Citrix ADC, see [Create System User Account for Citrix ingress controller in Citrix ADC](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc)
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Netscaler CPX collected by the [Netscaler metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
+- Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Netscaler deployment:
+    - (Standalone appliances) NSIP - The management IP address of a standalone Netscaler appliance. For more information, see [IP Addressing in Netscaler](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
+    - (Appliances in High Availability mode) SNIP - The subnet IP address. For more information, see [IP Addressing in Netscaler](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
+    -  (Appliances in Clustered mode) CLIP - The cluster management IP (CLIP) address for a clustered Netscaler deployment. For more information, see [IP addressing for a cluster](https://docs.citrix.com/en-us/citrix-adc/12-1/clustering/cluster-overview/ip-addressing.html)
+- The user name and password of the Netscaler VPX or MPX appliance used as the Ingress device. The Netscaler appliance must have a system user account (non-default) with certain privileges so that the Citrix ingress controller can configure the Netscaler VPX or MPX appliance. For instructions to create the system user account on Netscaler, see [Create System User Account for Citrix ingress controller in Netscaler](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc)
 
   You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
   ```
@@ -85,7 +85,7 @@ Perform the following:
 
    ![Application Service](../media/application_service.png)
 
-4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Citrix ADC VPX in the ingress YAML before applying it in the cluster.
+4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the Netscaler VPX in the ingress YAML before applying it in the cluster.
 
    ![Application Ingress](../media/application_ingress_vpx.png)
 
@@ -126,7 +126,7 @@ Perform the following:
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
 
-   Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the Citrix ADC VPX instance in the `nsIP` parameter and Kubernetes secret created using Citrix ADC VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. You can choose other available parameters as well depending upon your use-case.
+   Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the Netscaler VPX instance in the `nsIP` parameter and Kubernetes secret created using Netscaler VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. You can choose other available parameters as well depending upon your use-case.
 
    After you have updated the values of the required parameters, click **Create**. Ensure your Citrix Ingress Controller is succesfully deployed and initialised.
 
@@ -155,18 +155,18 @@ Perform the following:
    ![Citrix Ingress Controller Deployment Success](../media/uninstall_cic_operator.png)
 
 
-## Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX
+## Deploy the Citrix ingress controller as a sidecar with Netscaler CPX
 
-Using the Citrix ingress controller Operator you can deploy a Citrix ADC CPX with the Citrix ingress controller as a sidecar. The Citrix Ingress controller configures the Citrix ADC CPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology.
+Using the Citrix ingress controller Operator you can deploy a Netscaler CPX with the Citrix ingress controller as a sidecar. The Citrix Ingress controller configures the Netscaler CPX which is deployed as an Ingress or router for an application running in the OpenShift cluster. The following diagram explains the topology.
 
 ![CPX Topology](../media/CPX_cic_topology.png)
 
 ### Prerequisites
 
 - Deployed [Red Hat Openshift](https://www.openshift.com) version 4.1 or later.
-- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Citrix ADC CPX collected by the [Citrix ADC metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Netscaler CPX collected by the [Netscaler metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 
-### Deploy the Citrix ingress controller as a sidecar with Citrix ADC CPX using Operators
+### Deploy the Citrix ingress controller as a sidecar with Netscaler CPX using Operators
 
 Perform the following:
 
@@ -192,7 +192,7 @@ Perform the following:
 
    ![Application CPX Ingress](../media/application_ingress_cpx.png)
 
-5. Navigate to **Operators > OperatorHub**, select the **Citrix ADC CPX with Ingress Controller Operator** and click **Install**.
+5. Navigate to **Operators > OperatorHub**, select the **Netscaler CPX with Ingress Controller Operator** and click **Install**.
 
    ![Operator Hub](../media/operator_hub.png)
 
@@ -200,10 +200,10 @@ Perform the following:
 
    You have the following options to subscribe to the Citrix ingress Controller Operator:
 
-   -  **All namespaces on the cluster (default)** - Allows the Citrix ADC CPX with ingress controller operator to subscribe to every namespace present on the OpenShift cluster and hence allows you to initiate the Citrix ADC CPX from any namespace on the cluster.
-   -  **A specific namespace on the cluster** - Allows the Citrix ADC CPX with ingress controller operator to subscribe to the selected namespace on the OpenShift cluster. You can initiate the Citrix ADC CPX instance on the selected namespace only.
+   -  **All namespaces on the cluster (default)** - Allows the Netscaler CPX with ingress controller operator to subscribe to every namespace present on the OpenShift cluster and hence allows you to initiate the Netscaler CPX from any namespace on the cluster.
+   -  **A specific namespace on the cluster** - Allows the Netscaler CPX with ingress controller operator to subscribe to the selected namespace on the OpenShift cluster. You can initiate the Netscaler CPX instance on the selected namespace only.
 
-   For the demonstration purpose, you can subscribe the Citrix ADC CPX with ingress controller operator to the default namespace.
+   For the demonstration purpose, you can subscribe the Netscaler CPX with ingress controller operator to the default namespace.
 
    ![Subscription](../media/cpx_cic_operator_subscription_1.png)
 
@@ -215,7 +215,7 @@ Perform the following:
 
    ![Application Pod UP and Running](../media/cpx_cic_operator_pod.png)
 
-7. Navigate to **Operators > Installed Operators** and select the **Citrix ADC CPX with Ingress Controller** operator.
+7. Navigate to **Operators > Installed Operators** and select the **Netscaler CPX with Ingress Controller** operator.
 
    ![Application POD and CPX CIC](../media/cpx_cic_installed_operators.png)
 
@@ -223,32 +223,32 @@ Perform the following:
 
    ![Create New](../media/create_cpx_cic_instance.png)
 
-   The Citrix ADC CPX with ingress controller YAML definition is displayed.
+   The Netscaler CPX with ingress controller YAML definition is displayed.
 
    ![Parameter lists](../media/cpx_cic_instance_yaml.png)
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cpx-with-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
 
-   Ensure to set the `license.accept` parameter to `yes`. We will expose Citrix ADC CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. You can choose other available parameters as well depending upon your use-case.
+   Ensure to set the `license.accept` parameter to `yes`. We will expose Netscaler CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. You can choose other available parameters as well depending upon your use-case.
 
-   After you have updated the values of the required parameters, click **Create**. Ensure your Citrix ADC CPX with Ingress Controller is succesfully deployed and initialised.
+   After you have updated the values of the required parameters, click **Create**. Ensure your Netscaler CPX with Ingress Controller is succesfully deployed and initialised.
 
    ![Parameter lists](../media/cpx_cic_instance_deployed.png)
 
-9. Please attach privileged security context constraints to the serviceaccount of Citrix ADC CPX as it runs as privileged pod by using following commands:
-   1. Get the serviceaccount name used the Citrix ADC CPX using following command in the namespace where Citrix ADC CPX has been deployed:
+9. Please attach privileged security context constraints to the serviceaccount of Netscaler CPX as it runs as privileged pod by using following commands:
+   1. Get the serviceaccount name used the Netscaler CPX using following command in the namespace where Netscaler CPX has been deployed:
       ```
       oc get sa
       ```
   
-   2. Attach privileged SCC to the serviceaccount of the Citrix ADC CPX:
+   2. Attach privileged SCC to the serviceaccount of the Netscaler CPX:
       ```
       oc adm policy add-scc-to-user privileged -z <CPX-ServiceAccount-Name>
       ```
 
 10. Navigate to **Workloads > Pods** section and ensure that the **citrix-cpx-with-ingress-controller** pod is up and running.
 
-    ![Citrix ADC CPX with Ingress Controller Deployment Success](../media/cpx_cic_pod.png)
+    ![Netscaler CPX with Ingress Controller Deployment Success](../media/cpx_cic_pod.png)
 
 11. Verify the deployment by sending traffic. Perform the following:
 
@@ -266,11 +266,11 @@ Perform the following:
        <html><body><h1>It works!</h1></body></html>
        ```
 
-#### Delete the Citrix ADC CPX with ingress controller Operator.
-1. Navigate to **Operators > Installed Operators > Citrix ADC CPX with Ingress Controller** operator. Select **CitrixCpxWithIngressController** tab inside. After that select the instance you want to delete and then select its **Delete CitrixCpxWithIngressController** option.
+#### Delete the Netscaler CPX with ingress controller Operator.
+1. Navigate to **Operators > Installed Operators > Netscaler CPX with Ingress Controller** operator. Select **CitrixCpxWithIngressController** tab inside. After that select the instance you want to delete and then select its **Delete CitrixCpxWithIngressController** option.
 
-   ![Citrix ADC CPX with Ingress Controller Deployment Delete](../media/delete_cpx_cic_instance.png)
+   ![Netscaler CPX with Ingress Controller Deployment Delete](../media/delete_cpx_cic_instance.png)
 
 2. Navigate to **Operators > Installed Operators** and select **Uninstall Operator** for **Citrix CPX with Ingress Controller** operator.
 
-   ![Citrix ADC CPX with Ingress Controller Operator Unistall](../media/uninstall_cpx_cic_operator.png)
+   ![Netscaler CPX with Ingress Controller Operator Unistall](../media/uninstall_cpx_cic_operator.png)

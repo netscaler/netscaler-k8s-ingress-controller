@@ -2,13 +2,13 @@
 
 [OpenShift router sharding](https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html#router-sharding) allows distributing a set of routes among multiple OpenShift routers. By default, an OpenShift router selects all routes from all namespaces. In router sharding, labels are added to routes or namespaces and label selectors to routers for filtering routes. Each router shard selects only routes with specific labels that match its label selection parameters.
 
-Citrix ADC can be integrated with OpenShift in two ways and both deployments support OpenShift router sharding.
+Netscaler can be integrated with OpenShift in two ways and both deployments support OpenShift router sharding.
 
--  Citrix ADC CPX deployed as an OpenShift router along with Citrix ingress controller inside the cluster
--  Citrix ingress controller as a router plug-in for Citrix ADC MPX or VPX deployed outside the cluster
+-  Netscaler CPX deployed as an OpenShift router along with Citrix ingress controller inside the cluster
+-  Citrix ingress controller as a router plug-in for Netscaler MPX or VPX deployed outside the cluster
 
-To configure router sharding for a Citrix ADC deployment on OpenShift, a Citrix ingress controller instance is required per shard. The Citrix ingress controller instance is deployed with route or namespace labels or both as environment variables depending on the criteria required for sharding.
-When the Citrix ingress controller processes a route, it compares the route’s labels or route’s namespace labels with the selection criteria configured on it. If the route satisfies the criteria, the appropriate configuration is applied to Citrix ADC, otherwise it does not apply the configuration.
+To configure router sharding for a Netscaler deployment on OpenShift, a Citrix ingress controller instance is required per shard. The Citrix ingress controller instance is deployed with route or namespace labels or both as environment variables depending on the criteria required for sharding.
+When the Citrix ingress controller processes a route, it compares the route’s labels or route’s namespace labels with the selection criteria configured on it. If the route satisfies the criteria, the appropriate configuration is applied to Netscaler, otherwise it does not apply the configuration.
 
 In router sharding, selecting a subset of routes from the entire pool of routes is based on selection expressions. Selection expressions are a combination of multiple values and operations.
 
@@ -38,9 +38,9 @@ The following table shows selectors for route labels or namespace labels and a f
 !!! note "Note"
     The label selectors use the language supported by Kubernetes labels.
 
-If you want, you can change route or namespace labels by editing them later. Once you change the labels, router shard is revalidated and based on the change the Citrix ingress controller updates the configuration on Citrix ADC.
+If you want, you can change route or namespace labels by editing them later. Once you change the labels, router shard is revalidated and based on the change the Citrix ingress controller updates the configuration on Netscaler.
 
-## Deploy Citrix ADC CPX with OpenShift router sharding
+## Deploy Netscaler CPX with OpenShift router sharding
 
 To deploy CPX with OpenShift router sharding support, perform the following steps:
 
@@ -84,10 +84,10 @@ To deploy a Citrix ingress controller router plug-in with router sharding, perfo
 
         oc create -f cic.yaml
 
-## **Example:** Create an OpenShift route and verify the route configuration on Citrix ADC VPX
+## **Example:** Create an OpenShift route and verify the route configuration on Netscaler VPX
 
 This example shows how to create an OpenShift route with labels and verify the router shard configuration.
-In this example, route configuration is verified on a [Citrix ADC VPX deployment](#deploy-the-citrix-ingress-controller-router-plug-in-with-openshift-router-sharding-support).
+In this example, route configuration is verified on a [Netscaler VPX deployment](#deploy-the-citrix-ingress-controller-router-plug-in-with-openshift-router-sharding-support).
 
 Perform the following steps to create a sample route with labels.
 
@@ -120,18 +120,18 @@ Perform the following steps to create a sample route with labels.
 
 ### Verify route configuration
 
-You can verify the OpenShift route configuration on a Citrix ADC VPX by performing the following steps:
+You can verify the OpenShift route configuration on a Netscaler VPX by performing the following steps:
 
-1.  Log on to Citrix ADC VPX by performing the following:
+1.  Log on to Netscaler VPX by performing the following:
 
-    -  Use an SSH client such as PuTTy, to open an SSH connection to Citrix ADC VPX.
-    -  Log on to Citrix ADC VPX by using administrator credentials.
+    -  Use an SSH client such as PuTTy, to open an SSH connection to Netscaler VPX.
+    -  Log on to Netscaler VPX by using administrator credentials.
 
 1.  Check if the service group is created using the following command.
 
         show serviceGroup 
 
-1.  Verify the route configuration on Citrix ADC VPX in the ``show serviceGroup`` command output.
+1.  Verify the route configuration on Netscaler VPX in the ``show serviceGroup`` command output.
 
     Following is a sample route configuration from the ``show serviceGroup`` command output.
 
