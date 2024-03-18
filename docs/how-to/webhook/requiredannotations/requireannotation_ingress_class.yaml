@@ -6,11 +6,15 @@ spec:
   enforcementAction: deny
   match:
     kinds:
-      - apiGroups: ["extensions", "networking.k8s.io"]
-        kinds: ["Ingress"]
+    - apiGroups:
+      - extensions
+      - networking.k8s.io
+      kinds:
+      - Ingress
   parameters:
-    message: "All ingress objects must have the annotation `kubernetes.io/ingress.class: citrix-ingress`"
-#    labels:
     annotations:
-      - key: kubernetes.io/ingress.class
-        allowedRegex: "^citrix-ingress$"
+    - allowedRegex: ^citrix-ingress$
+      key: kubernetes.io/ingress.class
+    message: 'All ingress objects must have the annotation `kubernetes.io/ingress.class:
+      citrix-ingress`'
+---

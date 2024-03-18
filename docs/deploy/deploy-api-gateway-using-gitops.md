@@ -145,7 +145,7 @@ It maps the authentication references in the API specification document with the
 
 Perform the following steps to deploy the API Gateway CRD:
 
-  1. Download the [API Gateway CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/apigateway/apigateway-crd.yaml).
+  1. Download the [API Gateway CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/apigateway/apigateway-crd.yaml).
 
   2. Deploy the API Gateway CRD using the following command:
 
@@ -219,7 +219,7 @@ spec:
 
 ## Sample configuration for deploying Citrix API gateway with GitOps
 
-For a sample configuration for deploying Citrix API gateway with GitOps, see [Sample configuration for deploying Citrix API gateway with GitOps](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/example/git-ops/README.md).
+For a sample configuration for deploying Citrix API gateway with GitOps, see [Sample configuration for deploying Citrix API gateway with GitOps](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/git-ops/README.md).
 
 ## Support for web insight based analytics
 

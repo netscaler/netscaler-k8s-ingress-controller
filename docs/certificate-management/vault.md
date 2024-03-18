@@ -1,6 +1,6 @@
-# Deploy an HTTPS web application on Kubernetes with Citrix ingress controller and HashiCorp Vault using cert-manager
+# Deploy an HTTPS web application on Kubernetes with Netscaler ingress controller and HashiCorp Vault using cert-manager
 
-For ingress resources deployed with the Citrix ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert-manager.
+For ingress resources deployed with the Netscaler ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert-manager.
 
 Specifically, the workflow uses the Vault PKI Secrets Engine to create a certificate authority (CA). This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications. For external facing applications that require public trust, see [automating TLS certificates using Let’s Encrypt CA](./acme.md).
 
@@ -12,7 +12,7 @@ The workflow uses a Vault secret engine and authentication methods. For the full
 
 This topic provides you information on how to deploy an HTTPS web application on a Kubernetes cluster, using:
 
--  Citrix ingress controller
+-  Netscaler ingress controller
 -  JetStack's [cert-manager](https://cert-manager.io/docs/) to provision TLS certificates from [HashiCorp Vault](https://www.vaultproject.io/)
 -  [HashiCorp Vault](https://www.vaultproject.io/)
 
@@ -24,17 +24,17 @@ Ensure that you have:
 
 -  Enabled RBAC on your Kubernetes cluster.
 
--  Deployed Citrix ADC MPX, VPX, or CPX in Tier 1 or Tier 2 deployment model.
+-  Deployed Netscaler MPX, VPX, or CPX in Tier 1 or Tier 2 deployment model.
 
-    In the Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC). The Citrix ingress controller running in the Kubernetes cluster configures the virtual services for the services running on the Kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
+    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Netscaler ingress controller running in the Kubernetes cluster configures the virtual services for the services running on the Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
 
-    In the Tier 2 deployment, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in the Kubernetes cluster. Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
+    In the Tier 2 deployment, a TCP service is configured on the Netscaler (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Netscaler CPX instances running in the Kubernetes cluster. Netscaler CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Deployed Citrix ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
+-  Deployed Netscaler ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
 
 -  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure that you have the administrator permission.
 
-**Note:** The following procedure shows steps to configure Vault as a certificate authority with Citrix ADC CPX used as the ingress device. When a Citrix ADC VPX or MPX is used as the ingress device, the steps are the same except the steps to verify the ingress configuration in the Citrix ADC.
+**Note:** The following procedure shows steps to configure Vault as a certificate authority with Netscaler CPX used as the ingress device. When a Netscaler VPX or MPX is used as the ingress device, the steps are the same except the steps to verify the ingress configuration in the Netscaler.
 
 
 ## Deploy cert-manager using the manifest file
@@ -136,19 +136,19 @@ Perform the following steps to deploy a sample web application.
         NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
         kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-1.  Expose this service to the outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+1.  Expose this service to the outside world by creating an Ingress that is deployed on Netscaler CPX or VPX as Content switching virtual server.
 
         **Note:**
-        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Citrix ingress controller is started.
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Netscaler ingress controller is started.
 
 ```yml
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          annotations:
-            kubernetes.io/ingress.class: citrix
+          annotations: {}
           name: kuard
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
@@ -160,10 +160,19 @@ Perform the following steps to deploy a sample web application.
                       number: 80
                 path: /
                 pathType: Prefix
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
   ```
 
     !!! info "Important"
-        Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
+        Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Netscaler CPX or VPX.
 
 1.  Deploy the Ingress using the following command.
 
@@ -173,7 +182,7 @@ Perform the following steps to deploy a sample web application.
         NAME    HOSTS               ADDRESS   PORTS   AGE
         kuard   kuard.example.com             80      7s
 
-1.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command.
+1.  Verify if the ingress is configured on Netscaler CPX or VPX using the following command.
 
         kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
         root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
@@ -451,9 +460,9 @@ In this approach, you modify the ingress annotation for the cert-manager to auto
         metadata:
           annotations:
             cert-manager.io/cluster-issuer: vault-issuer
-            kubernetes.io/ingress.class: citrix
           name: kuard
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
@@ -469,6 +478,15 @@ In this approach, you modify the ingress annotation for the cert-manager to auto
           - hosts:
             - kuard.example.com
             secretName: kuard-example-tls
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 ```
 
 
@@ -559,10 +577,10 @@ Perform the following steps to modify the ingress to use the generated secret.
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          annotations:
-            kubernetes.io/ingress.class: citrix
+          annotations: {}
           name: kuard
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
@@ -572,12 +590,21 @@ Perform the following steps to modify the ingress to use the generated secret.
                     name: kuard
                     port:
                       number: 80
-                pathType: Prefix
                 path: /
+                pathType: Prefix
           tls:
           - hosts:
             - kuard.example.com
             secretName: kuard-example-tls
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 ```
 
 1.  Deploy the ingress using the following command.
@@ -589,11 +616,11 @@ Perform the following steps to modify the ingress to use the generated secret.
         NAME    HOSTS               ADDRESS   PORTS     AGE
         kuard   kuard.example.com             80, 443   12s
 
-**Verify the Ingress configuration in Citrix ADC**
+**Verify the Ingress configuration in Netscaler**
 
- Once the certificate is successfully generated, Citrix ingress controller uses this certificate for configuring the front-end SSL virtual server. You can verify it with the following steps.
+ Once the certificate is successfully generated, Netscaler ingress controller uses this certificate for configuring the front-end SSL virtual server. You can verify it with the following steps.
 
-1.  Log on to Citrix ADC CPX and verify if the Certificate is bound to the SSL virtual server.
+1.  Log on to Netscaler CPX and verify if the Certificate is bound to the SSL virtual server.
 
         % kubectl exec -it cpx-ingress-668bf6695f-4fwh8 bash
         cli_script.sh 'shsslvs'

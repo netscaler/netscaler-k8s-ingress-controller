@@ -1,6 +1,6 @@
 # Rewrite and redirect Support
 
-Citrix ingress controller supports header and URL modification via [rewrite policies CRD](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/crds/rewrite-responder.html). This section provides different examples for header and URL modification and contains the following sections:
+Netscaler ingress controller supports header and URL modification via [rewrite policies CRD](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/crds/rewrite-responder.html). This section provides different examples for header and URL modification and contains the following sections:
 
 -  [Before You Begin](#before-you-begin)
 -  [Examples for HTTP header manipulation](#http-header-manipulation)
@@ -18,9 +18,9 @@ Citrix ingress controller supports header and URL modification via [rewrite poli
 
     In this document, you refer to the `echo-server` application. See this document for steps to deploy [here](steps-to-deploy-echo-server).
 
-1.  Deploy the Citrix ingress controller.
+1.  Deploy the Netscaler ingress controller.
 
-    If you are using NetScaler VPX or MPX, follow [this instruction to deploy Citrix Ingress Controller (CIC) to configure the same. If you do not have NetScaler VPX or MPX, you can use NetScaler CPX and follow [this](<link>) to deploy CIC and CPX.
+    If you are using NetScaler VPX or MPX, follow [this instruction to deploy Netscaler ingress controller (CIC) to configure the same. If you do not have NetScaler VPX or MPX, you can use NetScaler CPX and follow [this](<link>) to deploy CIC and CPX.
 
 1.  Apply the rewrite policy CRD definition.
 

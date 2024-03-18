@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Creates a Citrix ADC VPX 12.1 version  instance with a single network interface
+Description: Creates a Netscaler VPX 12.1 version  instance with a single network interface
 Metadata:
   Copyright:
     - 'Copyright (c) 2019 Citrix Systems, Inc.'
@@ -160,7 +160,7 @@ Parameters:
      Default: m4.xlarge
      ConstraintDescription: Must be a valid EC2 instance type.
      Type: String
-     Description: Type of Citrix ADC VPX instance
+     Description: Type of Netscaler VPX instance
      AllowedValues:
        - m4.xlarge
        - m4.2xlarge

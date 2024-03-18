@@ -7,43 +7,43 @@ When you are running an application inside a Kubernetes cluster, you need to pro
 
 An Ingress controller is an application deployed inside the cluster that interprets rules defined in the Ingress. The Ingress controller converts the Ingress rules into configuration instructions for a load balancing application integrated with the cluster. The load balancer can be a software application running inside your Kubernetes cluster or a hardware appliance running outside the cluster.
 
-## What is Citrix ADC ingress controller
+## What is Netscaler ingress controller
 
-Citrix provides an implementation of the [Kubernetes Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-controllers) to manage and route traffic into your Kubernetes cluster using Citrix ADCs (Citrix ADC CPX, VPX, or MPX).
+Citrix provides an implementation of the [Kubernetes Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-controllers) to manage and route traffic into your Kubernetes cluster using Netscalers (Netscaler CPX, VPX, or MPX).
 
-Using Citrix ADC ingress controller, you can configure Citrix ADC CPX, VPX, or MPX according to the Ingress rules and integrate your Citrix ADCs with the Kubernetes environment.
+Using Netscaler ingress controller, you can configure Netscaler CPX, VPX, or MPX according to the Ingress rules and integrate your Netscalers with the Kubernetes environment.
 
-## Why Citrix ADC ingress controller
+## Why Netscaler ingress controller
 
-This topic provides information about some of the key benefits of integrating Citrix ADCs with your Kubernetes cluster using Citrix ADC ingress controller.
+This topic provides information about some of the key benefits of integrating Netscalers with your Kubernetes cluster using Netscaler ingress controller.
 
 ### Support for TCP and UDP traffic
 
-Standard Kubernetes Ingress solutions provide load balancing only at layer 7 (HTTP or HTTPS traffic). Some times, you need to expose many legacy applications which rely on TCP or UDP applications and need a way to load balance those applications. Citrix Kubernetes Ingress solution using Citrix ADC ingress controller provides TCP, TCP-SSL, and UDP traffic support apart from the standard HTTP or HTTPS Ingress. Also, it works seamlessly across multiple clouds or on-premises data centers.
+Standard Kubernetes Ingress solutions provide load balancing only at layer 7 (HTTP or HTTPS traffic). Some times, you need to expose many legacy applications which rely on TCP or UDP applications and need a way to load balance those applications. Citrix Kubernetes Ingress solution using Netscaler ingress controller provides TCP, TCP-SSL, and UDP traffic support apart from the standard HTTP or HTTPS Ingress. Also, it works seamlessly across multiple clouds or on-premises data centers.
 
 ### Advanced traffic management policies
 
-Citrix ADC provides enterprise-grade traffic management policies like rewrite and responder policies for efficiently load balancing traffic at layer 7. However, Kubernetes Ingress lacks such enterprise-grade traffic management policies. With the Kubernetes Ingress solution from Citrix, you can apply rewrite and responder policies for application traffic in a Kubernetes environment using CRDs provided by Citrix.
+Netscaler provides enterprise-grade traffic management policies like rewrite and responder policies for efficiently load balancing traffic at layer 7. However, Kubernetes Ingress lacks such enterprise-grade traffic management policies. With the Kubernetes Ingress solution from Citrix, you can apply rewrite and responder policies for application traffic in a Kubernetes environment using CRDs provided by Citrix.
 
 ### Flexible deployment topologies
 
-Citrix provides flexible and powerful topologies such as [Single-Tier](deployment-topologies.md#single-tier-topology) and [Dual-Tier](deployment-topologies.md#dual-tier-topology) depending on how you want to manage your Citrix ADCs and Kubernetes environment. For more information on the deployment topologies, see the
+Citrix provides flexible and powerful topologies such as [Single-Tier](deployment-topologies.md#single-tier-topology) and [Dual-Tier](deployment-topologies.md#dual-tier-topology) depending on how you want to manage your Netscalers and Kubernetes environment. For more information on the deployment topologies, see the
 [Deployment topologies](deployment-topologies.md) page.
 
 ### Layer 7 load balancing support for East-West traffic
 
-For traffic between microservices inside the Kubernetes cluster (East-West traffic), Kubernetes natively provides only limited layer 4 load balancing. Using Citrix ADC CPX along with the Ingress controller, you can achieve advanced layer 7 load balancing for East-West traffic.
+For traffic between microservices inside the Kubernetes cluster (East-West traffic), Kubernetes natively provides only limited layer 4 load balancing. Using Netscaler CPX along with the Ingress controller, you can achieve advanced layer 7 load balancing for East-West traffic.
 
 ### Service of type LoadBalancer on bare metal clusters
 
-There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Ingress controller and Citrix ADC. For more information, see [Expose services of type LoadBalancer](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/network/type-loadbalancer.html).
+There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Ingress controller and Netscaler. For more information, see [Expose services of type LoadBalancer](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/network/type-loadbalancer.html).
 
-## Deploy Citrix ADC ingress controller
+## Deploy Netscaler ingress controller
 
-You can deploy Citrix ADC ingress controller in the following deployment modes:
+You can deploy Netscaler ingress controller in the following deployment modes:
 
-1. As a standalone pod: This mode is used when managing ADCs such as Citrix ADC MPX, or VPX that is outside the Kubernetes cluster.
+1. As a standalone pod: This mode is used when managing ADCs such as Netscaler MPX, or VPX that is outside the Kubernetes cluster.
 
-1. As a sidecar in a pod along with the Citrix ADC CPX in the same pod. The controller is only responsible for the Citrix ADC CPX that resides in the same pod.
+1. As a sidecar in a pod along with the Netscaler CPX in the same pod. The controller is only responsible for the Netscaler CPX that resides in the same pod.
 
-You can deploy the ingress controller provided by Citrix using Kubernetes YAML or Helm charts. For more information, see [Deploy Citrix ADC ingress controller using YAML](deploy/deploy-cic-yaml.md) or [Deploy Citrix ADC ingress controller using Helm charts](deploy/deploy-cic-helm.md).
+You can deploy the ingress controller provided by Citrix using Kubernetes YAML or Helm charts. For more information, see [Deploy Netscaler ingress controller using YAML](deploy/deploy-cic-yaml.md) or [Deploy Netscaler ingress controller using Helm charts](deploy/deploy-cic-helm.md).

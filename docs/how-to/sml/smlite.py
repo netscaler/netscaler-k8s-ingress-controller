@@ -2,7 +2,7 @@
 
 '''
 This scipt convert application YAMLs into set of YAMLs that can be deployed in Service Mesh lite architecture 
-where east-west communication happens via Citrix ADC CPX running with Citrix Ingress Controller as sidecar.
+where east-west communication happens via Netscaler CPX running with Netscaler ingress controller as sidecar.
 SML yaml for services of an applcation which are already running inside Kubernetes cluster can also be generated using this script.
 '''
 
@@ -159,7 +159,7 @@ def main():
     prompts = chain(['Citrix ADM required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
     adm_required = validate_input(prompts,"yesORno")
     if adm_required.lower() == "y":
-        prompts = chain(['Please provide IP of ADM Agent(svcIP of container agent) for Citrix ADC CPX: '], repeat("Invaild IP. Please enter and IPv4 IP: "))
+        prompts = chain(['Please provide IP of ADM Agent(svcIP of container agent) for Netscaler CPX: '], repeat("Invaild IP. Please enter and IPv4 IP: "))
         cpx_adm_agent_ip = validate_input(prompts,"ip")
         adm_secret = input("Please provide name of K8s Secret created using ADM Agent credentials. Press ENTER for 'admlogin': ")
         if not adm_secret:
@@ -211,7 +211,7 @@ def main():
     '''
     Getting details for Tier-1 ADC
     '''
-    prompts = chain(['Citrix Ingress Controller for tier-1 ADC required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
+    prompts = chain(['Netscaler ingress controller for tier-1 ADC required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
     create_cic = validate_input(prompts,"yesORno")
     if create_cic.lower() == "y":
         prompts = chain(['Please provide tier-1 ADC NSIP: '], repeat("Invaild IP. Please enter and IPv4 IP: "))
@@ -222,7 +222,7 @@ def main():
         if not ns_secret:
             ns_secret = "nslogin"
         if adm_required.lower() == "y":
-            prompts = chain(['Please provide IP of ADM Agent(podIP of container agent) for Citrix ADC VPX/MPX: '], repeat("Invaild IP. Please enter and IPv4 IP: "))
+            prompts = chain(['Please provide IP of ADM Agent(podIP of container agent) for Netscaler VPX/MPX: '], repeat("Invaild IP. Please enter and IPv4 IP: "))
             vpx_adm_agent_ip = validate_input(prompts,"ip")
 
         app_frontend_svc_port = input("Please provide port used to expose CPX service to Tier-1 ADC: ")
@@ -387,7 +387,7 @@ def create_smlite_yamls(yaml_instance,frontend,hostname):
         list_of_sml_yamls.append(yaml_instance)
 
         '''
-        Creating service for appication so that FQDN of the microservice points to Citrix ADC CPX IP address
+        Creating service for appication so that FQDN of the microservice points to Netscaler CPX IP address
         '''
         service_yaml = manifestCreator.service({"name":service_name,"appLabel":chart_name+str(cpx_count)+"-cpx","ports":ports})
         service_yaml = service_yaml.create()

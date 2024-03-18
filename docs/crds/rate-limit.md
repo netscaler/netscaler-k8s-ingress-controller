@@ -1,16 +1,16 @@
-# Rate limiting in Kubernetes using Citrix ADC
+# Rate limiting in Kubernetes using Netscaler
 
-In a Kubernetes deployment, you can rate limit the requests to the resources on the back end server or services using [rate limiting](https://docs.citrix.com/en-us/citrix-adc/13/appexpert/rate-limiting.html) feature provided by the ingress Citrix ADC.
+In a Kubernetes deployment, you can rate limit the requests to the resources on the back end server or services using [rate limiting](https://docs.citrix.com/en-us/citrix-adc/13/appexpert/rate-limiting.html) feature provided by the ingress Netscaler.
 
-Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Rate limit CRD** that you can use with the Citrix ingress controller to configure the rate limiting configurations on the Citrix ADCs used as Ingress devices.
+Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Rate limit CRD** that you can use with the Netscaler ingress controller to configure the rate limiting configurations on the Netscalers used as Ingress devices.
 
 Apart from rate limiting the requests to the services in a Kubernetes environment, you can use the Rate limit CRD for API security as well. The Rate limit CRD allows you to limit the REST API request to API servers or specific API endpoints on the API servers. It monitors and keeps track of the requests to the API server or endpoints against the allowed limit per time slice and hence protects from attacks such as the DDoS attack.
 
-You can enable logging for observability with the rate limit CRD. Logs are stored on Citrix ADC which can be viewed by checking the logs using the shell command. The file location is based on the syslog configuration. For example, `/var/logs/ns.log`.
+You can enable logging for observability with the rate limit CRD. Logs are stored on Netscaler which can be viewed by checking the logs using the shell command. The file location is based on the syslog configuration. For example, `/var/logs/ns.log`.
 
 ## Rate limit CRD definition
 
-The Rate limit CRD spec is available in the Citrix ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Citrix ADC that acts as an API gateway.
+The Rate limit CRD spec is available in the Netscaler ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Netscaler that acts as an API gateway.
 
 
 ## Rate limit CRD attributes
@@ -55,13 +55,13 @@ Perform the following to deploy the Rate limit CRD:
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the rate-based policy configuration in a `.yaml` file. In the `.yaml` file, use `ratelimit` in the `kind` field and in the `spec` section add the Rate limit CRD attributes based on your requirement for the policy configuration.
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the rate-based policy configuration on the Ingress Citrix ADC device.
+After you deploy the `.yaml` file, the Netscaler ingress controller applies the rate-based policy configuration on the Ingress Netscaler device.
 
 ### Examples
 
 #### Limit API requests to configured API endpoint prefixes
 
-Consider a scenario wherein you want to define a rate-based policy in Citrix ADC to limit the API requests to 15 requests per minute from each unique client IP address to the configured API endpoint prefixes. Create a `.yaml` file called `ratelimit-example1.yaml` and use the appropriate CRD attributes to define the rate-based policy as follows:
+Consider a scenario wherein you want to define a rate-based policy in Netscaler to limit the API requests to 15 requests per minute from each unique client IP address to the configured API endpoint prefixes. Create a `.yaml` file called `ratelimit-example1.yaml` and use the appropriate CRD attributes to define the rate-based policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1beta1
@@ -94,11 +94,11 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
     root@master:~#kubectl create -f ratelimit-example1.yaml
     ratelimit.citrix.com/throttle-req-per-clientip created
 
-The Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
+The Netscaler ingress controller applies the policy configuration on the Ingress Netscaler device.
 
 #### Limit API requests to calender APIs
 
-Consider a scenario wherein you want to define a rate-based policy in a Citrix ADC to limit the API requests (GET or POST) to five requests from each API client identified using the HTTP header `X-API-Key` to the calender APIs. Create a `.yaml` file called `ratelimit-example2.yaml` and use the appropriate CRD attributes to define the rate-based policy as follows:
+Consider a scenario wherein you want to define a rate-based policy in a Netscaler to limit the API requests (GET or POST) to five requests from each API client identified using the HTTP header `X-API-Key` to the calender APIs. Create a `.yaml` file called `ratelimit-example2.yaml` and use the appropriate CRD attributes to define the rate-based policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1beta1
@@ -128,4 +128,4 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
     root@master:~#kubectl create -f ratelimit-example2.yaml
     ratelimit.citrix.com/throttle-req-per-clientip created
 
-The Citrix ingress controller applies the policy configuration on the Ingress Citrix ADC device.
+The Netscaler ingress controller applies the policy configuration on the Ingress Netscaler device.

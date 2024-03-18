@@ -31,7 +31,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               protocol:
                 type: string
                 enum: ["https", "http"]
@@ -104,7 +104,7 @@ spec:
                     - required: ["config"]
                   tcpprofile:
                     type: object
-                    description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
+                    description: "TCP level configurations, uses  ns tcpprofile of Netscaler"
                     properties:
                       preconfigured:
                         description: "Preconfigured or Built-in TCP profile name"
@@ -130,7 +130,7 @@ spec:
                         type: string
                         description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
                       config:
-                        description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                        description: "Netscaler frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
                         type: object
                         additionalProperties:
                           type: string
@@ -233,12 +233,12 @@ spec:
                                 description: "Use Secure communications to the backends"
                                 type: boolean
                               lbConfig:
-                                description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
                               servicegroupConfig:
-                                description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
@@ -256,7 +256,7 @@ spec:
                         description: "Host name specified is used for redirection with URL intact"
                         type: string
                       targetExpression:
-                        description: "A target can be specified using Citrix ADC policy expression"
+                        description: "A target can be specified using Netscaler policy expression"
                         type: string
                       responseCode:
                         description: "Default response code is 302, which can be customised using this attribute"
