@@ -1,4 +1,4 @@
-# **Deploying Citrix Ingress Controller for Loadbalancing Guestbook App**
+# **Deploying Netscaler ingress controller for Loadbalancing Guestbook App**
 
    Guestbook is a simple, multi-tier PHP-based web application that uses redis chart.
    The guestbook application uses Redis to store its data. It writes its data to a Redis master instance and reads data from multiple Redis slave instances.
@@ -11,9 +11,9 @@
   ```
 
 ## **Choose the  deployment**
-#### **1. Bring up Citrix Ingress Controller for VPX, MPX**
-######    1.1. Deploy Citrix ingress controller
-   Follow [Deployment](../../docs/deploy) guide to deploy citrix ingress controller
+#### **1. Bring up Netscaler ingress controller for VPX, MPX**
+######    1.1. Deploy Netscaler ingress controller
+   Follow [Deployment](../../docs/deploy) guide to deploy Netscaler ingress controller
 ######    1.2. Download the guestbook-ingress.yaml
    ```
    wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml
@@ -26,8 +26,8 @@
    ```  
 #### **2. Bring up CPX with builtin Controller**
 
-######    2.1 Deploy CPX with citrix ingress controller
-   Follow [Deployment](../../docs/deploy) guide to deploy the CPX with citrix ingress controller
+######    2.1 Deploy CPX with Netscaler ingress controller
+   Follow [Deployment](../../docs/deploy) guide to deploy the CPX with Netscaler ingress controller
 ######    2.2 Create an ingress resource by following command
    ```
     kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/guestbook/guestbook-ingress.yaml 

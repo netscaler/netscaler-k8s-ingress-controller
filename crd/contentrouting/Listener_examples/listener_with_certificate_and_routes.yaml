@@ -9,7 +9,7 @@ spec:
       # Kubernetes secret name
       name: my-secret
   - preconfigured: second-secret
-    # preconfigured certkey name in Citrix ADC
+    # preconfigured certkey name in Netscaler
     # This certkey must exist before applying the Custom Resource
     default: true
   defaultAction:

@@ -2,7 +2,7 @@
 
 Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) provides you a way to route requests to services based on the request host or path, centralizing a number of services into a single entry point.
 
-Citrix ingress controller is built around Kubernetes Ingress and automatically configures one or more Citrix ADC based on the Ingress resource configuration.
+Netscaler ingress controller is built around Kubernetes Ingress and automatically configures one or more Netscaler based on the Ingress resource configuration.
 
 ## Host name based routing
 
@@ -38,7 +38,7 @@ spec:
         path: /
 ```
 
-After the sample Ingress definition is deployed, all the HTTP request with a host header is load balanced by Citrix ADC to `service1`. And, the HTTP request with a host header is load balancer by Citrix ADC to `service2`.
+After the sample Ingress definition is deployed, all the HTTP request with a host header is load balanced by Netscaler to `service1`. And, the HTTP request with a host header is load balancer by Netscaler to `service2`.
 
 ## Path based routing
 
@@ -71,9 +71,9 @@ spec:
         pathType: Prefix
 ```
 
-After the sample Ingress definition is deployed, any HTTP requests with host `test.example.com` and URL path with prefix `/foo`, Citrix ADC routes the request to `service1` and all other requests are routed to `service2`.
+After the sample Ingress definition is deployed, any HTTP requests with host `test.example.com` and URL path with prefix `/foo`, Netscaler routes the request to `service1` and all other requests are routed to `service2`.
 
-Citrix ingress controller follows first match policy to evaluate paths. For effective matching, Citrix ingress controller orders the paths based on descending order of the path's length. It also orders the paths that belong to same hosts across multiple ingress resources.
+Netscaler ingress controller follows first match policy to evaluate paths. For effective matching, Netscaler ingress controller orders the paths based on descending order of the path's length. It also orders the paths that belong to same hosts across multiple ingress resources.
 
 ## Wildcard host routing
 
@@ -99,7 +99,7 @@ spec:
         pathType: Prefix
 ```
 
-After the sample Ingress definition is deployed, HTTP requests to all the subdomains of `example.com` is routed to `service1` by Citrix ADC.
+After the sample Ingress definition is deployed, HTTP requests to all the subdomains of `example.com` is routed to `service1` by Netscaler.
 
 >**Note:**
 > Rules with non-wildcard hosts are given higher priority than wildcard hosts. Among different wildcard hosts, rules are ordered on the descending order of length of hosts.
@@ -128,7 +128,7 @@ spec:
         pathType: Exact
 ```
 
-(Deprecated as of k8s 1.22+) By default for Ingresses belonging to `extension/v1beta1`, paths are treated as `Prefix` expressions. Using the annotation `ingress.citrix.com/path-match-method: "exact"` in the ingress definition defines the Citrix ingress controller to consider the path for the exact match.
+(Deprecated as of k8s 1.22+) By default for Ingresses belonging to `extension/v1beta1`, paths are treated as `Prefix` expressions. Using the annotation `ingress.citrix.com/path-match-method: "exact"` in the ingress definition defines the Netscaler ingress controller to consider the path for the exact match.
 
 The following sample Ingress definition demonstrates how to set up Ingress for exact path matching:
 
@@ -151,7 +151,7 @@ spec:
           servicePort: 80
 ```
 
-After the sample Ingress definition is deployed, HTTP requests with path `/exact` is routed by Citrix ADC to `service1` but not to `/exact/somepath`.
+After the sample Ingress definition is deployed, HTTP requests with path `/exact` is routed by Netscaler to `service1` but not to `/exact/somepath`.
 
 ## Non-Hostname routing
 
@@ -205,4 +205,4 @@ spec:
 ```
 
 >**Note:**
-> A global default back end can be specified if Citrix ADC CPX is load balancing the traffic. You can create a default back end per `frontend-ip:port` combination in case of Citrix ADC VPX or MPX is the ingress device.
+> A global default back end can be specified if Netscaler CPX is load balancing the traffic. You can create a default back end per `frontend-ip:port` combination in case of Netscaler VPX or MPX is the ingress device.

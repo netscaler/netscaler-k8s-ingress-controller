@@ -1,4 +1,4 @@
-# Contributing to the Citrix ingress controller
+# Contributing to the Netscaler ingress controller
 
  We are glad to know that you want to contribute to this project! This document helps to answer common questions you may have during your first contribution.
 

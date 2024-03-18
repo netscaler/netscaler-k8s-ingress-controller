@@ -1,18 +1,18 @@
-# Open policy agent support for Kubernetes with Citrix ADC
+# Open policy agent support for Kubernetes with Netscaler
 
-Open policy agent (OPA) is an open source, general-purpose policy engine that unifies policy enforcement across different technologies and systems. OPA provides a high-level declarative language that lets you specify policy as code and simple APIs to offload policy decision-making from your software. Using OPA, you can decouple policy decision-making from policy enforcement. You can use OPA to enforce policies through Citrix ADC in a Kubernetes environment.
+Open policy agent (OPA) is an open source, general-purpose policy engine that unifies policy enforcement across different technologies and systems. OPA provides a high-level declarative language that lets you specify policy as code and simple APIs to offload policy decision-making from your software. Using OPA, you can decouple policy decision-making from policy enforcement. You can use OPA to enforce policies through Netscaler in a Kubernetes environment.
 
-With OPA, you can create a centralized policy-decision making system for an environment involving multiple Citrix ADCs or multiple devices which are distributed. The advantage of this approach is you have to make changes only on the OPA server for any decision specific changes applicable to multiple devices.
+With OPA, you can create a centralized policy-decision making system for an environment involving multiple Netscalers or multiple devices which are distributed. The advantage of this approach is you have to make changes only on the OPA server for any decision specific changes applicable to multiple devices.
 
 For more information on OPA, see the [OPA documentation](https://www.openpolicyagent.org/docs/latest/).
 
-The OPA integration on Citrix ADC can be supported through HTTP callout, where OPA can be used with or without authentication. An HTTP callout is an HTTP or HTTPS request that the Citrix ADC appliance generates and sends to an external application as part of the policy evaluation.
+The OPA integration on Netscaler can be supported through HTTP callout, where OPA can be used with or without authentication. An HTTP callout is an HTTP or HTTPS request that the Netscaler appliance generates and sends to an external application as part of the policy evaluation.
 
 For more information on the HTTP callout support, see the [HTTP callout documentation](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/how-to/http-callout.html).
 
-For more information regarding authentication support, see the [Authentication and authorization policies for Kubernetes with Citrix ADC](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/crds/auth.html).
+For more information regarding authentication support, see the [Authentication and authorization policies for Kubernetes with Netscaler](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/crds/auth.html).
 
-The following diagram provides an overview of how to integrate OPA with the Citrix ADC cloud native solution.
+The following diagram provides an overview of how to integrate OPA with the Netscaler cloud native solution.
 
 ![OPA integration](../media/opa.png)
 
@@ -20,11 +20,11 @@ In the OPA integration diagram, each number represents the corresponding task in
 
 1. Creating the required Kubernetes objects using Kubernetes commands. This step should include creating the CRD to send the HTTP callout to the OPA server.
 
-2. Configuring Citrix ADC. Citrix ADC is automatically configured by Citrix ADC ingress controller based on the created Kubernetes objects.
+2. Configuring Netscaler. Netscaler is automatically configured by Netscaler ingress controller based on the created Kubernetes objects.
 
 3. Sending user request for resources from client. The user might get authenticated if authentication CRDs are created.
 
-4. Sending HTTP callout to OPA server in JSON format from Citrix ADC carrying authorization parameters.
+4. Sending HTTP callout to OPA server in JSON format from Netscaler carrying authorization parameters.
 
 5. Sending authorization decision from OPA server based on the rules defined in REGO, the policy language for OPA.
 

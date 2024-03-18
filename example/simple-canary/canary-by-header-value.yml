@@ -4,9 +4,9 @@ metadata:
   annotations:
     ingress.citrix.com/canary-by-header: some-header-info
     ingress.citrix.com/canary-by-header-value: citrix-canary
-    kubernetes.io/ingress.class: citrix
   name: canary-by-header-value
 spec:
+  ingressClassName: citrix
   rules:
   - host: webapp.com
     http:
@@ -18,3 +18,11 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---

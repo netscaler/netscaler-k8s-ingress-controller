@@ -2,11 +2,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/canary-weight: "40"
+    ingress.citrix.com/canary-weight: '40'
     ingress.citrix.com/frontend-ip: 1.1.1.1
-    kubernetes.io/ingress.class: citrix
   name: canary-by-weight
 spec:
+  ingressClassName: citrix
   rules:
   - host: demo-canary.webapp.com
     http:
@@ -18,3 +18,11 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---
