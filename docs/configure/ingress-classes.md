@@ -6,9 +6,9 @@ In a Kubernetes cluster, there might be multiple ingress controllers and you nee
 
 You can specify the ingress controller that should handle the ingress resource by using the `kubernetes.io/ingress.class` annotation in your ingress resource definition.
 
-## Citrix ingress controller and Ingress classes
+## Netscaler ingress controller and Ingress classes
 
-The Citrix ingress controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However, the Ingress Controller might need to handle various ingress resources from different classes.
+The Netscaler ingress controller supports accepting multiple ingress resources, which have `kuberneters.io/ingress.class` annotation. Each ingress resource can be associated with only one `ingress.class`. However, the Ingress Controller might need to handle various ingress resources from different classes.
 
 You can associate the Ingress Controller with multiple ingress classes using the `--ingress-classes` argument under the `spec` section of the YAML file.
 
@@ -43,7 +43,7 @@ spec:
           my-custom-class
 ```
 
-Following is the snippet from an Ingress YAML file where the Ingress class association is depicted. In the given example, an Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If the Citrix ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
+Following is the snippet from an Ingress YAML file where the Ingress class association is depicted. In the given example, an Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If the Netscaler ingress controller is configured to accept `my-custom-class`, it processes this Ingress resource.
 
 ```yml
 apiVersion: networking.k8s.io/v1
@@ -103,9 +103,9 @@ spec:
               number: 80
 ```
 
-The Citrix ingress controller uses the following rules to match the Ingresses.
+The Netscaler ingress controller uses the following rules to match the Ingresses.
 
-- If the Citrix ingress controller is started without specifying the `--ingress-classes` argument:
+- If the Netscaler ingress controller is started without specifying the `--ingress-classes` argument:
 
     - If the Kubernetes version is lesser than 1.19 (IngressClass V1 resource is supported)
       
@@ -117,7 +117,7 @@ The Citrix ingress controller uses the following rules to match the Ingresses.
      
          - Matches any ingress if the `spec.ingressClassName` field of the Ingress object is set and a `v1.IngressClass` resource exists with the same name and the `spec.controller` field of the resource is `citrix.com/ingress-controller`.
 
-- If the Citrix ingress controller is started with one or more ingress classes set using the `--ingress-classes` argument.
+- If the Netscaler ingress controller is started with one or more ingress classes set using the `--ingress-classes` argument.
 
     - If the Kubernetes version is lesser than 1.19 (IngressClass V1 resource is supported)
     
@@ -145,11 +145,11 @@ The Citrix ingress controller uses the following rules to match the Ingresses.
 
 **Note:** If both the annotation and `spec.ingressClassName` is defined, the annotation is matched before the `spec.ingressClassName`. If the annotation does not match, the matching operation for the `spec.ingressClassName` field is not performed.
 
-**Note:** When you are using Helm charts to install the Citrix ingress controller, if the `IngressClass` resource is supported and the Citrix ingress controller is deployed with the `--ingress-classes` argument, the `v1.IngressClass` resource is created by default.
+**Note:** When you are using Helm charts to install the Netscaler ingress controller, if the `IngressClass` resource is supported and the Netscaler ingress controller is deployed with the `--ingress-classes` argument, the `v1.IngressClass` resource is created by default.
 
 ## Updating the Ingress status for the Ingress resources with the specified IP address
 
-To update the `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Citrix ingress controller with the allocated IP addresses, specify the command line argument `--update-ingress-status yes` when you start the Citrix ingress controller. This feature is only supported for the Citrix ingress controller deployed as a stand-alone pod for managing Netscaler VPX or MPX. For Netscaler CPXs deployed as sidecars, this feature is not supported.
+To update the `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Netscaler ingress controller with the allocated IP addresses, specify the command line argument `--update-ingress-status yes` when you start the Netscaler ingress controller. This feature is only supported for the Netscaler ingress controller deployed as a stand-alone pod for managing Netscaler VPX or MPX. For Netscaler CPXs deployed as sidecars, this feature is not supported.
 
 Following is an example YAML with the  `--update-ingress-status yes` command line argument enabled.
 
@@ -170,7 +170,7 @@ In cloud deployments, Netscaler CPX along with the ingress controller is exposed
 
 This is applicable even on on-prem deployments. In dual-tier ingress deployments, in which the Netscaler CPX is exposed as service type `LoadBalancer` to the tier-1 Netscaler VPX ingress, the ingress resources operated by the Netscaler CPX is updated with the VIP address.
 
-This topic provides information about how to enable the ingress status update for Netscaler CPX with the Citrix ingress controller as sidecar deployments.
+This topic provides information about how to enable the ingress status update for Netscaler CPX with the Netscaler ingress controller as sidecar deployments.
 
 **Note**:
 
@@ -188,7 +188,7 @@ The following is a sample ingress output after the ingress status update:
 
 ## Enable ingress status update for the sidecar deployments
 
-You can enable the ingress status update feature for side car deployments by specifying the following argument in the Netscaler CPX YAML file. You must add the argument to the `args` section of Netscaler CPX in the deployment YAML file for Netscaler CPX with the Citrix ingress controller.
+You can enable the ingress status update feature for side car deployments by specifying the following argument in the Netscaler CPX YAML file. You must add the argument to the `args` section of Netscaler CPX in the deployment YAML file for Netscaler CPX with the Netscaler ingress controller.
 
        
 

@@ -393,7 +393,7 @@ Perform the following steps:
 
     This step is required for Netscaler to interact with the pods inside the Kubernetes cluster.
 
-1.  Update the Netscaler VPX management IP address and VIP in the Citrix ingress controller manifest.
+1.  Update the Netscaler VPX management IP address and VIP in the Netscaler ingress controller manifest.
 
         wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
 
@@ -411,7 +411,7 @@ Perform the following steps:
         - name: "NS_VIP"
           value: "X.X.X.X"
 
-1.  Once you have edited the YAML file with the required values deploy Citrix ingress controller.
+1.  Once you have edited the YAML file with the required values deploy Netscaler ingress controller.
 
         kubectl create -f cic.yaml
 
@@ -437,15 +437,15 @@ Perform the following steps:
 
           show ip <primary-private-ip-addess>
 
-3.  Update the Netscaler VPX image URL, management IP address, and VIP in the Citrix ingress controller YAML file.
+3.  Update the Netscaler VPX image URL, management IP address, and VIP in the Netscaler ingress controller YAML file.
 
-    1.  Download the Citrix ingress controller YAML file.
+    1.  Download the Netscaler ingress controller YAML file.
 
             wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/azurecic/cic.yaml
 
         **Note:** If you do not have `wget` installed, you can use the `fetch` or `curl` command.
 
-    2.  Update the Citrix ingress controller image with the Azure image URL in the `cic.yaml` file.
+    2.  Update the Netscaler ingress controller image with the Azure image URL in the `cic.yaml` file.
 
             - name: cic-k8s-ingress-controller
               # CIC Image from Azure
@@ -463,6 +463,6 @@ Perform the following steps:
             - name: "NS_VIP"
               value: "X.X.X.X"
 
-4.  Once you have configured Citrix ingress controller with the required values, deploy the Citrix ingress controller using the following command.
+4.  Once you have configured Netscaler ingress controller with the required values, deploy the Netscaler ingress controller using the following command.
 
             kubectl create -f cic.yaml

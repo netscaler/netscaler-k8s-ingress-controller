@@ -1,4 +1,4 @@
-# Deploy Netscaler VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller
+# Deploy Netscaler VPX in active-active high availability in EKS environment using Amazon ELB and Netscaler ingress controller
 
 The topic covers a solution to deploy Netscaler VPX in active-active high availability mode on multiple availability zones in AWS Elastic Container Service (EKS) platform. The solution combines AWS Elastic load balancing (ELB) and Netscaler VPX to load balance the Ingress traffic to the microservices deployed in EKS cluster. AWS ELB handles the Layer 4 traffic and the Netscaler VPXs provides advanced Layer 7 functionalities such as, advanced load balancing, caching, and content-based routing.
 
@@ -16,7 +16,7 @@ In the AWS cloud, AWS [Elastic Load Balancing](https://docs.aws.amazon.com/elast
 
 AWS ELB listens for incoming connections as defined by its listeners. Each listener forwards a new connection to one of the available Netscaler VPX instances. The Netscaler VPX instance load balances the traffic to the EKS pods. It also performs other Layer 7 functionalities such as, rewrite policy, responder policy, SSL offloading and so on provided by Netscaler VPX.
 
-A Citrix ingress controller is deployed in the EKS cluster for each Netscaler VPX instance. The Citrix ingress controllers are configured with the same ingress class. And, it configures the Ingress objects in the EKS cluster on the respective Netscaler VPX instances.
+A Netscaler ingress controller is deployed in the EKS cluster for each Netscaler VPX instance. The Netscaler ingress controllers are configured with the same ingress class. And, it configures the Ingress objects in the EKS cluster on the respective Netscaler VPX instances.
 
 AWS Elastic Load Balancing (ELB) has a DNS name to which an IP address is assigned dynamically. The DNS name can be added as Alias A record for your domain in [Route53](https://aws.amazon.com/route53/) to access the application hosted in the EKS cluster.
 
@@ -26,7 +26,7 @@ Perform the following to deploy the solution:
 
 1.  [Deploy Netscaler VPX Instances](#deploy-citrix-adc-vpx-instances).
 
-1.  [Deploy Citrix ingress controller](#deploy-citrix-ingress-controller).
+1.  [Deploy Netscaler ingress controller](#deploy-citrix-ingress-controller).
 
 1.  [Set up Amazon Elastic Load Balancing](#setup-elastic-load-balancing). You can either set up [Network Load Balancer](#set-up-network-load-balancer) or [Classic Load Balancer](#set-up-classic-load-balancer).
 
@@ -47,25 +47,25 @@ After you deploy the Netscaler VPX instances, you can verify the deployment by r
 
 After the Netscaler VPX instances are successfully deployed, you must edit the security groups to allow traffic from EKS node group security group. Also, you must change the EKS node group security group to allow traffic from VPX instances.
 
-### Deploy Citrix ingress controller
+### Deploy Netscaler ingress controller
 
-Deploy separate instance of Citrix ingress controller for each Netscaler VPX instance. Follow the [deployment instructions](deploy-cic-yaml.md) to deploy Citrix ingress controller.
+Deploy separate instance of Netscaler ingress controller for each Netscaler VPX instance. Follow the [deployment instructions](deploy-cic-yaml.md) to deploy Netscaler ingress controller.
 
-After the Netscaler VPX instance is up, you must set up a system user account on the Netscaler VPX instances. The system user account is used by Citrix ingress controller to log into the Netscaler VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Netscaler](deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+After the Netscaler VPX instance is up, you must set up a system user account on the Netscaler VPX instances. The system user account is used by Netscaler ingress controller to log into the Netscaler VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Netscaler](deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
-1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml](/deployment/aws/manifest/citrix-ingress-controller.yaml)).
+1.  Edit the Netscaler ingress controller deployment YAML ([citrix-ingress-controller.yaml](/deployment/aws/manifest/citrix-ingress-controller.yaml)).
 
     Replace `NS_IP` with the `Private NSIP` address of the respective Netscaler VPX instance. Also, provide the system user account user name and password that you have created on the Netscaler VPX instance. Once you edited the citrix-ingress-controller.yaml file, deploy the updated YAML file using the following command:
 
         kubectl apply -f citrix-ingress-controller .yaml
 
-1.  Perform Step 1 on the second Citrix ingress controller instance.
+1.  Perform Step 1 on the second Netscaler ingress controller instance.
 
-1.  Ensure that both the pods are UP and running. Also, verify if Citrix ingress controller is able to connect to the respective Netscaler VPX instance using the logs:
+1.  Ensure that both the pods are UP and running. Also, verify if Netscaler ingress controller is able to connect to the respective Netscaler VPX instance using the logs:
 
         kubectl logs <cic_pod_name>
 
-After the Citrix ingress controller pods are deployed and running in the EKS cluster. Any, Kubernetes Ingress resource configured with `citrix` ingress class is automatically configured on both the Netscaler VPX instances.
+After the Netscaler ingress controller pods are deployed and running in the EKS cluster. Any, Kubernetes Ingress resource configured with `citrix` ingress class is automatically configured on both the Netscaler VPX instances.
 
 ### Setup elastic load balancing
 
@@ -208,7 +208,7 @@ Alternative to Amazon Network load balancer, you can set up Classic Load Balance
 
 ### Verify the solution
 
-After you have successfully deployed Netscaler VPX, AWS ELB, and Citrix ingress controller, you can verify the solution using a sample service.
+After you have successfully deployed Netscaler VPX, AWS ELB, and Netscaler ingress controller, you can verify the solution using a sample service.
 
 Perform the following:
 
@@ -269,7 +269,7 @@ Perform the following:
 | **Problem** | **Resolution** |
 | ----------- | -------------- |
 | CloudFormation stack failure | -  Ensure that the IAM user or role has sufficient privilege to create EC2 instances and Lambda configurations.  </br> -  Ensure that you haven't exceeded the resource quota. |
-| Citrix ingress controller unable to communicate with the Netscaler VPX instances. | - Ensure that user name and password is correct in `citrix-ingress-controller.yaml` file.  </br> -  Ensure that the Netscaler VPX security group allows the traffic on port `80` and `443` from the EKS node group security group. |
+| Netscaler ingress controller unable to communicate with the Netscaler VPX instances. | - Ensure that user name and password is correct in `citrix-ingress-controller.yaml` file.  </br> -  Ensure that the Netscaler VPX security group allows the traffic on port `80` and `443` from the EKS node group security group. |
 | The services are DOWN in the Netscaler VPX instances. | Ensure that the Netscaler VPX traffic can reach the EKS cluster. Modify the security group of EKS node group to allow traffic from Netscaler VPX security group.|
 | Traffic not routing to Netscaler VPX instance from ELB. | Ensure that security group of Netscaler VPX allows traffic from the ELB security group. |
 

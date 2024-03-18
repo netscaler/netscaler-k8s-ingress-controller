@@ -1,6 +1,6 @@
-# Deploy Citrix Ingress Controller in EKS with Netscaler VPX
+# Deploy Netscaler ingress controller in EKS with Netscaler VPX
 
-This guide details the steps to deploy Citrix Ingress Controller in EKS with Netscaler VPX.
+This guide details the steps to deploy Netscaler ingress controller in EKS with Netscaler VPX.
 
 ## Pre-requisites:
 
@@ -57,7 +57,7 @@ Assign two secondary IPs when creating the Netscaler VPX
 ***The instructions provided above are just for this illustration. Actual deployment may vary according to your requirement***
 
 
-## Deploy Citrix Ingress Controller
+## Deploy Netscaler ingress controller
 
 
 #### Create Netscaler VPX login credentials using Kubernetes secret
@@ -80,7 +80,7 @@ add ns ip 192.168.84.93 255.255.224.0
 This is required for Netscaler to interact with the pods inside the Kubernetes cluster.
 
 
-#### Update the Netscaler VPX management IP and VIP in the Citrix Ingress controller manifest
+#### Update the Netscaler VPX management IP and VIP in the Netscaler ingress controller manifest
 
 ```
 wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/aws/quick-deploy-cic/manifest/cic.yaml
@@ -104,9 +104,9 @@ Update the Netscaler VPX VIP in the `cic.yaml` in the below field. This is the p
   value: "X.X.X.X"
 ```
 
-#### Create the Citrix Ingress Controller
+#### Create the Netscaler ingress controller
 
-Now that we have configure the Citrix Ingress controller with the required values, let's deploy it.
+Now that we have configure the Netscaler ingress controller with the required values, let's deploy it.
 
 ```
 kubectl create -f cic.yaml

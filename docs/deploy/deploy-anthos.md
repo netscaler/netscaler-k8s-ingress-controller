@@ -1,8 +1,8 @@
-# Deploy the Citrix ingress controller in Anthos
+# Deploy the Netscaler ingress controller in Anthos
 
 [Anthos](https://cloud.google.com/anthos) is a hybrid and multi cloud platform that lets you run your applications on existing on-prem hardware or in the public cloud. It provides a consistent development and operation experience for cloud and on-premises environments.
 
-The Citrix ingress controller can be deployed in Anthos GKE on-premises using the following deployment modes:
+The Netscaler ingress controller can be deployed in Anthos GKE on-premises using the following deployment modes:
 
 - Exposing Netscaler CPX with the sidecar ingress controller as a service of type `LoadBalancer`.
 - Dual-tier Ingress deployment
@@ -10,7 +10,7 @@ The Citrix ingress controller can be deployed in Anthos GKE on-premises using th
 ## Expose Netscaler CPX as a service of type `LoadBalancer` in Anthos GKE on-prem
 
 In this deployment, Netscaler VPX or MPX is deployed outside the cluster at Tier-1 and Netscaler CPX at Tier-2 inside the Anthos cluster similar to a dual-tier deployment. However instead of using Ingress, the Netscaler CPX is exposed using the Kubernetes service of type `LoadBalancer`.
-The Citrix ingress controller automates the process of configuring the IP address provided in the `LoadBalancerIP` field of the service specification.
+The Netscaler ingress controller automates the process of configuring the IP address provided in the `LoadBalancerIP` field of the service specification.
 
 **Prerequisites**
 
@@ -33,7 +33,7 @@ Perform the following steps to deploy Netscaler CPX as a service of type `LoadBa
 
    **Note:** In this example, `apache.yaml` is used. You should use the specific YAML file for your application.
 
-2. Deploy Netscaler CPX with the sidecar Citrix ingress controller as Tier-2 Ingress device using the [cpx-cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml) file.
+2. Deploy Netscaler CPX with the sidecar Netscaler ingress controller as Tier-2 Ingress device using the [cpx-cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml) file.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/service-type-lb/cpx-cic.yaml
 
@@ -57,7 +57,7 @@ Perform the following steps to deploy Netscaler CPX as a service of type `LoadBa
 
         kubectl --kubeconfig user-cluster-1-kubeconfig create secret  generic nslogin --from-literal=username=<citrix-adc-username> --from-literal=password=<citrix-adc-password>
 
-7. Deploy the Citrix ingress controller as a Tier-1 ingress controller.
+7. Deploy the Netscaler ingress controller as a Tier-1 ingress controller.
 
    1. Download the [cic.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/service-type-lb/cic.yaml) file.
    
@@ -99,11 +99,11 @@ To delete the Tier-2 Ingress object, use the following command.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f tier-2-ingress.yaml
 
-To delete the Netscaler CPX deployment along with the sidecar Citrix ingress controller, use the following command.
+To delete the Netscaler CPX deployment along with the sidecar Netscaler ingress controller, use the following command.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-cic.yaml
 
-To delete the stand-alone Citrix ingress controller, use the following command.
+To delete the stand-alone Netscaler ingress controller, use the following command.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cic.yaml
 
@@ -123,7 +123,7 @@ To delete the `nslogin` secret, use the following command.
 
 In a dual-tier Ingress deployment, Netscaler VPX or MPX is deployed outside the Kubernetes cluster (Tier-1) and Netscaler CPXs are deployed inside the Kubernetes cluster (Tier-2).
 
-Netscaler MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Netscaler CPXs in Tier-2. The Tier-2 Netscaler CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix ingress controller deployed as a standalone pod configures the Tier-1 Netscaler. The sidecar Citrix ingress controller in one or more Netscaler CPX pods configures the associated Netscaler CPX in the same pod.
+Netscaler MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Netscaler CPXs in Tier-2. The Tier-2 Netscaler CPX then routes the traffic to the microservices in the Kubernetes cluster. The Netscaler ingress controller deployed as a standalone pod configures the Tier-1 Netscaler. The sidecar Netscaler ingress controller in one or more Netscaler CPX pods configures the associated Netscaler CPX in the same pod.
 
 **Prerequisites**
 
@@ -145,7 +145,7 @@ Perform the following steps to deploy a dual-tier Ingress deployment of Netscale
    
    **Note:** In this example, `apache.yaml` is used. You should use the specific YAML file for your application.
 
-2. Deploy Netscaler CPX with the Citrix ingress controller as Tier-2 Ingress using the [cpx-cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml) file.
+2. Deploy Netscaler CPX with the Netscaler ingress controller as Tier-2 Ingress using the [cpx-cic.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml) file.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/anthos/manifest/dual-tiered-ingress/cpx-cic.yaml
 
@@ -173,7 +173,7 @@ Perform the following steps to deploy a dual-tier Ingress deployment of Netscale
 
         kubectl --kubeconfig user-cluster-1-kubeconfig create secret  generic nslogin --from-literal=username=<citrix-adc-username> --from-literal=password=<citrix-adc-password>
 
-8.  Deploy the Citrix ingress controller as a Tier-1 ingress controller.
+8.  Deploy the Netscaler ingress controller as a Tier-1 ingress controller.
 
     1. Download the [cic.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/anthos/manifest/dual-tiered-ingress/cic.yaml) file.
    
@@ -216,7 +216,7 @@ To delete the Tier-2 Ingress object, use the following command.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f tier-2-ingress.yaml`
 
-To delete the Netscaler CPX deployment along with the sidecar Citrix ingress controller, use the following command.
+To delete the Netscaler CPX deployment along with the sidecar Netscaler ingress controller, use the following command.
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-cic.yaml
 
@@ -224,7 +224,7 @@ To delete the Netscaler CPX service deployment, use the following command:
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cpx-service.yaml
 
-To delete the stand-alone Citrix ingress controller use the following command:
+To delete the stand-alone Netscaler ingress controller use the following command:
 
         kubectl --kubeconfig user-cluster-1-kubeconfig delete -f cic.yaml
 

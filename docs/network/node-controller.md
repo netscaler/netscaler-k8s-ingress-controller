@@ -16,20 +16,20 @@ Citrix provides a [node controller](https://github.com/citrix/citrix-k8s-node-co
 
 **To establish network connectivity using Citrix node controller:**
 
-1.  Deploy the Citrix ingress controller. Perform the following:
+1.  Deploy the Netscaler ingress controller. Perform the following:
 
     1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
 
             wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-    2.  Edit the `citrix-k8s-ingress-controller.yaml` file and enter the values for the environmental variables. For more information, see [Deploy the Citrix ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
+    2.  Edit the `citrix-k8s-ingress-controller.yaml` file and enter the values for the environmental variables. For more information, see [Deploy the Netscaler ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
 
 
     3.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 
             kubectl create -f citrix-k8s-ingress-controller.yaml
 
-    4.  Verify if the Citrix ingress controller is deployed successfully using the following command:
+    4.  Verify if the Netscaler ingress controller is deployed successfully using the following command:
 
             kubectl get pods --all-namespaces
 

@@ -1,10 +1,10 @@
 # Supported platforms and deployments
 
-This topic provides details about various Kubernetes platforms, deployment topologies, features, and CNIs supported in Cloud-Native deployments that include Netscaler and Citrix ingress controller.
+This topic provides details about various Kubernetes platforms, deployment topologies, features, and CNIs supported in Cloud-Native deployments that include Netscaler and Netscaler ingress controller.
 
 ## Kubernetes platforms
 
-Citrix ingress controller is supported on the following platforms:
+Netscaler ingress controller is supported on the following platforms:
 
 -  Kubernetes v1.10 (and later) on bare metal or self-hosted on public clouds such as, AWS, GCP, or Azure.
 -  Google Kubernetes Engine (GKE)
@@ -20,7 +20,7 @@ Citrix ingress controller is supported on the following platforms:
 
 For Kubernetes:
 
--  Citrix ingress controller supports `v1` version API.
+-  Netscaler ingress controller supports `v1` version API.
 
 For Istio and Red Hat OpenShift, the following are the latest validated versions:
 
@@ -31,7 +31,7 @@ For Istio and Red Hat OpenShift, the following are the latest validated versions
 
 ## Netscaler platforms
 
-The following table lists the Netscaler platforms supported by the Citrix ingress controller:
+The following table lists the Netscaler platforms supported by the Netscaler ingress controller:
 
 | Netscaler Platform | Versions |
 | ------------------- | -------- |
@@ -41,7 +41,7 @@ The following table lists the Netscaler platforms supported by the Citrix ingres
 
 ## Supported deployment topologies on platforms (on-premises)
 
-The following table lists the various deployment topologies supported by the Citrix ingress controller on the supported Kubernetes (on-premises) platforms:
+The following table lists the various deployment topologies supported by the Netscaler ingress controller on the supported Kubernetes (on-premises) platforms:
 
 | Deployment Topologies | Kubernetes | Red Hat OpenShift | PKS |
 | --------------------- | ---------- | --------------------------- | ------------------------- |
@@ -53,7 +53,7 @@ The following table lists the various deployment topologies supported by the Cit
 
 ## Supported deployment topologies on cloud platforms
 
-The following table lists the various deployment topologies supported by the Citrix ingress controller on the supported cloud platforms:
+The following table lists the various deployment topologies supported by the Netscaler ingress controller on the supported cloud platforms:
 
 | Deployment Topologies | GKE | EKS | AKS (Basic mode - Kubenet) | AKS (Advanced mode - Azure CNI) |
 | --------------------- |  --------------------------- | ------------------------- | --------------- | ----------------- |
@@ -61,11 +61,11 @@ The following table lists the various deployment topologies supported by the Cit
 | Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Netscaler VPX in tier-1 and Netscaler CPXs in tier-2) | Yes | No | Yes | Yes |
 | Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Cloud LB in tier-1 and Netscaler CPXs in tier-2) | Yes | No | Yes | Yes |
 
-## Supported Citrix ingress controller feature on platforms
+## Supported Netscaler ingress controller feature on platforms
 
-The following table lists the Citrix ingress controller features supported on various cloud-native platforms:
+The following table lists the Netscaler ingress controller features supported on various cloud-native platforms:
 
-| Citrix ingress controller features | Kubernetes | Google Cloud  | AWS | Azure | Red Hat OpenShift | PKS |
+| Netscaler ingress controller features | Kubernetes | Google Cloud  | AWS | Azure | Red Hat OpenShift | PKS |
 | --------------------- | ---------- | --------------------------- | ------------------------- | --------------- | ----------------- | --------------------------------|
 | [TCP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | Yes | Yes | Yes | Yes | Yes | Yes |
 | [UDP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | Yes | Yes | Yes | Yes | Yes | Yes |
@@ -84,9 +84,9 @@ The following table lists the Citrix ingress controller features supported on va
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | N/A | N/A | N/A | N/A | Yes | N/A |
 | [Simplified canary using Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations) | Yes | Yes | Yes | Yes | Yes | Yes |  
 
-The following table lists the Citrix ingress controller features supported on the respective Citrix Ingress Controller versions and Netscaler versions:
+The following table lists the Netscaler ingress controller features supported on the respective Netscaler ingress controller versions and Netscaler versions:
 
-| Citrix ingress controller features | Citrix ingress controller versions | Netscaler MPX or VPX versions | Netscaler CPX versions |
+| Netscaler ingress controller features | Netscaler ingress controller versions | Netscaler MPX or VPX versions | Netscaler CPX versions |
 | --------------------- | --------------------------- |--------------------------------| -------  |
 | [TCP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later  |
 | [UDP Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/how-to/tcp-udp-ingress/) | 1.1.1 and later | 11.1–61.7 and later | 12.1–51.16 and later |
@@ -137,11 +137,11 @@ The following matrix provides information on compatibility between the different
 
 For example, the first row of this table explains the versions of Netscaler CPX/VPX/MPX which supports different components of the Citrix cloud native solution. In this table NA is marked if the components are not dependent on each other or when the components are the same.
 
-| Product/component| Netscaler CPX/VPX/MPX | Citrix ingress controller| Citrix observability exporter (COE)| Citrix istio adaptor (CIA) | Citrix node controller | ADM agent | ADM service | ADM on-prem | Netscaler metrics exporter
+| Product/component| Netscaler CPX/VPX/MPX | Netscaler ingress controller| Citrix observability exporter (COE)| Citrix istio adaptor (CIA) | Citrix node controller | ADM agent | ADM service | ADM on-prem | Netscaler metrics exporter
 | ----------------- |------------- | ------------- |--------------------------- | ------------------------- | --------------- | ----------------- | --------------------------------|--------------------------------|--------------------------------|
-| Netscaler CPX/VPX/MPX| NA | Citrix ingress controller version 1.1.1 onwards is supported with CPX version 12.1+ onwards and VPX/MPX 11.1+ onwards| COE version 1.0.001 onwards is supported with VPX/MPX/CPX: 13.0 onwards  | CIA version 1.0.0-alpha onwards is supported with CPX/VPX/MPX 12.1+ onwards | CPX/VPX/MPX 12.0 onwards|  CPX/VPX/MPX 13.0–47.22 onwards | CPX/VPX/MPX 13.0–47.22 onwards | CPX/VPX/MPX 11.1 onwards|CPX/VPX/MPX 12.1 onwards  |
-| [Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) | CPX 12.1+ onwards and VPX/MPX 11.1+ onwards supports Citrix ingress controller version 1.1.1 onwards | NA  | COE version 1.0.001 and onwards is supported with Citrix ingress controller version 1.5.6 onwards  | NA |  NA | NA | NA | NA | NA |
-| [Citrix observability exporter (COE)](https://github.com/citrix/citrix-observability-exporter)|    CPX/VPX/MPX 13.0 onwards is supported with COE version 1.0.001 onwards | Citrix ingress controller version 1.5.6 onwards is supported with COE version 1.0.001 onwards  | NA|   CIA version 1.2.0-beta onwards is supported with COE version 1.0.001 onwards   |  NA  | NA | NA | NA | NA |
+| Netscaler CPX/VPX/MPX| NA | Netscaler ingress controller version 1.1.1 onwards is supported with CPX version 12.1+ onwards and VPX/MPX 11.1+ onwards| COE version 1.0.001 onwards is supported with VPX/MPX/CPX: 13.0 onwards  | CIA version 1.0.0-alpha onwards is supported with CPX/VPX/MPX 12.1+ onwards | CPX/VPX/MPX 12.0 onwards|  CPX/VPX/MPX 13.0–47.22 onwards | CPX/VPX/MPX 13.0–47.22 onwards | CPX/VPX/MPX 11.1 onwards|CPX/VPX/MPX 12.1 onwards  |
+| [Netscaler ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) | CPX 12.1+ onwards and VPX/MPX 11.1+ onwards supports Netscaler ingress controller version 1.1.1 onwards | NA  | COE version 1.0.001 and onwards is supported with Netscaler ingress controller version 1.5.6 onwards  | NA |  NA | NA | NA | NA | NA |
+| [Citrix observability exporter (COE)](https://github.com/citrix/citrix-observability-exporter)|    CPX/VPX/MPX 13.0 onwards is supported with COE version 1.0.001 onwards | Netscaler ingress controller version 1.5.6 onwards is supported with COE version 1.0.001 onwards  | NA|   CIA version 1.2.0-beta onwards is supported with COE version 1.0.001 onwards   |  NA  | NA | NA | NA | NA |
 | [Citrix istio adaptor (CIA)](https://github.com/citrix/citrix-istio-adaptor)| CPX/VPX/MPX 12.1+ onwards is supported with CIA version 1.2.0-beta onwards | NA | COE version 1.0.001 is supported with CIA version 1.2.0-beta onwards| NA |  NA  | NA | NA | NA | NA |
 | Citrix node controller| CPX/VPX/MPX 12.0 onwards | NA | NA | NA | NA  | NA | NA | NA | NA|
 | ADM agent| CPX/VPX/MPX 13.0–47.22 onwards | NA |NA| NA | NA | NA | NA | NA  | NA|

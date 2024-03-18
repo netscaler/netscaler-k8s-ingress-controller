@@ -15,7 +15,7 @@ Create a Kubernetes certificate for the CA certificate with which client certifi
 
             kubectl create secret generic tls-ca --from-file=tls.crt=cacerts.pem -n netscaler
 
-**Note:** You must specify `tls.crt=` while creating a secret. This file is used by the Citrix ingress controller while parsing a CA secret.
+**Note:** You must specify `tls.crt=` while creating a secret. This file is used by the Netscaler ingress controller while parsing a CA secret.
 
 You need to specify the `ingress.citrix.com/frontend_sslprofile` annotation to attach the generated CA secret which is used for the client certificate authentication for a service deployed in Kubernetes. For client authentication `clientauth` should be enabled using the `ingress.citrix.com/frontend_sslprofile` annotation. To know more about the SSL profile, see the [SSL profile documentation](./SSL-profile.md).
 
@@ -77,7 +77,7 @@ Perform the following steps to generate a Kubernetes secret for an existing cert
 
         kubectl create secret generic example-test-ca --from-file=tls.crt=cacerts.pem -n netscaler
 
-    **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by Citrix ingress controller while parsing a CA secret.
+    **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by Netscaler ingress controller while parsing a CA secret.
 
 1.  Create and apply the Ingress configuration.
 

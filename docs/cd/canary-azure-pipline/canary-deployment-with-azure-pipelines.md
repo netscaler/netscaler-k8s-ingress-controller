@@ -8,7 +8,7 @@ Canary is a deployment strategy which involves deploying new versions of an appl
 
 [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
 
-This section provides information on how to achieve canary deployment for Kubernetes based application using Netscaler VPX and Citrix ingress controller with Azure pipelines.
+This section provides information on how to achieve canary deployment for Kubernetes based application using Netscaler VPX and Netscaler ingress controller with Azure pipelines.
 
 ### Benefits of Canary deployment
 
@@ -33,7 +33,7 @@ For more information, see [simplified canary deployment using Ingress annotation
 
 ### Canary deployment using Netscaler VPX with Azure pipelines
 
-Citrix proposes a solution for canary deployment using Netscaler VPX and Citrix ingress controller with Azure pipelines for Kubernetes based applications.
+Citrix proposes a solution for canary deployment using Netscaler VPX and Netscaler ingress controller with Azure pipelines for Kubernetes based applications.
 
 ![canary-deployment](../../media/canary-blue-green.png)
 
@@ -47,11 +47,11 @@ In this solution, there are three configuration directories:
 
 **kubernetes_configs**
 
-This directory includes the version based application specific deployment YAML files and the Helm based configuration files to deploy Citrix ingress Controller which is responsible to push Netscaler configuration to achieve canary deployment.
+This directory includes the version based application specific deployment YAML files and the Helm based configuration files to deploy Netscaler ingress controller which is responsible to push Netscaler configuration to achieve canary deployment.
 
 ![kubernetes_configs](../../media/canary-kubernetes-configs.png)
 
-**Note:** You can download the latest Helm charts from the [Citrix ingress controller Helm charts repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller) and place it under the 
+**Note:** You can download the latest Helm charts from the [Netscaler ingress controller Helm charts repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller) and place it under the 
 `cic_helm` directory.
 
 **deployment_configs**
@@ -86,7 +86,7 @@ Perform the following steps:
 1. Clone the GitHub repository and go to the directory `cd/canary-azure-devops`.
 
 1. Place the application deployment specific YAMLs (with the ingress file) under a versioned folder `v1` in the `kubernetes_configs` directory.
-1. Create three Azure pipelines using the existing YAML files, `deploy_cic.yaml`, `deploy.yaml`, and `teardown.yaml`, for deploying Citrix ingress controller and deploying and tearing down the applications. See, [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) for creating a pipeline.
+1. Create three Azure pipelines using the existing YAML files, `deploy_cic.yaml`, `deploy.yaml`, and `teardown.yaml`, for deploying Netscaler ingress controller and deploying and tearing down the applications. See, [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) for creating a pipeline.
 1. Update the subscription, agent pool, service connection and Netscaler details in the pipeline YAML.
 1. Save the pipeline.
 1. Update the path in `deploy_config.json` with the path specifying the directory where the application YAMLs are placed.

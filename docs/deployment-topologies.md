@@ -6,13 +6,13 @@ In Dual-tier deployments, the second tier is within the Kubernetes Cluster (usin
 
 ## Single-Tier topology
 
-In a Single-Tier topology, Netscaler MPX or VPX devices proxy the (north-south) traffic from the clients to microservices inside the cluster. The Citrix ingress controller is deployed as a standalone pod in the Kubernetes cluster. The controller automates the configuration of Netscalers (MPX or VPX) based on the changes to the microservices or the Ingress resources.
+In a Single-Tier topology, Netscaler MPX or VPX devices proxy the (north-south) traffic from the clients to microservices inside the cluster. The Netscaler ingress controller is deployed as a standalone pod in the Kubernetes cluster. The controller automates the configuration of Netscalers (MPX or VPX) based on the changes to the microservices or the Ingress resources.
 
 ![Single-tier](media/singletopology.png)
 
 ## Dual-Tier topology
 
-In Dual-Tier topology, Netscaler MPX or VPX devices in Tier-1 proxy the traffic (north-south) from the client to Netscaler CPXs in Tier-2. The Tier-2 Netscaler CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix ingress controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Netscaler CPX pods configures the associated Netscaler CPX in the same pod.
+In Dual-Tier topology, Netscaler MPX or VPX devices in Tier-1 proxy the traffic (north-south) from the client to Netscaler CPXs in Tier-2. The Tier-2 Netscaler CPX then routes the traffic to the microservices in the Kubernetes cluster. The Netscaler ingress controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Netscaler CPX pods configures the associated Netscaler CPX in the same pod.
 
 ![Dual-tier](media/dualtier.png)
 
@@ -57,7 +57,7 @@ Services of type `LoadBalancer` in Kubernetes enables you to directly expose ser
 
 By default, in a bare metal Kubernetes cluster, service of type `LoadBalancer` simply exposes `NodePorts` for the service. And, it does not configure external load balancers.
 
-The Citrix ingress controller supports the services of type `LoadBalancer`. You can create a service of type `LoadBalancer` and expose it using the ingress Netscaler in Tier-1. The ingress Netscaler provisions a load balancer for the service and an external IP address is assigned to the service. The Citrix ingress controller allocates the IP address using the [Citrix IPAM controller](crds/vip.md).
+The Netscaler ingress controller supports the services of type `LoadBalancer`. You can create a service of type `LoadBalancer` and expose it using the ingress Netscaler in Tier-1. The ingress Netscaler provisions a load balancer for the service and an external IP address is assigned to the service. The Netscaler ingress controller allocates the IP address using the [Citrix IPAM controller](crds/vip.md).
 
 For more information, see [Expose services of type LoadBalancer](network/type_loadbalancer.md).
 
@@ -67,7 +67,7 @@ For more information, see [Expose services of type LoadBalancer](network/type_lo
 
 By default, Kubernetes services are accessible using the [cluster IP](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) address. The cluster IP address is an internal IP address that can be accessed within the Kubernetes cluster. To make the service accessible from the outside of the Kubernetes cluster, you can create a service of the type `NodePort`.
 
-The Citrix ingress controller supports services of type `NodePort`. Using the Ingress Netscaler and Citrix ingress controller, you can expose the service of type `NodePort` to the outside world.
+The Netscaler ingress controller supports services of type `NodePort`. Using the Ingress Netscaler and Netscaler ingress controller, you can expose the service of type `NodePort` to the outside world.
 
 For more information, see [Expose services of type NodePort](network/nodeport.md).
 

@@ -15,7 +15,7 @@ To request an invitation to participate in the Slack channel, please supply your
 
 **To Reproduce**
 1. Steps
-2. Version of the Citrix Ingress Controller
+2. Version of the Netscaler ingress controller
 3. Version of MPX/VPX/CPX
 4. Environment variables (minus secrets)
 

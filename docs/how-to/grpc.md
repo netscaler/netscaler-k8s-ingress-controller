@@ -1,4 +1,4 @@
-# Enable gRPC support using the Citrix ingress controller
+# Enable gRPC support using the Netscaler ingress controller
 
 gRPC is a high performance, open-source universal RPC framework created by Google. In gRPC, a client application can directly call methods on a server application from a different server in the same way you call local methods.
 You can easily create distributed applications and services using GRPC.
@@ -15,7 +15,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
            kubectl apply -f cic-configmap.yaml
 
-3. Edit the `cic.yaml` file for deploying the Citrix ingress controller to support ConfigMap.
+3. Edit the `cic.yaml` file for deploying the Netscaler ingress controller to support ConfigMap.
 
                 ```yml
                 args:
@@ -24,7 +24,7 @@ Perform the following steps to enable GRPC support using HTTP2.
                   - --configmap
                     default/cic-configmap
                 ```
-4. Deploy the Citrix ingress controller as a stand-alone pod by applying the edited YAML file.
+4. Deploy the Netscaler ingress controller as a stand-alone pod by applying the edited YAML file.
 
         kubectl apply -f cic.yaml
 
@@ -85,7 +85,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
         secret "grpc-secret" created
 
-8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Citrix ingress controller.
+8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Netscaler ingress controller.
 
    - Create a YAML file for the front-end Ingress configuration and apply it to enable HTTP/2 on the content switching virtual server.
   

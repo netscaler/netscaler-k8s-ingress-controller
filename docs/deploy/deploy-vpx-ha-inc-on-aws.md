@@ -6,7 +6,7 @@ In a typical high availability deployment, both the Netscaler VPX instances in a
 
 When the appliances in a high availability pair reside on two different networks, the secondary Netscaler VPX must have an independent network configuration. This means that Netscaler VPXs on different networks cannot share subnet IP address (SNIP), virtual IP address (VIP), or network routes. This type of configuration, in which the Netscaler VPXs in a high availability pair have different configuration parameters, is known as Independent Network Configuration (INC).
 
-As the management IP address or NSIP of both the Netscaler VPX instances are different and they cannot share a subnet IP address, an IP address that does not belong to the VPC CIDR is selected. An AWS Route table is then configured for this IP address pointing to the ENI of the primary VPX instance. Whenever, the Netscaler VPX fails over (it becomes secondary), the Route table is automatically updated to point to the ENI of the new primary VPX (earlier the secondary VPX). This IP address is used as the `NS_IP` environment variable in Citrix ingress controller to configure the Netscalers. For more information, see [VPX HA pair with private IP address](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws/vpx-ha-pip-different-aws-zones.html).
+As the management IP address or NSIP of both the Netscaler VPX instances are different and they cannot share a subnet IP address, an IP address that does not belong to the VPC CIDR is selected. An AWS Route table is then configured for this IP address pointing to the ENI of the primary VPX instance. Whenever, the Netscaler VPX fails over (it becomes secondary), the Route table is automatically updated to point to the ENI of the new primary VPX (earlier the secondary VPX). This IP address is used as the `NS_IP` environment variable in Netscaler ingress controller to configure the Netscalers. For more information, see [VPX HA pair with private IP address](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws/vpx-ha-pip-different-aws-zones.html).
 
 
    ![Unified Ingress Architecture with Netscaler VPXs deployed in HA INC mode as Ingress](../media/ha-inc-aws-eks-az-with-cic.png)
@@ -93,7 +93,7 @@ It takes a few minutes to complete the deployment. After the Terraform deploymen
 
 This response is from the Apache microservice that is deployed inside the EKS cluster. The Netscaler VPX HA pair has load balanced the HTTP request to the Apache microservice and relayed the response back. 
 
-This is an example on how to expose a microservice using the Netscaler VPX HA pair as Ingress. You can use the same for your microservice applications. You can also use the advanced features of Citrix ingress controller such as SSL termination, URL rewrite, Application Security and so on. For more information on Citrix ingress controller, see [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
+This is an example on how to expose a microservice using the Netscaler VPX HA pair as Ingress. You can use the same for your microservice applications. You can also use the advanced features of Netscaler ingress controller such as SSL termination, URL rewrite, Application Security and so on. For more information on Netscaler ingress controller, see [Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
 ## Workloads on Amazon EKS
 

@@ -15,14 +15,14 @@ The following are the Ingress annotations supported by Citrix:
 |kubernetes.io/ingress.class|ingress class name| It is a way to associate a particular ingress resource with an ingress controller.</br> </br>For example: `kubernetes.io/ingress.class:"Citrix"` | Configures all ingresses |
 | ingress.citrix.com/secure-service-type | `ssl` or `ssl_tcp` | The annotation allows L4 load balancing with SSL over TCP as protocol. Use `ssl_tcp`, if you want to use SSL over TCP. | `ssl` |
 |ingress.citrix.com/insecure-service-type| `http`, `tcp`, `udp`, `sip_udp`, or `any` | The annotation allows L4 load balancing with tcp/udp/sip_udp any as protocol. Use `tcp`, if you want TCP as the protocol. Use `udp`, if you want UDP as the protocol.| `http` |
-|ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Citrix ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Citrix ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Citrix ingress controller to consider any path string as a prefix expression. | `prefix` |
+|ingress.citrix.com/path-match-method | `prefix` or `exact` | Use this annotation for ingress path matching. </br>-  Use `prefix` for Netscaler ingress controller to consider any path string as a prefix expression.</br> - Use `exact` for the Netscaler ingress controller to consider the path as an exact match.</br></br> For example, the `ingress.citrix.com/path-match-method: "prefix"` annotation defines the Netscaler ingress controller to consider any path string as a prefix expression. | `prefix` |
 | ingress.citrix.com/deployment | `dsr` | Use this annotation to create Direct Server Return (DSR) configuration on Netscaler. For example, the `ingress.citrix.com/deployment: "dsr"` annotation creates DSR configuration on the Netscaler. |
 | `ingress.citrix.com/preconfigured-certkey`| Pre-configured certificate keys and type. Certificate type can be default, SNI, or CA.  |Use this annotation to specify the preconfigured certificate key or keys in the Netscaler that you want to reuse and bind to applications.  |If the type parameter is not provided with the name of a certificate, then the certificate is considered as the default (non-SNI) type. |
 | | | For example in the `ingress.citrix.com/preconfigured-certkey : '{"certs": [ {"name": "certkey1", "type": "default"}, {"name": "certkey2", "type": "sni"} ] }` annotation, `certkey1` is used as a non-SNI certificate and `certkey2` is used as a SNI certificate.||
 
 ## Smart annotations for Ingress
 
-Smart annotation is an option provided by the Citrix ingress controller to efficiently enable Netscaler features using the Netscaler entity name. The Citrix ingress controller converts the Ingress in Kubernetes to a set of Netscaler objects. You can efficiently control these objects using smart annotations.
+Smart annotation is an option provided by the Netscaler ingress controller to efficiently enable Netscaler features using the Netscaler entity name. The Netscaler ingress controller converts the Ingress in Kubernetes to a set of Netscaler objects. You can efficiently control these objects using smart annotations.
 
 !!! Info "Important"
     To use smart annotations, you must have good understanding of Netscaler features and their respective entity names. For more information on Netscaler features and entity names, see [Netscaler Documentation](https://docs.citrix.com/en-us/citrix-adc/12-1.html).
@@ -31,7 +31,7 @@ Smart annotation takes JSON format as input. The key and value that you pass in 
 
 For example, if you want to enable the `SRCIPDESTIPHASH` based lb method, you must use the corresponding NITRO key and value format `lbmethod`, `SRCIPDESTIPHASH` respectively.
 
-The following table details the smart annotations provided by the Citrix ingress controller:
+The following table details the smart annotations provided by the Netscaler ingress controller:
 
 | Netscaler Entity Name | Smart Annotation | Example |
 | ----------------------- | ---------------- | ------- |
@@ -86,9 +86,9 @@ By default, the content switching virtual server does not depend on the state of
 ## Smart annotations for routes
 
 Similar to Ingress, you can also use smart annotations with OpenShift routes.
-The Citrix ingress controller converts the routes in OpenShift to a set of Netscaler objects.
+The Netscaler ingress controller converts the routes in OpenShift to a set of Netscaler objects.
 
-The following table details the smart annotations provided by the Citrix ingress controller:
+The following table details the smart annotations provided by the Netscaler ingress controller:
 
 | Netscaler entity name | Smart annotation | Example |
 | ----------------------- | ---------------- | ------- |

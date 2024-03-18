@@ -1,16 +1,16 @@
-# Upgrade Citrix ingress controller
+# Upgrade Netscaler ingress controller
 
-This topic explains how to upgrade the Citrix ingress controller instance for Netscaler CPX with the Citrix ingress controller as sidecar and Citrix ingress controller standalone deployments.
+This topic explains how to upgrade the Netscaler ingress controller instance for Netscaler CPX with the Netscaler ingress controller as sidecar and Netscaler ingress controller standalone deployments.
 
-## Upgrade Netscaler CPX with Citrix ingress controller as a sidecar
+## Upgrade Netscaler CPX with Netscaler ingress controller as a sidecar
 
-To upgrade a Netscaler CPX with the Citrix ingress controller as a sidecar, you can either modify the associated YAML definition file (for example, [citrix-k8s-cpx-ingress.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)) or use the Helm chart.
+To upgrade a Netscaler CPX with the Netscaler ingress controller as a sidecar, you can either modify the associated YAML definition file (for example, [citrix-k8s-cpx-ingress.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml)) or use the Helm chart.
 
 If you want to upgrade by modifying the **YAML** definition file, perform the following:
 
-1.  Change the version of the Citrix ingress controller and Netscaler CPX image under `containers` section to the following:
-    -  Netscaler CPX version: 13.0-83.27 (`quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`)
-    -  Citrix ingress controller version: 1.33.4 (`quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6`)
+1.  Change the version of the Netscaler ingress controller and Netscaler CPX image under `containers` section to the following:
+    -  Netscaler CPX version: 13.0-83.27 (`quay.io/netscaler/netscaler-cpx:13.1-51.15`)
+    -  Netscaler ingress controller version: 1.33.4 (`quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6`)
   
 2.  Update the `CluterRole` as follows:
 
@@ -48,13 +48,13 @@ If you want to upgrade by modifying the **YAML** definition file, perform the fo
 
 3.  Save the YAML definition file and reapply the file.
 
-## Upgrade a standalone Citrix ingress controller to version 1.5.25
+## Upgrade a standalone Netscaler ingress controller to version 1.5.25
 
-To upgrade a standalone Citrix ingress controller instance, you can either modify the **YAML** definition file or use the Helm chart.
+To upgrade a standalone Netscaler ingress controller instance, you can either modify the **YAML** definition file or use the Helm chart.
 
-If you want to upgrade Citrix ingress controller to version 1.5.25 by modifying the **YAML** definition file, perform the following:
+If you want to upgrade Netscaler ingress controller to version 1.5.25 by modifying the **YAML** definition file, perform the following:
 
-1.  Change the version for the Citrix ingress controller image under `containers` section. For example, consider you have the following YAML file.
+1.  Change the version for the Netscaler ingress controller image under `containers` section. For example, consider you have the following YAML file.
 
         apiVersion: v1
         kind: Pod

@@ -17,13 +17,13 @@ VPX is present in Tier-1 and load balancing the client requests among the CPX po
 #### Netscaler CPX
 CPX is acting as a load balancer in Tier-2 for the endpoint application pods.
 The CPX pod is running with CIC and Exporter in sidecar.
-#### Citrix Ingress Controller (CIC)
+#### Netscaler ingress controller (CIC)
 CIC is an ingress controller which is built around Kubernetes Ingress and automatically configures Netscaler based on the Ingress resource configuration. It can be found [here](https://github.com/netscaler/netscaler-k8s-ingress-controller).
 
 There are 2 types of CICs in Figure 2 below. One is used for configuring the VPX and the other one for configuring the CPX where it is running as a sidecar container.
 #### Exporter
 The Exporter is a sidecar container which is exposing the CPX's metrics. Exporter collects the metrics from CPX and exposes it in a format that Prometheus can understand.
-Netscaler Metrics Exporter can be found [here](https://github.com/citrix/citrix-adc-metrics-exporter).
+Netscaler Metrics Exporter can be found [here](https://github.com/netscaler/netscaler-adc-metrics-exporter).
 #### Prometheus
 Prometheus – which is a graduated CNCF project – is used to collect all the metrics from the CPX and expose them using Prometheus-adapter which will be queried by the HPA controller to keep a check on the metrics.
 #### Prometheus-adapter

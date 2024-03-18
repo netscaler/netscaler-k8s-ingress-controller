@@ -1,6 +1,6 @@
-# Deploy an HTTPS web application on Kubernetes with Citrix ingress controller and HashiCorp Vault using cert-manager
+# Deploy an HTTPS web application on Kubernetes with Netscaler ingress controller and HashiCorp Vault using cert-manager
 
-For ingress resources deployed with the Citrix ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert-manager.
+For ingress resources deployed with the Netscaler ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert-manager.
 
 Specifically, the workflow uses the Vault PKI Secrets Engine to create a certificate authority (CA). This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications. For external facing applications that require public trust, see [automating TLS certificates using Let’s Encrypt CA](./acme.md).
 
@@ -12,7 +12,7 @@ The workflow uses a Vault secret engine and authentication methods. For the full
 
 This topic provides you information on how to deploy an HTTPS web application on a Kubernetes cluster, using:
 
--  Citrix ingress controller
+-  Netscaler ingress controller
 -  JetStack's [cert-manager](https://cert-manager.io/docs/) to provision TLS certificates from [HashiCorp Vault](https://www.vaultproject.io/)
 -  [HashiCorp Vault](https://www.vaultproject.io/)
 
@@ -26,11 +26,11 @@ Ensure that you have:
 
 -  Deployed Netscaler MPX, VPX, or CPX in Tier 1 or Tier 2 deployment model.
 
-    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Citrix ingress controller running in the Kubernetes cluster configures the virtual services for the services running on the Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
+    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Netscaler ingress controller running in the Kubernetes cluster configures the virtual services for the services running on the Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
 
     In the Tier 2 deployment, a TCP service is configured on the Netscaler (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Netscaler CPX instances running in the Kubernetes cluster. Netscaler CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Deployed Citrix ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
+-  Deployed Netscaler ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
 
 -  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure that you have the administrator permission.
 
@@ -139,7 +139,7 @@ Perform the following steps to deploy a sample web application.
 1.  Expose this service to the outside world by creating an Ingress that is deployed on Netscaler CPX or VPX as Content switching virtual server.
 
         **Note:**
-        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Citrix ingress controller is started.
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Netscaler ingress controller is started.
 
 ```yml
         apiVersion: networking.k8s.io/v1
@@ -618,7 +618,7 @@ Perform the following steps to modify the ingress to use the generated secret.
 
 **Verify the Ingress configuration in Netscaler**
 
- Once the certificate is successfully generated, Citrix ingress controller uses this certificate for configuring the front-end SSL virtual server. You can verify it with the following steps.
+ Once the certificate is successfully generated, Netscaler ingress controller uses this certificate for configuring the front-end SSL virtual server. You can verify it with the following steps.
 
 1.  Log on to Netscaler CPX and verify if the Certificate is bound to the SSL virtual server.
 

@@ -14,12 +14,12 @@ Once the registry is created, the Netscaler CPX registry name should be attached
 az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-acr <cpx-registry>
 ```
 
-## Get Citrix Ingress Controller from Azure Marketplace
+## Get Netscaler ingress controller from Azure Marketplace
 
-To deploy the Citrix ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the CIC image.
-For more information on how to create registry and get image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
+To deploy the Netscaler ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the CIC image.
+For more information on how to create registry and get image URL, see [Get Netscaler ingress controller from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
 
-Once the registry is created, the Citrix ingress controller registry name should be attached to the AKS cluster used for deployment.
+Once the registry is created, the Netscaler ingress controller registry name should be attached to the AKS cluster used for deployment.
 
 ```
 az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-acr <cic-registry>
@@ -56,7 +56,7 @@ In this procedure, Apache web server is used as the sample application.
         
         
 
-    3. Update the Citrix ingress controller image with the Azure Image URL in `azureimage-standalone_cpx.yaml` file.
+    3. Update the Netscaler ingress controller image with the Azure Image URL in `azureimage-standalone_cpx.yaml` file.
 
         
 

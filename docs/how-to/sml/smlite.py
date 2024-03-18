@@ -2,7 +2,7 @@
 
 '''
 This scipt convert application YAMLs into set of YAMLs that can be deployed in Service Mesh lite architecture 
-where east-west communication happens via Netscaler CPX running with Citrix Ingress Controller as sidecar.
+where east-west communication happens via Netscaler CPX running with Netscaler ingress controller as sidecar.
 SML yaml for services of an applcation which are already running inside Kubernetes cluster can also be generated using this script.
 '''
 
@@ -211,7 +211,7 @@ def main():
     '''
     Getting details for Tier-1 ADC
     '''
-    prompts = chain(['Citrix Ingress Controller for tier-1 ADC required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
+    prompts = chain(['Netscaler ingress controller for tier-1 ADC required? (Y/N): '], repeat("Invaild input. Please respond with (Y/N): "))
     create_cic = validate_input(prompts,"yesORno")
     if create_cic.lower() == "y":
         prompts = chain(['Please provide tier-1 ADC NSIP: '], repeat("Invaild IP. Please enter and IPv4 IP: "))

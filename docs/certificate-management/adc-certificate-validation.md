@@ -1,20 +1,20 @@
-# Enable Netscaler certificate validation in the Citrix ingress controller
+# Enable Netscaler certificate validation in the Netscaler ingress controller
 
-The Citrix ingress controller provides an option to ensure secure communication between the Citrix ingress controller and Netscaler by using the HTTPS protocol. You can achieve this by using pre-loaded certificates in the Netscaler. As an extra measure to avoid any possible man-in-the-middle (MITM) attack, the Citrix ingress controller also allows you to validate the SSL server certificate provided by the Netscaler.
+The Netscaler ingress controller provides an option to ensure secure communication between the Netscaler ingress controller and Netscaler by using the HTTPS protocol. You can achieve this by using pre-loaded certificates in the Netscaler. As an extra measure to avoid any possible man-in-the-middle (MITM) attack, the Netscaler ingress controller also allows you to validate the SSL server certificate provided by the Netscaler.
 
-To enable certificate signature and common name validation of the ADC server certificate by the Citrix ingress controller, security administrators can optionally install signed (or self-signed) certificates in the Netscaler and configure the Citrix ingress controller with the corresponding CA certificate bundle. Once the validation is enabled and CA certificate bundles are configured, the Citrix ingress controller starts validating the certificate (including certificate name validation). If the validation fails, the Citrix ingress controller logs the same and none of the configurations are used on an unsecure channel.
+To enable certificate signature and common name validation of the ADC server certificate by the Netscaler ingress controller, security administrators can optionally install signed (or self-signed) certificates in the Netscaler and configure the Netscaler ingress controller with the corresponding CA certificate bundle. Once the validation is enabled and CA certificate bundles are configured, the Netscaler ingress controller starts validating the certificate (including certificate name validation). If the validation fails, the Netscaler ingress controller logs the same and none of the configurations are used on an unsecure channel.
 
-This validation is turned off by default and an administrator can chose to enable the validation in the Citrix ingress controller as follows.
+This validation is turned off by default and an administrator can chose to enable the validation in the Netscaler ingress controller as follows.
 
 ## Prerequisites
 
 - For enabling certificate validation, you must configure a Netscaler with proper SSL server certificates (with proper server name or IP address in certificate subject). For more information, see [Netscaler documentation](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-certificates/add-group-certs.html).
 
-- The CA certificate for the installed server certificate-key pair is used to configure the Citrix ingress controller to enable validation of these certificates.
+- The CA certificate for the installed server certificate-key pair is used to configure the Netscaler ingress controller to enable validation of these certificates.
 
-## Configure the Citrix ingress controller for certificate validation
+## Configure the Netscaler ingress controller for certificate validation
 
-To make a CA certificate available for configuration, you need to configure the CA certificate as a Kubernetes secret so that the Citrix ingress controller can access it on a mounted storage volume.
+To make a CA certificate available for configuration, you need to configure the CA certificate as a Kubernetes secret so that the Netscaler ingress controller can access it on a mounted storage volume.
 
 To generate a Kubernetes secret for an existing certificate, use the following `kubectl` command:
 
@@ -31,7 +31,7 @@ Alternatively, you can also generate the Kubernetes secret using the following Y
         data:
   	       myCA.pem: <base64 encoded cert>
 
-The following is a sample YAML file with the Citrix ingress controller configuration for enabling certificate validation.
+The following is a sample YAML file with the Netscaler ingress controller configuration for enabling certificate validation.
 
 ```yml
 
@@ -81,7 +81,7 @@ spec:
       value: " <Mounted volume path>/myCA.pem"
 ```
 
-As specified in the example YAML file, following are the specific changes required for enabling certificate validation in the Citrix ingress controller.
+As specified in the example YAML file, following are the specific changes required for enabling certificate validation in the Netscaler ingress controller.
 
 ### Configure Kubernetes secret as a volume
 

@@ -1,4 +1,4 @@
-# Deploy HTTPS web application on Kubernetes with the Citrix ingress controller and Let`s Encrypt using cert-manager
+# Deploy HTTPS web application on Kubernetes with the Netscaler ingress controller and Let`s Encrypt using cert-manager
 
 [Let's Encrypt](https://letsencrypt.org/docs/) and the ACME (Automatic Certificate Management Environment) protocol enables you to set up an HTTPS server and automatically obtain a browser-trusted certificate. To get a certificate for your website’s domain from Let’s Encrypt, you have to demonstrate control over the domain by accomplishing certain challenges. A challenge is one among a list of specified tasks that only someone who controls the domain can accomplish.
 
@@ -12,7 +12,7 @@ On successful validation of the challenge, a certificate is granted for the doma
 
 This topic provides information on how to securely deploy an HTTPS web application on a Kubernetes cluster, using:
 
-- The Citrix ingress controller
+- The Netscaler ingress controller
 
 - JetStack's [cert-manager](https://github.com/jetstack/cert-manager) to provision TLS certificates from the [Let's Encrypt project](https://letsencrypt.org/docs/).
 
@@ -24,11 +24,11 @@ Ensure that you have:
 -  Enabled RBAC on your Kubernetes cluster.
 -  Deployed Netscaler MPX, VPX, or CPX deployed in Tier 1 or Tier 2 deployment model.
 
-    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Citrix ingress controller running in Kubernetes cluster configures the virtual services for services running on Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
+    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Netscaler ingress controller running in Kubernetes cluster configures the virtual services for services running on Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
 
     In the Tier 2 deployment model, a TCP service is configured on the Netscaler (VPX/MPX) running outside the Kubernetes cluster. This service is created to forward the traffic to Netscaler CPX instances running in the Kubernetes cluster. Netscaler CPX ends the SSL session and load-balances the traffic to actual service pods.
 
-- Deployed the Citrix ingress controller. Click [here](../deployment-topologies.md#deployment-topologies.html) for various deployment scenarios.
+- Deployed the Netscaler ingress controller. Click [here](../deployment-topologies.md#deployment-topologies.html) for various deployment scenarios.
 
 - Opened port 80 for the virtual IP address on the firewall for the Let's Encrypt CA to validate the domain for HTTP01 challenge.
 
@@ -114,7 +114,7 @@ Perform the following to deploy a sample web application:
 
 5. Expose this service to outside world by creating an Ingress that is deployed on Netscaler CPX or VPX as Content switching virtual server.
 
-    **Note:** Ensures that you change the value of `kubernetes.io/ingress.class` to your ingress class on which the Citrix ingress controller is started.
+    **Note:** Ensures that you change the value of `kubernetes.io/ingress.class` to your ingress class on which the Netscaler ingress controller is started.
 
 ```yml
             apiVersion: networking.k8s.io/v1
@@ -208,7 +208,7 @@ The HTTP validation using cert-manager is a simple way of getting a certificate 
 
 The cert-manager supports two different CRDs for configuration, an `Issuer`, scoped to a single namespace, and a `ClusterIssuer`, with cluster-wide scope.
 
-For the Citrix ingress controller to use the Ingress from any namespace, use `ClusterIssuer`. Alternatively, you can also create an `Issuer` for each namespace on which you are creating an Ingress resource.
+For the Netscaler ingress controller to use the Ingress from any namespace, use `ClusterIssuer`. Alternatively, you can also create an `Issuer` for each namespace on which you are creating an Ingress resource.
 
  For more information, see cert-manager documentation for [HTTP validation](https://cert-manager.io/docs/tutorials/acme/http-validation/).
 
@@ -235,7 +235,7 @@ For the Citrix ingress controller to use the Ingress from any namespace, use `Cl
                   class: citrix
 ```
 
-    `spec.acme.solvers[].http01.ingress.class` refers to the Ingress class of Citrix ingress controller. If the Citrix ingress controller has no ingress class, you do not need to specify this field.
+    `spec.acme.solvers[].http01.ingress.class` refers to the Ingress class of Netscaler ingress controller. If the Netscaler ingress controller has no ingress class, you do not need to specify this field.
     **Note:**
       This is a sample `Clusterissuer` of cert-manager.io/v1alpha2 resource. For more information, see [cert-manager http01 documentation](https://cert-manager.io/docs/configuration/acme/http01/).
 
@@ -603,7 +603,7 @@ For HTTP challenge, cert-manager creates a temporary Ingress resource to route t
         NAME                TYPE                DATA   AGE
         kuard-example-tls   kubernetes.io/tls   3      30m
 
-    The Citrix ingress controller picks up the secret and binds the certificate to the content switching virtual server on the Netscaler CPX. If there are any intermediate CA certificates, it is automatically linked to the server certificate and presented to the client during SSL negotiation.
+    The Netscaler ingress controller picks up the secret and binds the certificate to the content switching virtual server on the Netscaler CPX. If there are any intermediate CA certificates, it is automatically linked to the server certificate and presented to the client during SSL negotiation.
 
 2. Log on to Netscaler CPX and verify if the certificate is bound to the SSL virtual server.
 
@@ -814,8 +814,8 @@ Use the `kubectl describe` command to verify if both certificates and key are po
 
 If both `tls.crt` and `tls.key` are populated in the Kubernetes secret, certificate generation is complete. If only `tls.key` is present, certificate generation is incomplete. Analyze the cert-manager logs for more details about the issue.
 
-### Analyze logs from the Citrix ingress controller
+### Analyze logs from the Netscaler ingress controller
 
-If a Kubernetes secret is generated and complete, but it is not uploaded to the Netscaler, you can analyze logs from the Citrix ingress controller using the following command.
+If a Kubernetes secret is generated and complete, but it is not uploaded to the Netscaler, you can analyze logs from the Netscaler ingress controller using the following command.
 
     % kubectl logs -f cpx-ingress-685c8bc976-zgz8q

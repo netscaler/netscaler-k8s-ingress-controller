@@ -1,4 +1,4 @@
-# Install, link, and update certificates on a Netscaler using the Citrix ingress controller
+# Install, link, and update certificates on a Netscaler using the Netscaler ingress controller
 
 On the Ingress Netscaler, you can [install, link, and update certificates](https://docs.citrix.com/en-us/citrix-adc/13/ssl/ssl-certificates/add-group-certs.html). Many server certificates are signed by multiple hierarchical certificate authorities (CAs). This means that certificates form a chain.
 
@@ -12,7 +12,7 @@ If the intermediate certificate is not installed on the server (where the SSL ce
 
 ## Certificates linking in Kubernetes
 
-The Citrix ingress controller supports automatic provisioning and renewal of TLS certificates using the Kubernetes [cert-manager](https://github.com/jetstack/cert-manager). The `cert-manager` issues certificates from different sources, such as [Let’s Encrypt](https://letsencrypt.org/docs/) and [HashiCorp Vault](https://www.hashicorp.com/products/vault/) and converts them to Kubernetes secrets.
+The Netscaler ingress controller supports automatic provisioning and renewal of TLS certificates using the Kubernetes [cert-manager](https://github.com/jetstack/cert-manager). The `cert-manager` issues certificates from different sources, such as [Let’s Encrypt](https://letsencrypt.org/docs/) and [HashiCorp Vault](https://www.hashicorp.com/products/vault/) and converts them to Kubernetes secrets.
 
 The following diagram explains how the `cert-manager` performs certificate management.
 ![Certificate Management](../media/cert-management.png)

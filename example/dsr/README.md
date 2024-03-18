@@ -113,16 +113,16 @@ This section helps to create configurations required on the ingress device for D
 <a name="adc"></a>
 ## **4. Tier-1 Configurations**
    
-- ## **Download the Citrix Ingress Controller yaml**
+- ## **Download the Netscaler ingress controller yaml**
 	```
             wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
 	```
 
-- ## **Provide following Input for Citrix Ingress Controller**
+- ## **Provide following Input for Netscaler ingress controller**
 
 	Provide NS_IP, NS_USER and NS_PASSWORD arguments. Please refer [here](https://github.com/netscaler/netscaler-k8s-ingress-controller) for more detailed information.
 
-- ## **Deploy the Citrix Ingress Controller**
+- ## **Deploy the Netscaler ingress controller**
 
 	```
            kubectl create -f citrix-k8s-ingress-controller.yaml -n dsr

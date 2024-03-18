@@ -2,7 +2,7 @@
 
 Canary release is a technique to reduce the risk of introducing a new software version in production by first rolling out the change to a small subset of users. After the user validation, the application is rolled out to the larger set of users.
 
-Citrix provides the following options for canary deployment using the Citrix ingress controller.
+Citrix provides the following options for canary deployment using the Netscaler ingress controller.
 
 - [Deploy canary using the Canary CRD](#deploy-canary-using-the-canary-crd)
 - [Deploy canary using Ingress annotations](#simplified-canary-deployment-using-ingress-annotations)
@@ -17,7 +17,7 @@ Netscaler-Integrated Canary Deployment solution stitches together all components
 
 Netscaler comes with a rich application-centric configuration module and provides complete visibility to application traffic and health of application instances. The capabilities of Netscaler to generate accurate performance statistics can be leveraged for Canary analysis to take better decisions about the Canary deployment. In this solution, Netscaler is integrated with the Spinnaker platform and acts as a source for providing accurate metrics for analyzing Canary deployment using Kayenta.
 
- [Netscaler Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Netscaler policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to baseline and canary leveraging the rich Netscaler policy infrastructure.
+ [Netscaler Metrics Exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) exports the application performance metrics to the open-source monitoring system Prometheus and you can configure Kayenta to fetch the metrics for canary deployment. Traffic distribution to the canary version can be regulated using the Netscaler policy infrastructure. If you want to divert a specific kind of traffic from production to baseline and canary, you can use match expressions to redirect traffic to baseline and canary leveraging the rich Netscaler policy infrastructure.
 
 For example, you can divert traffic from production to canary and baseline using the match expression HTTP.REQ.URL.CONTAINS("citrix india"). The traffic which matches the expression is diverted to canary and baseline and the remaining traffic goes to production.
 
@@ -34,15 +34,15 @@ GitHub has many utilities available for integrating with other tools that form p
 
 -  [Jenkins](https://jenkins.io/): Jenkins is an open source automation server which helps to automate all sorts of tasks related to building, testing, and delivering or deploying software. Jenkins also supports running custom scripts as part of your deployment cycle.
 
--  [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/): Citrix provides an Ingress Controller for Netscaler MPX (hardware), Netscaler VPX (virtualized), and Netscaler CPX (containerized) for bare metal and cloud deployments. The Citrix ingress controller is built around Kubernetes Ingress and automatically configures one or more Netscalers based on the Ingress resource configuration.
+-  [Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/): Citrix provides an Ingress Controller for Netscaler MPX (hardware), Netscaler VPX (virtualized), and Netscaler CPX (containerized) for bare metal and cloud deployments. The Netscaler ingress controller is built around Kubernetes Ingress and automatically configures one or more Netscalers based on the Ingress resource configuration.
 
 **Software Requirements**
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
--  Citrix ingress controller build/version: `quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6`.
--  Netscaler CPX version: `quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27`.
--  Netscaler Metrics Exporter version: `quay.io/citrix/netscaler-metrics-exporter:1.4.0`.
+-  Netscaler ingress controller build/version: `quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6`.
+-  Netscaler CPX version: `quay.io/netscaler/netscaler-cpx:13.1-51.15`.
+-  Netscaler Metrics Exporter version: `quay.io/netscaler/netscaler-adc-metrics-exporter:1.4.9`.
 
 ### Workflow of a Spinnaker pipeline for Netscaler-Integrated Canary Deployment Solution
 
@@ -143,7 +143,7 @@ Perform the following steps to deploy Spinnaker and integrate plug-ins in GCP.
                 username: <username>
               password: <password>
 
-    1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Netscaler Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and perform the steps.
+    1.  To set up Prometheus and [Grafana](https://grafana.com/), see the Prometheus and Grafana Integration section in [Netscaler Metrics Exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) and perform the steps.
 
     1.  To integrate Prometheus with Spinnaker, update the following values in the ``quick-install.yml`` file.
 
@@ -235,21 +235,21 @@ Perform the following steps to deploy a sample application as a canary release.
    
         kubectl apply -f rbac.yaml 
 
-1. You can either deploy the Citrix ingress controller as a sidecar with Netscaler CPX or as a standalone pod which controls Netscaler VPX or MPX.
+1. You can either deploy the Netscaler ingress controller as a sidecar with Netscaler CPX or as a standalone pod which controls Netscaler VPX or MPX.
 
-    Use the [cpx-with-cic-sidecar.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cpx-with-cic-sidecar.yml) file to deploy the Citrix ingress controller as a sidecar with Netscaler CPX. It also deploys Netscaler Metrics Exporter on the same pod.
+    Use the [cpx-with-cic-sidecar.yml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cpx-with-cic-sidecar.yml) file to deploy the Netscaler ingress controller as a sidecar with Netscaler CPX. It also deploys Netscaler Metrics Exporter on the same pod.
     
         kubectl apply -f cpx-with-cic-sidecar.yml 
     
     
-     To deploy the Citrix ingress controller as a stand-alone pod for Netscaler VPX or MPX use the [cic-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/exporter.yaml) file to deploy Netscaler Metrics Exporter.
+     To deploy the Netscaler ingress controller as a stand-alone pod for Netscaler VPX or MPX use the [cic-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/cic-vpx.yaml) file. In this deployment, you should use the [exporter.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/exporter.yaml) file to deploy Netscaler Metrics Exporter.
 
 
         kubectl apply -f cic-vpx.yaml
         kubectl apply -f exporter.yaml
 
     !!! note "Note"
-        Depending on how you are deploying the Citrix ingress controller, you must edit the YAML file for Citrix ingress controller deployment and modify values for the environmental variables as provided in [deploying Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
+        Depending on how you are deploying the Netscaler ingress controller, you must edit the YAML file for Netscaler ingress controller deployment and modify values for the environmental variables as provided in [deploying Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/#deploy-citrix-ingress-controller-as-a-pod).
 
 1.  Deploy the Ingress for securely exposing Spinnaker using the [spin-ingress-ssl.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/canary/manifest/spin-ingress-ssl.yaml) file.
 
@@ -257,7 +257,7 @@ Perform the following steps to deploy a sample application as a canary release.
         kubectl apply -f spin-ingress-ssl.yaml 
 
     !!! note "Note"
-        For more information on creating a TLS certificate for Ingress, see [TLS certificates in Citrix Ingress Controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/certificate-management/tls-certificate-handling/).
+        For more information on creating a TLS certificate for Ingress, see [TLS certificates in Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/certificate-management/tls-certificate-handling/).
 
 1. Once Spinnaker is exposed using Netscaler, access Spinnaker and perform the steps in [Create a Spinnaker pipeline and configure automated canary deployment](#Create-a-Spinnaker-pipeline-and-configure-automated-canary-deployment) if the steps are not already done. 
  
@@ -317,9 +317,9 @@ Perform the following steps to deploy a sample application as a canary release.
 
 For troubleshooting the deployment, perform the following steps.
 
-1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Netscaler CPX, Netscaler Metrics Exporter, Citrix ingress controller.
-2.  Check the pod logs of the Citrix ingress controller for any configuration-related errors while configuring the Citrix proxy.
-3.  Search for the ``exception/Exception`` keyword in the Citrix ingress controller pod logs to narrow down the issues.
+1.  Check the pod logs for the respective components like Spinnaker, Prometheus, Kayenta, Netscaler CPX, Netscaler Metrics Exporter, Netscaler ingress controller.
+2.  Check the pod logs of the Netscaler ingress controller for any configuration-related errors while configuring the Citrix proxy.
+3.  Search for the ``exception/Exception`` keyword in the Netscaler ingress controller pod logs to narrow down the issues.
 4.  Check for the logs preceding the search. Check for the configuration that failed and caused the issue.
 5.  Check for the reason of failures during configuration.
 6.  If the failure happened because of incorrect configuration, correct the configuration.
@@ -757,7 +757,7 @@ Following is the workflow for the weight based canary deployment:
 
 - Finally, when you determine that the canary version is ready to be released, change the weight to 100 to ensure that all the traffic is being directed to the canary version.
 
-For deploying weight based canary using the Citrix ingress controller, create a new Ingress with a canary annotation `ingress.citrix.com/canary-weight:` and specify the percentage of traffic to be directed to the canary version.
+For deploying weight based canary using the Netscaler ingress controller, create a new Ingress with a canary annotation `ingress.citrix.com/canary-weight:` and specify the percentage of traffic to be directed to the canary version.
 
 ### Canary deployment based on the HTTP request header
 
@@ -775,7 +775,7 @@ ingress.citrix.com/canary-by-header-value: '["value1","value2","value3","value4"
 
 Perform the following steps to deploy a sample application as a canary release.
 
-1. Deploy the Citrix ingress controller using the steps in [deploy the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Citrix ingress controller as a sidecar with Netscaler CPX or as a standalone pod which controls Netscaler VPX or MPX.
+1. Deploy the Netscaler ingress controller using the steps in [deploy the Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). You can either deploy the Netscaler ingress controller as a sidecar with Netscaler CPX or as a standalone pod which controls Netscaler VPX or MPX.
 
 2. Deploy the `Guestbook` application using the [guestbook-deploy.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/example/simple-canary/guestbook-deploy.yaml) file.
 
@@ -835,11 +835,11 @@ Perform the following steps to deploy a sample application as a canary release.
               ---
               ```
 
-    Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Citrix ingress controller to configure the Netscaler in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
+    Here, the annotation `ingress.citrix.com/canary-weight: “10”` is the annotation for the weight based canary. This annotation specifies the Netscaler ingress controller to configure the Netscaler in such a way that 10 percent of the total requests destined to  `webapp.com` is sent to the `guestbook-canary` service. This is the service for the canary version of the `Guestbook` application.
 
-For deploying the HTTP header based canary using the Citrix ingress controller, replace the canary annotation `ingress.citrix.com/canary-weight:` with the `ingress.citrix.com/canary-by-header:`  annotation in the `canary-ingress.yaml` file.
+For deploying the HTTP header based canary using the Netscaler ingress controller, replace the canary annotation `ingress.citrix.com/canary-weight:` with the `ingress.citrix.com/canary-by-header:`  annotation in the `canary-ingress.yaml` file.
 
-For deploying the HTTP header value based canary using the Citrix ingress controller, replace the `ingress.citrix.com/canary-weight:` annotation with the `ingress.citrix.com/canary-by-header:` and `ingress.citrix.com/canary-by-header-value:` annotations in the `canary-ingress.yaml` file.
+For deploying the HTTP header value based canary using the Netscaler ingress controller, replace the `ingress.citrix.com/canary-weight:` annotation with the `ingress.citrix.com/canary-by-header:` and `ingress.citrix.com/canary-by-header-value:` annotations in the `canary-ingress.yaml` file.
 
 **Note:**
 You can see the [Canary example YAMLs](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/simple-canary) for achieving canary based on the header and canary based on the header value.

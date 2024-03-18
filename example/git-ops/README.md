@@ -40,7 +40,7 @@ Perform the following steps:
    >**Note:**
    >Replace `username` and `password` with the login credentials of your Netscaler VPX.
 
-1. Deploy Citrix ingress controller and apply CRD definition files through the following Helm commands:
+1. Deploy Netscaler ingress controller and apply CRD definition files through the following Helm commands:
 
         helm repo add citrix https://citrix.github.io/citrix-helm-charts/
         helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=nslogin,nodeWatch=true,crds.install=true

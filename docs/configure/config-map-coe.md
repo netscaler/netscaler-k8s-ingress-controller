@@ -1,6 +1,6 @@
 # Analytics configuration support using ConfigMap
 
-You can use [Citrix Observability Exporter](https://github.com/citrix/citrix-observability-exporter) to export metrics and transactions from Netscaler CPX, MPX, or VPX and analyze the exported data to get meaningful insights. The Citrix Observability Exporter support is enabled with in the Citrix ingress controller configuration. You can now enable the Citrix Observability Exporter configuration with in the Citrix ingress controller using a [ConfigMap](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/).
+You can use [Citrix Observability Exporter](https://github.com/citrix/citrix-observability-exporter) to export metrics and transactions from Netscaler CPX, MPX, or VPX and analyze the exported data to get meaningful insights. The Citrix Observability Exporter support is enabled with in the Netscaler ingress controller configuration. You can now enable the Citrix Observability Exporter configuration with in the Netscaler ingress controller using a [ConfigMap](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/).
 
 ## Supported environment variables for analytics configuration using ConfigMap
 
@@ -34,16 +34,16 @@ You can configure the following parameters under `NS_ANALYTICS_CONFIG` using a C
     - `enable`: Set this value to `true` to enable sending transactions. The default value is `false`.
     - `port`: Specifies the port number of the transactional endpoint of the analytics server. The default value is 5557.
 
-The following configurations cannot be changed while the Citrix ingress controller is running and you need to reboot the Citrix ingress controller to apply these settings.
+The following configurations cannot be changed while the Netscaler ingress controller is running and you need to reboot the Netscaler ingress controller to apply these settings.
 
 - server configuration (endpoint)
 - port configuration (time series)
 - port configuration (transactions)
 
- You can change other ConfigMap settings at runtime while the Citrix ingress controller is running.
+ You can change other ConfigMap settings at runtime while the Netscaler ingress controller is running.
 
 **Note:**
-When the user specifies value for a service as `namespace/service name`, Citrix ingress controller derives the endpoint associated to that service and dynamically bind them to the transactional service group in Citrix tier-1 ADC . If a user specifies the value for a service as IP address, the IP address is direclty bound to the transactional service group. Citrix ingress controller is enhanced to create default web or TCP based analytics profiles and bind them to the logging virtual server. The default analytics profiles are bound to all load balancing virtual servers of applications if the Netscaler observability exporter is enabled in the cluster. If the user wants to change the analytics profile, they can use the `analyticsprofile` annotation.
+When the user specifies value for a service as `namespace/service name`, Netscaler ingress controller derives the endpoint associated to that service and dynamically bind them to the transactional service group in Citrix tier-1 ADC . If a user specifies the value for a service as IP address, the IP address is direclty bound to the transactional service group. Netscaler ingress controller is enhanced to create default web or TCP based analytics profiles and bind them to the logging virtual server. The default analytics profiles are bound to all load balancing virtual servers of applications if the Netscaler observability exporter is enabled in the cluster. If the user wants to change the analytics profile, they can use the `analyticsprofile` annotation.
 
 The attributes of `NS_ANALYTICS_CONFIG` should follow a well-defined schema. If any value provided does not confirm with the schema, then the entire configuration is rejected. For reference, see the schema file [ns_analytics_config_schema.yaml](#Schema-for-NSANALYTICSCONFIG).
 
@@ -87,7 +87,7 @@ data:
     
 ```
 
-For more information on how to configure ConfigMap support on the Citrix ingress controller, [see configuring ConfigMap support for the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/#configuring-configmap-support-for-the-citrix-ingress-controller).
+For more information on how to configure ConfigMap support on the Netscaler ingress controller, [see configuring ConfigMap support for the Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/#configuring-configmap-support-for-the-citrix-ingress-controller).
 
 ### Schema for NS_ANALYTICS_CONFIG
 

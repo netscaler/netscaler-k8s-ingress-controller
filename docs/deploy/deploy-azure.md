@@ -5,7 +5,7 @@ This topic explains how to deploy Netscaler CPX as an ingress device in an [Azur
 
 **Note:**
 
-If you want to use Azure repository images for Netscaler CPX or the Citrix ingress controller instead of the default quay.io images, then see [Deploy Netscaler CPX as an Ingress device in an AKS cluster using Azure repository images](deploy-azure-image.md).
+If you want to use Azure repository images for Netscaler CPX or the Netscaler ingress controller instead of the default quay.io images, then see [Deploy Netscaler CPX as an Ingress device in an AKS cluster using Azure repository images](deploy-azure-image.md).
 
 ## Deploy Netscaler CPX as an ingress device in an AKS cluster
 
@@ -69,7 +69,7 @@ In this procedure, Apache web server is used as the sample application.
 For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
 
-1. Deploy a Netscaler CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
+1. Deploy a Netscaler CPX ingress with in built Netscaler ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 

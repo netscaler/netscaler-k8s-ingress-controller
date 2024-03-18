@@ -8,7 +8,7 @@ In a Kubernetes environment, to deploy specific layer 7 policies to handle scena
 
 Requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Netscaler device to deploy these policies.
 
-Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with the Citrix ingress controller to automate the configurations and deployment of these policies on the Netscalers used as Ingress devices.
+Citrix provides Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) that you can use with the Netscaler ingress controller to automate the configurations and deployment of these policies on the Netscalers used as Ingress devices.
 
 The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Netscalers. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.
 
@@ -129,7 +129,7 @@ In these sections, you need to use the [CRD attributes](#crd-attributes) provide
 
 Also, in the `spec` section, you need to include a `rewrite-policies` section to specify the service or services to which the policy must be applied. For more information, see [Sample policy configurations](#sample-policy-configurations).
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.
+After you deploy the `.yaml` file, the Netscaler ingress controller applies the policy configuration on the Ingress Netscaler device.
 
 > **Points to note:**
 >
@@ -184,7 +184,7 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
 
     kubectl create -f target-url-rewrite.yaml
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.
+After you deploy the `.yaml` file, the Netscaler ingress controller applies the policy configuration on the Ingress Netscaler device.
 
 On the master node in the Kubernetes cluster, you can verify the status of created/applied rewrite policy CRD using the following command:
 

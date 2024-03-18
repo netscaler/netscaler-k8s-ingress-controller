@@ -2,11 +2,11 @@
 
 OpenShift Operator is an open-source toolkit designed to package, deploy, and manage Kubernetes native applications in a more effective, automated, and scalable way.
 
-An API gateway acts as the single entry point for your APIs and ensures secure and reliable access to multiple APIs and microservices in your system. Citrix provides an enterprise grade API gateway for North-South API traffic into the OpenShift cluster. The API gateway integrates with the OpenShift cluster through the Citrix ingress controller and the Netscaler (Netscaler MPX, VPX, or CPX) deployed as the Ingress Gateway for on-premises or cloud deployments.
+An API gateway acts as the single entry point for your APIs and ensures secure and reliable access to multiple APIs and microservices in your system. Citrix provides an enterprise grade API gateway for North-South API traffic into the OpenShift cluster. The API gateway integrates with the OpenShift cluster through the Netscaler ingress controller and the Netscaler (Netscaler MPX, VPX, or CPX) deployed as the Ingress Gateway for on-premises or cloud deployments.
 
 This topic covers information on how to deploy the API gateway using OpenShift Operators.
 
-The Citrix API gateway operator installs the CRDs required for the API Gateway functionality. Since this operator leverages the Citrix ingress controller, you need to create an instance of the API Gateway CRD, which is the Citrix ingress controller. If you already have a Citrix ingress controller instance in the cluster you need to install it again.
+The Citrix API gateway operator installs the CRDs required for the API Gateway functionality. Since this operator leverages the Netscaler ingress controller, you need to create an instance of the API Gateway CRD, which is the Netscaler ingress controller. If you already have a Netscaler ingress controller instance in the cluster you need to install it again.
 
 API gateway supports the following CRDs:
 
@@ -29,7 +29,7 @@ In a Kubernetes environment, to deploy specific layer 7 policies (such as redire
 
 - VIP CRD (vips.citrix.com)
 
-Citrix provides a VIP CRD for asynchronous communication between the IPAM controller and the Citrix ingress controller. The IPAM controller is provided by Citrix for IP address management.
+Citrix provides a VIP CRD for asynchronous communication between the IPAM controller and the Netscaler ingress controller. The IPAM controller is provided by Citrix for IP address management.
 
 ## Deploy Citrix API Gateway using OpenShift Operator
 
@@ -67,7 +67,7 @@ For more information on upgrading CRD versions, see the [OpenShift documentation
 
 ## Delete the instance and operator
 
-To delete an instance of the CRD you have to delete the Citrix ingress controller instance from the user interface. Select the three vertical dots on the right side of the instance as shown in the following image and then click **Delete CitrixIngressController**.
+To delete an instance of the CRD you have to delete the Netscaler ingress controller instance from the user interface. Select the three vertical dots on the right side of the instance as shown in the following image and then click **Delete CitrixIngressController**.
 
 ![OpenShift Operator Install](../media/openshift-api8.png)
 

@@ -1,26 +1,26 @@
 # Policy based routing support for multiple Kubernetes clusters
 
-When you are using a single Netscaler to load balance multiple Kubernetes clusters, the Citrix ingress controller adds pod CIDR networks through static routes. These routes establish networking connectivity between Kubernetes pods and Netscaler. However, when the pod CIDRs overlap there may be route conflicts. Netscaler supports policy based routing (PBR) to address the networking conflicts in such scenarios. In PBR, decisions are taken based on the criteria that you specify. Typically, a next hop is specified where you send the selected packets. In a gslb Kubernetes environment, PBR is implemented by reserving a subnet IP address (SNIP) for each Kubernetes cluster or the Citrix Ingress Controller. Using net profile, the SNIP is bound to all service groups created by the same Citrix ingress controller. For all the traffic generated from service groups belonging to the same cluster, the source IP address is the same SNIP.
+When you are using a single Netscaler to load balance multiple Kubernetes clusters, the Netscaler ingress controller adds pod CIDR networks through static routes. These routes establish networking connectivity between Kubernetes pods and Netscaler. However, when the pod CIDRs overlap there may be route conflicts. Netscaler supports policy based routing (PBR) to address the networking conflicts in such scenarios. In PBR, decisions are taken based on the criteria that you specify. Typically, a next hop is specified where you send the selected packets. In a gslb Kubernetes environment, PBR is implemented by reserving a subnet IP address (SNIP) for each Kubernetes cluster or the Netscaler ingress controller. Using net profile, the SNIP is bound to all service groups created by the same Netscaler ingress controller. For all the traffic generated from service groups belonging to the same cluster, the source IP address is the same SNIP.
 
 Following is a sample topology where PBR is configured for two Kubernetes clusters which are load balanced using a Netscaler VPX or MPX.
 
 ![PBR configuration](../media/pbr.jpg)
 
-## Configure PBR using the Citrix ingress controller
+## Configure PBR using the Netscaler ingress controller
 
-To configure PBR, you need one SNIP or more per Kubernetes cluster. You can provide SNIP values either using the environment variable in the Citrix ingress controller deployment YAML file during bootup or using ConfigMap.
+To configure PBR, you need one SNIP or more per Kubernetes cluster. You can provide SNIP values either using the environment variable in the Netscaler ingress controller deployment YAML file during bootup or using ConfigMap.
 
-Perform the following steps to deploy the Citrix ingress controller and configure PBR using ConfigMap.
+Perform the following steps to deploy the Netscaler ingress controller and configure PBR using ConfigMap.
 
 1. Download the `citrix-k8s-ingress-controller.yaml` using the following command:
 
         wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-2. Edit the Citrix ingress controller YAML file:
+2. Edit the Netscaler ingress controller YAML file:
   
-          - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/) documentation.
+          - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/) documentation.
 
-3. Deploy the Citrix ingress controller using the edited YAML file with the following command on each cluster.
+3. Deploy the Netscaler ingress controller using the edited YAML file with the following command on each cluster.
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
@@ -42,7 +42,7 @@ Perform the following steps to deploy the Citrix ingress controller and configur
    
        kubectl create -f cic-configmap.yaml
 
-You can also specify the SNIPs using the `NS_SNIPS` environment variable in the Citrix ingress controller deployment YAML file.
+You can also specify the SNIPs using the `NS_SNIPS` environment variable in the Netscaler ingress controller deployment YAML file.
 
          - name: "NS_SNIPS"
             value: '["192.0.2.2", "192.0.2.1"]'
@@ -62,13 +62,13 @@ The following are the usage guidelines while using ConfigMap for configuring SNI
     - If SNIPs are not provided using the `NS_SNIPS` environment variable, static routes are added since `feature-node-watch` is enabled.
 
 
-### Validate PBR configuration on a Netscaler after deploying the Citrix ingress controller
+### Validate PBR configuration on a Netscaler after deploying the Netscaler ingress controller
 
-This validation example uses a two node Kubernetes cluster with the Citrix ingress controller deployed along with the following ConfigMap with two SNIPs.
+This validation example uses a two node Kubernetes cluster with the Netscaler ingress controller deployed along with the following ConfigMap with two SNIPs.
 
    ![Image](https://user-images.githubusercontent.com/46886297/117246195-cf68b400-ae59-11eb-9986-14e53ae98701.png)
 
-You can verify that the Citrix ingress controller adds the following configurations to the ADC:
+You can verify that the Netscaler ingress controller adds the following configurations to the ADC:
 
  1. An `IPset` of all `NS_SNIPs` provided by the ConfigMap is added.
  
@@ -78,26 +78,26 @@ You can verify that the Citrix ingress controller adds the following configurati
 
        ![Image](https://user-images.githubusercontent.com/46886297/117246445-4736de80-ae5a-11eb-8f0e-fd1829d6343d.png)
 
- 3. The service group added by the Citrix ingress controller contains the net profile set.
+ 3. The service group added by the Netscaler ingress controller contains the net profile set.
 
        ![Image](https://user-images.githubusercontent.com/46886297/117246742-c4faea00-ae5a-11eb-8e1d-fe0878066b6c.png)
 
-4. Finally, the Citrix ingress controller adds PBRs.
+4. Finally, the Netscaler ingress controller adds PBRs.
 
     ![Image](https://user-images.githubusercontent.com/46886297/117247049-3c307e00-ae5b-11eb-8130-2895384113ce.png)
     
     Here:
     - The number of PBRs is equivalent to (number of SNIPs) * (number of Kubernetes nodes). In this case, it adds four(2*2) PBRs.
-    - The `srcIP` of the PBR is the `NS_SNIPS` provided to the Citrix ingress controller by ConfigMap. The `destIP` is the CNI overlay subnet range of the Kubernetes node.
+    - The `srcIP` of the PBR is the `NS_SNIPS` provided to the Netscaler ingress controller by ConfigMap. The `destIP` is the CNI overlay subnet range of the Kubernetes node.
     - `NextHop` is the IP address of the Kubernetes node. 
 
-5. You can also use the logs of the Citrix ingress controller to validate the configuration.
+5. You can also use the logs of the Netscaler ingress controller to validate the configuration.
 
      <img src="https://user-images.githubusercontent.com/46886297/117247896-b1e91980-ae5c-11eb-8fbb-177c1db7ceb2.png" width="1200" height="100">
 
 ## Configure PBR using the Citrix node controller
 
-You can configure PBR using the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) for multiple Kubernetes clusters. When you are using a single Netscaler to load balance multiple Kubernetes clusters with Citrix node controller for networking, the static routes added by it to forward packets to the IP address of the VXLAN tunnel interface may cause route conflicts. To support PBR, Citrix node controller needs to works in conjunction with the Citrix ingress controller to bind the net profile to the service group. 
+You can configure PBR using the [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) for multiple Kubernetes clusters. When you are using a single Netscaler to load balance multiple Kubernetes clusters with Citrix node controller for networking, the static routes added by it to forward packets to the IP address of the VXLAN tunnel interface may cause route conflicts. To support PBR, Citrix node controller needs to works in conjunction with the Netscaler ingress controller to bind the net profile to the service group. 
 
 Perform the following steps to configure PBR using the Citrix node controller:
 
@@ -108,27 +108,27 @@ Perform the following steps to configure PBR using the Citrix node controller:
         - name: CLUSTER_NAME 
           value: "dev-cluster"
 
-2. While deploying the Citrix ingress controller, provide the `CLUSTER_NAME` as an environment variable. This value should be the same as the value provided in Citrix node controller.
+2. While deploying the Netscaler ingress controller, provide the `CLUSTER_NAME` as an environment variable. This value should be the same as the value provided in Citrix node controller.
 
     Example:  
 
         - name: CLUSTER_NAME  
           value: "dev-cluster "
 
-1. Specify the argument `--enable-cnc-pbr` as `True` in the arguments section of the Citrix ingress controller deployment YAML file. When you specify this argument, Citrix ingress controller is aware that the Citrix node controller is configuring PBR on the Netscaler.
+1. Specify the argument `--enable-cnc-pbr` as `True` in the arguments section of the Netscaler ingress controller deployment YAML file. When you specify this argument, Netscaler ingress controller is aware that the Citrix node controller is configuring PBR on the Netscaler.
 
     Example:
 
         args: 
          - --enable-cnc-pbr True          
 
-**Note:** The value provided for `CLUSTER_NAME` in the Citrix node controller and Citrix ingress controller deployment files should match when they are deployed in the same Kubernetes cluster.
+**Note:** The value provided for `CLUSTER_NAME` in the Citrix node controller and Netscaler ingress controller deployment files should match when they are deployed in the same Kubernetes cluster.
 
 **Note:** The `CLUSTER_NAME` is used while creating the net profile entity and binding it to service groups on Netscaler VPX or MPX.
 
 ### Validate PBR configuration on a Netscaler after deploying the Citrix node controller.
 
-This validation example uses a two node Kubernetes cluster with Citrix node controller and Citrix ingress controller deployed. 
+This validation example uses a two node Kubernetes cluster with Citrix node controller and Netscaler ingress controller deployed. 
 
 You can verify that the following configurations are added to the ADC by Citrix node controller:
 
@@ -136,7 +136,7 @@ You can verify that the following configurations are added to the ADC by Citrix 
   
      ![Image](https://user-images.githubusercontent.com/46886297/117264605-03030880-ae71-11eb-81a1-827e58778b2e.png)
 
-  2. Citrix ingress controller binds the net profile to the service groups it creates.
+  2. Netscaler ingress controller binds the net profile to the service groups it creates.
 
      ![Image](https://user-images.githubusercontent.com/46886297/117264747-262db800-ae71-11eb-8751-43a1f8161ef9.png)
   

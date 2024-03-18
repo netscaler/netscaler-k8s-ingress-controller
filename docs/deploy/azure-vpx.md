@@ -76,7 +76,7 @@ Perform the following steps to create a Netscaler VPX instance from Azure Market
     - Review all details of the Netscaler VPX, and then click **Create**. Wait for some time until the deployment is complete.
      <img src="../media/azurem-image-vpx11.png" width="500">
 
-5. Set the Netscaler VPX networking configurations required as part of ingress or the Citrix ingress controller deployment in the cluster.
+5. Set the Netscaler VPX networking configurations required as part of ingress or the Netscaler ingress controller deployment in the cluster.
 
    - Go to the `Networking` section on the deployed VPX Page, and select **Network Interface** on the right.
   

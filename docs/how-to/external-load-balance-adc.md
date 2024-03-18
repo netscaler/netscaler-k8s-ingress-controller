@@ -4,7 +4,7 @@ Sometimes, all the available services of an application may not be deployed comp
 
 ## Configure Netscaler to reach external services
 
-You can configure Netscaler as a domain name resolver using Citrix ingress controller. When you configure Netscaler as domain name resolver, you need to resolve:
+You can configure Netscaler as a domain name resolver using Netscaler ingress controller. When you configure Netscaler as domain name resolver, you need to resolve:
 
  - Reachability of Netscaler from microservices
  - Domain name resolution at Netscaler to reach external services
@@ -24,9 +24,9 @@ To reach Netscaler from microservices, you have to define a headless service whi
         - protocol: TCP
           port: 80
 
-### Configure Netscaler as a domain name resolver using Citrix ingress controller
+### Configure Netscaler as a domain name resolver using Netscaler ingress controller
 
-You can configure Netscaler through Citrix ingress controller to create a domain based service group using the ingress annotation `ingress.citrix.com/external-service`. The value for `ingress.citrix.com/external-service` is a list of external name services with their corresponding domain names. For Netscaler VPX, name servers are configured on Netscaler using the ConfigMap.
+You can configure Netscaler through Netscaler ingress controller to create a domain based service group using the ingress annotation `ingress.citrix.com/external-service`. The value for `ingress.citrix.com/external-service` is a list of external name services with their corresponding domain names. For Netscaler VPX, name servers are configured on Netscaler using the ConfigMap.
 
 **Note:** ConfigMaps are used to configure name servers on Netscaler only for Netscaler VPX. For Netscaler CPX, CoreDNS forwards the name resolution request to the upstream DNS server.
 
@@ -59,7 +59,7 @@ Following are the steps to configure Netscaler CPX to load balance external serv
             - protocol: TCP
               port: 80
 
-1. Define an ingress and specify the external-service annotation as specified in the [dbs-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/load-balance-external/db-ingress.yaml) file. When you specify this annotation, Citrix ingress controller creates DNS servers on Netscaler and binds the servers to the corresponding service group.
+1. Define an ingress and specify the external-service annotation as specified in the [dbs-ingress.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/load-balance-external/db-ingress.yaml) file. When you specify this annotation, Netscaler ingress controller creates DNS servers on Netscaler and binds the servers to the corresponding service group.
 
 
             annotations:

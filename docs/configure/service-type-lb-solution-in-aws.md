@@ -4,7 +4,7 @@ A service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-ne
 
 With the Citrix solution for service of type LoadBalancer, you can use Netscaler to directly load balance and expose a service instead of the cloud managed load balancer. Citrix provides this solution for service of type LoadBalancer for on-prem and cloud. Services of type LoadBalancer are natively supported in Kubernetes deployments on public clouds such as AWS, GCP, and Azure.
 
-When you deploy a service in AWS, a load balancer is created automatically and the IP address is allocated to the external field of the service. In this Citrix solution, Citrix IPAM controller allocates the IP address and that IP address is the VIP of Netscaler VPX. Citrix ingress controller, deployed in a Kubernetes cluster, configures a Netscaler deployed outside the cluster to load balance the incoming traffic. So, the service is accessed through Netscaler VPX instead of the cloud load balancer.
+When you deploy a service in AWS, a load balancer is created automatically and the IP address is allocated to the external field of the service. In this Citrix solution, Citrix IPAM controller allocates the IP address and that IP address is the VIP of Netscaler VPX. Netscaler ingress controller, deployed in a Kubernetes cluster, configures a Netscaler deployed outside the cluster to load balance the incoming traffic. So, the service is accessed through Netscaler VPX instead of the cloud load balancer.
 
  You need to specify the service `type` as `LoadBalancer` in the service definition. Setting the `type` field to `LoadBalancer` provisions a load balancer for your service on AWS.
 
@@ -23,13 +23,13 @@ Perform the following steps to configure the Citrix solution for service of type
 
 1.  Download the [unified-lb-values.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/typeLB/aws/unified-lb-values.yaml) file and edit the YAML file for specifying the following details:
 
-      -  Netscaler VPX NSIP. For more information, see [Citrix ingress controller Helm chart](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cloud-native/charts/citrix-ingress-controller)
+      -  Netscaler VPX NSIP. For more information, see [Netscaler ingress controller Helm chart](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cloud-native/charts/citrix-ingress-controller)
     
-      -  Secret created using the Netscaler VPX credentials. For more information, see [Citrix ingress controller Helm chart](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cloud-native/charts/citrix-ingress-controller).
+      -  Secret created using the Netscaler VPX credentials. For more information, see [Netscaler ingress controller Helm chart](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cloud-native/charts/citrix-ingress-controller).
 
       -  List of VIPs to be used in IPAM controller. For more information, see [IPAM Helm chart](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cloud-native/charts/citrix-ipam-controller).
 
-1.  Deploy Citrix IPAM controller and Citrix ingress controller on your Amazon EKS cluster using the edited YAML file. Use the following commands:
+1.  Deploy Citrix IPAM controller and Netscaler ingress controller on your Amazon EKS cluster using the edited YAML file. Use the following commands:
 
         helm repo add citrix https://citrix.github.io/citrix-helm-charts/
 
@@ -67,11 +67,11 @@ Perform the following steps to deploy the Citrix solution for service of type Lo
                 - --ipam
                   citrix-ipam-controller
 
-1. Deploy the Citrix ingress controller using the modified YAML.
+1. Deploy the Netscaler ingress controller using the modified YAML.
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
-1. Deploy the Citrix VIP CRD which enables communication between the Citrix ingress controller and the IPAM controller using the following command.
+1. Deploy the Citrix VIP CRD which enables communication between the Netscaler ingress controller and the IPAM controller using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
 

@@ -1,6 +1,6 @@
 # HTTP use cases
 
-This topic covers various HTTP use cases that you can configure on the Ingress Netscaler using the annotations in the Citrix ingress controller.
+This topic covers various HTTP use cases that you can configure on the Ingress Netscaler using the annotations in the Netscaler ingress controller.
 
 The following table lists the HTTP use cases with sample annotations:
 
@@ -13,7 +13,7 @@ The following table lists the HTTP use cases with sample annotations:
 
 The Ingress Netscaler HTTP/2 on the client side as well on the server side. For more information, see HTTP/2 support on Netscaler. For an HTTP load balancing configuration on the Ingress Netscaler, it uses one of the following methods to start communicating with the client/server using HTTP/2.
 
-The Ingress Netscaler provides configurable options in an HTTP profile for the HTTP/2 methods. These HTTP/2 options can be applied to the client side as well to the server side of an HTTPS or HTTP load balancing setup. The Citrix ingress controller provides annotations to configure HTTP profile on the Ingress Netscaler. You use these annotations to configure the various HTTP loads balancing configuration on the Ingress Netscaler to communicate with the client/server using HTTP/2.
+The Ingress Netscaler provides configurable options in an HTTP profile for the HTTP/2 methods. These HTTP/2 options can be applied to the client side as well to the server side of an HTTPS or HTTP load balancing setup. The Netscaler ingress controller provides annotations to configure HTTP profile on the Ingress Netscaler. You use these annotations to configure the various HTTP loads balancing configuration on the Ingress Netscaler to communicate with the client/server using HTTP/2.
 
 >IMPORTANT: Ensure that the HTTP/2 Service Side global parameter (HTTP2Serverside) is enabled on the Ingress Netscaler. For more information, see nshttpparam.
 

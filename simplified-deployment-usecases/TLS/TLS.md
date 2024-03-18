@@ -1,6 +1,6 @@
 # TLS certificate handling
 
-Ingress can be secured with the TLS PEM certificates. You can use this certificate to encrypt the communication. Citrix ingress controller provides option to configure TLS certificates for SSL-based virtual servers in NetScaler. The SSL virtual server intercepts SSL traffic, decrypts it and processes it before sending it to services that are bound to the virtual server.
+Ingress can be secured with the TLS PEM certificates. You can use this certificate to encrypt the communication. Netscaler ingress controller provides option to configure TLS certificates for SSL-based virtual servers in NetScaler. The SSL virtual server intercepts SSL traffic, decrypts it and processes it before sending it to services that are bound to the virtual server.
 
 This tutorial shows you how to secure an Ingress using TLS/SSL certificates while using NetScaler.
 
@@ -70,11 +70,11 @@ To enable such a certificate for an ingress resource you have to deploy cert-man
 
 ### TLS Section in the Ingress YAML
 
-Kubernetes allows you to provide the TLS secrets in the `spec:` section of an ingress definition. This section describes how the Citrix ingress controller uses these secrets.
+Kubernetes allows you to provide the TLS secrets in the `spec:` section of an ingress definition. This section describes how the Netscaler ingress controller uses these secrets.
 
 #### Without the host section
 
-If the secret name is provided without the host section, Citrix ingress controller binds the secret as a default certificate.
+If the secret name is provided without the host section, Netscaler ingress controller binds the secret as a default certificate.
 
         apiVersion: networking.k8s.io/v1
         kind: Ingress
@@ -111,7 +111,7 @@ This Ingress opens an HTTPS listener to secure the channel from the client to th
 
 #### With the `host` section
 
-If the secret name is provided with the host section, Citrix ingress controller binds the secret as an SNI certificate.
+If the secret name is provided with the host section, Netscaler ingress controller binds the secret as an SNI certificate.
 
         apiVersion: networking.k8s.io/v1
         kind: Ingress
@@ -148,9 +148,9 @@ If the secret name is provided with the host section, Citrix ingress controller 
 
 This Ingress opens an https listener to secure the channel from the client to the load balancer, terminates TLS at NetScaler with the secret retrieved via SNI, and forward unencrypted traffic to the `service-test`.
 
-### Using the argument `default-ssl-certificate` in Citrix ingress controller
+### Using the argument `default-ssl-certificate` in Netscaler ingress controller
 
-The argument `default-ssl-certificate` in Citrix ingress controller is used to provide a secret on Kubernetes that needs to be used as a non-SNI certificate. You must provide the secret name to be used and the namespace from which it should be taken as arguments in the deployment YAML file of the Citrix ingress controller:
+The argument `default-ssl-certificate` in Netscaler ingress controller is used to provide a secret on Kubernetes that needs to be used as a non-SNI certificate. You must provide the secret name to be used and the namespace from which it should be taken as arguments in the deployment YAML file of the Netscaler ingress controller:
 
             --default-ssl-certificate <NAMESPACE>/<SECRET_NAME>
 
@@ -159,7 +159,7 @@ The `default-ssl-certificate` option is supported for OpenShift routes as well.
 
 ### Pre-configured Certificates in NetScaler
 
-Citrix ingress controller allows you to use certkeys that are already configured on NetScaler. You must provide the details about the certificate using the following annotation in your ingress definition:
+Netscaler ingress controller allows you to use certkeys that are already configured on NetScaler. You must provide the details about the certificate using the following annotation in your ingress definition:
 
         ingress.citrix.com/preconfigured-certkey : '{"certs": [ {"name": "<name>", "type": "default|sni|ca"} ] }'
 
@@ -204,7 +204,7 @@ The following ingress YAML shows for how back-end service `service-test` is secu
         
 
 **Note:**
-Ensure that you use this feature in cases where you want to reuse the certificates that are present on the NetScaler and bind them to the applications that are managed by Citrix ingress controller.
+Ensure that you use this feature in cases where you want to reuse the certificates that are present on the NetScaler and bind them to the applications that are managed by Netscaler ingress controller.
 
 **Note:**
-Citrix ingress controller does not manage the life cycle of the certificates. That is, it does not create or delete the certificates, but only binds them to the necessary applications.
+Netscaler ingress controller does not manage the life cycle of the certificates. That is, it does not create or delete the certificates, but only binds them to the necessary applications.

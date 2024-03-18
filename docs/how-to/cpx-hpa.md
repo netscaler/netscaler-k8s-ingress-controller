@@ -16,11 +16,11 @@ Netscaler CPX HPA solution consists of the following components:
 
 - Netscaler VPX: Netscaler VPX or MPX is deployed at Tier-1 and load balances the client requests among the Netscaler CPX pods inside the cluster.
 
-- Netscaler CPX: Netscaler CPX deployed inside the cluster acts as a Tier-2 load balancer for the endpoint application pods. The Netscaler CPX pod is running along with the Citrix ingress controller and Netscaler metric exporter as sidecars.
+- Netscaler CPX: Netscaler CPX deployed inside the cluster acts as a Tier-2 load balancer for the endpoint application pods. The Netscaler CPX pod is running along with the Netscaler ingress controller and Netscaler metric exporter as sidecars.
 
-- Citrix ingress controller: The [Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) is an ingress controller which is built around the Kubernetes Ingress and automatically configures Netscaler based on the Ingress resource configuration. The Citrix ingress controller deployed as a stand-alone pod configures the Netscaler VPX and other instances configures Netscaler CPXs.
+- Netscaler ingress controller: The [Netscaler ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) is an ingress controller which is built around the Kubernetes Ingress and automatically configures Netscaler based on the Ingress resource configuration. The Netscaler ingress controller deployed as a stand-alone pod configures the Netscaler VPX and other instances configures Netscaler CPXs.
 
-- Netscaler metrics exporter: The [Netscaler metrics exporter]((https://github.com/citrix/citrix-adc-metrics-exporter)) exports the application performance metrics to the open-source monitoring system Prometheus. The Netscaler Metrics Exporter collects metrics from Netscaler CPX and exposes it in a format that Prometheus can understand.
+- Netscaler metrics exporter: The [Netscaler metrics exporter]((https://github.com/netscaler/netscaler-adc-metrics-exporter)) exports the application performance metrics to the open-source monitoring system Prometheus. The Netscaler Metrics Exporter collects metrics from Netscaler CPX and exposes it in a format that Prometheus can understand.
 
 - Prometheus: Prometheus is an open-source systems monitoring and alerting toolkit. Prometheus is used to collect metrics from Netscaler CPXs and expose them using a Prometheus adapter which is queried by the HPA controller to keep a check on metrics.
 
@@ -61,8 +61,8 @@ Perform the following steps to deploy the Netscaler CPX HPA solution.
     This step creates the following resources:
 
     - Prometheus and Grafana for monitoring
-    - Netscaler CPX with the Citrix ingress controller and metrics exporter as sidecars
-    - Citrix ingress controller as a stand-alone pod to configure Netscaler VPX
+    - Netscaler CPX with the Netscaler ingress controller and metrics exporter as sidecars
+    - Netscaler ingress controller as a stand-alone pod to configure Netscaler VPX
     - A sample [guestbook](http://www.guestbook.com) application
     - HPA controller for monitoring the Netscaler CPX autoscale deployment
     - Prometheus adapter for exposing the custom metrics

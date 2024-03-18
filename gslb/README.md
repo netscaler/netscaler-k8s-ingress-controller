@@ -1,4 +1,4 @@
-# NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters using the Citrix ingress controller
+# NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters using the Netscaler ingress controller
 
 ## Overview
 
@@ -18,9 +18,9 @@ The following diagram explains a deployment topology for the NetScaler GSLB cont
 
 This diagram shows a sample topology with two data centers and each data center contains multiple Kubernetes clusters. For data center 1, Netscaler CPX is deployed as the Ingress load balancer in each Kubernetes cluster. For data center 2, HAProxy is deployed as the load balancer in each Kubernetes cluster. Citrix NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters for Kubernetes load balances across the ingresses.
 
-**Note:** Any ingress solution, including third party solutions such as Istio ingress gateway as well as the Citrix ingress controller with Netscaler MPX, VPX, or BLX is supported. This topology is just a sample deployment.
+**Note:** Any ingress solution, including third party solutions such as Istio ingress gateway as well as the Netscaler ingress controller with Netscaler MPX, VPX, or BLX is supported. This topology is just a sample deployment.
 
-A Citrix global server load balancing (GSLB) device is configured for each data center. In each Netscaler which acts as a global load balancer, one site is configured as a local site representing the local data center. The other sites are configured as remote sites for each remote data center. The Netscaler (MPX or VPX) used as the GSLB can be also used as the Ingress appliance with the Citrix ingress controller.
+A Citrix global server load balancing (GSLB) device is configured for each data center. In each Netscaler which acts as a global load balancer, one site is configured as a local site representing the local data center. The other sites are configured as remote sites for each remote data center. The Netscaler (MPX or VPX) used as the GSLB can be also used as the Ingress appliance with the Netscaler ingress controller.
 
 The global server load balancing (GSLB) configuration synchronization option of the Netscaler is used to synchronize the configuration across the sites. The Netscaler appliance from which you use the synchronization is referred as the master node and the site where the configuration is copied as the subordinate site.
 
@@ -62,13 +62,13 @@ The following CRDs are introduced to support the Netscaler configuration for per
 
 GTP CRD accepts the parameters for configuring GSLB on the Netscaler including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
 
-The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml).
+The GTP CRD spec is available in the Netscaler ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml).
 
 ### GSE CRD
 
 GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
+The GSE CRD Spec is available in the Netscaler ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
 

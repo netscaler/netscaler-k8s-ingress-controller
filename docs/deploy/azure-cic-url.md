@@ -1,18 +1,18 @@
-# Get Citrix ingress controller from Azure Marketplace
+# Get Netscaler ingress controller from Azure Marketplace
 
-This topic explains the steps to create a URL for the Citrix ingress controller image on Azure Marketplace.
+This topic explains the steps to create a URL for the Netscaler ingress controller image on Azure Marketplace.
 
 **Prerequisites**
 
 - A valid Azure Marketplace account and subscription
 
-## Generate a URL for the Citrix ingress controller image in Azure Marketplace
+## Generate a URL for the Netscaler ingress controller image in Azure Marketplace
 
 1. Log in to your [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us) account. 
 
 2. Create a resource group under your subscription if the Kubernetes cluster has not been created yet.
    
-   **Note:** The resource group of the cluster and the Netscaler CPX registry must be the same. If the Kubernetes cluster where you want to deploy the Citrix ingress controller exists, then the same resource group should be used for the Citrix ingress controller registry. If the Kubernetes cluster does not exist, create a resource group and then create a cluster with this new resource group.
+   **Note:** The resource group of the cluster and the Netscaler CPX registry must be the same. If the Kubernetes cluster where you want to deploy the Netscaler ingress controller exists, then the same resource group should be used for the Netscaler ingress controller registry. If the Kubernetes cluster does not exist, create a resource group and then create a cluster with this new resource group.
 
    - Enter a name for the Resource group and specify a region.
   
@@ -24,7 +24,7 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
    
      <img src="../media/azurem-image-2.png" width="500">
       
-3. Select [Citrix Ingress Controller](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixingresscontroller?tab=Overview) on Azure Marketplace.
+3. Select [Netscaler ingress controller](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/citrix.citrixingresscontroller?tab=Overview) on Azure Marketplace.
 
     <img src="../media/azurem-image-3.png" width="500">
    
@@ -34,11 +34,11 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
 
      <img src="../media/azurem-image-4.png" width="500">
 
-4. Create a Citrix ingress controller image registry with the resource group created in step 2.
+4. Create a Netscaler ingress controller image registry with the resource group created in step 2.
    
    <img src="../media/azurem-image-5.png" width="500">
 
-   - Click **Create new** for creating an Azure Citrix ingress controller registry.
+   - Click **Create new** for creating an Azure Netscaler ingress controller registry.
   
    - Enter a registry name.
   
@@ -75,6 +75,6 @@ This topic explains the steps to create a URL for the Citrix ingress controller 
    
      For example, `azurecicreg.azurecr.io/citrix/citrix-k8s-ingress-controller:latest`.
      
-     Copy the image URL and replace as image in the Citrix ingress controller YAML file.
+     Copy the image URL and replace as image in the Netscaler ingress controller YAML file.
 
 
