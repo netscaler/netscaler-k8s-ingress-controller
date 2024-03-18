@@ -14,10 +14,10 @@ SSL profiles are classified into two categories:
 Once you enable SSL profiles on the NetScaler, a default front end profile (`ns_default_ssl_profile_frontend`) is applied to the SSL virtual server and a default back-end profile (`ns_default_ssl_profile_backend`) is applied to the service or service group on the NetScaler.
 
 > **IMPORTANT:**
-> SSL profile does not enable you to configure SSL certificate. For the SSL profile to work correctly, you must enable the default profile in NetScaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling default profile.
-Set default SSL profile on NetScaler using the command `set ssl parameter -defaultProfile ENABLED` before deploying Citrix ingress controller. If you have already deployed Citrix ingress controller, then redeploy it. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+> SSL profile does not enable you to configure SSL certificate. For the SSL profile to work correctly, you must enable the default profile in NetScaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Netscaler ingress controller is restarted after enabling default profile.
+Set default SSL profile on NetScaler using the command `set ssl parameter -defaultProfile ENABLED` before deploying Netscaler ingress controller. If you have already deployed Netscaler ingress controller, then redeploy it. For more information about the SSL default profile, see [documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
-The Citrix ingress controller provides the following two smart annotations for SSL profile. You can use these annotations to customize the default front end profile (`ns_default_ssl_profile_frontend`) and back-end profile (`ns_default_ssl_profile_backend`) based on your requirement:
+The Netscaler ingress controller provides the following two smart annotations for SSL profile. You can use these annotations to customize the default front end profile (`ns_default_ssl_profile_frontend`) and back-end profile (`ns_default_ssl_profile_backend`) based on your requirement:
 
 | Smart annotation | Description | Sample |
 | ---------------- | ------------ | ----- |
@@ -31,15 +31,14 @@ This example shows how to apply SSL profiles.
             apiVersion: networking.k8s.io/v1
             kind: Ingress
             metadata:
+              annotations:
+                ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls13" : "enabled"}'
               name: ingress-ssl-profile
               namespace: netscaler
-              annotations:
-                kubernetes.io/ingress.class: "netscaler"
-                # ingress.citrix.com/frontend-sslprofileannotation creates ssl profile for ingress with hsts and tls13 enabled.
-                ingress.citrix.com/frontend-sslprofile: '{"hsts":"enabled", "tls13" : "enabled"}' 
             spec:
+              ingressClassName: netscaler
               rules:
-              - host: "example.com"
+              - host: example.com
                 http:
                   paths:
                   - backend:
@@ -48,8 +47,17 @@ This example shows how to apply SSL profiles.
                     path: /
               tls:
               - hosts:
-                - "example-test"
+                - example-test
                 secretName: tls-secret
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: netscaler
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
+
 
 ## Example: Binding SSL cipher group
 
@@ -60,15 +68,15 @@ For information about securing cipher, see [securing cipher](https://developer-d
             apiVersion: networking.k8s.io/v1
             kind: Ingress
             metadata:
+              annotations:
+                ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled",
+                  "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'
               name: ingress-ssl-cipher
               namespace: netscaler
-              annotations:
-                kubernetes.io/ingress.class: "netscaler"
-                # ingress.citrix.com/frontend-sslprofile annotation creates ssl profile for ingress with sni, hsts, tls13 and ciphers enabled.
-                ingress.citrix.com/frontend-sslprofile: '{"snienable": "enabled", "hsts":"enabled", "tls13" : "enabled", "ciphers" : [{"ciphername": "test", "cipherpriority" :"1"}]}'  
             spec:
+              ingressClassName: netscaler
               rules:
-              - host: "example.com"
+              - host: example.com
                 http:
                   paths:
                   - backend:
@@ -77,8 +85,17 @@ For information about securing cipher, see [securing cipher](https://developer-d
                     path: /
               tls:
               - hosts:
-                - "example-test"
+                - example-test
                 secretName: tls-secret
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: netscaler
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
+            
 
 ## Using built-in or existing user-defined SSL profiles on the NetScaler
 
@@ -104,14 +121,14 @@ Where, 'ssl_preconf_profile' is the SSL profile that exists on the NetScaler and
 ## Global front-end profile configuration using ConfigMap variables
 
 If there is no front-end profiles annotation specified in any of the ingresses which share the front-end IP address, then the global values from the ConfigMap that is `FRONTEND_SSL_PROFILE` is used for the SSL front-end profiles respectively. The ConfigMap variable is used for the front-end profile if it is not overridden by front-end profiles smart annotation in one or more ingresses that shares a front-end IP address. If you need to enable or disable a feature using any front-end profile for all ingresses, you can use the variable `FRONTEND_SSL_PROFILE` for SSL profiles. For example, if you want to enable TLS 1.3 for all SSL ingresses, you can use `FRONTEND_SSL_PROFILE` to set this value instead of using the smart annotation in each ingress definition.
-Refer [ConfigMap documentation](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Citrix Ingress Controller.
+Refer [ConfigMap documentation](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/profiles.md) to know how to use configmap with Netscaler ingress controller.
 
 ### Configuration using FRONTEND_SSL_PROFILE
 
 The `FRONTEND_SSL_PROFILE` variable is used for setting the SSL options for the front-end virtual server (client side) unless overridden by the `ingress.citrix.com/frontend-sslprofile` smart annotation in the ingress definition.
 
 **Note:**
-For the SSL profile to work correctly, you must enable the default profile in NetScaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Citrix ingress controller is restarted after enabling the default profile. The default profile is automatically enabled when NetScaler CPX is used as an ingress device. For more information about the SSL default profile, see the [SSL profile documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
+For the SSL profile to work correctly, you must enable the default profile in NetScaler using the `set ssl parameter -defaultProfile ENABLED` command. Make sure that Netscaler ingress controller is restarted after enabling the default profile. The default profile is automatically enabled when NetScaler CPX is used as an ingress device. For more information about the SSL default profile, see the [SSL profile documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
 To use an existing profile on NetScaler or use a built-in SSL profile,
 

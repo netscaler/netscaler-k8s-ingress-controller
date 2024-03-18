@@ -40,7 +40,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: |+
                              'Name of the services for which the policies applied'
@@ -278,13 +278,13 @@ spec:
                                 type: string
                             login_name:
                                 description: |+
-                                             'LDAP login name attribute. The Citrix ADC uses the LDAP login name
+                                             'LDAP login name attribute. The Netscaler uses the LDAP login name
                                               to query external LDAP servers or Active Directories'
                                 type: string
                                 maxLength: 127
                             security_type:
                                 description: |+
-                                             'Type of security used for communications between the Citrix ADC
+                                             'Type of security used for communications between the Netscaler
                                               and the LDAP server. Default is TLS'
                                 type: string
                                 enum: ['PLAINTEXT', 'TLS', 'SSL']
@@ -318,7 +318,7 @@ spec:
                                 maxLength: 255
                             auth_timeout:
                                 description: |+
-                                             'Number of seconds the Citrix ADC waits for a response from the server
+                                             'Number of seconds the Netscaler waits for a response from the server
                                               Default is 3'
                                 type: integer
                                 minimum: 1
@@ -380,7 +380,7 @@ spec:
                                 type: string
                                 maxLength: 127
                             issuer_name:
-                                description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
+                                description: 'The name to be used in requests sent from SP to IDP to identify Netscaler'
                                 type: string
                                 maxLength: 63
                             binding:

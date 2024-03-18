@@ -1,6 +1,6 @@
 # Licensing
 
-For licensing the Citrix ADC CPX, you need to provide the following information in the YAML for the Citrix Application Delivery Management (ADM) to automatically pick the licensing information:
+For licensing the Netscaler CPX, you need to provide the following information in the YAML for the Citrix Application Delivery Management (ADM) to automatically pick the licensing information:
 
 -  **LS_IP (License server IP)** – Specify the Citrix ADM IP address.
 

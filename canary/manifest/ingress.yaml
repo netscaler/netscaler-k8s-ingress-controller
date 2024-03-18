@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: canarydemo
+  annotations: {}
   name: fronthotdrinksapp
   namespace: default
 spec:
+  ingressClassName: canarydemo
   rules:
   - host: canarydemo.com
     http:
@@ -17,3 +17,11 @@ spec:
               number: 8080
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: canarydemo
+spec:
+  controller: citrix.com/ingress-controller
+---
