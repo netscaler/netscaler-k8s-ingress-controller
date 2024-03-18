@@ -85,15 +85,15 @@ nav:
     - On PKS: deploy/deploy-pks.md
   - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - Deployment solutions:
-    - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
-    - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
-    - Deploy the Citrix ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
+    - Deploy the Netscaler ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
+    - Deploy the Netscaler ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
+    - Deploy the Netscaler ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
     - Deploy Netscaler CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
-    - Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Netscaler VPX: deploy/deploy-azure-cic.md
+    - Deploy Netscaler ingress controller in an Azure Kubernetes Service cluster with Netscaler VPX: deploy/deploy-azure-cic.md
     - Deploy Netscaler CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
-    - Deploy the Citrix ingress controller in Anthos Platform: deploy/deploy-anthos.md
-    - Deploy Netscaler VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
-    - Deploy the Citrix ingress controller for Netscaler with admin partitions: deploy/deploy-cic-adc-admin-partition.md
+    - Deploy the Netscaler ingress controller in Anthos Platform: deploy/deploy-anthos.md
+    - Deploy Netscaler VPX in active-active high availability in EKS environment using Amazon ELB and Netscaler ingress controller: deploy/deploy-eks-elb.md
+    - Deploy the Netscaler ingress controller for Netscaler with admin partitions: deploy/deploy-cic-adc-admin-partition.md
     - Citrix solution for service of type LoadBalancer in AWS: configure/service-type-lb-solution-in-aws.md
   - Deploy Citrix API gateway: 
     - Deploy the Citrix API gateway using OpenShift Operator: deploy/deploy-api-gateway-openshift.md
@@ -141,11 +141,11 @@ nav:
     - CORS: crds/cors.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
-    #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
-    - TLS certificates handling in Citrix ingress controller: certificate-management/tls-certificates.md
+    #- TLS certificates in Netscaler ingress controller: certificate-management/tls-certificate-handling.md
+    - TLS certificates handling in Netscaler ingress controller: certificate-management/tls-certificates.md
     - TLS client authentication in Netscaler: certificate-management/client-auth-support.md
     - TLS server authentication in Netscaler: certificate-management/server-auth.md
-    - Install, link, and update certificates on Netscaler using the Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
+    - Install, link, and update certificates on Netscaler using the Netscaler ingress controller: certificate-management/link-ca-certificate-chain.md
     - Configure SSL passthrough using Kubernetes Ingress: certificate-management/ssl-passthrough.md
     - Automated certificate management with cert-manager:
       - Introduction: certificate-management/certificate.md

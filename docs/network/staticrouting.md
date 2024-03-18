@@ -6,7 +6,7 @@ The Ingress Netscaler VPX or MPX outside the Kubernetes cluster receives all the
 
 One of the ways to achieve network connectivity between pods and Netscaler VPX or MPX instance outside the Kubernetes cluster is to configure routes on the Netscaler instance to the overlay network.
 
-You can either do this manually or Citrix ingress controller provides an option to automatically configure the network.
+You can either do this manually or Netscaler ingress controller provides an option to automatically configure the network.
 
 !!! note "Note"
     Ensure that the Netscaler instance (MPX or VPX) has SNIP configured on the host network. The host network is the network on which the Kubernetes nodes communicate with each other.

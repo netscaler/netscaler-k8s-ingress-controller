@@ -25,7 +25,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27 
+        image: quay.io/netscaler/netscaler-cpx:13.1-51.15 
         imagePullPolicy: Always
         name: cpx-ingress
         resources: {}
@@ -44,7 +44,7 @@ spec:
           name: cpx-volume2
         - mountPath: /var/deviceinfo
           name: shared-data
-      # add Citrix Ingress Controller as sidecar to CPX
+      # add Netscaler ingress controller as sidecar to CPX
       - name: cic
         args:
         #- --configmap default/config

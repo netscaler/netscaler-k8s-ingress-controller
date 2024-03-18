@@ -24,7 +24,7 @@ As the management IP or NSIP of both the Netscaler VPXs are different and they c
 1.  Create an AKS cluster
 1.  Enable VNet peering
 1.  Configure Network Security Group
-1.  Deploy the Citrix ingress controller
+1.  Deploy the Netscaler ingress controller
 1.  Create a microservice application and expose it using an Ingress
 
 Perform the following steps to deploy Netscaler VPX in a high availability INC mode in Azure:
@@ -158,9 +158,9 @@ A network security group contains security rules that allow or deny inbound or o
 
 When you deploy an AKS cluster, it creates a Network Security Group (NSG) by default for allowing inter-node communication. You can either edit this Network Security Group to allow traffic from Netscaler VPX or create a Network Security Group to allow traffic from Netscaler VPX to AKS cluster and vice versa. For more information on how to create an NSG or edit an existing NSG, see [Work with Network Security Group](https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group#work-with-network-security-groups).
 
-### Deploy the Citrix ingress controller
+### Deploy the Netscaler ingress controller
 
-1.  Use the following commands to deploy Citrix ingress controller in the Azure managed Kubernetes cluster (AKS) using the helm chart.
+1.  Use the following commands to deploy Netscaler ingress controller in the Azure managed Kubernetes cluster (AKS) using the helm chart.
 
         #Create a Kubernetes Secret using Netscaler login credentials
 
@@ -189,6 +189,6 @@ The following steps show how to create a sample Apache microservice and exposes 
         curl --resolve mysample-testdomain.com:80: $(terraform output -raw alb_public_ip) http://mysample-testdomain.com
         <html><body><h1>It works!</h1></body></html>
 
-Now you have deployed Netscaler VPX instances in High Availability INC mode as the ingress for your Azure Kubernetes Services (AKS). You can further use our advanced Citrix ingress controller for features such as SSL termination, Rewrite and Responder functionalities and so on. For information about Citrix ingress controller, see [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
+Now you have deployed Netscaler VPX instances in High Availability INC mode as the ingress for your Azure Kubernetes Services (AKS). You can further use our advanced Netscaler ingress controller for features such as SSL termination, Rewrite and Responder functionalities and so on. For information about Netscaler ingress controller, see [Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
 For information on network architecture for Netscaler VPX instances on Microsoft Azure, see [Netscaler VPX instances on Microsoft Azure](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-vpx-on-azure/network-architecture-vpx-azur).

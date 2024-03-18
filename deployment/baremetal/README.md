@@ -1,16 +1,16 @@
-# Citrix ingress controller for Kubernetes
+# Netscaler ingress controller for Kubernetes
 
-You can deploy the Citrix ingress controller in two ways:
+You can deploy the Netscaler ingress controller in two ways:
 
-## Citrix ingress controller as a standalone pod
+## Netscaler ingress controller as a standalone pod
 
-In this deployment, the Citrix ingress controller runs as a pod that monitors the Kubernetes API server and configures Netscaler VPX and MPX.
+In this deployment, the Netscaler ingress controller runs as a pod that monitors the Kubernetes API server and configures Netscaler VPX and MPX.
 
 **YAML file for deployment:** ***citrix-k8s-ingress-controller.yaml***
 
-## Netscaler CPX with the inbuilt Citrix ingress controller
+## Netscaler CPX with the inbuilt Netscaler ingress controller
 
-In this deployment, you deploy Netscaler CPX with a built-in Citrix ingress controller agent that configures the Netscaler CPX. Netscaler CPX runs as pod and does North-South load balancing.
+In this deployment, you deploy Netscaler CPX with a built-in Netscaler ingress controller agent that configures the Netscaler CPX. Netscaler CPX runs as pod and does North-South load balancing.
 
 **YAML file for deployment:** ***citrix-k8s-cpx-ingress.yaml***
 
@@ -23,9 +23,9 @@ Perform the following step to deploy a Netscaler CPX along with an inbuilt Ingre
           kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
       ```
 
-## Deploy Citrix ingress controller as a standalone pod
+## Deploy Netscaler ingress controller as a standalone pod
 
-Perform the following steps to deploy the Citrix ingress controller as a stand-alone pod.
+Perform the following steps to deploy the Netscaler ingress controller as a stand-alone pod.
 
 
 
@@ -35,14 +35,14 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
     ```
                         
     This YAML file has four sections, in which the first three sections are for cluster role creation and service account creation. The
-    last one is for Citrix ingress controller pod creation.
+    last one is for Netscaler ingress controller pod creation.
 
     * Cluster roles
     * Cluster role bindings
     * Service account
-    * Citrix ingress controller pod creation
+    * Netscaler ingress controller pod creation
    
-    First three sections are required for the Citrix ingress controller to monitor Kubernetes events. No changes are required for these sections. The next section defines the environment variables required for the Citrix ingress controller to configure the Netscaler.
+    First three sections are required for the Netscaler ingress controller to monitor Kubernetes events. No changes are required for these sections. The next section defines the environment variables required for the Netscaler ingress controller to configure the Netscaler.
 
  2. Edit the YAML file and update the following environment variables.
 
@@ -50,7 +50,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <details>
        <summary>NS_IP</summary>
 
-         This variable is a must for the Citrix ingress controller to configure the Netscaler appliance. Provide,
+         This variable is a must for the Netscaler ingress controller to configure the Netscaler appliance. Provide,
          ```
             NSIP for standalone Netscaler
             SNIP for HA (Management access has to be enabled) 
@@ -62,7 +62,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <summary>NS_USER and NS_PASSWORD</summary>
 
          This variable is for authenticating with Netscaler if it has non-default user name and password. You can directly pass user name and password or use Kubernetes secrets.
-         For configuring a non-default Netscaler user name and password, see [Create a system user account for the Citrix ingress controller in Netscaler](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+         For configuring a non-default Netscaler user name and password, see [Create a system user account for the Netscaler ingress controller in Netscaler](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
          Given YAML uses Kubernetes secrets. The following steps help to create secrets to be used in YAML.
 
@@ -77,7 +77,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <details>
        <summary>EULA</summary>
 
-          This variable is for the end user license agreement (EULA) which has to be set as `YES` for the Citrix ingress controller to up and run.
+          This variable is for the end user license agreement (EULA) which has to be set as `YES` for the Netscaler ingress controller to up and run.
 
        </details>
     2. `Optional` arguments:
@@ -85,13 +85,13 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
        <details>
        <summary>kubernetes_url</summary>
 
-          This variable is an optional field for the Citrix ingress controller to register for events. If you do not specify it explicitly, the Citrix ingress controller uses the internal Kubernetes API server IP address.
+          This variable is an optional field for the Netscaler ingress controller to register for events. If you do not specify it explicitly, the Netscaler ingress controller uses the internal Kubernetes API server IP address.
    
        </details>
        <details>
        <summary>LOGLEVEL</summary>
 
-         This variable is used for controlling the logs generated from the Citrix ingress controller. Following options are available. By default the log level is DEBUG.
+         This variable is used for controlling the logs generated from the Netscaler ingress controller. Following options are available. By default the log level is DEBUG.
          * CRITICAL 
          * ERROR
          * WARNING
@@ -102,7 +102,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        <summary>NS_PROTOCOL and NS_PORT</summary>
                                 
-         These environment variables define the protocol and port used by the Citrix ingress controller to communicate with the Netscaler.
+         These environment variables define the protocol and port used by the Netscaler ingress controller to communicate with the Netscaler.
 
          By default NS_PROTOCOL is HTTPS and NS_PORT is 443.
        </details>
@@ -111,7 +111,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
          [Ingress class](../../docs/configure/ingress-classes.md) is used when multiple Ingress load balancers are used to load balance different ingress resources.
 
-         The Citrix ingress controller configures Netscaler only with the ingress classes listed under --ingress-classes
+         The Netscaler ingress controller configures Netscaler only with the ingress classes listed under --ingress-classes
 
                      args:
                           - --ingress-classes
@@ -126,7 +126,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        <summary>NS_VIP</summary>
 
-       Citrix ingress controller uses the IP provided in this environment variable to configure a virtual IP address in the Tier-1 ADC which would receive the application traffic from the external world.
+       Netscaler ingress controller uses the IP provided in this environment variable to configure a virtual IP address in the Tier-1 ADC which would receive the application traffic from the external world.
 
        This variable is useful in the case where all Ingresses run in the Virtual IP address. This variable takes precedence over the [frontend-ip](../../docs/configure/annotations.md) annotation.
 
@@ -142,9 +142,9 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        <summary>NS_APPS_NAME_PREFIX</summary>
 
-       The Citrix ingress controller uses the provided prefix to form the application entity name in the Netscaler. This variable is useful in scenarios where a Netscaler load balances applications from different clusters. Prefix allows you to segregate the Kubernetes cluster configuration.
+       The Netscaler ingress controller uses the provided prefix to form the application entity name in the Netscaler. This variable is useful in scenarios where a Netscaler load balances applications from different clusters. Prefix allows you to segregate the Kubernetes cluster configuration.
 
-       By default, the Citrix ingress controller adds **k8s** as a prefix to the Netscaler entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Citrix ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed eight characters.
+       By default, the Netscaler ingress controller adds **k8s** as a prefix to the Netscaler entities such as, content switching (CS) virtual server, load balancing (LB) virtual server and so on. You can now customize the prefix using the `NS_APPS_NAME_PREFIX` environment variable in the Netscaler ingress controller deployment YAML file. You can use alphanumeric characters for the prefix and the prefix length should not exceed eight characters.
        **Usage:**
 
        ```
@@ -227,18 +227,18 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
 
        <details>
        <summary> SCOPE</summary>
-        Enables configuring the scope of Citrix ingress controller as `Role` or `ClusterRole` binding.
-        You can set the value of the `SCOPE` environment variable as `local` or `cluster`. When you set this variable as `local`, Citrix ingress controller is deployed with `Role` binding that has limited privileges. You can use this option when you want to deploy Citrix ingress controller with minimal privileges for a particular namespace with `Role` binding. By default, the value of `SCOPE` is set as `cluster` and Citrix ingress controller is deployed with the `ClusterRole` binding.
+        Enables configuring the scope of Netscaler ingress controller as `Role` or `ClusterRole` binding.
+        You can set the value of the `SCOPE` environment variable as `local` or `cluster`. When you set this variable as `local`, Netscaler ingress controller is deployed with `Role` binding that has limited privileges. You can use this option when you want to deploy Netscaler ingress controller with minimal privileges for a particular namespace with `Role` binding. By default, the value of `SCOPE` is set as `cluster` and Netscaler ingress controller is deployed with the `ClusterRole` binding.
        </details>
 
-1. Deploy the Citrix ingress controller using the `kubectl create` command.
+1. Deploy the Netscaler ingress controller using the `kubectl create` command.
         
            kubectl create -f citrix-k8s-ingress-controller.yaml
 
-    This command pulls the latest image and brings up the Citrix ingress controller.
+    This command pulls the latest image and brings up the Netscaler ingress controller.
                 
 
-    The official Citrix ingress controller docker image is available at: <span style="color:red"> `quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6` </span>
+    The official Netscaler ingress controller docker image is available at: <span style="color:red"> `quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6` </span>
 
 
 2. Configure reachability to the pod network using one of the following.
@@ -246,7 +246,7 @@ Perform the following steps to deploy the Citrix ingress controller as a stand-a
     - **Static routing**:
 
       For seamless functioning of services deployed in the Kubernetes cluster, the Netscaler ingress device should be able to reach the underlying overlay network over which pods are running. The
-    `feature-node-watch` argument of the Citrix ingress controller can be used for automatic route configuration on the Netscaler towards the pod network.
+    `feature-node-watch` argument of the Netscaler ingress controller can be used for automatic route configuration on the Netscaler towards the pod network.
     See, [Network Configuration](../../docs/network/staticrouting.md) for more information. 
 
       By default, `feature-node-watch` is false. It must be explicitly set to true if auto route configuration is required.

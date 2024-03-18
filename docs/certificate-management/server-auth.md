@@ -1,4 +1,4 @@
-# TLS server authentication support in Netscaler using the Citrix ingress controller
+# TLS server authentication support in Netscaler using the Netscaler ingress controller
 
 [Server authentication](https://docs.citrix.com/en-us/citrix-adc/13/ssl/server-authentication.html) allows a client to verify the authenticity of the web server that it is accessing.
 Usually, the Netscaler device performs SSL offload and acceleration on behalf of a web server and does not authenticate the certificate of the Web server. However, you can authenticate the server in deployments that require end-to-end SSL encryption.
@@ -17,7 +17,7 @@ Perform the following steps to configure TLS server authentication.
 
 1. Enable the TLS support in Netscaler.
 
-     The Citrix ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Netscaler.
+     The Netscaler ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Netscaler.
      The following is a sample snippet of the Ingress definition:
 
 
@@ -38,7 +38,7 @@ Perform the following steps to configure TLS server authentication.
 
             $ kubectl create secret generic tea-ca --from-file=tls.crt=cacerts.pem
 
-     **Note:** You must specify `tls.crt=` while creating a secret. This file is used by the Citrix ingress controller while parsing a CA secret.
+     **Note:** You must specify `tls.crt=` while creating a secret. This file is used by the Netscaler ingress controller while parsing a CA secret.
 
 3.  Enable secure back end communication to the service using the following annotation in the Ingress configuration.
    

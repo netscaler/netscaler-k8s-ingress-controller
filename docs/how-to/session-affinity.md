@@ -22,7 +22,7 @@ The Netscaler encrypts `ServiceIP` and `ServicePort` when it inserts a cookie, a
 
 For example, `a.com=ffffffff02091f1045525d5f4f58455e445a4a423660;expires=Fri, 23-Aug-2019 07:01:45`.
 
-You can configure persistence setting on the ingress Netscaler, using the following Ingress annotation provided by the Citrix ingress controller:
+You can configure persistence setting on the ingress Netscaler, using the following Ingress annotation provided by the Netscaler ingress controller:
 
     ingress.citrix.com/lbvserver: '{"apache":{"persistenceType":"COOKIEINSERT", "timeout":"20", "cookiename":"k8s_cookie"}}'
 

@@ -2,7 +2,7 @@
 
 Analytics from Netscaler instances provides you deep-level insights about application performance which helps you to quickly identify issues and take any necessary action.
 
-## Enabling analytics using annotations in the Citrix ingress controller YAML file
+## Enabling analytics using annotations in the Netscaler ingress controller YAML file
 
 You can enable analytics using the analytics profile which is defined as a smart annotation in Ingress or service of type LoadBalancer configuration. You can define the specific parameters you need to monitor by specifying them in the Ingress or service configuration of the application.
 The following is a sample Ingress annotation with analytics profile for HTTP records:

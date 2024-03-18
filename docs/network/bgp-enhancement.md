@@ -1,27 +1,27 @@
-# Enhancements for Kubernetes service of type LoadBalancer support in the Citrix ingress controller
+# Enhancements for Kubernetes service of type LoadBalancer support in the Netscaler ingress controller
 
-Kubernetes service of type LoadBalancer support in the Citrix ingress controller is enhanced with the following features:
+Kubernetes service of type LoadBalancer support in the Netscaler ingress controller is enhanced with the following features:
 
 - BGP route health injection (RHI) support
 - Advertise or recall load balancer IP addresses (VIPs) based on the availability of service’s pods in a set of nodes (zones) defined by node’s labels
   
 ## Support for automatic configuration of BGP RHI on Netscaler
 
-Route health injection (RHI) allows the Netscaler to advertise the availability of a VIP as a host route throughout the network using BGP. However, you had to manually perform the configuration on Netscaler to support RHI. Using Citrix ingress controllers deployed in a Kubernetes environment, you can automate the configuration on Netscalers to advertise VIPs.
+Route health injection (RHI) allows the Netscaler to advertise the availability of a VIP as a host route throughout the network using BGP. However, you had to manually perform the configuration on Netscaler to support RHI. Using Netscaler ingress controllers deployed in a Kubernetes environment, you can automate the configuration on Netscalers to advertise VIPs.
 
-When a service of type `LoadBalancer` is created, the Citrix ingress controller configures a VIP on the Netscaler for the service. If BGP RHI support is enabled for the Citrix ingress controller, it automatically configures Netscaler to advertise the VIP to the BGP network.
+When a service of type `LoadBalancer` is created, the Netscaler ingress controller configures a VIP on the Netscaler for the service. If BGP RHI support is enabled for the Netscaler ingress controller, it automatically configures Netscaler to advertise the VIP to the BGP network.
 
 ## Advertise and recall VIPs based on the availability of pods
 
-In the topology as shown in the following diagram, nodes in a Kubernetes cluster are physically distributed across three different racks. They are logically grouped into three zones. Each zone has a Netscaler MPX as the Tier-1 ADC and a Citrix ingress controller on the same in the Kubernetes cluster. Citrix ingress controllers in all zones listen to the same Kubernetes API server. So, whenever a service of type `LoadBalancer` is created, all Netscalers in the cluster advertises the same IP address to the BGP fabric. Even, if there is no workload on a zone, the Netscaler in that zone still advertises the IP address.
+In the topology as shown in the following diagram, nodes in a Kubernetes cluster are physically distributed across three different racks. They are logically grouped into three zones. Each zone has a Netscaler MPX as the Tier-1 ADC and a Netscaler ingress controller on the same in the Kubernetes cluster. Netscaler ingress controllers in all zones listen to the same Kubernetes API server. So, whenever a service of type `LoadBalancer` is created, all Netscalers in the cluster advertises the same IP address to the BGP fabric. Even, if there is no workload on a zone, the Netscaler in that zone still advertises the IP address.
 
 ![Sample topology](../media/bgp-route-vip.png)
 
- Citrix provides a solution to advertise or recall the VIP based on the availability of pods in a zone. You need to label the nodes on each zone so that the Citrix ingress controller can identify nodes belonging to the same zone. The Citrix ingress controller on each zone performs a check to see if there are pods on nodes in the zone. If there are pods on nodes in the zone, it advertises the VIP. Otherwise, it revokes the advertisement of VIP from the Netscaler on the zone.
+ Citrix provides a solution to advertise or recall the VIP based on the availability of pods in a zone. You need to label the nodes on each zone so that the Netscaler ingress controller can identify nodes belonging to the same zone. The Netscaler ingress controller on each zone performs a check to see if there are pods on nodes in the zone. If there are pods on nodes in the zone, it advertises the VIP. Otherwise, it revokes the advertisement of VIP from the Netscaler on the zone.
 
-## Configuring BGP RHI on Netscalers using the Citrix ingress controller
+## Configuring BGP RHI on Netscalers using the Netscaler ingress controller
 
-This topic provides information on how to configure BGP RHI on Netscalers using the Citrix ingress controller based on a sample topology. In this topology, nodes in a Kubernetes cluster are deployed across two zones. Each zone has a Netscaler VPX or MPX as the Tier-1 ADC and a Citrix ingress controller for configuring ADC in the Kubernetes cluster. The ADCs are peered using BGP with the upstream router.
+This topic provides information on how to configure BGP RHI on Netscalers using the Netscaler ingress controller based on a sample topology. In this topology, nodes in a Kubernetes cluster are deployed across two zones. Each zone has a Netscaler VPX or MPX as the Tier-1 ADC and a Netscaler ingress controller for configuring ADC in the Kubernetes cluster. The ADCs are peered using BGP with the upstream router.
 
 ![BGP RHI configuration sample topology](../media/BGP-RHI-sample-topology.png)
 
@@ -43,7 +43,7 @@ Perform the following steps to configure BGP RHI support based on the sample top
         kubectl label nodes node3 rack=rack-2
         kubectl label nodes node4 rack=rack-2
 
-2. Configure the following environmental variables in the Citrix ingress controller configuration YAML files as follows:
+2. Configure the following environmental variables in the Netscaler ingress controller configuration YAML files as follows:
 
     For zone 1:
 
@@ -59,7 +59,7 @@ Perform the following steps to configure BGP RHI support based on the sample top
          - name: "BGP_ADVERTISEMENT"
            value: "True"
   
-    A sample `cic.yaml` file for deploying the Citrix ingress controller on zone 1 is provided as follows:
+    A sample `cic.yaml` file for deploying the Netscaler ingress controller on zone 1 is provided as follows:
 
         apiVersion: v1
         kind: Pod
@@ -100,10 +100,10 @@ Perform the following steps to configure BGP RHI support based on the sample top
             citrix-ipam-controller
         imagePullPolicy: Always
   
-3. Deploy the Citrix ingress controller using the following command.
+3. Deploy the Netscaler ingress controller using the following command.
    
     **Note:**
-     You need to deploy the Citrix ingress controller on both racks (per zone).
+     You need to deploy the Netscaler ingress controller on both racks (per zone).
 
         Kubectl create -f cic.yaml
 

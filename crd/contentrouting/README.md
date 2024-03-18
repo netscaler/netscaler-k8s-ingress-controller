@@ -49,7 +49,7 @@ For more information about profile support for Listener CRD, see the [Profile su
 ## How to write Listener CRD objects
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the listener configuration in a YAML file. In the YAML file, use `Listener` in the kind field and in the spec section add the listener CRD attributes based on your requirement for the listener configuration.
-After you deploy the YAML file, the Citrix ingress controller applies the listener configuration on the Ingress Netscaler device.
+After you deploy the YAML file, the Netscaler ingress controller applies the listener configuration on the Ingress Netscaler device.
 
 Following is a sample Listener CRD object definition named as `Listener-crd.yaml`.
 
@@ -204,7 +204,7 @@ After you have defined the HTTP routes in the YAML file, deploy the YAML file fo
 
 	    Kubectl create -f  Route-crd.yaml
 
-Once you deploy the YAML file, the Citrix ingress controller applies the HTTP route configuration on the Ingress Netscaler device.
+Once you deploy the YAML file, the Netscaler ingress controller applies the HTTP route configuration on the Ingress Netscaler device.
 
 
 ### Attaching HTTPRoute CRD objects to a Listener CRD object

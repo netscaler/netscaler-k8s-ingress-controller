@@ -1,4 +1,4 @@
-# Citrix Ingress Controller
+# Netscaler ingress controller
 
 [Citrix](https://www.citrix.com/en-in/) provides an Ingress Controller for Netscaler MPX (hardware), Netscaler VPX (virtualized), and [Netscaler CPX](https://docs.citrix.com/en-us/citrix-adc-cpx/13/about.html) (containerized) for [bare metal](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment/baremetal) and [cloud](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/deployment) deployments. It configures one or more Netscaler based on the Ingress resource configuration in [Kubernetes](https://kubernetes.io/) or in [OpenShift](https://www.openshift.com) cluster.
 
@@ -11,7 +11,7 @@
    helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>
    ```
 
-   To install Citrix Provided Custom Resource Definition(CRDs) along with Citrix Ingress Controller
+   To install Citrix Provided Custom Resource Definition(CRDs) along with Netscaler ingress controller
    ```
    helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,crds.install=true
    ``` 
@@ -24,7 +24,7 @@
    helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,openshift=true
    ```
 
-   To install Citrix Provided Custom Resource Definition(CRDs) along with Citrix Ingress Controller
+   To install Citrix Provided Custom Resource Definition(CRDs) along with Netscaler ingress controller
    ```
    helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,openshift=true,crds.install=true
    ``` 
@@ -34,7 +34,7 @@
 > The `license.accept` argument is mandatory. Ensure that you set the value as `yes` to accept the terms and conditions of the Citrix license.
 
 ## Introduction
-This Helm chart deploys Citrix ingress controller in the [Kubernetes](https://kubernetes.io) or in the [Openshift](https://www.openshift.com) cluster using [Helm](https://helm.sh) package manager.
+This Helm chart deploys Netscaler ingress controller in the [Kubernetes](https://kubernetes.io) or in the [Openshift](https://www.openshift.com) cluster using [Helm](https://helm.sh) package manager.
 
 ### Prerequisites
 
@@ -51,7 +51,7 @@ This Helm chart deploys Citrix ingress controller in the [Kubernetes](https://ku
 
 -  You have installed [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the Netscaler CPX collected by the [metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 
--  The user name and password of the Netscaler VPX or MPX appliance used as the ingress device. The Netscaler appliance needs to have system user account (non-default) with certain privileges so that Citrix ingress controller can configure the Netscaler VPX or MPX appliance. For instructions to create the system user account on Netscaler, see [Create System User Account for CIC in Netscaler](#create-system-user-account-for-cic-in-citrix-adc).
+-  The user name and password of the Netscaler VPX or MPX appliance used as the ingress device. The Netscaler appliance needs to have system user account (non-default) with certain privileges so that Netscaler ingress controller can configure the Netscaler VPX or MPX appliance. For instructions to create the system user account on Netscaler, see [Create System User Account for CIC in Netscaler](#create-system-user-account-for-cic-in-citrix-adc).
 
     You can pass user name and password using Kubernetes secrets. Create a Kubernetes secret for the user name and password using the following command:
 
@@ -59,9 +59,9 @@ This Helm chart deploys Citrix ingress controller in the [Kubernetes](https://ku
        kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
     ```
 
-#### Create system User account for Citrix ingress controller in Netscaler
+#### Create system User account for Netscaler ingress controller in Netscaler
 
-Citrix ingress controller configures the Netscaler using a system user account of the Netscaler. The system user account should have certain privileges so that the CIC has permission configure the following on the Netscaler:
+Netscaler ingress controller configures the Netscaler using a system user account of the Netscaler. The system user account should have certain privileges so that the CIC has permission configure the following on the Netscaler:
 
 -  Add, Delete, or View Content Switching (CS) virtual server
 -  Configure CS policies and actions
@@ -118,14 +118,14 @@ To create the system user account, do the following:
     ```
 
 ## Installing the Chart
-Add the Citrix Ingress Controller helm chart repository using command:
+Add the Netscaler ingress controller helm chart repository using command:
 
 ```
    helm repo add citrix https://citrix.github.io/citrix-helm-charts/
 ```
 
 ### For Kubernetes:
-#### 1. Citrix Ingress Controller
+#### 1. Netscaler ingress controller
 To install the chart with the release name, `my-release`, use the following command:
    ```
    helm install my-release citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,ingressClass[0]=<ingressClassName>
@@ -135,10 +135,10 @@ To install the chart with the release name, `my-release`, use the following comm
 >
 > By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
 
-The command deploys Citrix ingress controller on Kubernetes cluster with the default configuration. The [configuration](#configuration) section lists the mandatory and optional parameters that you can configure during installation.
+The command deploys Netscaler ingress controller on Kubernetes cluster with the default configuration. The [configuration](#configuration) section lists the mandatory and optional parameters that you can configure during installation.
 
-#### 2. Citrix Ingress Controller with Exporter
-[Metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed along with Citrix ingress controller and collects metrics from the Netscaler instances. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
+#### 2. Netscaler ingress controller with Exporter
+[Metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed along with Netscaler ingress controller and collects metrics from the Netscaler instances. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
 
 > **Note:**
 > Ensure that you have installed [Prometheus Operator](https://github.com/coreos/prometheus-operator).
@@ -155,16 +155,16 @@ Add the name of the service account created when the chart is deployed to the pr
    oc adm policy add-scc-to-user privileged system:serviceaccount:<namespace>:<service-account-name>
    ```
 
-#### 1. Citrix Ingress Controller
+#### 1. Netscaler ingress controller
 To install the chart with the release name, `my-release`, use the following command:
    ```
    helm install my-release citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,openshift=true
    ```
 
-The command deploys Citrix ingress controller on your Openshift cluster in the default configuration. The [configuration](#configuration) section lists the mandatory and optional parameters that you can configure during installation.
+The command deploys Netscaler ingress controller on your Openshift cluster in the default configuration. The [configuration](#configuration) section lists the mandatory and optional parameters that you can configure during installation.
 
-#### 2. Citrix Ingress Controller with Exporter
-[Metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed along with Citrix ingress controller and collects metrics from the Netscaler instances. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
+#### 2. Netscaler ingress controller with Exporter
+[Metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics) can be deployed along with Netscaler ingress controller and collects metrics from the Netscaler instances. You can then [visualize these metrics](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/metrics/promotheus-grafana/) using Prometheus Operator and Grafana.
 
 > **Note:**
 > Ensure that you have installed [Prometheus Operator](https://github.com/coreos/prometheus-operator)
@@ -178,17 +178,17 @@ Use the following command for this:
 
 The following components are installed:
 
--  [Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller)
--  [Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) (if enabled)
+-  [Netscaler ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller)
+-  [Exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) (if enabled)
 
 ## Configuration for ServiceGraph:
-   If Netscaler VPX/MPX need to send data to the Citrix ADM to bring up the servicegraph, then the below steps can be followed to install Citrix ingress controller for Netscaler VPX/MPX. Citrix ingress controller configures Netscaler VPX/MPX with the configuration required for servicegraph.
+   If Netscaler VPX/MPX need to send data to the Citrix ADM to bring up the servicegraph, then the below steps can be followed to install Netscaler ingress controller for Netscaler VPX/MPX. Netscaler ingress controller configures Netscaler VPX/MPX with the configuration required for servicegraph.
 
-   1. Create secret using Netscaler VPX credentials, which will be used by Citrix ingress controller for configuring Netscaler VPX/MPX:
+   1. Create secret using Netscaler VPX credentials, which will be used by Netscaler ingress controller for configuring Netscaler VPX/MPX:
 
 	kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
-   2. Deploy Citrix ingress controller using helm command:
+   2. Deploy Netscaler ingress controller using helm command:
 
 	helm install my-release citrix/citrix-ingress-controller --set nsIP=<NSIP>,nsVIP=<NSVIP>,license.accept=yes,adcCredentialSecret=<Secret-of-Citrix-ADC-credentials>,coeConfig.required=true,coeConfig.timeseries.metrics.enable=true,coeConfig.timeseries.port=5563,coeConfig.distributedTracing.enable=true,coeConfig.transactions.enable=true,coeConfig.transactions.port=5557,coeConfig.endpoint.server=<ADM-Agent-IP>
 
@@ -197,10 +197,10 @@ The following components are installed:
 
 ## CRDs configuration
 
-CRDs can be installed/upgraded when we install/upgrade Citrix ingress controller using `crds.install=true` parameter in Helm. If you do not want to install CRDs, then set the option `crds.install` to `false`. By default, CRDs too get deleted if you uninstall through Helm. This means, even the CustomResource objects created by the customer will get deleted. If you want to avoid this data loss set `crds.retainOnDelete` to `true`.
+CRDs can be installed/upgraded when we install/upgrade Netscaler ingress controller using `crds.install=true` parameter in Helm. If you do not want to install CRDs, then set the option `crds.install` to `false`. By default, CRDs too get deleted if you uninstall through Helm. This means, even the CustomResource objects created by the customer will get deleted. If you want to avoid this data loss set `crds.retainOnDelete` to `true`.
 
 > **Note:**
-> Installing again may fail due to the presence of CRDs. Make sure that you back up all CustomResource objects and clean up CRDs before re-installing Citrix Ingress Controller.
+> Installing again may fail due to the presence of CRDs. Make sure that you back up all CustomResource objects and clean up CRDs before re-installing Netscaler ingress controller.
 
 There are a few examples of how to use these CRDs, which are placed in the folder: [Example-CRDs](https://github.com/citrix/citrix-helm-charts/tree/master/example-crds). Refer to them and install as needed, using the following command:
 ```kubectl create -f <crd-example.yaml>```
@@ -211,7 +211,7 @@ There are a few examples of how to use these CRDs, which are placed in the folde
 
 Authentication policies are used to enforce access restrictions to resources hosted by an application or an API server.
 
-Citrix provides a Kubernetes CustomResourceDefinitions (CRDs) called the [Auth CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/auth) that you can use with the Citrix ingress controller to define authentication policies on the ingress Netscaler.
+Citrix provides a Kubernetes CustomResourceDefinitions (CRDs) called the [Auth CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/auth) that you can use with the Netscaler ingress controller to define authentication policies on the ingress Netscaler.
 
 Example file: [auth_example.yaml](https://github.com/citrix/citrix-helm-charts/tree/master/example-crds/auth_example.yaml)
 
@@ -233,11 +233,11 @@ Example files: [ratelimit-example1.yaml](https://github.com/citrix/citrix-helm-c
 
 #### vips CRD:
 
-Citrix provides a CustomResourceDefinitions (CRD) called [VIP](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/vip) for asynchronous communication between the IPAM controller and Citrix ingress controller.
+Citrix provides a CustomResourceDefinitions (CRD) called [VIP](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/vip) for asynchronous communication between the IPAM controller and Netscaler ingress controller.
 
-The IPAM controller is provided by Citrix for IP address management. It allocates IP address to the service from a defined IP address range. The Citrix ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX VPX. And, the service is exposed using the IP address.
+The IPAM controller is provided by Citrix for IP address management. It allocates IP address to the service from a defined IP address range. The Netscaler ingress controller configures the IP address allocated to the service as virtual IP (VIP) in Citrix ADX VPX. And, the service is exposed using the IP address.
 
-When a new service is created, the Citrix ingress controller creates a CRD object for the service with an empty IP address field. The IPAM Controller listens to addition, deletion, or modification of the CRD and updates it with an IP address to the CRD. Once the CRD object is updated, the Citrix ingress controller automatically configures Netscaler-specfic configuration in the tier-1 Netscaler VPX.
+When a new service is created, the Netscaler ingress controller creates a CRD object for the service with an empty IP address field. The IPAM Controller listens to addition, deletion, or modification of the CRD and updates it with an IP address to the CRD. Once the CRD object is updated, the Netscaler ingress controller automatically configures Netscaler-specfic configuration in the tier-1 Netscaler VPX.
 
 #### rewritepolicies CRD:
 
@@ -247,7 +247,7 @@ Example files: [target-url-rewrite.yaml](https://github.com/citrix/citrix-helm-c
 
 #### wafs CRD:
 
-[WAF CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/crds/waf.md) can be used to configure the web application firewall policies with the Citrix ingress controller on the Netscaler VPX, MPX, SDX, and CPX. The WAF CRD enables communication between the Citrix ingress controller and Netscaler for enforcing web application firewall policies.
+[WAF CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/crds/waf.md) can be used to configure the web application firewall policies with the Netscaler ingress controller on the Netscaler VPX, MPX, SDX, and CPX. The WAF CRD enables communication between the Netscaler ingress controller and Netscaler for enforcing web application firewall policies.
 
 In a Kubernetes deployment, you can enforce a web application firewall policy to protect the server using the WAF CRD. For more information about web application firewall, see [Web application security](https://docs.citrix.com/en-us/citrix-adc/13/application-firewall/introduction/web-application-security.html).
 
@@ -255,12 +255,12 @@ Example files: [wafhtmlxsssql.yaml](https://github.com/citrix/citrix-helm-charts
 
 #### apigateway CRD:
 
-API Gateway CRD is used to configure gitops framework on citrix API gateway. This solution enables citrix ingress controller to generate API gateway configurations out of Open API Specification documents checked in to git repository by API developers and designers.
+API Gateway CRD is used to configure gitops framework on citrix API gateway. This solution enables Netscaler ingress controller to generate API gateway configurations out of Open API Specification documents checked in to git repository by API developers and designers.
 
 Example files: [api-gateway-crd-instance.yaml](https://github.com/citrix/citrix-helm-charts/tree/master/example-crds/api-gateway-crd-instance.yaml)
 #### bots CRD:
 
-[BOT CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/crds/bot.md) You can use Bot CRDs to configure the bot management policies with the Citrix ingress controller on the Netscaler VPX. The Bot custom resource definition enables communication between the Citrix ingress controller and Netscaler for enforcing bot management policies.
+[BOT CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/crds/bot.md) You can use Bot CRDs to configure the bot management policies with the Netscaler ingress controller on the Netscaler VPX. The Bot custom resource definition enables communication between the Netscaler ingress controller and Netscaler for enforcing bot management policies.
 
 In a Kubernetes deployment, you can enforce bot management policy on therequests and responses from and to the server using the Bot CRDs. For more information on security vulnerabilities, see [Bot Detection](https://docs.citrix.com/en-us/citrix-adc/current-release/bot-management/bot-detection.html).
 
@@ -270,7 +270,7 @@ Example files: [botallowlist.yaml](https://github.com/citrix/citrix-helm-charts/
 
 Taints are applied on cluster nodes whereas tolerations are applied on pods. Tolerations enable pods to be scheduled on node with matching taints. For more information see [Taints and Tolerations in Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
-Toleration can be applied to Citrix ingress controller pod using `tolerations` argument while deploying CIC using helm chart. This argument takes list of tolerations that user need to apply on the CIC pods.
+Toleration can be applied to Netscaler ingress controller pod using `tolerations` argument while deploying CIC using helm chart. This argument takes list of tolerations that user need to apply on the CIC pods.
 
 For example, following command can be used to apply toleration on the CIC pod:
 
@@ -308,17 +308,17 @@ The following table lists the mandatory and optional parameters that you can con
 | nodeWatch | Optional | false | Use the argument if you want to automatically configure network route from the Ingress Netscaler VPX or MPX to the pods in the Kubernetes cluster. For more information, see [Automatically configure route on the Netscaler instance](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/network/staticrouting/#automatically-configure-route-on-the-citrix-adc-instance). |
 | cncPbr | Optional | False | Use this argument to inform CIC that Citrix Node Controller(CNC) is configuring Policy Based Routes(PBR) on the Netscaler. For more information, see [CNC-PBR-SUPPORT](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/docs/how-to/pbr.md#configure-pbr-using-the-citrix-node-controller) |
 | defaultSSLCertSecret | Optional | N/A | Provide Kubernetes secret name that needs to be used as a default non-SNI certificate in Netscaler. |
-| podIPsforServiceGroupMembers | Optional | False |  By default Citrix Ingress Controller will add NodeIP and NodePort as service group members while configuring type LoadBalancer Services and NodePort services. This variable if set to `True` will change the behaviour to add pod IP and Pod port instead of nodeIP and nodePort. Users can set this to `True` if there is a route between ADC and K8s clusters internal pods either using feature-node-watch argument or using Citrix Node Controller. |
-| ignoreNodeExternalIP | Optional | False | While adding NodeIP, as Service group members for type LoadBalancer services or NodePort services, Citrix Ingress Controller has a selection criteria whereas it choose Node ExternalIP if available and Node InternalIP, if Node ExternalIP is not present. But some users may want to use Node InternalIP over Node ExternalIP even if Node ExternalIP is present. If this variable is set to `True`, then it prioritises the Node Internal IP to be used for service group members even if node ExternalIP is present |
+| podIPsforServiceGroupMembers | Optional | False |  By default Netscaler ingress controller will add NodeIP and NodePort as service group members while configuring type LoadBalancer Services and NodePort services. This variable if set to `True` will change the behaviour to add pod IP and Pod port instead of nodeIP and nodePort. Users can set this to `True` if there is a route between ADC and K8s clusters internal pods either using feature-node-watch argument or using Citrix Node Controller. |
+| ignoreNodeExternalIP | Optional | False | While adding NodeIP, as Service group members for type LoadBalancer services or NodePort services, Netscaler ingress controller has a selection criteria whereas it choose Node ExternalIP if available and Node InternalIP, if Node ExternalIP is not present. But some users may want to use Node InternalIP over Node ExternalIP even if Node ExternalIP is present. If this variable is set to `True`, then it prioritises the Node Internal IP to be used for service group members even if node ExternalIP is present |
 | nsHTTP2ServerSide | Optional | OFF | Set this argument to `ON` for enabling HTTP2 for Netscaler service group configurations. |
 | nsCookieVersion | Optional | 0 | Specify the persistence cookie version (0 or 1). |
 | ipam | Optional | False | Set this argument if you want to use the IPAM controller to automatically allocate an IP address to the service of type LoadBalancer. |
 | logProxy | Optional | N/A | Provide Elasticsearch or Kafka or Zipkin endpoint for Citrix observability exporter. |
 | entityPrefix | Optional | k8s | The prefix for the resources on the Netscaler VPX/MPX. |
-| updateIngressStatus | Optional | False | Set this argurment if `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Citrix ingress controller needs to be updated with allocated IP addresses. For more information see [this](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/ingress-classes.md#updating-the-ingress-status-for-the-ingress-resources-with-the-specified-ip-address). |
-| routeLabels | Optional | N/A | You can use this parameter to provide the route labels selectors to be used by Citrix Ingress Controller for routeSharding in OpenShift cluster. |
-| namespaceLabels | Optional | N/A | You can use this parameter to provide the namespace labels selectors to be used by Citrix Ingress Controller for routeSharding in OpenShift cluster. |
-| exporter.required | Optional | false | Use the argument, if you want to run the [Exporter for Netscaler Stats](https://github.com/citrix/citrix-adc-metrics-exporter) along with CIC to pull metrics for the Netscaler VPX or MPX|
+| updateIngressStatus | Optional | False | Set this argurment if `Status.LoadBalancer.Ingress` field of the Ingress resources managed by the Netscaler ingress controller needs to be updated with allocated IP addresses. For more information see [this](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/ingress-classes.md#updating-the-ingress-status-for-the-ingress-resources-with-the-specified-ip-address). |
+| routeLabels | Optional | N/A | You can use this parameter to provide the route labels selectors to be used by Netscaler ingress controller for routeSharding in OpenShift cluster. |
+| namespaceLabels | Optional | N/A | You can use this parameter to provide the namespace labels selectors to be used by Netscaler ingress controller for routeSharding in OpenShift cluster. |
+| exporter.required | Optional | false | Use the argument, if you want to run the [Exporter for Netscaler Stats](https://github.com/netscaler/netscaler-adc-metrics-exporter) along with CIC to pull metrics for the Netscaler VPX or MPX|
 | exporter.image    | Optional | `quay.io/citrix/citrix-adc-metrics-exporter:1.4.7` | The Exporter image. |
 | exporter.pullPolicy | Optional | IfNotPresent | The Exporter image pull policy. |
 | exporter.ports.containerPort | Optional | 8888 | The Exporter container port. |
@@ -357,7 +357,7 @@ For example:
 
 ## Route Addition in MPX/VPX
 For seamless functioning of services deployed in the Kubernetes cluster, it is essential that Ingress NetScaler device should be able to reach the underlying overlay network over which Pods are running.
-`feature-node-watch` knob of Citrix Ingress Controller can be used for automatic route configuration on NetScaler towards the pod network. Refer [Static Route Configuration](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/network/staticrouting.md) for further details regarding the same.
+`feature-node-watch` knob of Netscaler ingress controller can be used for automatic route configuration on NetScaler towards the pod network. Refer [Static Route Configuration](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/network/staticrouting.md) for further details regarding the same.
 By default, `feature-node-watch` is false. It needs to be explicitly set to true if auto route configuration is required.
 
 This can also be achieved by deploying [Citrix Node Controller](https://github.com/citrix/citrix-k8s-node-controller).
@@ -370,9 +370,9 @@ If your deployment uses one single Netscaler Device to loadbalance between multi
    helm install my-release citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,nsSNIPS='[<NS_SNIP1>\, <NS_SNIP2>\, ...]'
    ```
 
-   [Citrix Node Controller](https://github.com/citrix/citrix-k8s-node-controller) by default also adds static routes while creating the VXLAN tunnel. To use [Policy Based Routing(PBR)] (https://docs.citrix.com/en-us/citrix-adc/current-release/networking/ip-routing/configuring-policy-based-routes/configuring-policy-based-routes-pbrs-for-ipv4-traffic.html) to avoid static route clash, both Citrix Node Controller and Citrix Ingress Controller has to work in conjunction and has to be started with specific arguments. For more details refer [CNC-PBR-SUPPORT](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/docs/how-to/pbr.md#configure-pbr-using-the-citrix-node-controller).
+   [Citrix Node Controller](https://github.com/citrix/citrix-k8s-node-controller) by default also adds static routes while creating the VXLAN tunnel. To use [Policy Based Routing(PBR)] (https://docs.citrix.com/en-us/citrix-adc/current-release/networking/ip-routing/configuring-policy-based-routes/configuring-policy-based-routes-pbrs-for-ipv4-traffic.html) to avoid static route clash, both Citrix Node Controller and Netscaler ingress controller has to work in conjunction and has to be started with specific arguments. For more details refer [CNC-PBR-SUPPORT](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/docs/how-to/pbr.md#configure-pbr-using-the-citrix-node-controller).
 
-   Use the following command to inform Citrix Ingress Controller that Citrix Node Controller is configuring Policy Based Routes(PBR) on the Netscaler
+   Use the following command to inform Netscaler ingress controller that Citrix Node Controller is configuring Policy Based Routes(PBR) on the Netscaler
 
    ```
    helm install my-release citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,clusterName=<unique-cluster-identifier>,cncPbr=<True/False>
@@ -435,5 +435,5 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Related documentation
 
-- [Citrix ingress controller Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/)
-- [Citrix ingress controller GitHub](https://github.com/netscaler/netscaler-k8s-ingress-controller)
+- [Netscaler ingress controller Documentation](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/)
+- [Netscaler ingress controller GitHub](https://github.com/netscaler/netscaler-k8s-ingress-controller)

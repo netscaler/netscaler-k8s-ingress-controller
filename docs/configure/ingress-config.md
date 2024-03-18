@@ -2,7 +2,7 @@
 
 Kubernetes [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) provides you a way to route requests to services based on the request host or path, centralizing a number of services into a single entry point.
 
-Citrix ingress controller is built around Kubernetes Ingress and automatically configures one or more Netscaler based on the Ingress resource configuration.
+Netscaler ingress controller is built around Kubernetes Ingress and automatically configures one or more Netscaler based on the Ingress resource configuration.
 
 ## Host name based routing
 
@@ -73,7 +73,7 @@ spec:
 
 After the sample Ingress definition is deployed, any HTTP requests with host `test.example.com` and URL path with prefix `/foo`, Netscaler routes the request to `service1` and all other requests are routed to `service2`.
 
-Citrix ingress controller follows first match policy to evaluate paths. For effective matching, Citrix ingress controller orders the paths based on descending order of the path's length. It also orders the paths that belong to same hosts across multiple ingress resources.
+Netscaler ingress controller follows first match policy to evaluate paths. For effective matching, Netscaler ingress controller orders the paths based on descending order of the path's length. It also orders the paths that belong to same hosts across multiple ingress resources.
 
 ## Wildcard host routing
 
@@ -128,7 +128,7 @@ spec:
         pathType: Exact
 ```
 
-(Deprecated as of k8s 1.22+) By default for Ingresses belonging to `extension/v1beta1`, paths are treated as `Prefix` expressions. Using the annotation `ingress.citrix.com/path-match-method: "exact"` in the ingress definition defines the Citrix ingress controller to consider the path for the exact match.
+(Deprecated as of k8s 1.22+) By default for Ingresses belonging to `extension/v1beta1`, paths are treated as `Prefix` expressions. Using the annotation `ingress.citrix.com/path-match-method: "exact"` in the ingress definition defines the Netscaler ingress controller to consider the path for the exact match.
 
 The following sample Ingress definition demonstrates how to set up Ingress for exact path matching:
 

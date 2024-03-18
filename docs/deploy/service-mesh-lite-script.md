@@ -7,7 +7,7 @@ To deploy an application in a Service Mesh lite architecture using Citrix portfo
 - Modify the existing services to make them headless services
 - Create a service to point to Netscaler CPX
 - Create Ingress rules
-- Create Citrix Ingress Controller for Tier-1 ADC if dual-tier topology is required.
+- Create Netscaler ingress controller for Tier-1 ADC if dual-tier topology is required.
 
 However, when you want to deploy multiple applications which consist of several microservices, you may need an easier way you deploy the services in a Service Mesh lite architecture. Citrix provides you an automated way to generate ready-to-deploy YAMLs out of your application YAMLs for Service Mesh lite deployment.
 
@@ -119,7 +119,7 @@ This section provides information on the inputs you need to provide.
         Please give secret-name for TLS certificate:
      
 
-For more information on TLS certificate handling by the Citrix ingress controller, see [TLS certificates handling in the Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/certificate-management/tls-certificates.md).
+For more information on TLS certificate handling by the Netscaler ingress controller, see [TLS certificates handling in the Netscaler ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/certificate-management/tls-certificates.md).
 
 7. If you want to enable Netscalers to send data to the Citrix Application Delivery Management, select 'yes':
 
@@ -133,9 +133,9 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
        Please provide name of K8s Secret created using ADM Agent credentials. Press ENTER for 'admlogin': 
 
-8. If you want to use Citrix ingress controller for Tier1 Citix ADC VPX/MPX, select 'yes':
+8. If you want to use Netscaler ingress controller for Tier1 Citix ADC VPX/MPX, select 'yes':
 
-       Citrix Ingress Controller for tier-1 ADC required? (Y/N): 
+       Netscaler ingress controller for tier-1 ADC required? (Y/N): 
 
    - Provide Tier-1 Netscaler VPX/MPX NSIP:
 
@@ -199,7 +199,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
         Citrix ADM required? (Y/N): y
         Please provide IP of ADM Agent(svcIP of container agent) for Netscaler CPX: 1.1.1.1
         Please provide name of K8s Secret created using ADM Agent credentials. Press ENTER for 'admlogin':
-        Citrix Ingress Controller for tier-1 ADC required? (Y/N): y
+        Netscaler ingress controller for tier-1 ADC required? (Y/N): y
         Please provide tier-1 ADC NSIP: 2.2.2.2
         Please provide tier-1 ADC VIP: 3.3.3.3
         Please provide name of K8s Secret created using ADC credentials. Press ENTER for 'nslogin': nscred
@@ -213,7 +213,7 @@ For more information on TLS certificate handling by the Citrix ingress controlle
 
     **Note:** If you have used service names which are running inside a cluster to generate the Service Mesh lite YAMLs for them, the `smlite-all-in-one.yaml` file will not contain the deployment YAML files of the application. In that case, you must deploy the deployment YAML files in the application along with the `smlite-all-in-one.yaml` file for running your application in the SML architecture.
 
-    **Note:** This script creates an ingress to expose one of the Netscaler CPX (CPX handling your frontend microservice) to the tier-1 Netscaler VPX. This ingress contains basic configuration only. So update this ingress if some additonal configuration is required. For more information on features supported by Citrix ingress contoller, see [Citrix ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller).
+    **Note:** This script creates an ingress to expose one of the Netscaler CPX (CPX handling your frontend microservice) to the tier-1 Netscaler VPX. This ingress contains basic configuration only. So update this ingress if some additonal configuration is required. For more information on features supported by Citrix ingress contoller, see [Netscaler ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller).
 
 ### Limitations
 

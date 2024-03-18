@@ -1,8 +1,8 @@
-# Using Netscaler credentials stored in a Vault server for the Citrix ingress controller
+# Using Netscaler credentials stored in a Vault server for the Netscaler ingress controller
 
-In most organizations, tier 1 Netscaler Ingress devices and Kubernetes clusters are managed by separate teams. Usually, network administrators manage tier 1 Netscaler Ingress devices, while developers manage Kubernetes clusters. The Citrix ingress controller requires Netscaler credentials such as Netscaler user name and password to configure the Netscaler. You can specify Netscaler credentials as part of the Citrix ingress controller specification and store the ADC credentials as Kubernetes secrets. However, you can also store Netscaler credentials in a Vault server and pass credentials to the Citrix ingress controller to minimize any security risk. This topic provides information on how to use Netscaler credentials stored in a Vault server for the Citrix ingress controller.
+In most organizations, tier 1 Netscaler Ingress devices and Kubernetes clusters are managed by separate teams. Usually, network administrators manage tier 1 Netscaler Ingress devices, while developers manage Kubernetes clusters. The Netscaler ingress controller requires Netscaler credentials such as Netscaler user name and password to configure the Netscaler. You can specify Netscaler credentials as part of the Netscaler ingress controller specification and store the ADC credentials as Kubernetes secrets. However, you can also store Netscaler credentials in a Vault server and pass credentials to the Netscaler ingress controller to minimize any security risk. This topic provides information on how to use Netscaler credentials stored in a Vault server for the Netscaler ingress controller.
 
-The following diagram explains the steps for using Netscaler credentials which are stored in a Vault server with the Citrix ingress controller.
+The following diagram explains the steps for using Netscaler credentials which are stored in a Vault server with the Netscaler ingress controller.
 
 ![vault-auto-authentication](../media/vault-auto-authenticate.png)
 
@@ -10,15 +10,15 @@ The following diagram explains the steps for using Netscaler credentials which a
 
 Ensure that you have setup a Vault server and enabled key-value (KV) secret store. For more information, see [Vault documentation](https://www.vaultproject.io/docs/install/index.html).
 
-## Using Netscaler credentials from a Vault server for the Citrix ingress controller
+## Using Netscaler credentials from a Vault server for the Netscaler ingress controller
 
-Perform the following tasks to use Netscaler credentials from a Vault server for the Citrix ingress controller.
+Perform the following tasks to use Netscaler credentials from a Vault server for the Netscaler ingress controller.
 
 1. [Create a service account for Kubernetes authentication](#Create-a-service-account).
 
 2. [Create a Key Vault secret and setup Kubernetes authentication on Vault server](#Create-a-key-vault-secret-and-setup-Kubernetes-authentication).
   
-3. [Leverage Vault Auto-Auth functionality to fetch Netscaler credentials for the Citrix ingress controller](#Leverage-Vault-agent-auto-authentication-for-the-Citrix-ingress-controller).
+3. [Leverage Vault Auto-Auth functionality to fetch Netscaler credentials for the Netscaler ingress controller](#Leverage-Vault-agent-auto-authentication-for-the-Citrix-ingress-controller).
 
 ### Create a service account for Kubernetes authentication
 
@@ -121,7 +121,7 @@ Create a service account for Kubernetes authentication by using the following st
 !!! note "Note"
         Authorization with Kubernetes authentication back-end is role based. Before a token is used for login, it must be configured as part of a role.
 
-### Leverage Vault agent auto-authentication for the Citrix ingress controller
+### Leverage Vault agent auto-authentication for the Netscaler ingress controller
 
 Perform the following steps to leverage Vault auto-authentication.
 
@@ -191,7 +191,7 @@ Perform the following steps to leverage Vault auto-authentication.
     
             kubectl create configmap example-vault-agent-config --from-file=./vault-agent-config.hcl --form-file=./consul-template-config.hcl
 
-4. Create a Citrix ingress controller pod with Vault and consul template as init container [citrix-k8s-ingress-controller-vault.yaml](./examples-yamls/citrix-k8s-ingress-controller-vault.yaml). Vault fetches the token using the Kubernetes authentication method and pass it on to a consul template which creates the `.env` file on shared volume. This token is used by the Citrix ingress controller for authentication with tier 1 Netscaler.
+4. Create a Netscaler ingress controller pod with Vault and consul template as init container [citrix-k8s-ingress-controller-vault.yaml](./examples-yamls/citrix-k8s-ingress-controller-vault.yaml). Vault fetches the token using the Kubernetes authentication method and pass it on to a consul template which creates the `.env` file on shared volume. This token is used by the Netscaler ingress controller for authentication with tier 1 Netscaler.
 
             kubectl apply citrix-k8s-ingress-controller-vault.yaml
    
@@ -272,6 +272,6 @@ Perform the following steps to leverage Vault auto-authentication.
                     medium: Memory
                     name: shared-data        
 
-If the configuration is successful, the Vault server fetches a token and passes it on to a Consul template container. The Consul template uses the token to read Netscaler credentials and write it as an environment variable in the path ``/etc/citrix/.env``. The Citrix ingress controller uses these credentials for communicating with the tier 1 Netscaler.
+If the configuration is successful, the Vault server fetches a token and passes it on to a Consul template container. The Consul template uses the token to read Netscaler credentials and write it as an environment variable in the path ``/etc/citrix/.env``. The Netscaler ingress controller uses these credentials for communicating with the tier 1 Netscaler.
 
-Verify that the Citrix ingress controller is running successfully using credentials fetched from the Vault server.
+Verify that the Netscaler ingress controller is running successfully using credentials fetched from the Vault server.

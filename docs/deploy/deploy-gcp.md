@@ -75,7 +75,7 @@ You can get your Google account details using the following command.
 For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
 
-1. Deploy a Netscaler CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/gcp/manifest/all-in-one.yaml).
+1. Deploy a Netscaler CPX ingress with in built Netscaler ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/gcp/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 

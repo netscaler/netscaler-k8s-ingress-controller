@@ -1,8 +1,8 @@
-# Deploy the Citrix ingress controller for Netscaler with admin partitions
+# Deploy the Netscaler ingress controller for Netscaler with admin partitions
 
-Citrix ingress controller is used to automatically configure one or more Netscaler based on the Ingress resource configuration. The ingress Netscaler appliance (MPX or VPX) can be partitioned into logical entities called admin partitions, where each partition can be configured and used as a separate Netscaler appliance. For more information, see [Admin Partition](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition.html). Citrix ingress controller can also be deployed to configure Netscaler with admin partitions.
+Netscaler ingress controller is used to automatically configure one or more Netscaler based on the Ingress resource configuration. The ingress Netscaler appliance (MPX or VPX) can be partitioned into logical entities called admin partitions, where each partition can be configured and used as a separate Netscaler appliance. For more information, see [Admin Partition](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition.html). Netscaler ingress controller can also be deployed to configure Netscaler with admin partitions.
 
-For Netscaler with admin partitions, you must deploy a single instance of Citrix ingress controller for each partition. And, the partition must be associated with a [partition user](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition.html#user-access-and-roles) specific to the Citrix ingress controller instance.
+For Netscaler with admin partitions, you must deploy a single instance of Netscaler ingress controller for each partition. And, the partition must be associated with a [partition user](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition.html#user-access-and-roles) specific to the Netscaler ingress controller instance.
 
 **Note:**
 
@@ -13,12 +13,12 @@ Netscaler metrics exporter supports exporting metrics from the admin partitions 
 Ensure that:
 
 -  Admin partitions are configured on the Netscaler appliance. For instructions see, [Configure admin partitions](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition/admin-partition-access-and-configure.html).
--  Create a partition user specifically for the Citrix ingress controller. Citrix ingress controller configures the Netscaler using this partition user account. Ensure that you do not associate this partition user to other partitions in the Netscaler appliance.
+-  Create a partition user specifically for the Netscaler ingress controller. Netscaler ingress controller configures the Netscaler using this partition user account. Ensure that you do not associate this partition user to other partitions in the Netscaler appliance.
 
 **Note:**
     For SSL-related use cases in the admin partition, ensure that you use Netscaler version 12.0–56.8 and above.
 
-**To deploy the Citrix ingress controller for Netscaler with admin partitions:**
+**To deploy the Netscaler ingress controller for Netscaler with admin partitions:**
 
 1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
 
@@ -29,32 +29,32 @@ Ensure that:
     | Environment Variable | Mandatory or Optional | Description |
     | ---------------------- | ---------------------- | ----------- |
     | NS_IP | Mandatory | The IP address of the Netscaler appliance. For more details, see [Prerequisites](#prerequisites). |
-    | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the partition user that you have created for the Citrix ingress controller. For more details, see [Prerequisites](#prerequisites). |
-    | NS_VIP | Mandatory | Citrix ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Netscaler that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
+    | NS_USER and NS_PASSWORD | Mandatory | The user name and password of the partition user that you have created for the Netscaler ingress controller. For more details, see [Prerequisites](#prerequisites). |
+    | NS_VIP | Mandatory | Netscaler ingress controller uses the IP address provided in this environment variable to configure a virtual IP address to the Netscaler that receives the Ingress traffic. **Note:** NS_VIP acts as a fallback when the [frontend-ip](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/configure/annotations.md) annotation is not provided in Ingress YAML. Only Supported for Ingress.  |
     | NS_ENABLE_MONITORING | Mandatory | Set the value `Yes` to monitor Netscaler.</br> **Note:** Ensure that you disable Netscaler monitoring for Netscaler with admin partitions. Set the value to `No`. |
     | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
-    | Kubernetes_url | Optional | The kube-apiserver url that Citrix ingress controller uses to register the events. If the value is not specified, Citrix ingress controller uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
-    | LOGLEVEL | Optional | The log levels to control the logs generated by Citrix ingress controller. By default, the value is set to DEBUG. The supported values are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Log Levels](../configure/log-levels.md)|
-    | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by the Citrix ingress controller to communicate with Netscaler. By default, the Citrix ingress controller uses HTTPS on port 443. You can also use HTTP on port 80. |
-    | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify the Citrix ingress controller to configure Netscaler associated with a specific ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
+    | Kubernetes_url | Optional | The kube-apiserver url that Netscaler ingress controller uses to register the events. If the value is not specified, Netscaler ingress controller uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
+    | LOGLEVEL | Optional | The log levels to control the logs generated by Netscaler ingress controller. By default, the value is set to DEBUG. The supported values are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Log Levels](../configure/log-levels.md)|
+    | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by the Netscaler ingress controller to communicate with Netscaler. By default, the Netscaler ingress controller uses HTTPS on port 443. You can also use HTTP on port 80. |
+    | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify the Netscaler ingress controller to configure Netscaler associated with a specific ingress class. For information on Ingress classes, see [Ingress class support](../configure/ingress-classes.md)|
 
 1.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
-1.  Verify if the Citrix ingress controller is deployed successfully using the following command:
+1.  Verify if the Netscaler ingress controller is deployed successfully using the following command:
 
         kubectl get pods --all-namespaces
 
 ## Use case: How to securely deliver multitenant microservice-based applications using Netscaler admin partitions
 
-You can isolate ingress traffic between different microservice based applications with the Netscaler admin partition using Citrix ingress controller. Netscaler admin partition enables multitenancy at the software level in a single Netscaler instance. Each partition has its own control plane and network plane.
+You can isolate ingress traffic between different microservice based applications with the Netscaler admin partition using Netscaler ingress controller. Netscaler admin partition enables multitenancy at the software level in a single Netscaler instance. Each partition has its own control plane and network plane.
 
-You can deploy one instance of Citrix ingress controller in each namespace in a cluster.
+You can deploy one instance of Netscaler ingress controller in each namespace in a cluster.
 
-For example, imagine you have two namespaces in a Kubernetes cluster and you want to isolate these namespaces from each other under two different admins. You can use the admin partition feature to separate these two namespaces. Create namespace 1 and namespace 2 and deploy Citrix ingress controller separately in both of these namespaces.
+For example, imagine you have two namespaces in a Kubernetes cluster and you want to isolate these namespaces from each other under two different admins. You can use the admin partition feature to separate these two namespaces. Create namespace 1 and namespace 2 and deploy Netscaler ingress controller separately in both of these namespaces.
 
-Citrix ingress controller instances provide configuration instructions to the respective Netscaler partitions using the system user account specified in the YAML manifest.
+Netscaler ingress controller instances provide configuration instructions to the respective Netscaler partitions using the system user account specified in the YAML manifest.
 
 ![Netscaler managing Kubernetes cluster workload using admin partitions](../media/admin-partition-topology.png)
 
@@ -64,7 +64,7 @@ The following prerequisites apply:
 
 -  Ensure that you have configured admin partitions on the Netscaler appliance. For instructions see, [Configure admin partitions](https://docs.citrix.com/en-us/citrix-adc/13/admin-partition/admin-partition-access-and-configure.html).
 
--  Ensure that you create a partition user account specifically for the Citrix ingress controller. Citrix ingress controller configures the Netscaler using this partition user account. Ensure that you do not associate this partition user to other partitions in the Netscaler appliance.
+-  Ensure that you create a partition user account specifically for the Netscaler ingress controller. Netscaler ingress controller configures the Netscaler using this partition user account. Ensure that you do not associate this partition user to other partitions in the Netscaler appliance.
 
 ### Example
 
@@ -127,9 +127,9 @@ Create two namespaces `ns1` and `ns2` using the following commands:
           selector:
             app: apache-ns1
 
-2. Deploy Citrix ingress controller in `ns1`.
+2. Deploy Netscaler ingress controller in `ns1`.
 
-   You can use the YAML file to deploy Citrix ingress controller or use the Helm chart.
+   You can use the YAML file to deploy Netscaler ingress controller or use the Helm chart.
 
    Ensure that you use the user credentials that is bind to the default partition.
 
@@ -167,7 +167,7 @@ Create two namespaces `ns1` and `ns2` using the following commands:
         ---
 
 
-4. Citrix ingress controller in `ns1` configures the ADC entities in the default partition.
+4. Netscaler ingress controller in `ns1` configures the ADC entities in the default partition.
 
 ### Configurations in namespace `ns2`
 
@@ -332,7 +332,7 @@ Create two namespaces `ns1` and `ns2` using the following commands:
                 ports:
                 - containerPort: 80
 
-2. Deploy Citrix ingress controller in namespace `ns2`.
+2. Deploy Netscaler ingress controller in namespace `ns2`.
 
   Ensure that you use the user credentials that is bind to the partition `p1`.
 
@@ -370,4 +370,4 @@ Create two namespaces `ns1` and `ns2` using the following commands:
         ---
 
 
-4. Citrix ingress controller in `ns2` configures the ADC entities in partition `p1`.
+4. Netscaler ingress controller in `ns2` configures the ADC entities in partition `p1`.

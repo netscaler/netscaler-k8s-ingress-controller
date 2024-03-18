@@ -1,8 +1,8 @@
-# Configure bot management policies with the Citrix ingress controller
+# Configure bot management policies with the Netscaler ingress controller
 
 A bot is a software application that automates manual tasks. Using bot management policies you can allow useful bots to access your cloud native environment and block the malicious bots.
 
-Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the Bot CRD provided by Citrix, you can configure the bot management policies with the Citrix ingress controller on the Netscaler VPX. The Bot CRD enables communication between the Citrix ingress controller and Netscaler for enforcing bot management policies.
+Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the Bot CRD provided by Citrix, you can configure the bot management policies with the Netscaler ingress controller on the Netscaler VPX. The Bot CRD enables communication between the Netscaler ingress controller and Netscaler for enforcing bot management policies.
 
 In a Kubernetes deployment, you can enforce bot management policy on the requests and responses from and to the server using the Bot CRD. For more information on security vulnerabilities, see [Bot Detection](https://docs.citrix.com/en-us/citrix-adc/current-release/bot-management/bot-detection.html).
 
@@ -25,7 +25,7 @@ Based on the type of protections required, you can specify the metadata and use 
  
 ## Bot CRD definition
 
-The Bot CRD is available in the Citrix ingress controller GitHub repo at [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml). The Bot CRD provides attributes for the various options that are required to define the bot management policies on Netscaler.
+The Bot CRD is available in the Netscaler ingress controller GitHub repo at [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml). The Bot CRD provides attributes for the various options that are required to define the bot management policies on Netscaler.
 
 ## Bot CRD attributes
 
@@ -68,7 +68,7 @@ customresourcedefinition.apiextensions.k8s.io/bots.citrix.com created
 
 After you have deployed the Bot CRD provided by Citrix in the Kubernetes cluster, you can define the bot management policy configuration in a YAML file. In the YAML file, specify bot in the kind field. In the spec section, add the Bot CRD attributes based on your requirements for the policy configuration.
 
-After you deploy the YAML file, the Citrix ingress controller applies the bot configuration on the Ingress Netscaler device.
+After you deploy the YAML file, the Netscaler ingress controller applies the bot configuration on the Ingress Netscaler device.
 
 **Examples**
 

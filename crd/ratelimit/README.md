@@ -2,7 +2,7 @@
 
 In a Kubernetes deployment, you can rate limit the requests to the resources on the back end server or services using [rate limiting](https://docs.citrix.com/en-us/citrix-adc/13/appexpert/rate-limiting.html) feature provided by the ingress Netscaler.
 
-Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Rate limit CRD** that you can use with the Citrix ingress controller to configure the rate limiting configurations on the Netscalers used as Ingress devices.
+Citrix provides a Kubernetes [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRDs) called the **Rate limit CRD** that you can use with the Netscaler ingress controller to configure the rate limiting configurations on the Netscalers used as Ingress devices.
 
 Apart from rate limiting the requests to the services in a Kubernetes environment, you can use the Rate limit CRD for API security as well. The Rate limit CRD allows you to limit the REST API request to API servers or specific API endpoints on the API servers. It monitors and keeps track of the requests to the API server or endpoints against the allowed limit per time slice and hence protects from attacks such as the DDoS attack.
 
@@ -10,7 +10,7 @@ You can enable logging for observability with the rate limit CRD. Logs are store
 
 ## Rate limit CRD definition
 
-The Rate limit CRD spec is available in the Citrix ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Netscaler that acts as an API gateway.
+The Rate limit CRD spec is available in the Netscaler ingress controller GitHub repo at: [ratelimit-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/ratelimit/ratelimit-crd.yaml). The **Rate limit CRD provides** [attributes](#ratelimit-crd-attributes) for the various options that are required to define the rate limit policies on the Ingress Netscaler that acts as an API gateway.
 
 
 ## Rate limit CRD attributes
@@ -55,7 +55,7 @@ Perform the following to deploy the Rate limit CRD:
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the rate-based policy configuration in a `.yaml` file. In the `.yaml` file, use `ratelimit` in the `kind` field and in the `spec` section add the Rate limit CRD attributes based on your requirement for the policy configuration.
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the rate-based policy configuration on the Ingress Netscaler device.
+After you deploy the `.yaml` file, the Netscaler ingress controller applies the rate-based policy configuration on the Ingress Netscaler device.
 
 ### Examples
 
@@ -94,7 +94,7 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
     root@master:~#kubectl create -f ratelimit-example1.yaml
     ratelimit.citrix.com/throttle-req-per-clientip created
 
-The Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.
+The Netscaler ingress controller applies the policy configuration on the Ingress Netscaler device.
 
 #### Limit API requests to calender APIs
 
@@ -128,4 +128,4 @@ After you have defined the policy configuration, deploy the `.yaml` file using t
     root@master:~#kubectl create -f ratelimit-example2.yaml
     ratelimit.citrix.com/throttle-req-per-clientip created
 
-The Citrix ingress controller applies the policy configuration on the Ingress Netscaler device.
+The Netscaler ingress controller applies the policy configuration on the Ingress Netscaler device.

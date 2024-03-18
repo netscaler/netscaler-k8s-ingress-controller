@@ -2,11 +2,11 @@
 
 Authentication and authorization policies are used to enforce access restrictions to the resources hosted by an application or API server. While you can verify the identity using the authentication policies, authorization policies are used to verify whether a specified request has the necessary permissions to access a resource.
 
-Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Netscaler.
+Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called the **Auth CRD** that you can use with the Netscaler ingress controller to define authentication policies on the ingress Netscaler.
 
 ## Auth CRD definition
 
-The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for the various options that are required to define the authentication policies on the Ingress Netscaler.
+The Auth CRD is available in the Netscaler ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for the various options that are required to define the authentication policies on the Ingress Netscaler.
 
 ## Auth CRD attributes
 
@@ -209,7 +209,7 @@ Perform the following to deploy the Auth CRD:
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and in the `spec` section add the **Auth CRD** attributes based on your requirement for the policy configuration.
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the authentication policy configuration on the Ingress Netscaler device.
+After you deploy the `.yaml` file, the Netscaler ingress controller applies the authentication policy configuration on the Ingress Netscaler device.
 
 ### Local auth provider
 

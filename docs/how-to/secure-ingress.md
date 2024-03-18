@@ -1,8 +1,8 @@
 # Securing Ingress
 
-The topic covers the various ways to secure your Ingress using Netscaler and the annotations provided by the Citrix ingress controller.
+The topic covers the various ways to secure your Ingress using Netscaler and the annotations provided by the Netscaler ingress controller.
 
-The following table lists the TLS use cases with sample annotations that you can use to secure your Ingress using the Ingress Netscaler and the Citrix ingress controller:
+The following table lists the TLS use cases with sample annotations that you can use to secure your Ingress using the Ingress Netscaler and the Netscaler ingress controller:
 
 | Use cases | Sample annotations |
 | --------- | ------------------ |

@@ -2,7 +2,7 @@
 
 In a Kubernetes environment, an Ingress is an object that allows access to the Kubernetes services from outside the Kubernetes cluster. Standard Kubernetes Ingress resources assume that all the traffic is HTTP-based and do not cater to non-HTTP based protocols such as, TCP, TCP-SSL, and UDP. Hence, you cannot expose critical applications based on layer 7 protocols such as DNS, FTP, or LDAP using the standard Kubernetes Ingress.
 
-NetScaler provides a solution using Ingress annotations to load balance TCP or UDP based Ingress traffic. When you specify these annotations in the Ingress resource definition, the [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/) configures the NetScaler to load balance TCP or UDP based Ingress traffic.
+NetScaler provides a solution using Ingress annotations to load balance TCP or UDP based Ingress traffic. When you specify these annotations in the Ingress resource definition, the [Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/) configures the NetScaler to load balance TCP or UDP based Ingress traffic.
 
 You can use the following annotations in your Kubernetes Ingress resource definition to load balance the TCP or UDP based Ingress traffic:
 
@@ -41,7 +41,7 @@ spec:
 
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.1.1:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Netscaler ingress controller version 1.1.1:
 
 ```yml
 apiVersion: networking.k8s.io/v1
@@ -78,7 +78,7 @@ spec:
     name: bind
 ```
 
-**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Citrix ingress controller version 1.5.25:
+**Sample:** Ingress definition for UDP-based Ingress. The following is a sample for Netscaler ingress controller version 1.5.25:
 
 ```yml
 apiVersion: networking.k8s.io/v1
@@ -98,7 +98,7 @@ spec:
 
 ## Load balance Ingress traffic based on TCP over SSL
 
-Citrix ingress controller provides an `'ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
+Netscaler ingress controller provides an `'ingress.citrix.com/secure-service-type: ssl_tcp` annotation that you can use to load balance Ingress traffic based on TCP over SSL.
 
 **Sample:** Ingress definition for TCP over SSL based Ingress.
 
@@ -162,13 +162,13 @@ spec:
         pathType: Prefix
 ```
 
-For more information on the different deployment options supported by the Citrix ingress controller, see [Deployment topologies](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/).
+For more information on the different deployment options supported by the Netscaler ingress controller, see [Deployment topologies](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/).
 
-For more information on deploying the Citrix ingress controller:
+For more information on deploying the Netscaler ingress controller:
 
--  [Deploy the Citrix ingress controller using YAML](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/)
+-  [Deploy the Netscaler ingress controller using YAML](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/)
 
--  [Deploy the Citrix ingress controller using Helm charts](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-helm/)
+-  [Deploy the Netscaler ingress controller using Helm charts](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-helm/)
 
 ## How to expose non-standard HTTP ports in NetScaler CPX service
 

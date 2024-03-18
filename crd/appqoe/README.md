@@ -1,13 +1,13 @@
-# Enable request retry feature using AppQoE for Citrix ingress controller
+# Enable request retry feature using AppQoE for Netscaler ingress controller
 
 When a Netscaler appliance receives an HTTP request and forwards it to a back-end server, sometimes there may be connection failures with the back-end server. You can configure the request-retry feature on Netscaler to forward the request to the next available server, instead of sending the reset to the client. Hence, the client saves round trip time when Netscaler initiates the same request to the next available service. For more information request retry feature, see the [Netscaler documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/system/request-retry/request_retry_if_back-end_server_resets_tcp_connection.html)
 
-Now, you can configure request retry on Netscaler with Citrix ingress controller.
-Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the AppQoE CRD provided by Citrix, you can configure request-retry policies on Netscaler with the Citrix ingress controller. The AppQoE CRD enables communication between the Citrix ingress controller and Netscaler for enforcing AppQoE policies.
+Now, you can configure request retry on Netscaler with Netscaler ingress controller.
+Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the AppQoE CRD provided by Citrix, you can configure request-retry policies on Netscaler with the Netscaler ingress controller. The AppQoE CRD enables communication between the Netscaler ingress controller and Netscaler for enforcing AppQoE policies.
 
 ## AppQoE CRD definition
 
-The AppQoE CRD is available in the Citrix ingress controller GitHub repo at: [appqoe-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/appqoe/appqoe-crd.yaml). The AppQoE CRD provides attributes for the various options that are required to define the AppQoE policy on Netscaler.
+The AppQoE CRD is available in the Netscaler ingress controller GitHub repo at: [appqoe-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/appqoe/appqoe-crd.yaml). The AppQoE CRD provides attributes for the various options that are required to define the AppQoE policy on Netscaler.
 
 The following are the attributes provided in the AppQoE CRD:
 

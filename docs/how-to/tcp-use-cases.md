@@ -1,6 +1,6 @@
 # TCP use cases
 
-This topic covers various TCP use cases that you can configure on the Ingress Netscaler using the annotations in the Citrix ingress controller.
+This topic covers various TCP use cases that you can configure on the Ingress Netscaler using the annotations in the Netscaler ingress controller.
 
 The following table lists the TCP use cases with sample annotations:
 

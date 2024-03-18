@@ -18,7 +18,7 @@ Perform the following steps to configure TLS client authentication.
 
 1. Enable the TLS support in Netscaler.
 
-     The Citrix ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Netscaler.
+     The Netscaler ingress controller uses the **TLS** section in the Ingress definition as an enabler for TLS support with Netscaler.
      The following is a sample snippet of the Ingress definition:
 
 
@@ -33,7 +33,7 @@ Perform the following steps to configure TLS client authentication.
 
            $ kubectl create secret generic tls-ca --from-file=tls.crt=cacerts.pem
 
-     **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by the Citrix ingress controller while parsing a CA secret.
+     **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by the Netscaler ingress controller while parsing a CA secret.
 
 1. Configure Ingress to enable client authentication.
 

@@ -76,5 +76,5 @@ For more information on how to configure an Azure Route table, see [Managing Azu
 
 After successfully configuring the above configurations, 
 
-1. [Citrix Ingress Controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) deployed inside OpenShift should be able to reach and configure the Netscaler VPX
+1. [Netscaler ingress controller](https://github.com/netscaler/netscaler-k8s-ingress-controller) deployed inside OpenShift should be able to reach and configure the Netscaler VPX
 2. Netscaler VPX would be able to reach the workloads/PODS deployed inside the OpenShift cluster

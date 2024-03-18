@@ -1,7 +1,7 @@
 
 # Back-end TLS Support
 
-Citrix ingress controller can configure NetScaler which can connect to a TLS enabled back-end server. The following annotations can be used for such configuration in the Ingress resource.
+Netscaler ingress controller can configure NetScaler which can connect to a TLS enabled back-end server. The following annotations can be used for such configuration in the Ingress resource.
 
 |Annotation| Description|
 |----------|-------------|

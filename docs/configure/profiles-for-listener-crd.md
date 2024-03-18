@@ -4,7 +4,7 @@ You can use individual entities such as [HTTP profile](https://docs.citrix.com/e
 
 ## HTTP profile
 
-An [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/current-release/system/http-configurations.html#sample-http-configurations) is a collection of HTTP settings. A default HTTP profile called `nshttp_default_profile` is configured to set the HTTP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the HTTP configurations for a Listener resource by specifying `spec.policies.httpprofile`. If specified, Citrix ingress controller creates a new HTTP profile with the default values derived from the default HTTP profile and configures the values specified.
+An [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/current-release/system/http-configurations.html#sample-http-configurations) is a collection of HTTP settings. A default HTTP profile called `nshttp_default_profile` is configured to set the HTTP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the HTTP configurations for a Listener resource by specifying `spec.policies.httpprofile`. If specified, Netscaler ingress controller creates a new HTTP profile with the default values derived from the default HTTP profile and configures the values specified.
 
 It helps to derive the default values from the default HTTP profile and configures the values specified.
 
@@ -48,7 +48,7 @@ spec:
 
 ## TCP profile
 
-A TCP profile is a collection of TCP settings. A default TCP profile called `nstcp_default_profile` is configured to set the TCP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the TCP settings by specifying `spec.policies.tcpprofile`. When you specify `spec.policies.tcpprofile`, Citrix ingress controller creates a TCP profile that is derived from the default TCP profile and applies the values provided in the specification, and binds it to the front-end virtual server.
+A TCP profile is a collection of TCP settings. A default TCP profile called `nstcp_default_profile` is configured to set the TCP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the TCP settings by specifying `spec.policies.tcpprofile`. When you specify `spec.policies.tcpprofile`, Netscaler ingress controller creates a TCP profile that is derived from the default TCP profile and applies the values provided in the specification, and binds it to the front-end virtual server.
 
 For information about all the possible key-value pairs for a TCP profile, see [TCP profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/).
 
@@ -93,7 +93,7 @@ spec:
 
 An SSL profile is a collection of settings for SSL entities. SSL profile makes configuration easier and flexible. You can configure the settings in a profile and bind that profile to a virtual server instead of configuring the settings on each entity. An SSL profile allows you to customize many SSL parameters such as TLS protocol and ciphers. For more information about SSL profile, see [SSL profile infrastructure](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
-**Note:** By default, Netscaler creates a legacy SSL profile. The legacy SSL profile has many drawbacks including non-support for advanced protocols such as SSLv3. Hence, it is recommended to enable the default SSL profiles in Netscaler before Citrix ingress controller is launched.
+**Note:** By default, Netscaler creates a legacy SSL profile. The legacy SSL profile has many drawbacks including non-support for advanced protocols such as SSLv3. Hence, it is recommended to enable the default SSL profiles in Netscaler before Netscaler ingress controller is launched.
 
 To enable the advanced SSL profile, use the following command in the Netscaler command line:
 
@@ -101,7 +101,7 @@ To enable the advanced SSL profile, use the following command in the Netscaler c
 
 The command enables the default SSL profile for all the existing SSL virtual servers and the SSL service groups.
 
-You can specify `spec.policies.sslprofile` to customize the SSL profile. When specified, Citrix ingress controller creates an SSL profile derived from the default SSL front-end profile: `ns_default_ssl_profile_frontend`.
+You can specify `spec.policies.sslprofile` to customize the SSL profile. When specified, Netscaler ingress controller creates an SSL profile derived from the default SSL front-end profile: `ns_default_ssl_profile_frontend`.
 
 For information about key-value pairs supported in the SSL profile, see [SSL profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ssl/sslprofile/).
 

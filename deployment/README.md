@@ -2,7 +2,7 @@
 
 The common deployment architectures emerging in K8s environment are of single-tier and dual-tier load balancing.
 
-Netscaler with Ingress Controller provides solution for these deployments. The Citrix ingress controller automates the configuration of Netscaler load balancing microservices in Kubernetes environment.
+Netscaler with Ingress Controller provides solution for these deployments. The Netscaler ingress controller automates the configuration of Netscaler load balancing microservices in Kubernetes environment.
 
 **North-South traffic Load balancing**: North-South traffic is the traffic heading in and out of your Kubernetes Cluster. It is the traffic that comes from the client and hits the frontend microservices.
 
@@ -18,7 +18,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Service Mesh Lite](../docs/deploy/service-mesh-lite.md)
 -  [API Gateway](../docs/deploy/citrix-api-gateway.md)
 
-## Citrix ingress controller features
+## Netscaler ingress controller features
 
 -  [Ingress Class](../docs/configure/ingress-classes.md)
 -  [Ingress Configuration](../docs/configure/ingress-config.md)
@@ -33,7 +33,7 @@ The E-W traffic can also be load balanced by Ingress load balancer with E-W Hair
 -  [Automated Certificate Management with cert-manager](../docs/certificate-management/certificate.md)
 -  [HTTP, TCP, or SSL Profiles support](../docs/configure/profiles.md)
 -  [TLS Certificate Handling](../docs/certificate-management/tls-certificates.md)
--  [Install, link, and update certificates on Netscaler using the Citrix ingress controller](../docs/certificate-management/link-ca-certificate-chain.md)
+-  [Install, link, and update certificates on Netscaler using the Netscaler ingress controller](../docs/certificate-management/link-ca-certificate-chain.md)
 -  [Rewrite and Responder](../docs/crds/rewrite-responder.md)
 -  [Advanced content routing](../docs/crds/content-routing.md)
 -  [Canary deployment support](../docs/canary/canary.md)

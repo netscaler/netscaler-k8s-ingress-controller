@@ -84,25 +84,25 @@ Perform the steps in this section to establish network connectivity between Tier
 	
            kubectl create -f citrix-k8s-node-controller.yaml -n dsr
 
-### Deploy the Citrix ingress controller for Tier-1 ADC and expose Netscaler CPX as a service. 
+### Deploy the Netscaler ingress controller for Tier-1 ADC and expose Netscaler CPX as a service. 
 
-Perform the following steps to deploy the Citrix ingress controller as a stand-alone pod and create an Ingress resource for Tier-2 Netscaler CPX.
+Perform the following steps to deploy the Netscaler ingress controller as a stand-alone pod and create an Ingress resource for Tier-2 Netscaler CPX.
 
-   1. Download the Citrix Ingress Controller YAML file using the following command.
+   1. Download the Netscaler ingress controller YAML file using the following command.
 	
             wget https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/example/dsr/KubernetesConfig/citrix-k8s-ingress-controller.yaml
 
 
-   2. Edit the YAML file and update the following values for Citrix Ingress Controller.
+   2. Edit the YAML file and update the following values for Netscaler ingress controller.
 
         - NS_IP
         - NS_USER
         - NS_PASSWORD
   
         
-      For more information, see [Deploy the Citrix ingress controller using YAML](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml#deploy-netscaler-ingress-controller-as-a-standalone-pod-in-the-kubernetes-cluster-for-netscaler-mpx-or-vpx-appliances.html).
+      For more information, see [Deploy the Netscaler ingress controller using YAML](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml#deploy-netscaler-ingress-controller-as-a-standalone-pod-in-the-kubernetes-cluster-for-netscaler-mpx-or-vpx-appliances.html).
 
-   3. Save the YAML file and deploy the Citrix Ingress Controller.
+   3. Save the YAML file and deploy the Netscaler ingress controller.
 
 	
            kubectl create -f citrix-k8s-ingress-controller.yaml -n dsr

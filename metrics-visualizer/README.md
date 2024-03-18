@@ -1,7 +1,7 @@
 Metrics Visualization of Netscaler Appliances in Kubernetes
 ===
 
-This document describes how the [Netscaler Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
+This document describes how the [Netscaler Metrics Exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
 
 
 Launching Promethus-Operator
@@ -385,7 +385,7 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_cic_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s ingress services grafana dashboard](https://github.com/netscaler/netscaler-adc-metrics-exporter/blob/master/k8s_cic_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/netscaler/netscaler-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 

@@ -1,6 +1,6 @@
-# Deploy Citrix ingress controller in an Azure Kubernetes Service cluster with Netscaler VPX
+# Deploy Netscaler ingress controller in an Azure Kubernetes Service cluster with Netscaler VPX
 
-This topic explains how to deploy the Citrix ingress controller with Netscaler VPX in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy the Citrix ingress controller with Netscaler VPX.
+This topic explains how to deploy the Netscaler ingress controller with Netscaler VPX in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. You can also configure the Kubernetes cluster on [Azure VMs](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy the Netscaler ingress controller with Netscaler VPX.
 
 The procedure to deploy for both AKS and Azure VM is the same. However, if you are configuring Kubernetes on Azure VMs you need to deploy the CNI plug-in for the Kubernetes cluster.
 
@@ -24,21 +24,21 @@ The following is the sample topology used in this deployment.
 You can create Netscaler VPX from the Azure Marketplace.
 For more information on how to create a Netscaler VPX instance from Azure Marketplace, see [Get Netscaler VPX from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-vpx.md).
 
-## Get the Citrix ingress controller from Azure Marketplace
+## Get the Netscaler ingress controller from Azure Marketplace
 
-To deploy the Citrix ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the Citrix ingress controller image.
+To deploy the Netscaler ingress controller, an image registry should be created on Azure and the corresponding image URL should be used to fetch the Netscaler ingress controller image.
 
-For more information on how to create a registry and get the image URL, see [Get Citrix ingress controller from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
+For more information on how to create a registry and get the image URL, see [Get Netscaler ingress controller from Azure Marketplace](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/deploy/azure-cic-url.md).
 
-Once a registry is created, the Citrix ingress controller registry name should be attached to the AKS cluster used for deployment.
+Once a registry is created, the Netscaler ingress controller registry name should be attached to the AKS cluster used for deployment.
 
 ```
 az aks update -n <cluster-name> -g <resource-group-where-aks-deployed> --attach-acr <cic-registry>
 ```
 
-## Deploy Citrix Ingress Controller
+## Deploy Netscaler ingress controller
 
-Perform the following steps to deploy the Citrix ingress controller.
+Perform the following steps to deploy the Netscaler ingress controller.
 
 1. Create Netscaler VPX login credentials using Kubernetes secret.
 
@@ -65,10 +65,10 @@ Perform the following steps to deploy the Citrix ingress controller.
     
 
 
-3. Update the Netscaler VPX image URL, management IP, and VIP in the Citrix ingress controller YAML file.
+3. Update the Netscaler VPX image URL, management IP, and VIP in the Netscaler ingress controller YAML file.
 
 
-   1. Download the Citrix ingress controller YAML file.
+   1. Download the Netscaler ingress controller YAML file.
 
        
 
@@ -78,7 +78,7 @@ Perform the following steps to deploy the Citrix ingress controller.
 
        **Note:** If you do not have `wget` installed, you can use the `fetch` or `curl` command.
 
-   2. Update the Citrix ingress controller image with the Azure image URL in the `cic.yaml` file.
+   2. Update the Netscaler ingress controller image with the Azure image URL in the `cic.yaml` file.
 
       
             - name: cic-k8s-ingress-controller
@@ -105,7 +105,7 @@ Perform the following steps to deploy the Citrix ingress controller.
         
       
 
-4. Once you have configured the Citrix ingress controller with the required values, deploy the Citrix ingress controller using the following command.
+4. Once you have configured the Netscaler ingress controller with the required values, deploy the Netscaler ingress controller using the following command.
 
 
             kubectl create -f cic.yaml

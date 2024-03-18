@@ -3,19 +3,19 @@
 This section provides information on how to use the SSL certificate stored as
 a Kubernetes secret with services of type LoadBalancer. The certificate is applied if the annotation `service.citrix.com/service-type` is `SSL` or `SSL_TCP`.
 
-## Using the Citrix ingress controller default certificate
+## Using the Netscaler ingress controller default certificate
 
-If the SSL certificate is not provided, you can use the default Citrix ingress controller certificate.
+If the SSL certificate is not provided, you can use the default Netscaler ingress controller certificate.
 
-You must provide the secret name you want to use and the namespace from which it should be taken as arguments in the Citrix ingress controller YAML file.
+You must provide the secret name you want to use and the namespace from which it should be taken as arguments in the Netscaler ingress controller YAML file.
 
-Default Citrix ingress controller
+Default Netscaler ingress controller
 
             --default-ssl-certificate <NAMESPACE>/<SECRET_NAME> 
 
 ## Service annotations for SSL certificate as Kubernetes secrets
 
-The Citrix ingress controller provides the following service annotations to use SSL certificates stored as Kubernetes secrets for services of type `LoadBalancer`.
+The Netscaler ingress controller provides the following service annotations to use SSL certificates stored as Kubernetes secrets for services of type `LoadBalancer`.
 
 | Service annotation | Description|
 | ---------------- | ------------ |

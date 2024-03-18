@@ -7,11 +7,11 @@ Netscaler supports two types of monitors.
 1. Built-in monitors
 2. Custom monitors
 
-A smart annotation on the Citrix ingress controller can be used for creating various types of monitors for your applications. You can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use the smart annotation to manage your application monitor lifecycle.
+A smart annotation on the Netscaler ingress controller can be used for creating various types of monitors for your applications. You can choose between creating a monitor based on a built-in monitor, or creating a custom monitor that uses a script that you write to monitor the service. Once you have chosen or created a monitor, you can use the smart annotation to manage your application monitor lifecycle.
 
 ## Smart annotation for monitor
 
-You can use the  ```ingress.citrix.com/monitor```  smart annotation which can be used to create a monitor of your choice. The Citrix Ingress controller internally creates the monitor and bounds it to the right service.
+You can use the  ```ingress.citrix.com/monitor```  smart annotation which can be used to create a monitor of your choice. The Netscaler ingress controller internally creates the monitor and bounds it to the right service.
 
 ## Configure a built-in monitor
   
@@ -23,7 +23,7 @@ Here is an example of using an HTTP monitor with the help of smart annotation.
 ingress.citrix.com/monitor: '{"frontend":{"type":"http", "httpRequest":"GET /", "respcode":"200", "retries":"2"}}'
 ```
 
-In this example, a service called ```frontend``` is configured with an HTTP monitor which sends a GET request and expects the HTTP response code 200. When the Citrix ingress controller gets this event, it creates a monitor and binds the monitor with the corresponding service.
+In this example, a service called ```frontend``` is configured with an HTTP monitor which sends a GET request and expects the HTTP response code 200. When the Netscaler ingress controller gets this event, it creates a monitor and binds the monitor with the corresponding service.
 
   A sample Ingress is shown as follows:
 

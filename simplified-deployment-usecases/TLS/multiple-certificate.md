@@ -1,13 +1,13 @@
 # Multiple certificates to an Ingress
 
-You can secure an Ingress by specifying TLS secrets inside the `spec.tls` section of the Ingress. Citrix ingress controller uploads the TLS secrets in the `nsconfig/ssl` folder inside the NetScaler. So if you specify multiple TLS secrets, all of them are present in the `/nsconfig/ssl` folder. NetScaler presents the certificate to clients which matches with the TLS Server Name Indication (SNI) field of the request. If no SNI is provided by the client or if the SNI does not match with any certificate, then the first loaded certificate is presented. So you need to send a request with the correct SNI. The Host header indicates the SNI.
+You can secure an Ingress by specifying TLS secrets inside the `spec.tls` section of the Ingress. Netscaler ingress controller uploads the TLS secrets in the `nsconfig/ssl` folder inside the NetScaler. So if you specify multiple TLS secrets, all of them are present in the `/nsconfig/ssl` folder. NetScaler presents the certificate to clients which matches with the TLS Server Name Indication (SNI) field of the request. If no SNI is provided by the client or if the SNI does not match with any certificate, then the first loaded certificate is presented. So you need to send a request with the correct SNI. The Host header indicates the SNI.
 
 This tutorial shows you how to configure multiple TLS secrets or certificates for different hosts within a single ingress.
 
 ## Before you begin
 
 You need a Kubernetes cluster and `kubectl` command-line tool to communicate with the cluster.
-If you are using NetScaler VPX or MPX, follow [Deploy Citrix ingress controller](./quick-installation-cic.md) instructions to deploy Citrix ingress controller to configure the same. If you do not have NetScaler VPX or MPX, you can use NetScaler CPX and follow the instructions to deploy Citrix ingress controller and CPX.
+If you are using NetScaler VPX or MPX, follow [Deploy Netscaler ingress controller](./quick-installation-cic.md) instructions to deploy Netscaler ingress controller to configure the same. If you do not have NetScaler VPX or MPX, you can use NetScaler CPX and follow the instructions to deploy Netscaler ingress controller and CPX.
 
 This tutorial uses a separate namespace called `netscaler` throughout this tutorial for keeping things isolated. Run the following command to prepare your cluster for this tutorial:
 

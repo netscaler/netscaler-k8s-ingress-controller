@@ -1,10 +1,10 @@
 # View metrics of Netscalers using Prometheus and Grafana
 
-You can use the [Netscaler metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Netscaler VPX or CPX ingress devices and Netscaler CPX (east-west) devices.
+You can use the [Netscaler metrics exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Netscaler VPX or CPX ingress devices and Netscaler CPX (east-west) devices.
 
 ## Netscaler metrics exporter
 
-Netscaler metrics exporter is a simple server that collects Netscaler stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Netscaler stats. For more information see, [Netscaler metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter).
+Netscaler metrics exporter is a simple server that collects Netscaler stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Netscaler stats. For more information see, [Netscaler metrics exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter).
 
 > **Note:**
 >
@@ -89,7 +89,7 @@ After you modify the `grafana-service.yaml`file, apply the changes to the Kubern
 
 ## Configure Netscaler metrics exporter
 
-This topic describes how to integrate the [Netscaler metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) with Netscaler VPX or CPX ingress or Netscaler CPX (east-west) devices.
+This topic describes how to integrate the [Netscaler metrics exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) with Netscaler VPX or CPX ingress or Netscaler CPX (east-west) devices.
 
 **Netscaler VPX Ingress device**:
 
@@ -175,7 +175,7 @@ spec:
         - name: NS_PORT
           value: "9080"
         #Define the NITRO port here
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
+        image: quay.io/netscaler/netscaler-cpx:13.1-51.15
         imagePullPolicy: IfNotPresent
         name: cpx-ingress
         ports:
@@ -260,7 +260,7 @@ spec:
           value: HOST
         #- name: "kubernetes_url"
         #  value: "https://10..xx.xx:6443"
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
+        image: quay.io/netscaler/netscaler-cpx:13.1-51.15
         imagePullPolicy: IfNotPresent
         name: cpx
         securityContext:
@@ -364,7 +364,7 @@ To view the metrics graphically:
 
 1.  Log into Grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample Grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample Grafana dashboard](https://github.com/netscaler/netscaler-adc-metrics-exporter/blob/master/sample_lb_stats.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 
