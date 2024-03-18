@@ -101,17 +101,18 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
 
-   Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the NetScaler VPX instance in the `nsIP` parameter and Kubernetes secret created using NetScaler VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. You can choose other available parameters as well depending upon your use-case.
+ > **NOTE:**
+   > Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the NetScaler VPX instance in the `nsIP` parameter and Kubernetes secret created using NetScaler VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. If CRDs are already installed, specify crds.install=false. You can choose other available parameters as well depending upon your use-case.
 
    After you have updated the values of the required parameters, click **Create**. Ensure your NetScaler Ingress Controller is succesfully deployed and initialised.
 
    ![NetScaler Ingress Controller Instance](../media/nic_instance_deployed.png)
 
-7. Navigate to **Workloads > Pods** section and ensure that the **netscaler-ingress-controller** pod is up and running.
+8. Navigate to **Workloads > Pods** section and ensure that the **netscaler-ingress-controller** pod is up and running.
 
    ![NetScalerIngress Controller Pod](../media/nic_pod.png)
 
-8. Verify the deployment by sending traffic as shown:
+9. Verify the deployment by sending traffic as shown:
    ```
    curl http://citrix-ingress-operator.com --resolve citrix-ingress-operator.com:80:<VIP>
    ```
@@ -177,7 +178,8 @@ Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX w
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cpx-with-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
 
-   Ensure to set the `license.accept` parameter to `yes`. We will expose NetScaler CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. You can choose other available parameters as well depending upon your use-case.
+ > **NOTE:**
+  > Ensure to set the `license.accept` parameter to `yes`. We will expose NetScaler CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. If CRDs are already installed, specify crds.install=false. You can choose other available parameters as well depending upon your use-case. 
 
    After you have updated the values of the required parameters, click **Create**. Ensure your NetScaler CPX with Ingress Controller is succesfully deployed and initialised.
 
