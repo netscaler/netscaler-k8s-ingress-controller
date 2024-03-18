@@ -15,35 +15,42 @@ Create a Kubernetes certificate for the CA certificate with which client certifi
 
             kubectl create secret generic tls-ca --from-file=tls.crt=cacerts.pem -n netscaler
 
-**Note:** You must specify `tls.crt=` while creating a secret. This file is used by the Citrix ingress controller while parsing a CA secret.
+**Note:** You must specify `tls.crt=` while creating a secret. This file is used by the Netscaler ingress controller while parsing a CA secret.
 
 You need to specify the `ingress.citrix.com/frontend_sslprofile` annotation to attach the generated CA secret which is used for the client certificate authentication for a service deployed in Kubernetes. For client authentication `clientauth` should be enabled using the `ingress.citrix.com/frontend_sslprofile` annotation. To know more about the SSL profile, see the [SSL profile documentation](./SSL-profile.md).
 
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
+          annotations:
+            ingress.citrix.com/ca-secret: '{"ingress-demo": "tls-ca"}'
+            ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "sni": "enabled"}'
           name: ingress-demo
           namespace: netscaler
-          annotations:
-           kubernetes.io/ingress.class: "netscaler"
-           # annotation ingress.citrix.com/ca-secret is the CA for client certificate for authentication 
-           ingress.citrix.com/ca-secret: '{"ingress-demo": "tls-ca"}'
-           # annotation ingress.citrix.com/frontend_sslprofile to configure different SSL settings for the frontend ingress
-           ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "sni": "enabled"}'      
         spec:
-          tls:
-          - secretName: tls-secret
+          ingressClassName: netscaler
           rules:
-          - host:  "example.com"
+          - host: example.com
             http:
               paths:
-              - path: /
-                pathType: Prefix
-                backend:
-                  service: 
+              - backend:
+                  service:
                     name: service-test
-                    port: 
+                    port:
                       number: 80
+                path: /
+                pathType: Prefix
+          tls:
+          - secretName: tls-secret
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: netscaler
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+        
 
 ## TLS server authentication
 
@@ -70,7 +77,7 @@ Perform the following steps to generate a Kubernetes secret for an existing cert
 
         kubectl create secret generic example-test-ca --from-file=tls.crt=cacerts.pem -n netscaler
 
-    **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by Citrix ingress controller while parsing a CA secret.
+    **Note:** You must specify 'tls.crt=' while creating a secret. This file is used by Netscaler ingress controller while parsing a CA secret.
 
 1.  Create and apply the Ingress configuration.
 
@@ -79,35 +86,39 @@ Perform the following steps to generate a Kubernetes secret for an existing cert
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
+          annotations:
+            ingress.citrix.com/backend-ca-secret: '{"service-test":"example-test-ca"}'
+            ingress.citrix.com/backend-secret: '{"service-test": "tls-example-test"}'
+            ingress.citrix.com/backend-sslprofile: '{"service-test":{"serverauth": "enabled",
+              "sni": "enabled"}}'
+            ingress.citrix.com/ca-secret: '{"ingress-demo": "tls-ca"}'
+            ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "sni": "enabled"}'
+            ingress.citrix.com/secure-backend: 'True'
           name: ingress-demo
           namespace: netscaler
-          annotations:
-           kubernetes.io/ingress.class: "netscaler"
-           # annotation ingress.citrix.com/ca-secret is the CA for client certificate for authentication 
-           ingress.citrix.com/ca-secret: '{"ingress-demo": "tls-ca"}'
-           # annotation ingress.citrix.com/frontend_sslprofile to configure different SSL settings for the frontend ingress
-           ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "sni": "enabled"}'
-           # annotation ingress.citrix.com/secure-backend is to make secure connection with backend service
-           ingress.citrix.com/secure-backend: "True"
-           # annotation ingress.citrix.com/backend-secret is used for providing certificate for secure connection with backend service.
-           ingress.citrix.com/backend-secret: '{"service-test": "tls-example-test"}'
-           # annotation ingress.citrix.com/backend-ca-secret for providing CA certificate used for authenticating secure backend communication.
-           ingress.citrix.com/backend-ca-secret: '{"service-test":"example-test-ca"}
-           # annotaion ingress.citrix.com/backend-sslprofile for setting different SSL settings for communication with backend services
-           ingress.citrix.com/backend-sslprofile: '{"service-test":{"serverauth": "enabled", "sni": "enabled"}}'     
         spec:
-          tls:
-          - secretName: tls-secret
+          ingressClassName: netscaler
           rules:
-          - host:  "example.com"
+          - host: example.com
             http:
               paths:
-              - path: /
-                pathType: Prefix
-                backend:
-                  service: 
+              - backend:
+                  service:
                     name: service-test
-                    port: 
+                    port:
                       number: 443
+                path: /
+                pathType: Prefix
+          tls:
+          - secretName: tls-secret
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: netscaler
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 
 **Note:** SNI can be enabled or disabled based on the certificate.

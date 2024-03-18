@@ -1,8 +1,8 @@
-# Blue-green deployment using Citrix ADC VPX and Azure pipelines
+# Blue-green deployment using Netscaler VPX and Azure pipelines
 
-Blue-green deployment is a technique that reduces downtime and risk by running two identical production environments called blue and green. At any time, only one of the environments is live that serves all the production traffic. The basis of the blue-green method is side-by-side deployments of two separate but identical environments. Deploying an application in both the environments can be fully automated by using jobs and tasks. This approach enforces duplication of every resource of an application. However, there are many different ways blue-green deployments can be carried out in various continuous deployment tools. This topic provides information on how to achieve the blue green deployment of an application (non cloud-native applications) using Citrix ADC with Azure pipelines. [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
+Blue-green deployment is a technique that reduces downtime and risk by running two identical production environments called blue and green. At any time, only one of the environments is live that serves all the production traffic. The basis of the blue-green method is side-by-side deployments of two separate but identical environments. Deploying an application in both the environments can be fully automated by using jobs and tasks. This approach enforces duplication of every resource of an application. However, there are many different ways blue-green deployments can be carried out in various continuous deployment tools. This topic provides information on how to achieve the blue green deployment of an application (non cloud-native applications) using Netscaler with Azure pipelines. [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) are a cloud service provided by Azure DevOps which allows you to automatically run builds, perform tests, and deploy code to various development and production environments.
 
-In this solution, Citrix ADC VPX is deployed on the Azure platform to enable load balancing of an application and achieve blue green deployment using Citrix ADC VPX. For more information on how to deploy Citrix ADC on Microsoft Azure, see the [Citrix documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-vpx-on-azure.html).
+In this solution, Netscaler VPX is deployed on the Azure platform to enable load balancing of an application and achieve blue green deployment using Netscaler VPX. For more information on how to deploy Netscaler on Microsoft Azure, see the [Citrix documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-vpx-on-azure.html).
 
 
 ## Why blue-green deployment?
@@ -13,17 +13,17 @@ The following are the major benefits of adopting Blue green deployment strategy 
 - zero-downtime upgrade for an existing application
 - easier rollback mechanism, implementation, and disaster recovery
 
-## Blue-green deployment using Citrix ADC
+## Blue-green deployment using Netscaler
 
-Blue-green deployment of an application can be achieved using Citrix ADC by adjusting the traffic split percentage of the application end points (blue and green versions) to zero and 100. Initially, the traffic split percentage of an application with blue version is set to 100 and post validation of the green version, you change the traffic split percentage of the blue version to zero and set the green version to 100. At this stage, the green version is promoted to the live environment as a blue version and further upcoming versions of the application are treated as the new green versions.
+Blue-green deployment of an application can be achieved using Netscaler by adjusting the traffic split percentage of the application end points (blue and green versions) to zero and 100. Initially, the traffic split percentage of an application with blue version is set to 100 and post validation of the green version, you change the traffic split percentage of the blue version to zero and set the green version to 100. At this stage, the green version is promoted to the live environment as a blue version and further upcoming versions of the application are treated as the new green versions.
 
-Here, you are using the content switching (CS) policy in Citrix ADC for each application version. You can achieve the blue green deployment by adjusting the traffic weight and priority of the CS policy to switch the traffic between blue and green versions of the application.
+Here, you are using the content switching (CS) policy in Netscaler for each application version. You can achieve the blue green deployment by adjusting the traffic weight and priority of the CS policy to switch the traffic between blue and green versions of the application.
 
 ![](../../media/blue-green-deployment.png)
 
-## Blue-green deployment using Citrix ADC with Azure pipelines
+## Blue-green deployment using Netscaler with Azure pipelines
 
-Citrix proposes a solution for blue-green deployment using Citrix ADC with Azure pipelines for any virtual machine based application as depicted in the following topology.
+Citrix proposes a solution for blue-green deployment using Netscaler with Azure pipelines for any virtual machine based application as depicted in the following topology.
 
 For information on how to create and configure agent pools on Azure, see the [Azure documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=azure-devops&tabs=yaml%2Cbrowser).
 
@@ -38,7 +38,7 @@ In this solution, there are three configuration directories:
 
 ### adc_configs
 
-This directory includes the template based Terraform scripts which are responsible for pushing application(version) specific Citrix ADC configuration such as back-end services, traffic weight. The Citrix ADC configurations include creating content switching virtual server, load balancing virtual server, and a content switching policy with the appropriate priority set for each version of the application.
+This directory includes the template based Terraform scripts which are responsible for pushing application(version) specific Netscaler configuration such as back-end services, traffic weight. The Netscaler configurations include creating content switching virtual server, load balancing virtual server, and a content switching policy with the appropriate priority set for each version of the application.
 
 ![adc_configs](../../media/adc-configs.png)
 
@@ -61,14 +61,14 @@ This procedure shows the steps to deploy an application using blue-green mode in
 **Pre-requisites**
 
 Ensure that:
-- Citrix ADC VPX is deployed on the Azure platform
+- Netscaler VPX is deployed on the Azure platform
 - Back end services are running on the virtual machine and the corresponding IP addresses are available to set up the continuous delivery. 
 
 Perform the following steps:
 
 1. Clone the GitHub repository and go to the directory `cd/blue-green`.
 
-1. Review and update the Citrix ADC configurations in the Terraform files under the `adc_configs` directory.
+1. Review and update the Netscaler configurations in the Terraform files under the `adc_configs` directory.
 
 1. Create two Azure pipelines using the existing YAML files, `deploy.yaml` and `teardown.yaml`, for deploying and tearing down the applications. See, [Azure pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline) for creating a pipeline.
 
@@ -79,7 +79,7 @@ Perform the following steps:
        backend_service_ip = "<IP of backend service with version v1>"
 
        priority = 101 
-       /*This configuration is used to set the priority of the traffic to be served by Citrix ADC when you introduce a new version of the application in production environment.*/
+       /*This configuration is used to set the priority of the traffic to be served by Netscaler when you introduce a new version of the application in production environment.*/
 
 1. Update the `setup_config.json` file with version and traffic weight percentage.
 
@@ -92,7 +92,7 @@ Perform the following steps:
 1. Commit `setup_config.json` and `v1.conf` files using Git to trigger the pipeline to deploy the v1 version of the application.
 
 
-1. Access the application through Citrix ADC. 
+1. Access the application through Netscaler. 
 
 1. Introduce the v2 version of the application by creating the `v2.conf` file.
 

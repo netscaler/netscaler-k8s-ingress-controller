@@ -1,12 +1,12 @@
 apiVersion: v2
 appVersion: "1.15.12"
-description: A Helm chart for Citrix Ingress Controller configuring MPX/VPX.
+description: A Helm chart for Netscaler ingress controller configuring MPX/VPX.
 name: citrix-ingress-controller
 version: 1.15.12
 icon: https://raw.githubusercontent.com/citrix/citrix-helm-charts/gh-pages/icon.png
 home: https://www.citrix.com
 sources:
-- https://github.com/citrix/citrix-k8s-ingress-controller
+- https://github.com/netscaler/netscaler-k8s-ingress-controller
 maintainers:
 - name: priyankash-citrix
   email: priyanka.sharma@citrix.com

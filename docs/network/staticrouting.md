@@ -1,17 +1,17 @@
-# Configure static route on Ingress Citrix ADC VPX or MPX
+# Configure static route on Ingress Netscaler VPX or MPX
 
 In a Kubernetes cluster, pods run on an overlay network. The overlay network can be Flannel, Calico, Weave, and so on. The pods in the cluster are assigned with an IP address from the overlay network which is different from the host network.
 
-The Ingress Citrix ADC VPX or MPX outside the Kubernetes cluster receives all the Ingress traffic to the microservices deployed in the Kubernetes cluster. You need to establish network connectivity between the Ingress Citrix ADC instance and the pods for the ingress traffic to reach the microservices.
+The Ingress Netscaler VPX or MPX outside the Kubernetes cluster receives all the Ingress traffic to the microservices deployed in the Kubernetes cluster. You need to establish network connectivity between the Ingress Netscaler instance and the pods for the ingress traffic to reach the microservices.
 
-One of the ways to achieve network connectivity between pods and Citrix ADC VPX or MPX instance outside the Kubernetes cluster is to configure routes on the Citrix ADC instance to the overlay network.
+One of the ways to achieve network connectivity between pods and Netscaler VPX or MPX instance outside the Kubernetes cluster is to configure routes on the Netscaler instance to the overlay network.
 
-You can either do this manually or Citrix ingress controller provides an option to automatically configure the network.
+You can either do this manually or Netscaler ingress controller provides an option to automatically configure the network.
 
 !!! note "Note"
-    Ensure that the Citrix ADC instance (MPX or VPX) has SNIP configured on the host network. The host network is the network on which the Kubernetes nodes communicate with each other.
+    Ensure that the Netscaler instance (MPX or VPX) has SNIP configured on the host network. The host network is the network on which the Kubernetes nodes communicate with each other.
 
-## Manually configure route on the Citrix ADC instance
+## Manually configure route on the Netscaler instance
 
 Perform the following:
 
@@ -31,9 +31,9 @@ Perform the following:
           podNetwork: 192.168.174.0       gateway: 10.106.162.109/24
           podNetwork: 192.168.76.128      gateway: 10.106.162.106/24
 
-1.  Log on to the Citrix ADC instance.
+1.  Log on to the Netscaler instance.
 
-1.  Add route on the Citrix ADC instance using the podCIDR information. Use the following command:
+1.  Add route on the Netscaler instance using the podCIDR information. Use the following command:
 
         add route <pod_network> <podCIDR_netmask> <gateway>
 
@@ -45,21 +45,21 @@ Perform the following:
 
         add route 192.244.1.0 255.255.255.0 192.106.162.106
 
-## Automatically configure route on the Citrix ADC instance
+## Automatically configure route on the Netscaler instance
 
-In the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file, you can use an argument,`feature-node-watch` to automatically configure route on the associated Citrix ADC instance.
+In the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file, you can use an argument,`feature-node-watch` to automatically configure route on the associated Netscaler instance.
 
 Set the `feature-node-watch` argument to `true` to enable automatic route configuration.
 
-You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
+You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
 
 ```yml
    spec:
         serviceAccountName: cic-k8s-role
         containers:
         - name: cic-k8s-ingress-controller
-          image: "quay.io/citrix/citrix-k8s-ingress-controller:1.39.6"
-        # feature-node-watch argument configures route(s) on the Ingress Citrix ADC
+          image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6"
+        # feature-node-watch argument configures route(s) on the Ingress Netscaler
         # to provide connectivity to the pod network. By default, this feature is disabled.
         args:
         - --feature-node-watch
@@ -68,7 +68,7 @@ You can specify this argument in the [citrix-k8s-ingress-controller.yaml](https:
 
 !!! info "Points to Note"
     - By default, the `feature-node-watch` argument is set to `false`. Set the argument to `true` to enable the automatic route configuration.
-    - For automatic route configuration, you must provide permissions to listen to the events of nodes resource type. You can provide the required permissions in the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
+    - For automatic route configuration, you must provide permissions to listen to the events of nodes resource type. You can provide the required permissions in the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file as follows:
 
 ```yml
   kind: ClusterRole

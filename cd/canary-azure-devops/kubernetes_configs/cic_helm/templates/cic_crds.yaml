@@ -383,7 +383,7 @@ spec:
                       type: string
                     full_req_expr:
                       description: |+
-                                   'Exact HTTP request, in the form of an expression, which the Citrix ADC sends
+                                   'Exact HTTP request, in the form of an expression, which the Netscaler sends
                                     to the callout agent. The request expression is constrained by the feature
                                     for which the callout is used. For example, an HTTP.RES expression cannot be
                                     used in a request-time policy bank or in a TCP content switching policy bank.'
@@ -497,7 +497,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the ratelimit policies are applied.'
                 type: array
@@ -652,7 +652,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: |+
                              'Name of the services for which the policies applied'
@@ -890,13 +890,13 @@ spec:
                                 type: string
                             login_name:
                                 description: |+
-                                             'LDAP login name attribute. The Citrix ADC uses the LDAP login name
+                                             'LDAP login name attribute. The Netscaler uses the LDAP login name
                                               to query external LDAP servers or Active Directories'
                                 type: string
                                 maxLength: 127
                             security_type:
                                 description: |+
-                                             'Type of security used for communications between the Citrix ADC
+                                             'Type of security used for communications between the Netscaler
                                               and the LDAP server. Default is TLS'
                                 type: string
                                 enum: ['PLAINTEXT', 'TLS', 'SSL']
@@ -930,7 +930,7 @@ spec:
                                 maxLength: 255
                             auth_timeout:
                                 description: |+
-                                             'Number of seconds the Citrix ADC waits for a response from the server
+                                             'Number of seconds the Netscaler waits for a response from the server
                                               Default is 3'
                                 type: integer
                                 minimum: 1
@@ -992,7 +992,7 @@ spec:
                                 type: string
                                 maxLength: 127
                             issuer_name:
-                                description: 'The name to be used in requests sent from SP to IDP to identify citrix ADC'
+                                description: 'The name to be used in requests sent from SP to IDP to identify Netscaler'
                                 type: string
                                 maxLength: 63
                             binding:
@@ -1173,7 +1173,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               protocol:
                 type: string
                 enum: ["https", "http"]
@@ -1246,7 +1246,7 @@ spec:
                     - required: ["config"]
                   tcpprofile:
                     type: object
-                    description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
+                    description: "TCP level configurations, uses  ns tcpprofile of Netscaler"
                     properties:
                       preconfigured:
                         description: "Preconfigured or Built-in TCP profile name"
@@ -1272,7 +1272,7 @@ spec:
                         type: string
                         description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
                       config:
-                        description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                        description: "Netscaler frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
                         type: object
                         additionalProperties:
                           type: string
@@ -1375,12 +1375,12 @@ spec:
                                 description: "Use Secure communications to the backends"
                                 type: boolean
                               lbConfig:
-                                description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
                               servicegroupConfig:
-                                description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
@@ -1398,7 +1398,7 @@ spec:
                         description: "Host name specified is used for redirection with URL intact"
                         type: string
                       targetExpression:
-                        description: "A target can be specified using Citrix ADC policy expression"
+                        description: "A target can be specified using Netscaler policy expression"
                         type: string
                       responseCode:
                         description: "Default response code is 302, which can be customised using this attribute"
@@ -1449,7 +1449,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               hostname:
                 type: array
                 description: "List of domain names that share the same route, default is '*'"
@@ -1612,7 +1612,7 @@ spec:
                             description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
                           policyExpression:
                             type: string
-                            description: "Citrix ADC policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
+                            description: "Netscaler policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
                     action:
                       type: object
                       description: "Action for the matched rule"
@@ -1643,12 +1643,12 @@ spec:
                                       description: "Use Secure communications to the backends"
                                       type: boolean
                                     lbConfig:
-                                      description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                      description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
                                     servicegroupConfig:
-                                      description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                      description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
@@ -1666,7 +1666,7 @@ spec:
                               description: "Host name specified is used for redirection with URL intact"
                               type: string
                             targetExpression:
-                              description: "A target can be specified using Citrix ADC policy expression"
+                              description: "A target can be specified using Netscaler policy expression"
                               type: string
                             responseCode:
                               description: "Default response code is 302, which can be customised using this attribute"
@@ -1760,7 +1760,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the waf policies are applied.'
                 type: array
@@ -1926,7 +1926,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the bot policies are applied.'
                 type: array
@@ -2249,7 +2249,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'The list of Kubernetes services to which you want to apply the cors policies.'
                 type: array

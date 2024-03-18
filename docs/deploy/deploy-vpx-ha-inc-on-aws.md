@@ -1,15 +1,15 @@
-# Citrix ADC VPX in High Availability INC mode as ingress for Amazon EKS
+# Netscaler VPX in High Availability INC mode as ingress for Amazon EKS
 
-You can deploy Citrix ADC VPX in a high availability (High Availability) INC (Independent Network Configuration) mode in the Amazon EKS (Elastic Kubernetes Service).
+You can deploy Netscaler VPX in a high availability (High Availability) INC (Independent Network Configuration) mode in the Amazon EKS (Elastic Kubernetes Service).
 
-In a typical high availability deployment, both the Citrix ADC VPX instances in a high availability pair reside on the same subnet. A high availability deployment can also consist of two VPX instances in which each VPX is in a different network.
+In a typical high availability deployment, both the Netscaler VPX instances in a high availability pair reside on the same subnet. A high availability deployment can also consist of two VPX instances in which each VPX is in a different network.
 
-When the appliances in a high availability pair reside on two different networks, the secondary Citrix ADC VPX must have an independent network configuration. This means that Citrix ADC VPXs on different networks cannot share subnet IP address (SNIP), virtual IP address (VIP), or network routes. This type of configuration, in which the Citrix ADC VPXs in a high availability pair have different configuration parameters, is known as Independent Network Configuration (INC).
+When the appliances in a high availability pair reside on two different networks, the secondary Netscaler VPX must have an independent network configuration. This means that Netscaler VPXs on different networks cannot share subnet IP address (SNIP), virtual IP address (VIP), or network routes. This type of configuration, in which the Netscaler VPXs in a high availability pair have different configuration parameters, is known as Independent Network Configuration (INC).
 
-As the management IP address or NSIP of both the Citrix ADC VPX instances are different and they cannot share a subnet IP address, an IP address that does not belong to the VPC CIDR is selected. An AWS Route table is then configured for this IP address pointing to the ENI of the primary VPX instance. Whenever, the Citrix ADC VPX fails over (it becomes secondary), the Route table is automatically updated to point to the ENI of the new primary VPX (earlier the secondary VPX). This IP address is used as the `NS_IP` environment variable in Citrix ingress controller to configure the Citrix ADCs. For more information, see [VPX HA pair with private IP address](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws/vpx-ha-pip-different-aws-zones.html).
+As the management IP address or NSIP of both the Netscaler VPX instances are different and they cannot share a subnet IP address, an IP address that does not belong to the VPC CIDR is selected. An AWS Route table is then configured for this IP address pointing to the ENI of the primary VPX instance. Whenever, the Netscaler VPX fails over (it becomes secondary), the Route table is automatically updated to point to the ENI of the new primary VPX (earlier the secondary VPX). This IP address is used as the `NS_IP` environment variable in Netscaler ingress controller to configure the Netscalers. For more information, see [VPX HA pair with private IP address](https://docs.citrix.com/en-us/citrix-adc/current-release/deploying-vpx/deploy-aws/vpx-ha-pip-different-aws-zones.html).
 
 
-   ![Unified Ingress Architecture with Citrix ADC VPXs deployed in HA INC mode as Ingress](../media/ha-inc-aws-eks-az-with-cic.png)
+   ![Unified Ingress Architecture with Netscaler VPXs deployed in HA INC mode as Ingress](../media/ha-inc-aws-eks-az-with-cic.png)
 
 **Pre-requisites:**
 
@@ -17,9 +17,9 @@ As the management IP address or NSIP of both the Citrix ADC VPX instances are di
 2. Ensure that you have installed and configured the AWS command line utility `az`. Use the `aws configure` command login.
 3. Ensure that you have installed the Kubernetes control command line utility `kubectl`.
 
-## Deploy Citrix ADC VPX in high availability INC mode as ingress in Amazon EKS
+## Deploy Netscaler VPX in high availability INC mode as ingress in Amazon EKS
 
-1.  Clone the Citrix ADC Terraform repository using the following command:
+1.  Clone the Netscaler Terraform repository using the following command:
 
         git clone https://github.com/citrix/terraform-cloud-scripts.git
         cd terraform-cloud-scripts/terraform-cloud-scripts/aws/cloud_native
@@ -60,15 +60,15 @@ The following table provides variables and their description:
 | `management_subnet_cidr_blocks` | Specify the CIDRs for the management subnet. Provide the CIDRs in a list format.                                                |
 | `client_subnet_cidr_blocks`     | Specify the CIDRs for the client subnet. Provide the CIDRs in a list format.                                                    |
 | `server_subnet_cidr_blocks`     | Specify the CIDRs for the server subnet. Provide the CIDRs in a list format.                                                   |
-| `controlling_subnet`            | Specify the CIDR that access to the deployed Citrix ADC instances.                                               |
+| `controlling_subnet`            | Specify the CIDR that access to the deployed Netscaler instances.                                               |
 | `naming_prefix`                 | (Optional) Specify a name that is used as prefix in all the created resource names.                                         |
-| `vpx_ami_map`                   | Specify the AMI map for Citrix ADC VPX.                                                                                     |
-| `ns_instance_type`              | Specify the Citrix ADC instance type.                                                                                       |
+| `vpx_ami_map`                   | Specify the AMI map for Netscaler VPX.                                                                                     |
+| `ns_instance_type`              | Specify the Netscaler instance type.                                                                                       |
 | `aws_ssh_key_name`              | Specify the AWS SSH key name.                                                                                               |
 | `aws_ssh_public_key`            | Specify the SSH Public key to use.                                                                                          |
-| `reset_password`                | Specify if the Citrix ADC password has to be reset. Set this value to `true` always.                                          |
-| `new_password`                  | Specify a strong Citrix ADC VPX password.                                                                                   |
-| `cic_config_snip`               | Specify an IP address that is used as SNIP in the Citrix ADC. This IP address should be outside of the VPC CIDR range (`vpc_cidr_block`). |
+| `reset_password`                | Specify if the Netscaler password has to be reset. Set this value to `true` always.                                          |
+| `new_password`                  | Specify a strong Netscaler VPX password.                                                                                   |
+| `cic_config_snip`               | Specify an IP address that is used as SNIP in the Netscaler. This IP address should be outside of the VPC CIDR range (`vpc_cidr_block`). |
 
 Make sure input values in the file in accordance with your deployment topology.
 
@@ -91,9 +91,9 @@ It takes a few minutes to complete the deployment. After the Terraform deploymen
 
     <html><body><h1>It works!</h1></body></html>
 
-This response is from the Apache microservice that is deployed inside the EKS cluster. The Citrix ADC VPX HA pair has load balanced the HTTP request to the Apache microservice and relayed the response back. 
+This response is from the Apache microservice that is deployed inside the EKS cluster. The Netscaler VPX HA pair has load balanced the HTTP request to the Apache microservice and relayed the response back. 
 
-This is an example on how to expose a microservice using the Citrix ADC VPX HA pair as Ingress. You can use the same for your microservice applications. You can also use the advanced features of Citrix ingress controller such as SSL termination, URL rewrite, Application Security and so on. For more information on Citrix ingress controller, see [Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
+This is an example on how to expose a microservice using the Netscaler VPX HA pair as Ingress. You can use the same for your microservice applications. You can also use the advanced features of Netscaler ingress controller such as SSL termination, URL rewrite, Application Security and so on. For more information on Netscaler ingress controller, see [Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/).
 
 ## Workloads on Amazon EKS
 
