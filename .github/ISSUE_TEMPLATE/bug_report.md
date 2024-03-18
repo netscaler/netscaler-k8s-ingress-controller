@@ -10,9 +10,6 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**Participate**
-You can reach out for any questions via our email: **netscaler-appmodernization@cloud.com**
-
 
 **To Reproduce**
 1. Steps
@@ -25,11 +22,13 @@ A clear and concise description of what you expected to happen.
 
 **Logs**
 
-kubectl logs
+kubectl logs 
 
-To facilitate a more efficient troubleshooting process and identify the issue, we recommend utilizing the [CIC Diagnostic tool](https://github.com/netscaler/modern-apps-toolkit/tree/main/cic_diagnostics_tool). This tool will gather deployment logs and other essential details that are crucial for our analysis.
-
+To facilitate a more efficient troubleshooting process and identify the issue, we recommend utilizing the [NSIC Diagnostic tool](https://github.com/netscaler/modern-apps-toolkit/tree/main/cic_diagnostics_tool). This tool will gather deployment logs and other essential details that are crucial for our analysis.
 
 **Additional context**
 
 Add any other context about the problem here.
+
+
+If you need faster resolution or need to share logs, please feel free to reach out to us via email at **netscaler-appmodernization@cloud.com**. We'll be happy to assist you promptly.
