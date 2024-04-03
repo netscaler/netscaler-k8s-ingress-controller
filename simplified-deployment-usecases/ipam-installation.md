@@ -45,11 +45,11 @@ You must perform the following steps before installing Citrix IPAM controller:
 
 -  You need to install Netscaler ingress controller for your NetScaler VPX or MPX, and the VIP CRD. Use the following Helm commands:
 
-        helm repo add citrix https://citrix.github.io/citrix-helm-charts/
+        helm repo add netscaler https://netscaler.github.io/netscaler-helm-charts/
         
-        helm install demo1 citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,ingressClass[0]=netscaler,serviceClass[0]=netscaler,ipam=true,crds.install=true -n netscaler
+        helm install nsic netscaler/netscaler-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,ingressClass[0]=netscaler,serviceClass[0]=netscaler,ipam=true,crds.install=true -n netscaler
 
-    For detailed information on deploying and configuring Netscaler ingress controller using Helm charts see [the Helm chart repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller).
+    For detailed information on deploying and configuring Netscaler ingress controller using Helm charts see [the Helm chart repository](https://github.com/netscaler/netscaler-helm-charts/tree/master/netscaler-ingress-controller).
 
     **Note:**
      Make sure that you create a secret using the Tier-1 NetScaler VPX or MPX credentials before performing this step.
@@ -58,11 +58,11 @@ You must perform the following steps before installing Citrix IPAM controller:
 
 For deploying IPAM controller, use the following Helm command:
 
-    helm repo add citrix https://citrix.github.io/citrix-helm-charts/
+    helm repo add netscaler https://netscaler.github.io/citrix-helm-charts/
 
-    helm install demo2 citrix/citrix-ipam-controller --set vipRange='[{"cnn": ["<ip-range>"]}]' -n netscaler
+    helm install ipam netscaler/netscaler-ipam-controller --set vipRange='[{"cnn": ["<ip-range>"]}]' -n netscaler
 
-For information about all the configurable parameters that can be used while installing IPAM controller using Helm charts, see the [Helm chart repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ipam-controller).
+For information about all the configurable parameters that can be used while installing IPAM controller using Helm charts, see the [Helm chart repository](https://github.com/netscaler/netscaler-helm-charts/tree/master/citrix-ipam-controller).
 
 ## Use IPAM controller for services of type LoadBalancer
 
