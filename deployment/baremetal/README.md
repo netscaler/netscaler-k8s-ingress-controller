@@ -20,7 +20,7 @@ Perform the following step to deploy a Netscaler CPX along with an inbuilt Ingre
 
    1. Apply the following command to deploy a Netscaler CPX with the inbuilt ingress controller.
       ```
-          kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+          kubectl apply -f  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
       ```
 
 ## Deploy Netscaler ingress controller as a standalone pod
@@ -31,7 +31,7 @@ Perform the following steps to deploy the Netscaler ingress controller as a stan
 
  1. Download the `citrix-k8s-ingress-controller.yaml` using the following command.
     ```
-      wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
+      wget  https://raw.githubusercontent.com/netscaler/netscaler-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
     ```
                         
     This YAML file has four sections, in which the first three sections are for cluster role creation and service account creation. The
@@ -230,6 +230,10 @@ Perform the following steps to deploy the Netscaler ingress controller as a stan
         Enables configuring the scope of Netscaler ingress controller as `Role` or `ClusterRole` binding.
         You can set the value of the `SCOPE` environment variable as `local` or `cluster`. When you set this variable as `local`, Netscaler ingress controller is deployed with `Role` binding that has limited privileges. You can use this option when you want to deploy Netscaler ingress controller with minimal privileges for a particular namespace with `Role` binding. By default, the value of `SCOPE` is set as `cluster` and Netscaler ingress controller is deployed with the `ClusterRole` binding.
        </details>
+       <details>
+        <summary>POD_IPS_FOR_SERVICEGROUP_MEMBERS</summary>
+         By default, while configuring services of type LoadBalancer and NodePort on an external tier-1 Citrix ADC the Citrix ingress controller adds NodeIP and NodePort as service group members. If this variable is set as `True`, pod IP address and port are added instead of NodeIP and NodePort as service group members.
+        </details>
 
 1. Deploy the Netscaler ingress controller using the `kubectl create` command.
         
@@ -255,4 +259,4 @@ Perform the following steps to deploy the Netscaler ingress controller as a stan
 
       If the Kubernetes cluster and the Ingress Netscaler are in different subnets, you cannot establish a route between them using static routing. This scenario requires an overlay mechanism to establish a route between the Kubernetes cluster and the Ingress Netscaler.  
 
-      The [Citrix node controller](https://github.com/citrix/citrix-k8s-node-controller) is a microservice that you can use to create a VXLAN based overlay network between the cluster and the Ingress Netscaler device.
+      The [Citrix node controller](https://github.com/netscaler/netscaler-k8s-node-controller) is a microservice that you can use to create a VXLAN based overlay network between the cluster and the Ingress Netscaler device.
