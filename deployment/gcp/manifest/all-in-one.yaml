@@ -130,7 +130,7 @@ spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: quay.io/netscaler/netscaler-cpx:13.1-51.15
+          image: quay.io/netscaler/netscaler-cpx:14.1-17.38
           securityContext:
              privileged: true
           env:
@@ -165,7 +165,7 @@ spec:
               name: cpx-volume-conf
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
