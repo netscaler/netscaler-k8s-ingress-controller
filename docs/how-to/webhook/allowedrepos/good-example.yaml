@@ -6,4 +6,4 @@ metadata:
 spec:
   containers:
     - name: test-cic
-      image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
+      image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12
