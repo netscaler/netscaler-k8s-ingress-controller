@@ -56,7 +56,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.39.6
+        image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12
         imagePullPolicy: Always
         name: cic-k8s-ingress-controller
       - args:
@@ -65,7 +65,7 @@ spec:
         - name: EULA
           value: "YES"
         - name: KUBERNETES_TASK_ID
-        image: quay.io/netscaler/netscaler-cpx:13.1-51.15
+        image: quay.io/netscaler/netscaler-cpx:14.1-17.38
         imagePullPolicy: Always
         name: cpx-ingress
         ports:

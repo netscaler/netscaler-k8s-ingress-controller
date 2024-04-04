@@ -175,7 +175,7 @@ spec:
         - name: NS_PORT
           value: "9080"
         #Define the NITRO port here
-        image: quay.io/netscaler/netscaler-cpx:13.1-51.15
+        image: quay.io/netscaler/netscaler-cpx:14.1-17.38
         imagePullPolicy: IfNotPresent
         name: cpx-ingress
         ports:
@@ -260,7 +260,7 @@ spec:
           value: HOST
         #- name: "kubernetes_url"
         #  value: "https://10..xx.xx:6443"
-        image: quay.io/netscaler/netscaler-cpx:13.1-51.15
+        image: quay.io/netscaler/netscaler-cpx:14.1-17.38
         imagePullPolicy: IfNotPresent
         name: cpx
         securityContext:
