@@ -97,7 +97,7 @@ spec:
       serviceAccount: citrix
       containers:
       - name: cic
-        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12"
+        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.41.5"
         securityContext:
            privileged: true
         env:
