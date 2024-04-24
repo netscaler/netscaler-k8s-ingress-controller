@@ -104,7 +104,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12"
+          image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.41.5"
           env:
           - name: "EULA"
             value: "yes"

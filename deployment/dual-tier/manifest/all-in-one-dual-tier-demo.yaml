@@ -144,7 +144,7 @@ spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx-ingress
-          image: quay.io/netscaler/netscaler-cpx:14.1-17.38
+          image: quay.io/netscaler/netscaler-cpx:14.1-17.101
           tty: true
           securityContext:
              privileged: true
@@ -163,7 +163,7 @@ spec:
               name: cpx-volume-conf
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:1.41.5
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
@@ -346,7 +346,7 @@ spec:
       serviceAccountName: cic-k8s-role
       containers:
       - name: cic-k8s-ingress-controller
-        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12"
+        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.41.5"
         env:
          # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
          - name: "NS_IP"
