@@ -25,7 +25,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
-        image: quay.io/netscaler/netscaler-cpx:14.1-17.38 
+        image: quay.io/netscaler/netscaler-cpx:14.1-17.101 
         imagePullPolicy: Always
         name: cpx-ingress
         resources: {}
@@ -88,7 +88,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.40.12" 
+        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.41.5" 
         imagePullPolicy: Always
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
