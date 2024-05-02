@@ -142,6 +142,9 @@ spec:
                               uri:
                                 type: string
                                 description: "Path to be probed for the health of gslb endpoint in case of http and https"
+                              customHeader:
+                                type: string
+                                description: "Custom header for monitoring"
                               respCode:
                                 type: integer
                                 description: "Response code expected to mark the gslb endpoint healthy in case of http and https"
