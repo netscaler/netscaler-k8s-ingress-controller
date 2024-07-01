@@ -88,7 +88,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.41.5" 
+        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:1.42.12" 
         imagePullPolicy: Always
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
