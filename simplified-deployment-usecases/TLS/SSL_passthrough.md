@@ -22,6 +22,7 @@ SSL passthrough is enabled for all services or host names provided in the Ingres
 
 To configure SSL passthrough on the Ingress NetScaler, you must define the `ingress.citrix.com/ssl-passthrough:` as shown in the following sample Ingress definition. You must also enable TLS for the host as shown in the example.
 
+```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -53,3 +54,5 @@ metadata:
 spec:
   controller: citrix.com/ingress-controller
 ---
+```
+
