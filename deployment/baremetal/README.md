@@ -242,7 +242,7 @@ Perform the following steps to deploy the Netscaler ingress controller as a stan
     This command pulls the latest image and brings up the Netscaler ingress controller.
                 
 
-    The official Netscaler ingress controller docker image is available at: <span style="color:red"> `quay.io/netscaler/netscaler-k8s-ingress-controller:1.42.12` </span>
+    The official Netscaler ingress controller docker image is available at: <span style="color:red"> `quay.io/netscaler/netscaler-k8s-ingress-controller:1.43.7` </span>
 
 
 2. Configure reachability to the pod network using one of the following.
