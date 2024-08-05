@@ -161,7 +161,7 @@ metadata:
   name: apigatewaypolicyinstance
 spec:
     api_definition:
-        repository: "https://code.citrite.net/scm/cnn/cic-gitops.git"
+        repository: "<repository_URL>"
         branch: "modify-test-branch"
         oas_secret_ref: "mysecret"
         files:

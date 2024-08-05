@@ -36,7 +36,7 @@ You must perform the following steps before installing Citrix IPAM controller:
             spec:
               containers:
               - name: cnn-website     
-                image: ns-local-docker.repo.citrite.net/apoorvak/cnnapp:v1    
+                image: quay.io/sample-apps/cnn-website:v1.0.0     
                 ports:
                 - name: http-80
                   containerPort: 80
