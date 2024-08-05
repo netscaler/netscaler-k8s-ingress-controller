@@ -214,7 +214,7 @@ Perform the following steps to leverage Vault auto-authentication.
                     value: <Tier 1 ADC IP-ADDRESS>
                     - name: EULA
                     value: "yes"
-                    image: in-docker-reg.eng.citrite.net/cpx-dev/kumar-cic:latest
+                    image: quay.io/citrix/citrix-k8s-ingress-controller:latest
                     imagePullPolicy: Always
                     name: cic-k8s-ingress-controller
                     volumeMounts:
