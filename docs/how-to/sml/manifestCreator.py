@@ -147,8 +147,8 @@ class cpxCic:
         self.name = cpxCicInput["name"]
         self.cicContainerName = "cic"
         self.cpxContainerName = "cpx"
-        self.cpxImage = "quay.io/netscaler/netscaler-cpx:14.1-25.109"
-        self.cicImage = "quay.io/netscaler/netscaler-k8s-ingress-controller:1.43.7"
+        self.cpxImage = "quay.io/netscaler/netscaler-cpx:14.1-25.111"
+        self.cicImage = "quay.io/netscaler/netscaler-k8s-ingress-controller:2.0.6"
         self.imagePullPolicy = "Always"
         self.readinessProbe = True
         self.serviceAccountName = "citrix"

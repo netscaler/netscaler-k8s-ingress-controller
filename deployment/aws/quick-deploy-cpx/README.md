@@ -12,28 +12,28 @@ This guide provides the step-by-step approach to deploy a Netscaler CPX on docke
 Use the following command to pull the CPX image from quay
 
 ```
-docker pull quay.io/netscaler/netscaler-cpx:14.1-25.109 
+docker pull quay.io/netscaler/netscaler-cpx:14.1-25.111 
 ```
 
 Use the following command to verify if CPX image is installed in docker images
 
 ```
 root@ubuntu:~# docker images | grep 'citrix-k8s-cpx-ingress'
-quay.io/citrix/citrix-k8s-cpx-ingress                  14.1-25.109          952a04e73101        2 months ago        469 MB
+quay.io/citrix/citrix-k8s-cpx-ingress                  14.1-25.111          952a04e73101        2 months ago        469 MB
 ```
 
 ## Using 'docker run' command to deploy CPX container:
 Use the following command to create a CPX container instance running in bridge mode
 
 ```
-docker run -dt -P --privileged=true -e EULA=yes --ulimit core=-1 --name cpx-hello-world quay.io/netscaler/netscaler-cpx:14.1-25.109 
+docker run -dt -P --privileged=true -e EULA=yes --ulimit core=-1 --name cpx-hello-world quay.io/netscaler/netscaler-cpx:14.1-25.111 
 ```
 
 Use the following command to verify if the CPX container is created successfully
 
 ```
 root@ubuntu:~# docker ps | grep cpx-hello-world
-00d58f020a9e        quay.io/netscaler/netscaler-cpx:14.1-25.109   "/var/netscaler/bi..."   5 seconds ago       Up 3 seconds        0.0.0.0:33122->22/tcp, 0.0.0.0:32770->161/udp, 0.0.0.0:33121->9080/tcp, 0.0.0.0:33120->9443/tcp   cpx-hello-world
+00d58f020a9e        quay.io/netscaler/netscaler-cpx:14.1-25.111   "/var/netscaler/bi..."   5 seconds ago       Up 3 seconds        0.0.0.0:33122->22/tcp, 0.0.0.0:32770->161/udp, 0.0.0.0:33121->9080/tcp, 0.0.0.0:33120->9443/tcp   cpx-hello-world
 ```
 
 If the above verification fails, please check container logs for the error logs
