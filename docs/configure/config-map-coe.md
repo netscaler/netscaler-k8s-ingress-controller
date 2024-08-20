@@ -70,8 +70,10 @@ data:
       enable: 'false'
       samplingrate: 100
     endpoint:
-      server: '1.1.1.1'
-      service: 'default/coe-kafka'
+      metrics:
+        service: '1.1.1.1'
+      transactions:
+        service: 'default/coe-kafka'
     timeseries:
       port: 5563
       metrics:
@@ -102,12 +104,23 @@ mapping:
     type: map
     mapping:
       endpoint:
-        required: yes
+        required: false
         type: map
         mapping:
-          server:
-            required: yes
-            type: str
+          metrics:
+            required: false
+            type: map
+            mapping:
+              service:
+                required: false
+                type: str
+          transactions:
+            required: false
+            type: map
+            mapping:
+              service:
+                required: false
+                type: str
       distributed_tracing:
         required: no
         type: map

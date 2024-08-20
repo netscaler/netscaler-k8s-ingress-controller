@@ -251,7 +251,8 @@ data:
        enable: 'false'
        samplingrate: 0
      endpoint:
-       server: 'coe-es.default.svc.cluster.local'
+       metrics:
+         service: 'coe-es.default.svc.cluster.local'
      timeseries: 
        port: 5563 
        metrics:

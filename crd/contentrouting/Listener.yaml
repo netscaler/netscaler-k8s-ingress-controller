@@ -31,10 +31,13 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+              multicluster:
+                description: "Is the csvserver IP shared by multiclusters and CICs"
+                type: boolean
               protocol:
                 type: string
-                enum: ["https", "http"]
+                enum: ["tcp", "udp", "https", "http"]
                 description: "Protocol for this listener"
               vip:
                 type: string
@@ -104,7 +107,7 @@ spec:
                     - required: ["config"]
                   tcpprofile:
                     type: object
-                    description: "TCP level configurations, uses  ns tcpprofile of Netscaler"
+                    description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
                     properties:
                       preconfigured:
                         description: "Preconfigured or Built-in TCP profile name"
@@ -130,7 +133,7 @@ spec:
                         type: string
                         description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
                       config:
-                        description: "Netscaler frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                        description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
                         type: object
                         additionalProperties:
                           type: string
@@ -233,12 +236,12 @@ spec:
                                 description: "Use Secure communications to the backends"
                                 type: boolean
                               lbConfig:
-                                description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
                               servicegroupConfig:
-                                description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
@@ -256,7 +259,7 @@ spec:
                         description: "Host name specified is used for redirection with URL intact"
                         type: string
                       targetExpression:
-                        description: "A target can be specified using Netscaler policy expression"
+                        description: "A target can be specified using Citrix ADC policy expression"
                         type: string
                       responseCode:
                         description: "Default response code is 302, which can be customised using this attribute"
