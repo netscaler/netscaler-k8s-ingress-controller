@@ -29,7 +29,8 @@ data:
       enable: {{ .Values.coeConfig.distributedTracing.enable | quote }}
       samplingrate: {{ .Values.coeConfig.distributedTracing.samplingrate }}
     endpoint:
-      server: {{ include "analytics.server" . | quote }}
+      metrics:
+        service: {{ include "analytics.server" . | quote }}
     timeseries:
       port: {{ .Values.coeConfig.timeseries.port }}
       metrics:
