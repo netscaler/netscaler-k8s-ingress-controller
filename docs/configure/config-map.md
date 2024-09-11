@@ -97,7 +97,7 @@ Perform the following to configure ConfigMap support for the Netscaler ingress c
                 serviceAccountName: cic-k8s-role
                 containers:
                 - name: cic-k8s-ingress-controller
-                  image: "quay.io/netscaler/netscaler-k8s-ingress-controller:2.0.6"
+                  image: "quay.io/netscaler/netscaler-k8s-ingress-controller:2.1.4"
                   env:
                   # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
                   - name: "NS_IP"
