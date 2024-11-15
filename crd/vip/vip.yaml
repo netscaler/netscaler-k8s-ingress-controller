@@ -47,8 +47,11 @@ spec:
                 type: string
               kind:
                 type: string
-                enum: ["service", "ingress"]
+                enum: ["service", "ingress", "listener"]
               description:
                 type: string
               range-name:
                 type: string
+              multicluster:
+                description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
+                type: boolean
