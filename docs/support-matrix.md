@@ -58,8 +58,8 @@ The following table lists the various deployment topologies supported by the Net
 | Deployment Topologies | GKE | EKS | AKS (Basic mode - Kubenet) | AKS (Advanced mode - Azure CNI) |
 | --------------------- |  --------------------------- | ------------------------- | --------------- | ----------------- |
 | Single-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Netscaler VPX in tier-1) | Yes | Yes | Yes | Yes | |
-| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Netscaler VPX in tier-1 and Netscaler CPXs in tier-2) | Yes | No | Yes | Yes |
-| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Cloud LB in tier-1 and Netscaler CPXs in tier-2) | Yes | No | Yes | Yes |
+| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Netscaler VPX in tier-1 and Netscaler CPXs in tier-2) | Yes | Yes | Yes | Yes |
+| Dual-Tier [Cloud](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deployment-topologies/#cloud-topology) topology (Cloud LB in tier-1 and Netscaler CPXs in tier-2) | Yes | Yes | Yes | Yes |
 
 ## Supported Netscaler ingress controller feature on platforms
 
