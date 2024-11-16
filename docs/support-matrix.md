@@ -105,7 +105,7 @@ The following table lists the Netscaler ingress controller features supported on
 | [OpenShift router sharding](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-openshift-sharding/) | 1.2.0 and later | 12.1–51.16 and later | 13.0–36.28 and later |
 |[Simplified canary using Ingress](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/canary/canary/#simplified-canary-deployment-using-ingress-annotations) | Version 1.13.15 and later | 11.1–61.7 and later | 12.1–51.16 and later|
 |[Cross-origin resource sharing policies](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/cors/)|Version 1.17.13 and later | 11.1–61.7 and later | 12.1–51.16 and later|
-
+|[ICAP policies](https://docs.netscaler.com/en-us/netscaler-k8s-ingress-controller/crds/icap)|Version 2.2.10 and later | 14.1-25.56 and later | N/A|
 ## Container network interfaces (CNIs) for Netscaler CPX
 
 The following table lists the Container network interfaces (CNIs) supported by Netscaler CPX:
