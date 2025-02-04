@@ -131,7 +131,7 @@ spec:
       serviceAccountName: cpx
       containers:
         - name: cpx-ingress
-          image: quay.io/netscaler/netscaler-cpx:14.1-25.111
+          image: quay.io/netscaler/netscaler-cpx:14.1-38.53
           securityContext:
              privileged: true
           env:
