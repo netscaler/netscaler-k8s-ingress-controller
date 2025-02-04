@@ -1241,7 +1241,7 @@ spec:
           value: 'yes'
         - name: KUBERNETES_TASK_ID
           value: ''
-        image: quay.io/netscaler/netscaler-cpx:14.1-25.111
+        image: quay.io/netscaler/netscaler-cpx:14.1-38.53
         imagePullPolicy: Always
         name: cpx
         ports:
