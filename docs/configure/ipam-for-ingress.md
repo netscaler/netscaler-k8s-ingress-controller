@@ -57,7 +57,7 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
               serviceAccountName: cic-k8s-role
               containers:
               - name: cic-k8s-ingress-controller
-                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:2.3.15"
+                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:2.2.10"
                 env:
                   - name: "NS_IP"
                     value: "x.x.x.x"
@@ -119,7 +119,7 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
               serviceAccountName: citrix-ipam-controller
               containers:
               - name: citrix-ipam-controller
-                image: quay.io/netscaler/netscaler-ipam-controller:2.1.2
+                image: quay.io/netscaler/netscaler-ipam-controller:2.0.1
                 env:
                 # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
                 - name: "VIP_RANGE"
