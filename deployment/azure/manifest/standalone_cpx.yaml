@@ -130,7 +130,7 @@ spec:
               name: cpx-volume-conf
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/netscaler/netscaler-k8s-ingress-controller:2.3.15
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:2.2.10
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data
