@@ -55,7 +55,7 @@ spec:
      spec:
        serviceAccountName: citrix-ipam-controller
        containers:
-       - image: quay.io/netscaler/netscaler-ipam-controller:2.0.1
+       - image: quay.io/netscaler/netscaler-ipam-controller:2.1.2
          imagePullPolicy: IfNotPresent
          name: citrix-ipam-controller
          env:
