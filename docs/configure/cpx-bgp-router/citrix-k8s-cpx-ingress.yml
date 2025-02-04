@@ -25,7 +25,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
-        image: quay.io/netscaler/netscaler-cpx:14.1-25.111 
+        image: quay.io/netscaler/netscaler-cpx:14.1-38.53 
         imagePullPolicy: Always
         name: cpx-ingress
         resources: {}
