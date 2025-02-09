@@ -207,11 +207,9 @@ spec:
                         reset:
                           type: string
                           description: 'Use this option when you want to Reset the client connection by closing it when request matches to policy.'
-                          properties:
                         drop:
                           type: string
                           description: 'Use this option when you want to drop the request without sending a response to the user when request matches to policy.'
-                          properties:
                         respond-criteria:
                           description: 'Default syntax expression that the policy uses to determine whether to respond to the specified request.'
                           type: string
@@ -427,24 +425,14 @@ spec:
                       type: string
                       maxLength: 255
                   allOf:
-                  - properties:
-                    required: [name, server_ip, server_port]
-                  - properties:
-                    oneOf:
-                    - properties:
-                      required: [full_req_expr]
-                    - properties:
-                      anyOf:
-                      - properties:
-                        required: [http_method]
-                      - properties:
-                        required: [host_expr]
-                      - properties:
-                        required: [url_stem_expr]
-                      - properties:
-                        required: [headers]
-                      - properties:
-                        required: [parameters]
-                      - properties:
-                        required: [body_expr]
+                  - required: [name, server_ip, server_port]
+                  - oneOf:
+                    - required: [full_req_expr]
+                    - anyOf:
+                      - required: [http_method]
+                      - required: [host_expr]
+                      - required: [url_stem_expr]
+                      - required: [headers]
+                      - required: [parameters]
+                      - required: [body_expr]
             anyOf: [required: [rewrite-policies], required: [responder-policies]]
