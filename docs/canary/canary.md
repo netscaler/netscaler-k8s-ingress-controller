@@ -40,7 +40,7 @@ GitHub has many utilities available for integrating with other tools that form p
 
 Following Citrix software versions are required for Citrix-Integrated Canary Deployment Solution:
 
--  Netscaler ingress controller build/version: `quay.io/netscaler/netscaler-k8s-ingress-controller:2.3.15`.
+-  Netscaler ingress controller build/version: `quay.io/netscaler/netscaler-k8s-ingress-controller:3.0.5`.
 -  Netscaler CPX version: `quay.io/netscaler/netscaler-cpx:14.1-38.53`.
 -  Netscaler Metrics Exporter version: `quay.io/netscaler/netscaler-adc-metrics-exporter:1.5.0`.
 
