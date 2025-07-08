@@ -105,7 +105,7 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
           serviceAccountName: cic-k8s-role
           containers:
           - name: cic-k8s-ingress-controller
-            image: "quay.io/netscaler/netscaler-k8s-ingress-controller:3.0.5"
+            image: "quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34"
             env:
             # Set Netscaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
               - name: "NS_IP"
