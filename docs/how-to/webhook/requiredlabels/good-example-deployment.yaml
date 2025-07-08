@@ -20,4 +20,4 @@ spec:
     spec:
       containers:
       - name: test
-        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:3.0.5"
+        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34"
