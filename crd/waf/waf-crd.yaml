@@ -95,6 +95,28 @@ spec:
                     items:
                       type: string
                       description: "header name"
+              exclude:
+                description: 'To control what traffic to be excluded by Web Application Firewall. If you do not provide the exclude list, nothing will be skipped by default explicitly'
+                type: object
+                properties:
+                  path:
+                    type: array
+                    description: "List of http urls to exclude"
+                    items:
+                      type: string
+                      description: "URL path"
+                  method:
+                    type: array
+                    description: "List of http methods to exclude"
+                    items:
+                      type: string
+                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT', 'UNKNOWN_METHOD']
+                  header:
+                    type: array
+                    description: "List of http headers to exclude"
+                    items:
+                      type: string
+                      description: "header name"
               security_checks:
                 description: 'To enable/disable application firewall security checks'
                 type: object
