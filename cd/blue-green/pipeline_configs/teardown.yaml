@@ -1,0 +1,52 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - cd/blue-green/deployment_configs/teardown.json
+
+pool: <Your Azure Pipeline Agent Pool Name>
+
+stages:
+- stage:
+  jobs:
+  - job: TearDown
+    displayName: Delete Configuration
+    pool: <Your Azure Pipeline Agent Pool Name>
+    steps:
+    - task: PythonScript@0
+      displayName: 'Update Pipeline variables for deleting existing config on ADC'
+      inputs:
+        scriptPath: '$(System.DefaultWorkingDirectory)/cd/blue-green/pipeline_configs/read_config.py'
+        arguments: --config_file $(System.DefaultWorkingDirectory)/cd/blue-green/deployment_configs/teardown.json --action delete
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.13.5'
+      displayName: 'Install Terraform'
+      condition:  and(succeeded(), eq(variables['TEARDOWN_FLAG'], true))
+    - task: TerraformCLI@0
+      inputs:
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/cd/blue-green/adc_configs'
+        allowTelemetryCollection: false
+        commandOptions: '-backend-config="path=/tmp/tfstates/$(DEPLOYMENT_VERSION).tfstate"'
+        backendType: local
+      displayName: 'terraform init'
+      condition:  and(succeeded(), eq(variables['TEARDOWN_FLAG'], true))
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script:  |
+          cd '$(System.DefaultWorkingDirectory)/cd/blue-green/adc_configs'
+          '$(Agent.ToolsDirectory)/terraform/0.13.5/x64/terraform' state rm "citrixadc_csvserver.demo_csvserver"
+      displayName: 'Exclude csvs resource deletion from Terraform state file'
+      condition:  and(succeeded(), eq(variables['TEARDOWN_FLAG'], true))
+    - task: TerraformCLI@0
+      displayName: 'terraform destroy'
+      inputs:
+        command: destroy
+        workingDirectory: '$(System.DefaultWorkingDirectory)/cd/blue-green/adc_configs'
+        environmentServiceName: '<Your Azure subscription ID>'
+        allowTelemetryCollection: false
+      condition:  and(succeeded(), eq(variables['TEARDOWN_FLAG'], true))

@@ -1,0 +1,200 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: tea-beverage
+  name: tea-beverage
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tea-beverage
+  template:
+    metadata:
+      labels:
+        app: tea-beverage
+    spec:
+      containers:
+      - image: quay.io/sample-apps/hotdrinks:v1
+        name: tea-beverage
+        ports:
+        - containerPort: 80
+          name: tea-80
+        - containerPort: 443
+          name: tea-443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea-beverage
+spec:
+  clusterIP: None
+  ports:
+  - name: tea-80
+    port: 80
+    targetPort: 80
+  - name: tea-443
+    port: 443
+    targetPort: 443
+  selector:
+    app: tea-beverage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: coffee-beverage
+  name: coffee-beverage
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: coffee-beverage
+  template:
+    metadata:
+      labels:
+        app: coffee-beverage
+    spec:
+      containers:
+      - image: quay.io/sample-apps/hotdrinks:v1
+        name: coffee-beverage
+        ports:
+        - containerPort: 80
+          name: coffee-80
+        - containerPort: 443
+          name: coffee-443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coffee-beverage
+spec:
+  clusterIP: None
+  ports:
+  - name: coffee-80
+    port: 80
+    targetPort: 80
+  - name: coffee-443
+    port: 443
+    targetPort: 443
+  selector:
+    app: coffee-beverage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-hotdrinks
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-hotdrinks
+  template:
+    metadata:
+      labels:
+        app: frontend-hotdrinks
+    spec:
+      containers:
+      - image: quay.io/sample-apps/hotdrinks:v1
+        name: frontend-hotdrinks
+        ports:
+        - containerPort: 80
+          name: hotdrinks-80
+        - containerPort: 443
+          name: hotdrinks-443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-hotdrinks
+spec:
+  clusterIP: None
+  ports:
+  - name: hotdrinks-80
+    port: 80
+    targetPort: 80
+  - name: hotdrinks-443
+    port: 443
+    targetPort: 443
+  selector:
+    app: frontend-hotdrinks
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/secure_backend: '{"coffee-beverage": "True"}'
+  name: hotdrinks-ingress
+spec:
+  ingressClassName: hotdrink
+  rules:
+  - host: hotdrink.beverages.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend-hotdrinks
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: tea
+    http:
+      paths:
+      - backend:
+          service:
+            name: tea-beverage
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: coffee
+    http:
+      paths:
+      - backend:
+          service:
+            name: coffee-beverage
+            port:
+              number: 443
+        path: /
+        pathType: Prefix
+  tls:
+  - secretName: hotdrink-secret
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: hotdrink
+spec:
+  controller: citrix.com/ingress-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea
+spec:
+  ports:
+  - name: hotdrinks-80
+    port: 80
+    targetPort: 80
+  - name: hotdrinks-443
+    port: 443
+    targetPort: 443
+  selector:
+    app: cpx-ingress
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coffee
+spec:
+  ports:
+  - name: hotdrinks-80
+    port: 80
+    targetPort: 80
+  - name: hotdrinks-443
+    port: 443
+    targetPort: 443
+  selector:
+    app: cpx-ingress
+---

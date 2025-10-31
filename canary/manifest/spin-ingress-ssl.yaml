@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/secure-backend: '{"spin-deck":"True", "spin-gate":"True"}'
+  labels:
+    app: spin
+    cluster: spin-ingress
+  name: spin-ingress
+  namespace: spinnaker
+spec:
+  ingressClassName: canarydemo
+  rules:
+  - host: spinnaker.example.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: spin-deck
+            port:
+              number: 9000
+        path: /
+        pathType: Prefix
+  - host: spinnaker-api.example.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: spin-gate
+            port:
+              number: 8084
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - spinnaker.example.com
+    secretName: newcert
+  - hosts:
+    - spinnaker-api.example.com
+    secretName: newcert
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: canarydemo
+spec:
+  controller: citrix.com/ingress-controller
+---

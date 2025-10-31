@@ -1,0 +1,54 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - cd/blue-green/deployment_configs/setup_config.json
+
+pool: <Your Azure Pipeline Agent Pool Name>
+
+stages:
+- stage:
+  jobs:
+  - job: Deploy
+    displayName: Configure ADC
+    pool: <Your Azure Pipeline Agent Pool Name>
+    steps:
+    - task: PythonScript@0
+      displayName: 'Update Pipeline variables'
+      inputs:
+        scriptPath: '$(System.DefaultWorkingDirectory)/cd/blue-green/pipeline_configs/read_config.py'
+        arguments: --config_file $(System.DefaultWorkingDirectory)/cd/blue-green/deployment_configs/setup_config.json --action 'create'
+    
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+      displayName: 'Install Terraform 0.13.5'
+      inputs:
+        terraformVersion: 0.13.5
+
+    - task: TerraformCLI@0
+      inputs:
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/cd/blue-green/adc_configs'
+        allowTelemetryCollection: false
+        commandOptions: '-backend-config="path=/tmp/tfstates/$(DEPLOYMENT_VERSION).tfstate"'
+        backendType: local
+      displayName: 'terraform init'
+
+    - task: TerraformCLI@0
+      displayName: 'terraform plan'
+      inputs:
+        command: plan
+        workingDirectory: '$(System.DefaultWorkingDirectory)/cd/blue-green/adc_configs'
+        environmentServiceName: '<Your Azure subscription ID>'
+        commandOptions: '-var-file "$(System.DefaultWorkingDirectory)/$(ADC_CONFIG)" -var "resource_prefix=$(DEPLOYMENT_VERSION)" -var "traffic_weight=$(TRAFFIC_WEIGHT)"'
+        allowTelemetryCollection: false
+
+    - task: TerraformCLI@0
+      displayName: 'terraform apply'
+      inputs:
+        command: apply
+        workingDirectory: '$(System.DefaultWorkingDirectory)/cd/blue-green/adc_configs'
+        environmentServiceName: '<Your Azure subscription ID>'
+        commandOptions: '-var-file "$(System.DefaultWorkingDirectory)/$(ADC_CONFIG)" -var "resource_prefix=$(DEPLOYMENT_VERSION)" -var "traffic_weight=$(TRAFFIC_WEIGHT)"'
+        allowTelemetryCollection: false
