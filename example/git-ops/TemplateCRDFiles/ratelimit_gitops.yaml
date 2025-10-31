@@ -1,0 +1,13 @@
+apiVersion: citrix.com/v1beta1
+kind: ratelimit
+metadata:
+  name: ratelimit-gitops
+spec:
+  servicenames: []
+  selector_keys:
+   basic:
+    path: []
+    per_client_ip: true
+  req_threshold: 7
+  timeslice: 79000
+  throttle_action: "RESPOND"

@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/frontend-ip: '`VPX_VIP`'
+    ingress.citrix.com/insecure-port: '80'
+  name: cpx-ingress-vpx
+spec:
+  ingressClassName: cic-vpx
+  rules:
+  - host: www.guestbook.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: cpx-builtin
+            port:
+              number: 6080
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: cic-vpx
+spec:
+  controller: citrix.com/ingress-controller
+---

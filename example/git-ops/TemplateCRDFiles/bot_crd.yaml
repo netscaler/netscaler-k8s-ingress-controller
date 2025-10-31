@@ -1,0 +1,18 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+  name: botdefense
+spec:
+  servicenames: []
+  target:
+    path: []
+  security_checks:
+    block_list: "ON"
+  bindings:
+    block_list:
+      - subnet:
+          value: 192.2.160.0/24
+          action: ["log"]
+      - ip:
+          value: 192.2.159.131
+          action: ["log", "reset"]          

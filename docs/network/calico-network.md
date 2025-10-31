@@ -61,15 +61,15 @@ The Calico process that is part of the Kubernetes master node are:
 
 > Note: When you join a node to the Kubernetes cluster, a new *Calico node* is initiated on the Kubernetes node.
 
-### Configure BGP peer with Ingress Citrix ADC
+### Configure BGP peer with Ingress Netscaler
 
 Whenever you deploy an application after establishing the Calico network in the cluster, Kubernetes assigns an IP address from the IP address pool of Calico to the service associated with the application.
 
 [Border Gateway Protocol (BGP)](https://en.wikipedia.org/wiki/Border_Gateway_Protocol) uses [autonomous system number (AS number)](https://en.wikipedia.org/wiki/Autonomous_system_(Internet)) to identify the remote nodes. The AS number is a special number assigned by IANA used primarily with BGP to identify a network under a single network administration that uses unique routing policy.
 
-#### Configure BGP on Kubernetes using Ingress Citrix ADC
+#### Configure BGP on Kubernetes using Ingress Netscaler
 
-Using a YAML file, you can apply BGP configuration of a remote node using the `kubectl create` command. In the YAML file, you need to add the peer IP address and the AS number. The peer IP address is the Ingress Citrix ADC IP address and the AS number is the AS number that is used in the Ingress Citrix ADC.
+Using a YAML file, you can apply BGP configuration of a remote node using the `kubectl create` command. In the YAML file, you need to add the peer IP address and the AS number. The peer IP address is the Ingress Netscaler IP address and the AS number is the AS number that is used in the Ingress Netscaler.
 
 #### Obtain the AS Number of the cluster
 
@@ -89,19 +89,19 @@ kind: BGPPeer  # BGPPeer specifies that its Global peering.
 metadata:
     name: bgppeer-global-3040  # The name of the configuration
 spec:
-    peerIP: 10.102.33.208  # IP address of the Ingress Citrix ADC
-    asNumber: 500  # AS number configured on the Ingress Citrix ADC
+    peerIP: 10.102.33.208  # IP address of the Ingress Netscaler
+    asNumber: 500  # AS number configured on the Ingress Netscaler
 ```
 
 Deploy the definition file using the following command:
 
     > kubectl create -f bgp.yml
 
-#### Add the BGP configurations on the Ingress Citrix ADC
+#### Add the BGP configurations on the Ingress Netscaler
 
 Perform the following:
 
-1. Log on to the Citrix ADC command-line interface.
+1. Log on to the Netscaler command-line interface.
 
 2. Enable the BGP feature using the following command:
 
@@ -157,7 +157,7 @@ Perform the following:
         ns(config-router)#
     In the sample, the AS number of Calico is 64512, you can change this number as per your requirement.
 
-8. Install the BGP routes to Citrix ADC routing table using the following command:
+8. Install the BGP routes to Netscaler routing table using the following command:
 
         ns(config)#ns route-install bgp
         ns(config)#exit
@@ -167,7 +167,7 @@ Perform the following:
 
     ![Sh route](../media/sh-route.png)
 
-Once the route is installed, the Citrix ADC is able to communicate with services that are present in the Kubernetes cluster:
+Once the route is installed, the Netscaler is able to communicate with services that are present in the Kubernetes cluster:
 
 ![Summary](../media/summary.png)
 

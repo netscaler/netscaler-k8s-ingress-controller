@@ -1,55 +1,77 @@
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apache-only-http
   labels:
-      name: apache-only-http
+    name: apache-only-http
+  name: apache-only-http
 spec:
+  progressDeadlineSeconds: 600
+  replicas: 4
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: apache-only-http
-  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: apache-only-http
     spec:
       containers:
-      - name: apache-only-http
-        image: "raghulc/apache-multiport-http:1.0.0"
+      - image: raghulc/apache-multiport-http:1.0.0
+        imagePullPolicy: IfNotPresent
+        name: apache-only-http
         ports:
-        # All HTTP Ports
         - containerPort: 80
+          protocol: TCP
         - containerPort: 5080
+          protocol: TCP
         - containerPort: 5081
+          protocol: TCP
         - containerPort: 5082
+          protocol: TCP
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apache-only-ssl
   labels:
-      name: apache-only-ssl
+    name: apache-only-ssl
+  name: apache-only-ssl
 spec:
+  progressDeadlineSeconds: 600
+  replicas: 4
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: apache-only-ssl
-  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: apache-only-ssl
     spec:
       containers:
-      - name: apache-only-ssl
-        image: "raghulc/apache-multiport-ssl:1.0.0"
+      - image: raghulc/apache-multiport-ssl:1.0.0
+        imagePullPolicy: IfNotPresent
+        name: apache-only-ssl
         ports:
-        # All SSL Ports
         - containerPort: 443
+          protocol: TCP
         - containerPort: 5443
+          protocol: TCP
         - containerPort: 5444
+          protocol: TCP
         - containerPort: 5445
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service

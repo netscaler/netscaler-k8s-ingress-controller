@@ -12,53 +12,13 @@ spec:
     termination: edge
 
     key: |-                      
-      -----BEGIN RSA PRIVATE KEY-----
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      ***REMOVED***
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      ----BEGIN RSA PRIVATE KEY-----
+          
+          [...]
       
       -----END RSA PRIVATE KEY-----
 
     certificate: |-              
       -----BEGIN CERTIFICATE-----
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      GbqIML4OOBN+8pwByFp7T+3xAQ==
+          [...]
       -----END CERTIFICATE-----

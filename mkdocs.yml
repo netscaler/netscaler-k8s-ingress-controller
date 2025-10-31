@@ -1,55 +1,63 @@
 # Project information
-site_name: Citrix ingress controller for Kubernetes
+site_name: Netscaler ingress controller for Kubernetes 
 site_title: Developer Docs
-site_description: Documentation for the Citrix ingress controller for Kubernetes
+site_description: Ingress Controller configures Kubernetes ingress & Service Type LoadBalancer on Netscalers. Supports OpenShift, Rancher on baremetal as well as AKS, GKE and EKS
 site_author:
-site_url: 
+site_url: https://developer-docs.citrix.com
 
 # Repository
-repo_name: "Citrix Ingress Controller"
-repo_url: "https://github.com/citrix/citrix-k8s-ingress-controller"
+repo_name: "Netscaler ingress controller"
+repo_url: "https://github.com/netscaler/netscaler-k8s-ingress-controller"
 edit_uri: "edit/master/docs"
 
+# Feedback
+
+issues_uri: https://github.com/netscaler/netscaler-k8s-ingress-controller/issues/new
+assignees_uri:
+  - sreejithgs
+labels_uri:
+  - documentation
+
 # Copyright
-copyright: 'Copyright &copy; 1999-2019 Citrix Systems, Inc. All rights reserved. '
+copyright: 'Copyright &copy; 1999-2021 Citrix Systems, Inc. All rights reserved.'
 
 extra_css:
   - 'assets/stylesheets/extra.css'
+  - https://use.fontawesome.com/releases/v5.12.1/css/all.css
+
 
 # Configuration
 theme:
   name: null
-  custom_dir: material
-
+  custom_dir: devdocs-theme
+  
   # 404 page
   static_templates:
     - 404.html
-
+  
   # Don't include MkDocs' JavaScript
   include_search_page: false
   search_index_only: true
-
+  
   # Default values, taken from mkdocs_theme.yml
   language: en
-  feature:
-    tabs: false
   palette:
-    primary: white
-    accent: blue
+    primary: teal
+    accent: teal
   font: false
-  favicon: /media/favicon.ico
-  logo: https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png
+  favicon: https://docs.citrix.com/assets/images/favicon.ico
+  logo: https://developer-docs.citrix.com/_static/logo.svg
+  icon: fontawesome
 
-# Customization
 extra:
   social:
-    - type: youtube
+    - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UCiOupk9QF6jdk3EDKTHDykA
-    - type: github-alt
+    - icon: fontawesome/brands/github-alt
       link: https://github.com/citrix
-    - type: twitter
+    - icon: fontawesome/brands/twitter
       link: https://twitter.com/citrixdeveloper
-    - type: linkedin
+    - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/citrix/
 
 markdown_extensions:
@@ -57,17 +65,19 @@ markdown_extensions:
   - codehilite
   - toc:
       permalink: true
-  - footnotes
-  - meta
-  - extra
+
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
+      prebuild_index: true
 
 # Page tree
 nav:
   - Overview: index.md
-  - Release notes: https://github.com/citrix/citrix-k8s-ingress-controller/releases
+  - Release notes: https://github.com/netscaler/netscaler-k8s-ingress-controller/releases
   - Supported platforms and deployments: support-matrix.md
   - Deployment topologies: deployment-topologies.md
-  - Deploy the Citrix ingress controller: 
+  - Deploy Netscaler ingress controller: 
     - Using YAML: deploy/deploy-cic-yaml.md
     - Using Helm charts: deploy/deploy-cic-helm.md
     - Using Kops: deploy/deploy-cic-kops.md
@@ -75,61 +85,105 @@ nav:
     - On PKS: deploy/deploy-pks.md
   - Expose services of type LoadBalancer: network/type_loadbalancer.md
   - Deployment solutions:
-    - Deploy the Citrix ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
-    - Deploy the Citrix ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
-    - Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
-    - Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
-    - Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller: deploy/deploy-eks-elb.md
-    - Deploy the Citrix ingress controller for Citrix ADC with admin partitions: deploy/deploy-cic-adc-admin-partition.md
-  - Citrix ADC Integrated canary deployment solution (beta): canary/canary.md
+    - Deploy the Netscaler ingress controller as an OpenShift router: deploy/deploy-cic-openshift.md
+    - Deploy the Netscaler ingress controller with OpenShift router sharding support: deploy/deploy-openshift-sharding.md
+    - Deploy the Netscaler ingress controller using OpenShift Operator : deploy/deploy-cic-openshift-operator.md
+    - Deploy Netscaler CPX as an Ingress in Azure Kubernetes Engine: deploy/deploy-azure.md
+    - Deploy Netscaler ingress controller in an Azure Kubernetes Service cluster with Netscaler VPX: deploy/deploy-azure-cic.md
+    - Deploy Netscaler CPX as an Ingress in Google Cloud Platform: deploy/deploy-gcp.md
+    - Deploy the Netscaler ingress controller in Anthos Platform: deploy/deploy-anthos.md
+    - Deploy Netscaler VPX in active-active high availability in EKS environment using Amazon ELB and Netscaler ingress controller: deploy/deploy-eks-elb.md
+    - Deploy the Netscaler ingress controller for Netscaler with admin partitions: deploy/deploy-cic-adc-admin-partition.md
+    - Citrix solution for service of type LoadBalancer in AWS: configure/service-type-lb-solution-in-aws.md
+  - Deploy Citrix API gateway: 
+    - Deploy the Citrix API gateway using OpenShift Operator: deploy/deploy-api-gateway-openshift.md
+    - Deploy the Citrix API gateway using Rancher: deploy/deploy-api-gateway-rancher.md
+    - Deploy the Citrix API Gateway with GitOps: deploy/deploy-api-gateway-using-gitops.md
+  - Netscaler Integrated canary deployment solution: canary/canary.md
     #- Software Requirements: canary.md#software-requirements
-    #- Workflow of a Spinnaker pipeline for Citrix ADC Integrated Canary Deployment Solution:
-    #- Deploy the Citrix ADC Integrated Canary Deployment Solution in Google cloud Platform:
+    #- Workflow of a Spinnaker pipeline for Netscaler Integrated Canary Deployment Solution:
+    #- Deploy the Netscaler Integrated Canary Deployment Solution in Google cloud Platform:
     #- Troubleshooting: 
+  - gslb ingress and load balancing solution: gslb/gslb.md
+  - Multi-cloud and gslb ingress and load balancing solution with Amazon EKS and Microsoft AKS clusters: deploy/multi-cloud-ingress-lb-solution.md 
   - Licensing: licensing.md
   - Configure:
     - Annotations: configure/annotations.md
+    - ConfigMap: configure/config-map.md
     - Ingress: configure/ingress-config.md
     - Ingress class: configure/ingress-classes.md
+    - Service class: configure/service-classes.md
     - HTTP, TCP or SSL Profiles: configure/profiles.md
     - Log levels: configure/log-levels.md
-  - Network:
+    - TCP profile support for services of type LoadBalancer: configure/TCP-profile-type-lb.md
+    - SSL certificate for services of type LoadBalancer through the Kubernetes secret resource: configure/service-type-lb-ssl-secret.md
+    - BGP advertisement for type LoadBalancer services and Ingresses using Netscaler CPX: configure/cpx-service-type-lb.md
+    - Netscaler CPX integration with MetalLB in layer 2 mode for on-premises Kubernetes clusters: configure/cpx-metal-lb.md
+    - Advanced content routing for Kubernetes Ingress using the HTTPRoute CRD: configure/advanced-content-routing-using-http-crd.md 
+    - Profile support for the Listener CRD: configure/profiles-for-listener-crd.md
+    - IP address management using the Citrix IPAM controller for Ingress resources: configure/ipam-for-ingress.md
+    - Apply CRDs using annotations: configure/crds-annotations.md 
+    - Add DNS records using Netscaler ingress controller: configure/add-dns-records.md
+  - Network: 
     - Static routing: network/staticrouting.md
-    - Establish network between K8s nodes and Ingress Citrix ADC using Citrix node controller: network/node-controller.md
+    - Establish network between K8s nodes and Ingress Netscaler using Citrix node controller: network/node-controller.md
     - Expose services of type NodePort: network/nodeport.md
     - Pod to pod communication using Calico: network/calico-network.md
+    - Enhancement to services of type LoadBalancer: network/bgp-enhancement.md
   - CRDs: 
     - Authentication: crds/auth.md
     - Rate limit: crds/rate-limit.md
     - Rewrite and Responder: crds/rewrite-responder.md
     - IPAM or VIP: crds/vip.md
+    - Content Routing: crds/content-routing.md
+    - Web application firewall: crds/waf.md
+    - Bot: crds/bot.md
+    - CORS: crds/cors.md
   - Certificate management:
     #- TLS certificate handling for multiple Ingress: certificate-management/tls-certificate-handling-multiple-ingress.md
-    #- TLS certificates in Citrix Ingress Controller: certificate-management/tls-certificate-handling.md
-    - TLS certificates handling in Citrix ingress controller: certificate-management/tls-certificates.md
-    - Install, link, and update certificates on Citrix ADC using the Citrix ingress controller: certificate-management/link-ca-certificate-chain.md
+    #- TLS certificates in Netscaler ingress controller: certificate-management/tls-certificate-handling.md
+    - TLS certificates handling in Netscaler ingress controller: certificate-management/tls-certificates.md
+    - TLS client authentication in Netscaler: certificate-management/client-auth-support.md
+    - TLS server authentication in Netscaler: certificate-management/server-auth.md
+    - Install, link, and update certificates on Netscaler using the Netscaler ingress controller: certificate-management/link-ca-certificate-chain.md
     - Configure SSL passthrough using Kubernetes Ingress: certificate-management/ssl-passthrough.md
     - Automated certificate management with cert-manager:
       - Introduction: certificate-management/certificate.md
-      - Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager: certificate-management/acme.md
+      - Deploy HTTPs web applications on K8s with CIC and Let's Encrypt using cert-manager: certificate-management/acme.md
       - Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager: certificate-management/vault.md
+    - Enable Netscaler certificate validation: certificate-management/adc-certificate-validation.md
+    - Disable API server certificate verification: certificate-management/disable-api.md
   - Metrics:
     - Integrate with Prometheus and Grafana: metrics/promotheus-grafana.md
-  - Troubleshooting: troubleshooting.md
-  - Upgrade: upgrade.md
+  - Analytics and observability: analytics.md
+  - Netscaler Observability Exporter support using ConfigMap: configure/config-map-coe.md
+  - Troubleshooting: 
+    - Troubleshooting: troubleshooting/troubleshooting.md
+    - Enable troubleshooting: troubleshooting/troubleshooting-cic.md
+    - Call Home: troubleshooting/call-home.md
+    - Upgrade: upgrade.md
+  - Service mesh lite: deploy/service-mesh-lite.md
   - Use cases:
-    - Service mesh lite: deploy/service-mesh-lite.md
     - Securing ingress: how-to/secure-ingress.md
     - TCP use cases: how-to/tcp-use-cases.md
     - HTTP use cases: how-to/http-use-cases.md
+    - HTTP call out: how-to/http-callout.md
     - Session affinity: how-to/session-affinity.md
-    - Whitelisting or Blacklisting IP addresses: how-to/ip-whitelist-blacklist.md
+    - Allowlisting or blocklisting IP addresses: how-to/ip-whitelist-blacklist.md
     - Interoperability with ExternalDNS: how-to/integrate-externaldns.md 
-    - Use Citrix ADC credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
+    - Use Netscaler credentials stored in Vault server: how-to/use-vault-stored-credentials-for-cic.md
+    - Use Kubernetes secrets for storing Netscaler credentials: how-to/secret-credentials.md
     - Load balance Ingress traffic to TCP or UDP based application: how-to/tcp-udp-ingress.md
     - Set up dual-tier deployment: how-to/deploy-cic-dual-tier.md
-  
+    - Horizontal pod autoscaler: how-to/cpx-hpa.md
+    - Direct server return: how-to/dsr.md
+    - Admission controller webhook: how-to/webhook-use-case.md
+    - Enable GRPC support: how-to/grpc.md
+    - Policy based routing: how-to/pbr.md
+    - MongoDB solution: how-to/MongoDB-single-tier-solution.md
+    - Canary and blue-green deployment using Azure pipelines: cd/canary-azure-pipline/canary-deployment-with-azure-pipelines.md
+    - Traffic management for external services: how-to/external-load-balance-adc.md
+  - Entity name change: entity-name-change.md
 google_analytics:
   - 'UA-59929653-12'
   - 'auto'
-  
