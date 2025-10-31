@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+   name: cpx-config
+data:
+  cpx.conf: |
+    #NetScaler Commands
+    add iptunnel  dsr 192.168.1.254 255.255.255.0 *

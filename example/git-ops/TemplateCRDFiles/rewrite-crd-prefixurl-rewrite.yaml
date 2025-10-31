@@ -1,0 +1,18 @@
+apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: prefixurl
+spec:
+  rewrite-policies:
+    - servicenames: []
+      rewrite-policy:
+        operation: replace
+        target: http.req.url
+        modify-expression: '"gitopswrite/production"+http.req.url'
+        comment: 'Some Prefix before a URL'
+        direction: REQUEST
+        rewrite-criteria: 'http.req.url.equals_any("urls")'
+ 
+  patset:
+    - name: urls
+      values: []

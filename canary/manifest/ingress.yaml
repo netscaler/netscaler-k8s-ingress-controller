@@ -1,16 +1,27 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  annotations: {}
   name: fronthotdrinksapp
   namespace: default
-  annotations:
-   kubernetes.io/ingress.class: canarydemo
 spec:
+  ingressClassName: canarydemo
   rules:
-  - host: canarydemo.com 
+  - host: canarydemo.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: fronthotdrinksapp
-          servicePort: 8080
+      - backend:
+          service:
+            name: fronthotdrinksapp
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: canarydemo
+spec:
+  controller: citrix.com/ingress-controller
+---

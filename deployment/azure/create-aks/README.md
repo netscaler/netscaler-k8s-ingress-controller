@@ -1,13 +1,10 @@
 # Create a Kubernetes cluster using Azure Kubernetes Engine (AKS)
 
 This guide explains the steps to create a basic Kubernetes cluster in AKS using Azure CLI.
-There are two ways to create a AKS cluster
+There are two ways to create a AKS cluster:
 
 - Using Kubenet CNI (Basic networking)
 - Using Azure CNI (Advanced networking)
-
-**Note:**
-We currently support only Azure Basic Networking (Kubenet CNI).
 
 #### Prerequisites:
 

@@ -1,5 +1,5 @@
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx-ingress-k8s-role
 rules:
@@ -24,19 +24,31 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
+    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits", "listeners", "httproutes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["citrix.com"]
+    resources: ["rewritepolicies/status", "canarycrds/status", "ratelimits/status", "authpolicies/status", "listeners/status", "httproutes/status"]
+    verbs: ["get", "list", "patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
     verbs: ["get", "list", "watch", "create", "delete"]
   - apiGroups: ["route.openshift.io"]
     resources: ["routes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["networks"]
+    verbs: ["get", "list"]
+  - apiGroups: ["network.openshift.io"]
+    resources: ["hostsubnets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["ipamblocks"]
+    verbs: ["get", "list", "watch"]
 
 ---
 
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cpx-ingress-k8s-role
 roleRef:
