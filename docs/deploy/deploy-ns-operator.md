@@ -50,7 +50,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 ### Prerequisites
 
 - Deployed [Red Hat OpenShift](https://www.openshift.com) version 4.1 or later.
-- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the NetScaler CPX collected by the [NetScaler metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the NetScaler CPX collected by the [NetScaler metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 - Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of NetScaler deployment:
     - (Standalone appliances) NSIP - The management IP address of a standalone NetScaler appliance. For more information, see [IP Addressing in NetScaler](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
     - (Appliances in High Availability mode) SNIP - The subnet IP address. For more information, see [IP Addressing in NetScaler](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html)
@@ -59,7 +59,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 
   You can directly pass the user name and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the user name and password using the following command:
   ```
-  kubectl create secret generic nslogin --from-literal=username='nic' --from-literal=password='mypassword'
+  kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
   ```
 
 ### Steps to deploy NetScaler Ingress Controller for apache application
@@ -68,7 +68,7 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 
 2. Deploy an Apache application using the console. Perform the following:
 
-    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
+    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
 
        ![Application Deployment](../media/application_deployment.png)
        > **NOTE:**
@@ -78,11 +78,11 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 
        ![Application pod](../media/application_pods.png)
 
-3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
+3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
    ![Application Service](../media/application_service.png)
 
-4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the NetScaler VPX in the ingress YAML before applying it in the cluster.
+4. Create an ingress for the apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-vpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-vpx.yaml) to create the ingress. Ensure that you update VIP of the NetScaler VPX in the ingress YAML before applying it in the cluster.
 
    ![Application Ingress](../media/application_ingress_vpx.png)
 
@@ -101,17 +101,18 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
 
-   Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the NetScaler VPX instance in the `nsIP` parameter and Kubernetes secret created using NetScaler VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. You can choose other available parameters as well depending upon your use-case.
+ > **NOTE:**
+   > Ensure to set the `license.accept` parameter to `yes`, provide the IP address of the NetScaler VPX instance in the `nsIP` parameter and Kubernetes secret created using NetScaler VPX credentials in `adcCredentialSecret` parameter respectively for this exercise. If CRDs are already installed, specify `crds.install=false`. You can choose other available parameters as well depending upon your use-case.
 
    After you have updated the values of the required parameters, click **Create**. Ensure your NetScaler Ingress Controller is succesfully deployed and initialised.
 
    ![NetScaler Ingress Controller Instance](../media/nic_instance_deployed.png)
 
-7. Navigate to **Workloads > Pods** section and ensure that the **netscaler-ingress-controller** pod is up and running.
+8. Navigate to **Workloads > Pods** section and ensure that the **netscaler-ingress-controller** pod is up and running.
 
    ![NetScalerIngress Controller Pod](../media/nic_pod.png)
 
-8. Verify the deployment by sending traffic as shown:
+9. Verify the deployment by sending traffic as shown:
    ```
    curl http://citrix-ingress-operator.com --resolve citrix-ingress-operator.com:80:<VIP>
    ```
@@ -119,6 +120,9 @@ Using the NetScaler operator you can deploy the NetScaler ingress controller as 
    ```
    <html><body><h1>It works!</h1></body></html>
    ```
+
+> **NOTE:**
+  Please make sure pod network in OpenShift cluster is reachable from NetScaler VPX/MPX if you are using service of type ClusterIP for your application. We have option to do this automatically using NSIC, see [this](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/310ae7eb1c8bdea57faa7f4556979a76822e23ec/docs/network/staticrouting.md)
 
 ### Steps to delete NetScaler Ingress Controller
 1. Navigate to **Operators > Installed Operators > NetScaler Operator**. Select **NetScaler Ingress Controller** tab inside. After that select the instance you want to delete and then select its **Delete NetScalerIngressController** option.
@@ -134,7 +138,7 @@ Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX w
 ### Prerequisites
 
 - Deployed [Red Hat Openshift](https://www.openshift.com) version 4.1 or later.
-- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the NetScaler CPX collected by the [NetScaler metrics exporter](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
+- Installed the [Prometheus Operator](https://github.com/coreos/prometheus-operator), if you want to view the metrics of the NetScaler CPX collected by the [NetScaler metrics exporter](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/metrics-visualizer#visualization-of-metrics).
 
 ### Steps to deploy Netscaler CPX with NetScaler ingress controller for apache application
 
@@ -142,7 +146,7 @@ Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX w
 
 2. Deploy an Apache application using the console. Perform the following:
 
-    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
+    1. Navigate to **Workloads > Deployments > Create Deployment** and use the [apache.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache.yaml) to create the deployment.
 
        ![Application Deployment](../media/application_deployment.png)
        > **NOTE:**
@@ -152,11 +156,11 @@ Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX w
 
        ![Application pod](../media/application_pods.png)
 
-3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
+3. Create a service for the Apache application. Navigate to **Networking > Services > Create Service** and use the [apache-service.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-service.yaml) to create the service.
 
    ![Application Service](../media/application_service.png)
 
-4. Create an Ingress for the Apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
+4. Create an Ingress for the Apache application. Navigate to **Networking > Ingresses > Create Ingress** and use the [apache-ingress-cpx.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/openshift/manifest/openshift-operator/apache-ingress-cpx.yaml) to create the ingress.
 
    ![Application CPX Ingress](../media/application_ingress_cpx.png)
 
@@ -174,7 +178,8 @@ Using the NetScaler ingress controller Operator you can deploy a NetScaler CPX w
 
    Please see [this](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-cpx-with-ingress-controller#configuration) table that lists the mandatory and optional parameters and their default values that you can configure during installation.
 
-   Ensure to set the `license.accept` parameter to `yes`. We will expose NetScaler CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. You can choose other available parameters as well depending upon your use-case.
+ > **NOTE:**
+  > Ensure to set the `license.accept` parameter to `yes`. We will expose NetScaler CPX service using kind `nodePort` to access the Apache application. For this please set `serviceType.nodePort.enabled` to `true`. If CRDs are already installed, specify `crds.install=false`. You can choose other available parameters as well depending upon your use-case. 
 
    After you have updated the values of the required parameters, click **Create**. Ensure your NetScaler CPX with Ingress Controller is succesfully deployed and initialised.
 

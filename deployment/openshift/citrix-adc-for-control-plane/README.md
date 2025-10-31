@@ -1,8 +1,8 @@
-# Citrix ADC as a load balancer for the OpenShift control plane
+# Netscaler as a load balancer for the OpenShift control plane
 
-You can use Citrix ADC for load balancing the OpenShift control plane (master nodes). Citrix provides a solution to automate the configuration of the Citrix ADC using [Terraform](https://www.terraform.io/) instead of manually configuring the Citrix ADC.
+You can use Netscaler for load balancing the OpenShift control plane (master nodes). Citrix provides a solution to automate the configuration of the Netscaler using [Terraform](https://www.terraform.io/) instead of manually configuring the Netscaler.
 
-## Configuring Citrix ADC for the OpenShift control plane using Terraform
+## Configuring Netscaler for the OpenShift control plane using Terraform
 
 **Prerequisites**
 
@@ -16,15 +16,15 @@ You must perform the following prerequisites:
     
     For installing Terraform on other operating systems, see the [official Terraform installation guide](https://learn.hashicorp.com/terraform/getting-started/install.html).
 
-- Download and install Citrix ADC Terraform provider plug-in from the [Citrix ADC Terraform Provider Official Repo](https://github.com/citrix/terraform-provider-citrixadc).
+- Download and install Netscaler Terraform provider plug-in from the [Netscaler Terraform Provider Official Repo](https://github.com/citrix/terraform-provider-citrixadc).
 
     You can download a release from the [releases page](https://github.com/citrix/terraform-provider-citrixadc/releases) and untar the binary into `~/.terraform.d/plugins/`.
 
-### Perform the following steps for configuring Citrix ADC for the OpenShift control plane using Terraform.
+### Perform the following steps for configuring Netscaler for the OpenShift control plane using Terraform.
 
 1. Clone the `citrix-k8s-ingress-controller` repository from GitHub using the following command.
 
-       git clone https://github.com/citrix/citrix-k8s-ingress-controller.git
+       git clone https://github.com/netscaler/netscaler-k8s-ingress-controller.git
     
 1. After cloning, change your directory using the following command.
 
@@ -48,10 +48,10 @@ You must perform the following prerequisites:
 
    | Variable | Description |
    |-------------------------------------|--------------------------------|
-   | `citrix_adc_ip`  | Management IP address of the Citrix ADC |
-   | `citrix_adc_username` | User name of the Citrix ADC |
-   | `citrix_adc_password` | Password of the Citrix ADC |
-   | `lb_ip_address`      | VIP for the Citrix ADC - provided in    the installer configuration file |
+   | `citrix_adc_ip`  | Management IP address of the Netscaler |
+   | `citrix_adc_username` | User name of the Netscaler |
+   | `citrix_adc_password` | Password of the Netscaler |
+   | `lb_ip_address`      | VIP for the Netscaler - provided in    the installer configuration file |
    | `api_backend_addresses` | Kubernetes control plane node IP addresses|
    | `ingress_backend_addresses` | Kubernetes compute node IP addresses |
 
@@ -60,9 +60,9 @@ You must perform the following prerequisites:
 
         terraform apply -var citrix_adc_ip="<citrix-adc-ip>" -var citrix_adc_username="<citrix-adc-username>" -var citrix_adc_password='<citrix-adc-password>' -var lb_ip_address="<vip-of-citrix-adc>" -var 'api_backend_addresses=["1.1.1.1","1.1.1.2","1.1.1.3"]' -var 'ingress_backend_addresses=["2.2.2.1","2.2.2.2","2.2.2.3"]' -auto-approve
 
-## Unconfiguring Citrix ADC (Optional)
+## Unconfiguring Netscaler (Optional)
 
-If the Citrix ADC configuration needs to be removed for some reason, you can use the `terraform destroy` command.
+If the Netscaler configuration needs to be removed for some reason, you can use the `terraform destroy` command.
 
 
         terraform destroy -var citrix_adc_ip="<citrix-adc-ip>" -var citrix_adc_username="<citrix-adc-username>" -var citrix_adc_password='<citrix-adc-password>' -var lb_ip_address="<vip-of-citrix-adc>" -var 'api_backend_addresses=["1.1.1.1","1.1.1.2","1.1.1.3"]' -var 'ingress_backend_addresses=["2.2.2.1","2.2.2.2","2.2.2.3"]' -auto-approve

@@ -1,8 +1,8 @@
 # Installing Citrix IPAM controller
 
-IPAM controller is an application provided by Citrix for IP address management and it runs in parallel to the Citrix ingress controller in the Kubernetes cluster. It automatically allocates IP addresses to services of type LoadBalancer and ingress resources from a specified IP address range.
+IPAM controller is an application provided by Citrix for IP address management and it runs in parallel to the Netscaler ingress controller in the Kubernetes cluster. It automatically allocates IP addresses to services of type LoadBalancer and ingress resources from a specified IP address range.
 
-The IPAM controller requires the [VIP](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/crds/vip.md) custom resource definition (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Citrix ingress controller and the Citrix IPAM controller.
+The IPAM controller requires the [VIP](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/crds/vip.md) custom resource definition (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Netscaler ingress controller and the Citrix IPAM controller.
 
 ## Prerequisites
 
@@ -36,20 +36,20 @@ You must perform the following steps before installing Citrix IPAM controller:
             spec:
               containers:
               - name: cnn-website     
-                image: ns-local-docker.repo.citrite.net/apoorvak/cnnapp:v1    
+                image: quay.io/sample-apps/cnn-website:v1.0.0     
                 ports:
                 - name: http-80
                   containerPort: 80
                 - name: https-443
                   containerPort: 443
 
--  You need to install Citrix ingress controller for your NetScaler VPX or MPX, and the VIP CRD. Use the following Helm commands:
+-  You need to install Netscaler ingress controller for your NetScaler VPX or MPX, and the VIP CRD. Use the following Helm commands:
 
-        helm repo add citrix https://citrix.github.io/citrix-helm-charts/
+        helm repo add netscaler https://netscaler.github.io/netscaler-helm-charts/
         
-        helm install demo1 citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,ingressClass[0]=netscaler,serviceClass[0]=netscaler,ipam=true,crds.install=true -n netscaler
+        helm install nsic netscaler/netscaler-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=<Secret-for-ADC-credentials>,ingressClass[0]=netscaler,serviceClass[0]=netscaler,ipam=true,crds.install=true -n netscaler
 
-    For detailed information on deploying and configuring Citrix ingress controller using Helm charts see [the Helm chart repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ingress-controller).
+    For detailed information on deploying and configuring Netscaler ingress controller using Helm charts see [the Helm chart repository](https://github.com/netscaler/netscaler-helm-charts/tree/master/netscaler-ingress-controller).
 
     **Note:**
      Make sure that you create a secret using the Tier-1 NetScaler VPX or MPX credentials before performing this step.
@@ -58,11 +58,11 @@ You must perform the following steps before installing Citrix IPAM controller:
 
 For deploying IPAM controller, use the following Helm command:
 
-    helm repo add citrix https://citrix.github.io/citrix-helm-charts/
+    helm repo add netscaler https://netscaler.github.io/citrix-helm-charts/
 
-    helm install demo2 citrix/citrix-ipam-controller --set vipRange='[{"cnn": ["<ip-range>"]}]' -n netscaler
+    helm install ipam netscaler/netscaler-ipam-controller --set vipRange='[{"cnn": ["<ip-range>"]}]' -n netscaler
 
-For information about all the configurable parameters that can be used while installing IPAM controller using Helm charts, see the [Helm chart repository](https://github.com/citrix/citrix-helm-charts/tree/master/citrix-ipam-controller).
+For information about all the configurable parameters that can be used while installing IPAM controller using Helm charts, see the [Helm chart repository](https://github.com/netscaler/netscaler-helm-charts/tree/master/citrix-ipam-controller).
 
 ## Use IPAM controller for services of type LoadBalancer
 
@@ -123,21 +123,28 @@ If you want to expose your application using Ingress, then IPAM controller can b
         apiVersion: extensions/v1beta1
         kind: Ingress
         metadata:
-          name: vpx-ingress
           annotations:
-            # CIC uses below annotation to select services to be configured on Netscaler VPX/MPX
-            kubernetes.io/ingress.class: 'netscaler'
-            # IPAM uses below annotation to select the IP Range, from which it allocates IPs
-            ingress.citrix.com/ipam-range: 'cnn'
+            ingress.citrix.com/ipam-range: cnn
+          name: vpx-ingress
         spec:
+          ingressClassName: netscaler
           rules:
-          - host: "cnn-website.com"
+          - host: cnn-website.com
             http:
               paths:
-              - path: /
-                backend:
+              - backend:
                   serviceName: cnn-website
                   servicePort: 80
+                path: /
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: netscaler
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 
 ## Multiple IP address allocations
 

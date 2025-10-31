@@ -1,15 +1,15 @@
-# Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster
+# Deploy Netscaler CPX as an Ingress device in an Azure Kubernetes Service cluster
 
-This topic explains how to deploy Citrix ADC CPX as an ingress device in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. Citrix ADC CPX supports both the [Advanced Networking (Azure CNI)](https://docs.microsoft.com/en-us/azure/aks/concepts-network#azure-cni-advanced-networking) and [Basic Networking (Kubenet)](https://docs.microsoft.com/en-us/azure/aks/concepts-network#kubenet-basic-networking) mode of AKS.
+This topic explains how to deploy Netscaler CPX as an ingress device in an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster. Netscaler CPX supports both the [Advanced Networking (Azure CNI)](https://docs.microsoft.com/en-us/azure/aks/concepts-network#azure-cni-advanced-networking) and [Basic Networking (Kubenet)](https://docs.microsoft.com/en-us/azure/aks/concepts-network#kubenet-basic-networking) mode of AKS.
 
 
 **Note:**
 
-If you want to use Azure repository images for Citrix ADC CPX or the Citrix ingress controller instead of the default quay.io images, then see [Deploy Citrix ADC CPX as an Ingress device in an AKS cluster using Azure repository images](deploy-azure-image.md).
+If you want to use Azure repository images for Netscaler CPX or the Netscaler ingress controller instead of the default quay.io images, then see [Deploy Netscaler CPX as an Ingress device in an AKS cluster using Azure repository images](deploy-azure-image.md).
 
-## Deploy Citrix ADC CPX as an ingress device in an AKS cluster
+## Deploy Netscaler CPX as an ingress device in an AKS cluster
 
-Perform the following steps to deploy Citrix ADC CPX as an ingress device in an AKS cluster.
+Perform the following steps to deploy Netscaler CPX as an ingress device in an AKS cluster.
 
 **Note:**
 In this procedure, Apache web server is used as the sample application.
@@ -21,7 +21,7 @@ In this procedure, Apache web server is used as the sample application.
      **Note:**
        In this example, `apache.yaml` is used. You should use the specific YAML file for your application.
 
-2.  Deploy Citrix ADC CPX as an ingress device in the cluster using the following command.
+2.  Deploy Netscaler CPX as an ingress device in the cluster using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/standalone_cpx.yaml
 
@@ -29,7 +29,7 @@ In this procedure, Apache web server is used as the sample application.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/cpx_ingress.yaml
 
-4.  Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the following command.
+4.  Create a service of type LoadBalancer for accessing the Netscaler CPX by using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/cpx_service.yaml
 
@@ -56,9 +56,9 @@ In this procedure, Apache web server is used as the sample application.
     |Kubernetes|    ClusterIP|10.0.0.1 |none| 443/TCP| 22h|
 
     !!! note "Note"  
-        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. 
+        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Netscaler CPX deployment yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. 
 
-		If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
+		If the health check fails, you should check the readinessProbe configured for Netscaler CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 1.  Access the application using the following command.
 
@@ -69,7 +69,7 @@ In this procedure, Apache web server is used as the sample application.
 For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
+1. Deploy a Netscaler CPX ingress with in built Netscaler ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 

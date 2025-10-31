@@ -2,7 +2,7 @@
 
 Namespaces are used to isolate resources within a Kubernetes cluster. Sometimes, services in a different namespace might have to access a service located in another namespace. In such scenarios, you can use the `ExternalName` service provided by Kubernetes. An `ExternalName` service is a special service that does not have selectors and instead uses DNS names.
 
-In the service definition, the `externalName` field must point to the namespace and also to the service which we are trying to access on that namespace. Citrix ingress controller supports services of type `ExternalName` when you have to access services within the cluster.
+In the service definition, the `externalName` field must point to the namespace and also to the service which we are trying to access on that namespace. Netscaler ingress controller supports services of type `ExternalName` when you have to access services within the cluster.
 
 When you create the `ExternalName` service, the following criteria must be met:
 

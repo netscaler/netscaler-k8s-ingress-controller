@@ -1,6 +1,6 @@
-# Deploy Citrix ADC CPX as an Ingress device in Google Cloud Platform
+# Deploy Netscaler CPX as an Ingress device in Google Cloud Platform
 
-This topic explains how to deploy Citrix ADC CPX as an ingress device in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/)
+This topic explains how to deploy Netscaler CPX as an ingress device in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/)
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ You can get your Google account details using the following command.
 
     gcloud info | grep Account
 
-## Deploy Citrix ADC CPX as an ingress device in Google Cloud Platform
+## Deploy Netscaler CPX as an ingress device in Google Cloud Platform
 
 1.  Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.
 
@@ -27,7 +27,7 @@ You can get your Google account details using the following command.
     !!! note "Note"
         In this example, ``apache.yaml`` is used. You should use the specific YAML file for your application.
 
-1.  Deploy Citrix ADC CPX as an ingress device in the cluster using the following command.
+1.  Deploy Netscaler CPX as an ingress device in the cluster using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/standalone_cpx.yaml
 
@@ -35,7 +35,7 @@ You can get your Google account details using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_ingress.yaml
 
-1.  Create a service of type LoadBalancer for accessing the Citrix ADC CPX by using the following command.
+1.  Create a service of type LoadBalancer for accessing the Netscaler CPX by using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_service.yaml
 
@@ -63,7 +63,7 @@ You can get your Google account details using the following command.
     |kubernetes| ClusterIP| 192.7.240.1|none|443/TCP|22h|`
 
     !!! note "Note"
-        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX service YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX.
+        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Netscaler CPX service YAML](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Netscaler CPX.
         For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 1.  Access the application using the following command.
@@ -75,7 +75,7 @@ You can get your Google account details using the following command.
 For the ease of deployment, you can just deploy a single all-in-one manifest that would combine the steps explained in the previous topic.
 
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp/manifest/all-in-one.yaml).
+1. Deploy a Netscaler CPX ingress with in built Netscaler ingress controller in your Kubernetes cluster using the [all-in-one.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/gcp/manifest/all-in-one.yaml).
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 

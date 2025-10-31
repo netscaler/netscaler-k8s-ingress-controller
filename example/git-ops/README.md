@@ -26,27 +26,27 @@ Perform the following steps:
 
         echo example/git-ops >> .git/info/sparse-checkout
 
-        git remote add -f origin https://github.com/citrix/citrix-k8s-ingress-controller.git
+        git remote add -f origin https://github.com/netscaler/netscaler-k8s-ingress-controller.git
 
         git pull origin master
 
         cd example/git-ops/
 
  
-1. Create a Kubernetes secret with the login information for your Citrix ADC.
+1. Create a Kubernetes secret with the login information for your Netscaler.
 
         kubectl create secret generic nslogin --from-literal=username=<username> --from-literal=password=<password>
 
    >**Note:**
-   >Replace `username` and `password` with the login credentials of your Citrix ADC VPX.
+   >Replace `username` and `password` with the login credentials of your Netscaler VPX.
 
-1. Deploy Citrix ingress controller and apply CRD definition files through the following Helm commands:
+1. Deploy Netscaler ingress controller and apply CRD definition files through the following Helm commands:
 
         helm repo add citrix https://citrix.github.io/citrix-helm-charts/
         helm install cic citrix/citrix-ingress-controller --set nsIP=<NSIP>,license.accept=yes,adcCredentialSecret=nslogin,nodeWatch=true,crds.install=true
     
     >**Note:**
-    >Replace `NSIP` with Citrix ADC VPX IP address.
+    >Replace `NSIP` with Netscaler VPX IP address.
 
      To install a specific version of the Helm chart (for example: 1.18.15), use the following command:
      
@@ -80,11 +80,11 @@ Perform the following steps:
    - `repository`: Provide the GIT Repository information
    - `branch`: The branch on the Git repository that needs to be referred.
    - `files`:  The path of Swagger files to be monitored on Git.
-   - `ipaddress`: Provide the Citrix ADC content switching virtual server VIP IP address (The listener IP address on Citrix ADC).
+   - `ipaddress`: Provide the Netscaler content switching virtual server VIP IP address (The listener IP address on Netscaler).
    - `port`: Provide the port information for the listener (For HTTP, port 80 and for HTTPS port 443).
    - `protocol`:  HTTP or HTTPS (If the protocol is HTTPS, then there is a need of certificate information to be provided as a secret).
 
-1. Create a certificate for the Citrix ADC listener if the protocol is HTTPS.
+1. Create a certificate for the Netscaler listener if the protocol is HTTPS.
 
         kubectl create secret tls cert1 --key="cert.key" --cert="cert.crt"
 
@@ -94,7 +94,7 @@ Perform the following steps:
 1. Based on the protocol selected in the API Gateway CRD, try accessing the application through `http://ipaddress/v2/play/play_api` or `https://ipaddress/v2/play/play_api` URLs .
 
    >**Note:**
-   Replace `ipaddress` in the URL with the IP address of the Citrix ADC content switching virtual server VIP (the listener IP address on the Citrix ADC). Replace the `play_api` with the API that needs to be accessed (For example: `tennis)`.
+   Replace `ipaddress` in the URL with the IP address of the Netscaler content switching virtual server VIP (the listener IP address on the Netscaler). Replace the `play_api` with the API that needs to be accessed (For example: `tennis)`.
 
 1. Try to modify the Swagger file APIs on Git or the template rewritepolicy CRD to evaluate the GitOps functionality.
 

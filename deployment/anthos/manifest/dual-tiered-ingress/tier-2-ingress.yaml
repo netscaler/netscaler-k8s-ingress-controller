@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: citrix-tier-2
+  annotations: {}
   name: citrix-tier-2-ingress
 spec:
+  ingressClassName: citrix-tier-2
   rules:
   - host: anthos-citrix-ingress.com
     http:
@@ -18,3 +18,11 @@ spec:
         pathType: Prefix
   tls:
   - secretName: anthos-citrix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix-tier-2
+spec:
+  controller: citrix.com/ingress-controller
+---

@@ -6,13 +6,13 @@ In mutual authentication, two sides of a communication channel verify the identi
 
 Perform the following steps to apply mutual authentication for Ingress:
 
-1.  Enable the default SSL profile on Citrix ADC.
+1.  Enable the default SSL profile on Netscaler.
 
         set ssl parameter -defaultProfile ENABLED
 
-    **Note:** Make sure that Citrix ingress controller is restarted after enabling the default profile.
+    **Note:** Make sure that Netscaler ingress controller is restarted after enabling the default profile.
 
-2.  Download the [mutual-auth.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/example/mutual-auth.yaml) file. This YAML file contains the Ingress resource definition and the SSL annotations.
+2.  Download the [mutual-auth.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/example/mutual-auth.yaml) file. This YAML file contains the Ingress resource definition and the SSL annotations.
 
     The contents of the YAML is as follows:
 
@@ -21,38 +21,48 @@ Perform the following steps to apply mutual authentication for Ingress:
             kind: Ingress
             metadata:
               annotations:
-                ingress.citrix.com/frontend-ip: "A.B.C.D"
-                kubernetes.io/ingress.class: "citrix"
-                ingress.citrix.com/frontend-sslprofile: '{"clientauth": "enabled", "sni": "enabled" }'
-                ingress.citrix.com/secure_backend: '{"apache": "True"}'
+                ingress.citrix.com/backend-ca-secret: '{"apache": "tls-ca"}'
+                ingress.citrix.com/backend-secret: '{"apache": "wildcard-secret"}'
                 ingress.citrix.com/backend-sslprofile: '{"apache":{"serverauth": "enabled", "sni": "enabled"}}'
                 ingress.citrix.com/ca-secret: '{"apache": "tls-ca"}'
-                ingress.citrix.com/backend-secret: '{"apache": "wildcard-secret"}'
-                ingress.citrix.com/backend-ca-secret: '{"apache": "tls-ca"}'
+                ingress.citrix.com/frontend-ip: A.B.C.D
+                ingress.citrix.com/frontend-sslprofile: '{"clientauth": "enabled", "sni": "enabled"
+                  }'
+                ingress.citrix.com/secure_backend: '{"apache": "True"}'
               name: web-ingress
             spec:
-              tls:
-                - secretName: wildcard-secret
-                  hosts:
-                    - "www.guestbook.com"
+              ingressClassName: citrix
               rules:
-                - host: "www.guestbook.com"
-                  http:
-                    paths:
-                      - backend:
-                          service:
-                            name: apache
-                            port:
-                              number: 443
-                        path: /
-                        pathType: ImplementationSpecific
+              - host: www.guestbook.com
+                http:
+                  paths:
+                  - backend:
+                      service:
+                        name: apache
+                        port:
+                          number: 443
+                    path: /
+                    pathType: ImplementationSpecific
+              tls:
+              - hosts:
+                - www.guestbook.com
+                secretName: wildcard-secret
+            ---
+            apiVersion: networking.k8s.io/v1
+            kind: IngressClass
+            metadata:
+              name: citrix
+            spec:
+              controller: citrix.com/ingress-controller
+            ---
+
           ```
 
     In this example:
 
       -  An application named `apache` is used as the back-end service. You can replace it with the application that you are using.
 
-      -  `wildcard-secret` is the associated Kubernetes secret holding the client certificate. This certificate is used when Citrix ADC acts as a client to send the request to the back end Apache service.
+      -  `wildcard-secret` is the associated Kubernetes secret holding the client certificate. This certificate is used when Netscaler acts as a client to send the request to the back end Apache service.
 
       -  The `tls-ca` secret holds the CA certificate that is used for verification of the client
 certificate
@@ -77,8 +87,8 @@ certificate
 
 -  `ingress.citrix.com/secure-backend: "True"`: Enables secure back end communication to the service.
 
--  `ingress.citrix.com/ca-secret`: Provides a CA certificate for the client certificate verification. This certificate is bound to the front-end SSL virtual server in Citrix ADC.
+-  `ingress.citrix.com/ca-secret`: Provides a CA certificate for the client certificate verification. This certificate is bound to the front-end SSL virtual server in Netscaler.
 
--  `ingress.citrix.com/backend-secret`: Use this annotation if the back-end communication between the Citrix ADC and your workload is on an encrypted channel, and you need the client authentication in your workload. This annotation is bound to the back end SSL service group.
+-  `ingress.citrix.com/backend-secret`: Use this annotation if the back-end communication between the Netscaler and your workload is on an encrypted channel, and you need the client authentication in your workload. This annotation is bound to the back end SSL service group.
 
--  `ingress.citrix.com/backend-ca-secret`: Enables server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Citrix ADC.
+-  `ingress.citrix.com/backend-ca-secret`: Enables server authentication which authenticates the back-end server certificate. This configuration binds the CA certificate of the server to the SSL service on the Netscaler.
