@@ -1,12 +1,12 @@
 # Analytics configuration support using ConfigMap
 
-You can use [Citrix Observability Exporter](https://github.com/citrix/citrix-observability-exporter) to export metrics and transactions from Citrix ADC CPX, MPX, or VPX and analyze the exported data to get meaningful insights. The Citrix Observability Exporter support is enabled with in the Citrix ingress controller configuration. You can now enable the Citrix Observability Exporter configuration with in the Citrix ingress controller using a [ConfigMap](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/).
+You can use [Citrix Observability Exporter](https://github.com/citrix/citrix-observability-exporter) to export metrics and transactions from Netscaler CPX, MPX, or VPX and analyze the exported data to get meaningful insights. The Citrix Observability Exporter support is enabled with in the Netscaler ingress controller configuration. You can now enable the Citrix Observability Exporter configuration with in the Netscaler ingress controller using a [ConfigMap](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/).
 
 ## Supported environment variables for analytics configuration using ConfigMap
 
 You can configure the following parameters under `NS_ANALYTICS_CONFIG` using a ConfigMap:
 
-- `distributed_tracing`: This variable enables or disables OpenTracing in Citrix ADC and has the following attributes:
+- `distributed_tracing`: This variable enables or disables OpenTracing in Netscaler and has the following attributes:
 
   - `enable`:  Set this value to `true` to enable OpenTracing. The default value is `false`.
   - `samplingrate`: Specifies the OpenTracing sampling rate in percentage. The default value is 100.
@@ -14,36 +14,36 @@ You can configure the following parameters under `NS_ANALYTICS_CONFIG` using a C
 - `endpoint`: Specifies the IP address or DNS address of the analytics server.
 
     - `server`: Set this value as the IP address or DNS address of the server.
-    - `service`: Specifies the IP address or service name of the Citrix ADC observability exporter service depending on whether the service is running on a virtual machine or as a Kubernetes service.
-    If the Citrix ADC observability exporter instance is running on a virtual machine this parameter specifies the IP address. If the Citrix ADC observability exporter instance is running as a service in the Kubernetes cluster, this parameter specifies the instance as namespace/service name.
-- `timeseries`: Enables exporting time series data from Citrix ADC. You can specify the following attributes for time series configuration.
+    - `service`: Specifies the IP address or service name of the Netscaler observability exporter service depending on whether the service is running on a virtual machine or as a Kubernetes service.
+    If the Netscaler observability exporter instance is running on a virtual machine this parameter specifies the IP address. If the Netscaler observability exporter instance is running as a service in the Kubernetes cluster, this parameter specifies the instance as namespace/service name.
+- `timeseries`: Enables exporting time series data from Netscaler. You can specify the following attributes for time series configuration.
     
     - `port`: Specifies the port number of the time series end point of the analytics server. The default value is 5563.
-    - `metrics`: Enables exporting metrics from Citrix ADC.
+    - `metrics`: Enables exporting metrics from Netscaler.
   
        - `enable`: Set this value to `true` to enable sending metrics. The default value is `false`.
        - `mode`: Specifies the mode of metric endpoint. The default value is  `avro`.
-    - `auditlogs`: Enables exporting audit log data from Citrix ADC.
+    - `auditlogs`: Enables exporting audit log data from Netscaler.
        - `enable`: Set this value to `true` to enable audit log data. The default value is `false`.
   
-    - `events`: Enables exporting events from the Citrix ADC.
+    - `events`: Enables exporting events from the Netscaler.
        - `enable`: Set this value to `true` to enable exporting events. The default value is `false`.
 
-- `transactions`: Enables exporting transactions from Citrix ADC.
+- `transactions`: Enables exporting transactions from Netscaler.
   
     - `enable`: Set this value to `true` to enable sending transactions. The default value is `false`.
     - `port`: Specifies the port number of the transactional endpoint of the analytics server. The default value is 5557.
 
-The following configurations cannot be changed while the Citrix ingress controller is running and you need to reboot the Citrix ingress controller to apply these settings.
+The following configurations cannot be changed while the Netscaler ingress controller is running and you need to reboot the Netscaler ingress controller to apply these settings.
 
 - server configuration (endpoint)
 - port configuration (time series)
 - port configuration (transactions)
 
- You can change other ConfigMap settings at runtime while the Citrix ingress controller is running.
+ You can change other ConfigMap settings at runtime while the Netscaler ingress controller is running.
 
 **Note:**
-When the user specifies value for a service as `namespace/service name`, Citrix ingress controller derives the endpoint associated to that service and dynamically bind them to the transactional service group in Citrix tier-1 ADC . If a user specifies the value for a service as IP address, the IP address is direclty bound to the transactional service group. Citrix ingress controller is enhanced to create default web or TCP based analytics profiles and bind them to the logging virtual server. The default analytics profiles are bound to all load balancing virtual servers of applications if the Citrix ADC observability exporter is enabled in the cluster. If the user wants to change the analytics profile, they can use the `analyticsprofile` annotation.
+When the user specifies value for a service as `namespace/service name`, Netscaler ingress controller derives the endpoint associated to that service and dynamically bind them to the transactional service group in Citrix tier-1 ADC . If a user specifies the value for a service as IP address, the IP address is direclty bound to the transactional service group. Netscaler ingress controller is enhanced to create default web or TCP based analytics profiles and bind them to the logging virtual server. The default analytics profiles are bound to all load balancing virtual servers of applications if the Netscaler observability exporter is enabled in the cluster. If the user wants to change the analytics profile, they can use the `analyticsprofile` annotation.
 
 The attributes of `NS_ANALYTICS_CONFIG` should follow a well-defined schema. If any value provided does not confirm with the schema, then the entire configuration is rejected. For reference, see the schema file [ns_analytics_config_schema.yaml](#Schema-for-NSANALYTICSCONFIG).
 
@@ -70,8 +70,10 @@ data:
       enable: 'false'
       samplingrate: 100
     endpoint:
-      server: '1.1.1.1'
-      service: 'default/coe-kafka'
+      metrics:
+        service: '1.1.1.1'
+      transactions:
+        service: 'default/coe-kafka'
     timeseries:
       port: 5563
       metrics:
@@ -87,7 +89,7 @@ data:
     
 ```
 
-For more information on how to configure ConfigMap support on the Citrix ingress controller, [see configuring ConfigMap support for the Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/#configuring-configmap-support-for-the-citrix-ingress-controller).
+For more information on how to configure ConfigMap support on the Netscaler ingress controller, [see configuring ConfigMap support for the Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map/#configuring-configmap-support-for-the-citrix-ingress-controller).
 
 ### Schema for NS_ANALYTICS_CONFIG
 
@@ -102,12 +104,23 @@ mapping:
     type: map
     mapping:
       endpoint:
-        required: yes
+        required: false
         type: map
         mapping:
-          server:
-            required: yes
-            type: str
+          metrics:
+            required: false
+            type: map
+            mapping:
+              service:
+                required: false
+                type: str
+          transactions:
+            required: false
+            type: map
+            mapping:
+              service:
+                required: false
+                type: str
       distributed_tracing:
         required: no
         type: map

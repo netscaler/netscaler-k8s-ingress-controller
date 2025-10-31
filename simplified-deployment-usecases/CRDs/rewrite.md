@@ -1,49 +1,43 @@
-# Rewrite and redirect Support
+# Rewrite and Redirect Support
 
-Citrix ingress controller supports header and URL modification via [rewrite policies CRD](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/crds/rewrite-responder.html). This section provides different examples for header and URL modification and contains the following sections:
+`Citrix Ingress Controller` supports header and URL modification via [rewritepolicies CRD](https://docs.citrix.com/en-us/citrix-k8s-ingress-controller/crds/rewrite-responder.html). 
 
--  [Before You Begin](#before-you-begin)
--  [Examples for HTTP header manipulation](#http-header-manipulation)
--  [Examples for URL manipulation](#url-manipulation)
--  [Examples for blocking requests](#blocking-requests)
--  [Miscellaneous Examples](#miscellaneous-examples)
+## Table of Contents
+1. [Before You Begin](#before-you-begin)
+2. [Examples for HTTP Header Manipulation](#http-header-manipulation)
+3. [Examples for URL Manipulation](#url-manipulation)
+4. [Examples for Blocking Requests](#blocking-requests)
+5. [Miscellaneous Examples](#miscellaneous-examples)
 
-## Before you begin
+# 1 Before You Begin
 
-1.  Create a Kubernetes cluster.
+1. **Create a Cluster**
 
-    You need a Kubernetes cluster and the kubectl command-line tool to communicate with the cluster. If you do not have a cluster created before, follow the instructions in [Create Kubernetes cluster](https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/) to create the Kubernetes cluster.
+    You need a Kubernetes cluster and kubectl command-line tool to communicate with the cluster.
+2. **Deploy an Application**
 
-1.  Deploy an application.
+    In this document we are referring to `echo-server` application (image: gcr.io/google_containers/echoserver:1.0)
+3. **Deploy the Citrix Ingress Controller**
 
-    In this document, you refer to the `echo-server` application. See this document for steps to deploy [here](steps-to-deploy-echo-server).
+    If you are using NetScaler VPX or MPX, please follow [UNIFIED ingress controller](<link>) instructions to deploy Citrix Ingress Controller (CIC) to configure the same. If you do not have NetScaler VPX or MPX, you can use NetScaler CPX and follow [Dual Tier Ingress Controllder](<link>) to deploy CIC and CPX.
+    > Note:
+    Setting crds.install=true will install all citrix supported CRD Definitons.         
 
-1.  Deploy the Citrix ingress controller.
+# 2 HTTP Header Manipulation
 
-    If you are using NetScaler VPX or MPX, follow [this instruction to deploy Citrix Ingress Controller (CIC) to configure the same. If you do not have NetScaler VPX or MPX, you can use NetScaler CPX and follow [this](<link>) to deploy CIC and CPX.
+A few examples are presented in this section that demonstrate how HTTP headers are manipulated before they are sent to the backend application.
 
-1.  Apply the rewrite policy CRD definition.
+## 2.1 HTTP Header Insertion 
 
-         $ kubectl apply -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml 
+Addition of headers to the request before it is sent to the backend application.
 
-    **Note:**
-    If Ingress controller is deployed via Helm, the setting `crds.install=true` installs all Citrix supported CRD definitions.
+### 2.1.1 Addition of Single header: X-Forwarded-For
 
-## HTTP header manipulation
+In this example,
 
-A few examples are presented in this section that demonstrates how HTTP headers are manipulated before they are sent to the back end application.
+If `X-Forwarded-For` HTTP Header doesn't exist in the client request, the header is inserted with `CLIENT.IP.SRC`.
 
-### HTTP header insertion
-
-Addition of headers to the request before it is sent to the back end application.
-
-#### Addition of single header: X-Forwarded-For
-
-In this example:
-
-If `X-Forwarded-For` the HTTP Header does not exist in the client request, the header is inserted with `CLIENT.IP.SRC`.
-
-If the `X-Forwarded-For` header exists in the client request, `CLIENT.IP.SRC` is appended to the list.
+If `X-Forwarded-For` header already exists in the client request, `CLIENT.IP.SRC` is appended to the list. 
 
 ```yml
 apiVersion: citrix.com/v1
@@ -79,10 +73,10 @@ spec:
 Verifying this Policy
 </summary>
 
+
 **Request:** curl http://demo.example.com
 
 **Response:**
-
 ```
 CLIENT VALUES:
 command=GET
@@ -107,7 +101,6 @@ X-Forwarded-For=<CLIENT-IP>
 **Request:**  curl --header "X-Forwarded-For: 1.2.3.4"  http://demo.example.com
 
 **Response:**
-
 ```
 CLIENT VALUES:
 command=GET
@@ -128,14 +121,16 @@ Host=demo.example.com
 User-Agent=curl/7.47.0
 X-Forwarded-For=1.2.3.4,<CLIENT-IP>
 ```
-
-Note:
-This rewrite CRD creates two rewrite policies on the NetScaler.
+More Info: 
+This rewrite CRD will create two rewrite policies on the Netscaler. 
 </details>
 
-### Addition of multiple headers in a single policy: X-Forwarded-For & X-Fowarded-Host
 
-In this example, `X-Forwarded-For` and `X-Forwarded-Host` HTTP Headers are inserted for all requests sent to the back-end microservice.
+
+### 2.1.2 Addition of Multiple Headers in a single policy: X-Forwarded-For & X-Fowarded-Host
+
+In this example,
+`X-Forwarded-For` and `X-Forwarded-Host` HTTP Headers are inserted for all request sent to the backend microservice.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -160,10 +155,10 @@ spec:
 Verifying this Policy
 </summary>
 
+
 **Request:** curl http://demo.example.com
 
 **Response:**
-
 ```
 CLIENT VALUES:
 command=GET
@@ -185,15 +180,17 @@ X-Forwarded-For=<CLIENT-IP>
 X-Forwarded-Host=demo.example.com
 ```
 
-More Information:
-This rewrite CRD creates one rewrite policy on the NetScaler.
+More Info: 
+This rewrite CRD will create one rewrite policies on the Netscaler. 
 </details>
 
-### Addition of multiple headers in separate policies:  X-Forwarded-For & X-Fowarded-Host
 
-In this example:
-`X-Forwarded-For` and `X-Forwarded-Host` HTTP Headers are inserted for all requests sent to the back end microservice, if not already added by the client.
-As a default, NetScaler stops evaluating all other rewrite policies once a policy is hit. By setting the `goto-priority-expression: NEXT` in the CRD, you instruct the NetScaler to evaluate the next policy in the list.
+
+### 2.1.3 Addition of Multiple Headers in separate policies:  X-Forwarded-For & X-Fowarded-Host
+
+In this example,
+`X-Forwarded-For` and `X-Forwarded-Host` HTTP Headers are inserted for all requests sent to the backend microservice, if not already added by the client.
+> As a default, Netscaler stops evaluating all other rewrite policies once a policy is hit. By setting the `goto-priority-expression: NEXT` in the CRD, we instruct the Netscaler to evaluate the next policy in the list.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -257,7 +254,6 @@ X-Forwarded-Host=demo.example.com
 **Request:** curl --header "X-Forwarded-For: 1.2.3.4"  http://demo.example.com 
 
 **Response:**
-
 ```
 CLIENT VALUES:
 command=GET
@@ -281,14 +277,15 @@ X-Forwarded-Host=demo.example.com   <--------- Inserted by Netscaler
 ```
 
 **More Info:**
-This rewrite CRD creates two rewrite policies on the NetScaler. The first rewrite policy has the `GotoPriority Expression: NEXT` set.
+This rewrite CRD will create two rewrite policies on the Netscaler. The first rewrite policy will have the `GotoPriority Expression: NEXT` set.
 
 </details>
 
-## HTTP Header rewrites
+
+## 2.2 HTTP Header rewrite
 
 In this example,
-`dummy-header` HTTP Header value sent from the client is replaced with the `"replaced-value"` before sending the request to the back end microservice.
+`dummy-header` HTTP Header value sent from the Client is replaced with `"replaced-value"` before sending the request to the backend microservice.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -313,10 +310,10 @@ spec:
 Verifying this Policy
 </summary>
 
+
 **Request:** curl --header "dummy-header: dummy"  http://demo.example.com
 
 **Response:**
-
 ```
 CLIENT VALUES:
 command=GET
@@ -339,12 +336,13 @@ dummy-header=replaced-value
 ```
 
 **More Info:**
-This rewrite CRD creates one rewrite policy on the NetScaler appliance.
+This rewrite CRD will create one rewrite policies on the Netscaler. 
 </details>
 
-## HTTP header removal
+## 2.3 HTTP Header removal 
 
-In this example, `dummy-header` header sent from the client is removed before sending the request to the back end microservice.
+In this example,
+`dummy-header` Header sent from the Client is removed before sending the request to the backend microservice.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -369,6 +367,7 @@ spec:
 Verifying this Policy
 </summary>
 
+
 **Request:** curl --header "dummy-header: dummy"  http://demo.example.com
 
 **Response:**
@@ -393,14 +392,15 @@ User-Agent=curl/7.47.0
 ```
 
 **More Info:**
-This rewrite CRD creates one rewrite policy on the NetScaler.
+This rewrite CRD will create one rewrite policies on the Netscaler. 
 </details>
 
-## URL manipulation
+ 
+# 3 URL Manipulation 
 
-A few examples are presented in this section that demonstrates how URLs are manipulated before they are sent to the back end application.
+A few examples are presented in this section that demonstrate how URLs are manipulated before they are sent to the backend application.
 
-### Rewrite a single URL
+### 3.1 Rewrite a single URL
 
 In this example, the user‑friendly URL `http://mysite.com/listings/123` is rewritten to a URL handled by the microservice, `http://mysite.com/listing.html?listing=123`.
 
@@ -452,13 +452,13 @@ Host=demo.example.com
 User-Agent=curl/7.47.0
 ```
 
-**Note:**
-This rewrite CRD creates one rewrite policy on the NetScaler. 
+**More Info:**
+This rewrite CRD will create one rewrite policies on the Netscaler. 
 </details>
 
-### Rewrite a pattern set of URLs
+### 3.2 Rewrite a patset of URLs.
 
-In this example, if the first subdirectory of the URL path belongs to a pattern set, `/new-apps` is inserted before it.
+In this example, if first subdirectory of the URL Path belongs to a patset, `/new-apps` is inserted before it.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -488,6 +488,7 @@ spec:
 Verifying this Policy
 </summary>
 
+
 **Request:** curl http://demo.example.com/app2
 
 **Response:**
@@ -511,13 +512,14 @@ Host=demo.example.com
 User-Agent=curl/7.47.0
 ```
 
-**Note:**
-This rewrite CRD creates one rewrite policy on the NetScaler.
+**More Info:**
+This rewrite CRD will create one rewrite policies on the Netscaler. 
 </details>
 
-### Rewrite multiple URLs in a single policy using string map
 
-In this example, If the URL path matches the key of a string map, it is rewritten with the corresponding value.
+### 3.3 Rewrite mulitple URLs in a single policy using stringmap
+
+In this example, If the URL Path matches the Key of a stringmap, it is rewritten with the corresponding value.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -597,16 +599,16 @@ User-Agent=curl/7.47.0
 ```
 
 **More Info:**
-This rewrite CRD creates one rewrite policy on the NetScaler. 
+This rewrite CRD will create one rewrite policies on the Netscaler. 
 </details>
 
-## Blocking requests
+# 4 Blocking Requests
 
-A few examples are presented in this section that demonstrates how certain client requests are allowed or denied access to the application.
+A few examples are presented in this section that demonstrate how certain client requests are allowed/denied access to the application. 
 
-### URL blocking
+## 4.1 URL Blocking
 
-In this example, access to certain URLs provided via a pattern set is denied access.
+In this example, access to certain URLs provided via a patset is denied access.
  
 ```yml
 apiVersion: citrix.com/v1
@@ -629,10 +631,9 @@ spec:
         - '/admin'
         - '/secret'
 ```
+## 4.2 IP Blocking
 
-## IP address blocking
-
-In this example, client IP addresses belonging to a certain CIDR is denied access.
+In this example, Client IPs belonging to a certain CIDR is denied access.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -650,10 +651,9 @@ spec:
         respond-criteria: 'client.ip.src.IN_SUBNET(10.xxx.170.xx/24)'
         comment: 'Blocklist certain IPs'
 ```
+## 4.3 File access Blocking 
 
-## File access blocking
-
-In this example, access to extension like aspx, php, cgi, jsp is forbidden.
+In this example, access to file extension like aspx, php, cgi, jsp is forbidden.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -676,6 +676,7 @@ spec:
 Verifying this Policy
 </summary>
 
+
 **Request:** curl http://demo.example.com/file.jsp -w "\n" -v
 
 **Response:**
@@ -692,15 +693,15 @@ Verifying this Policy
 Access to file /file.jsp is Forbidden
 ```
 
-**Note:**
-This rewrite CRD creates one responder policy on the NetScaler.
+**More Info:**
+This rewrite CRD will create one responder policies on the Netscaler. 
 </details>
 
-## Miscellaneous examples
+# 5 Miscellaneous Examples
 
-### Adding proxy protocol headers
+## 5.1 Adding Proxy Protocol Headers
 
-In this example, proxy protocol headers are inserted before sending the request to the back end microservice.
+In this example, Proxy Protocol header are inserted before sending the request to the backend microservice.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -721,9 +722,9 @@ spec:
         rewrite-criteria: 'HTTP.REQ.IS_VALID'
 ```
 
-### Redirect to a new host name
+## 5.2 Redirect to a new Hostname
 
-In this example, requests are redirected from the old domain name to the home page of the new domain.
+In this example, requests are redirected from the old domain name to the homepage of the new domain.
 
 ```yml
 apiVersion: citrix.com/v1
@@ -743,11 +744,10 @@ spec:
        comment: 'Redirect to New Domain Name'
 ```
 
-**Note:** If the URL has to be mapped with the new-domain-name, the only change on the URL attribute is as follows:
+> If the url has to be mapped with the new-domain-name, the only change on the url attribute will be as follows:
+  url: '"new-domain-name.com" + http.req.url'
 
-    url: '"new-domain-name.com" + http.req.url'
-
-## Forcing all requests to use SSL or HTTPS
+## 5.3 Forcing all Requests to Use SSL/HTTPS
 
 In this example, all requests are forced to use a secured (SSL/HTTPS) connection to your site.
 
@@ -767,3 +767,5 @@ spec:
        respond-criteria: 'http.req.is_valid'
        comment: 'http to https'
 ```
+
+

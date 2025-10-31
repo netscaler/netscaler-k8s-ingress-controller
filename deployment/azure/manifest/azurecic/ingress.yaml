@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: citrix
+  annotations: {}
   name: citrix-ingress
 spec:
+  ingressClassName: citrix
   rules:
   - host: citrix-ingress.com
     http:
@@ -16,3 +16,11 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---

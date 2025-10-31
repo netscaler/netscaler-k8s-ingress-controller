@@ -2,10 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.citrix.com/insecure-port: "6080"
-    kubernetes.io/ingress.class: builtin-hostport
+    ingress.citrix.com/insecure-port: '6080'
   name: guestbook-ingress
 spec:
+  ingressClassName: builtin-hostport
   rules:
   - host: www.guestbook.com
     http:
@@ -17,3 +17,11 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: builtin-hostport
+spec:
+  controller: citrix.com/ingress-controller
+---

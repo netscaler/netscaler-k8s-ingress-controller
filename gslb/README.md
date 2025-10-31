@@ -1,4 +1,4 @@
-# NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters using the Citrix ingress controller
+# NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters using the Netscaler ingress controller
 
 ## Overview
 
@@ -12,19 +12,19 @@ NetScaler provides a GSLB controller for applications deployed in distributed Ku
 
 The following diagram explains a deployment topology for the NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters for Kubernetes clusters.
 
-**Note:** Services of type LoadBalancer (available for bare metal clusters using Citrix ADC) are also supported.
+**Note:** Services of type LoadBalancer (available for bare metal clusters using Netscaler) are also supported.
 
 ![GSLB-controller-deployment](../docs/media/multi-cluster-updated.png)
 
-This diagram shows a sample topology with two data centers and each data center contains multiple Kubernetes clusters. For data center 1, Citrix ADC CPX is deployed as the Ingress load balancer in each Kubernetes cluster. For data center 2, HAProxy is deployed as the load balancer in each Kubernetes cluster. Citrix NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters for Kubernetes load balances across the ingresses.
+This diagram shows a sample topology with two data centers and each data center contains multiple Kubernetes clusters. For data center 1, Netscaler CPX is deployed as the Ingress load balancer in each Kubernetes cluster. For data center 2, HAProxy is deployed as the load balancer in each Kubernetes cluster. Citrix NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters for Kubernetes load balances across the ingresses.
 
-**Note:** Any ingress solution, including third party solutions such as Istio ingress gateway as well as the Citrix ingress controller with Citrix ADC MPX, VPX, or BLX is supported. This topology is just a sample deployment.
+**Note:** Any ingress solution, including third party solutions such as Istio ingress gateway as well as the Netscaler ingress controller with Netscaler MPX, VPX, or BLX is supported. This topology is just a sample deployment.
 
-A Citrix global server load balancing (GSLB) device is configured for each data center. In each Citrix ADC which acts as a global load balancer, one site is configured as a local site representing the local data center. The other sites are configured as remote sites for each remote data center. The Citrix ADC (MPX or VPX) used as the GSLB can be also used as the Ingress appliance with the Citrix ingress controller.
+A Citrix global server load balancing (GSLB) device is configured for each data center. In each Netscaler which acts as a global load balancer, one site is configured as a local site representing the local data center. The other sites are configured as remote sites for each remote data center. The Netscaler (MPX or VPX) used as the GSLB can be also used as the Ingress appliance with the Netscaler ingress controller.
 
-The global server load balancing (GSLB) configuration synchronization option of the Citrix ADC is used to synchronize the configuration across the sites. The Citrix ADC appliance from which you use the synchronization is referred as the master node and the site where the configuration is copied as the subordinate site.
+The global server load balancing (GSLB) configuration synchronization option of the Netscaler is used to synchronize the configuration across the sites. The Netscaler appliance from which you use the synchronization is referred as the master node and the site where the configuration is copied as the subordinate site.
 
-Each cluster in the deployment runs an instance of the GSLB Kubernetes controller. GSLB controller is the module responsible for the configuration of the Citrix ADC GSLB device. The GSLB controller configures the GSLB master device for the applications deployed in their respective cluster. The GSLB master device pushes the GSLB configuration to the remaining GSLB subordinate devices using the GSLB sync feature. When you synchronize a GSLB configuration, the configurations on all the GSLB sites participating in the GSLB setup are made similar to the configuration on the master site.
+Each cluster in the deployment runs an instance of the GSLB Kubernetes controller. GSLB controller is the module responsible for the configuration of the Netscaler GSLB device. The GSLB controller configures the GSLB master device for the applications deployed in their respective cluster. The GSLB master device pushes the GSLB configuration to the remaining GSLB subordinate devices using the GSLB sync feature. When you synchronize a GSLB configuration, the configurations on all the GSLB sites participating in the GSLB setup are made similar to the configuration on the master site.
 
 The NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters can be applied for any Kubernetes object which is used to route traffic into the cluster.
 
@@ -53,22 +53,22 @@ The following deployment types are supported:
 
 ## CRDs for configuring NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters
 
-The following CRDs are introduced to support the Citrix ADC configuration for performing GSLB of Kubernetes applications.
+The following CRDs are introduced to support the Netscaler configuration for performing GSLB of Kubernetes applications.
 
 -  Global traffic policy (GTP)
 -  Global service entry (GSE)
 
 ### GTP CRD
 
-GTP CRD accepts the parameters for configuring GSLB on the Citrix ADC including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
+GTP CRD accepts the parameters for configuring GSLB on the Netscaler including deployment type (canary, failover, local-first), GSLB domain, health monitor for the Ingress, and service type.
 
-The GTP CRD spec is available in the Citrix ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml).
+The GTP CRD spec is available in the Netscaler ingress controller GitHub repo at: [grp-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml).
 
 ### GSE CRD
 
 GSE CRD dictates the endpoint information (any Kubernetes object which routes traffic into the cluster) in each cluster.
 
-The GSE CRD Spec is available in the Citrix ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
+The GSE CRD Spec is available in the Netscaler ingress controller GitHub repo at: [gse-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 The GSE CRD is auto generated for an Ingress object if the service specified in the Ingress resource is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated. For a service of type `LoadBalancer`, the GSE CRD is auto generated if the service is referred in the GTP CRD instance and the `status-loadbalancer-ip/hostname` field is already populated.
 
@@ -79,13 +79,13 @@ For GSE CRD auto generation in the case of Ingress, host name should exactly mat
 
 ### Prerequisites**
 
--  You should configure GSLB sites on the Citrix ADC which acts as the GSLB device.
+-  You should configure GSLB sites on the Netscaler which acts as the GSLB device.
 -  Features like content switching and SSL should be enabled in the GSLB device
 -  For static proximity, the location database has to be applied externally
 
 Perform the following steps to deploy the Citrix global load balancing solution for geographically distributed Kubernetes clusters.
 
-1.  Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-rbac.yaml) file.
+1.  Create the RBAC permissions required to deploy the GSLB controller using the [gslb-rbac.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-rbac.yaml) file.
 
         kubectl apply -f gslb-rbac.yaml
 
@@ -96,7 +96,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
      **Note:** These secrets are used in the GSLB controller YAML file for the respective sites. The `username` and `password` in the command specifies the user name and password of the Citrix GSLB ADC.
 
-3.  Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-controller.yaml).
+3.  Download the GSLB controller YAML file [gslb-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gslb-controller.yaml).
 
 4.  Edit the GSLB controller YAML file and update the following values as per the requirements of each cluster.
 
@@ -155,11 +155,11 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
         kubectl apply -f gslb-controller.yaml
 
-6.  Deploy the [GTP CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
+6.  Deploy the [GTP CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml) definition YAML file, using the following command.
 
         kubectl create -f  gtp-crd.yaml
 
-7.  Deploy the [GSE CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml) definition YAML file using the following command.
+7.  Deploy the [GSE CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml) definition YAML file using the following command.
 
         kubectl create -f  gse-crd.yaml
 
@@ -169,7 +169,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
 
     **Note:** GTP CRD should be applied across all clusters with the same configuration for the same domain.
 
-    Following is an example for a global traffic policy configuration where traffic policy is specified as local first for the domain `app2.com`. When your application prefers local services, you can use this option. The CIDR of the local cluster (cluster1) is specified using the `CIDR` field. The `weight` field is used to direct more client requests to any particular cluster than other clusters when the GSLB decision is taken by the Citrix ADC.
+    Following is an example for a global traffic policy configuration where traffic policy is specified as local first for the domain `app2.com`. When your application prefers local services, you can use this option. The CIDR of the local cluster (cluster1) is specified using the `CIDR` field. The `weight` field is used to direct more client requests to any particular cluster than other clusters when the GSLB decision is taken by the Netscaler.
     The load balancing method is specified using the `secLbMethod` field as round robin.
 
     **Note:** You can specify the load balancing method for local first, canary, and failover deployments.
@@ -243,7 +243,7 @@ Perform the following steps to deploy the Citrix global load balancing solution 
               ingress:
               - ip: 10.102.217.72
 
-For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Citrix ADC, see the [Multi-cloud and NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md).
+For a sample configuration of multi-cloud ingress and load balancing solution for Amazon EKS and Microsoft AKS clusters using Netscaler, see the [Multi-cloud and NetScaler GSLB controller for applications deployed in distributed Kubernetes clusters with Amazon EKS and Microsoft AKS clusters](../deploy/multi-cloud-ingress-lb-solution.md).
 
 ## How to direct the DNS resolution of pods to Citrix GSLB ADC
 
@@ -378,29 +378,29 @@ This configuration can be verified using the following command:
 
 ## GTP CRD definition
 
-GTP CRD definition is available at [gtp-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml))
+GTP CRD definition is available at [gtp-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gtp-crd.yaml))
 
 The following table explains the GTP CRD attributes.
 
 | Field               | Description                                                                                                                                                                                                                                                                                                                        |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |   `ipType`                                                                                     |Specifies the DNS record type as A or AAAA. Currently, only  `A` record type is supported                                                                                                                                                                                   |
-|`serviceType:`          |Specifies the protocol to which multi-cluster support is applied.                                                                                                                                                                                                                                                                  |
-| `host`          |                                                                                           Specifies the domain for which multi-cluster support is applied.                                                                                                                                |
-| `trafficPolicy`    | Specifies the traffic distribution policy supported in a multi-cluster deployment. |
+|`serviceType:`          |Specifies the protocol to which gslb support is applied.                                                                                                                                                                                                                                                                  |
+| `host`          |                                                                                           Specifies the domain for which gslb support is applied.                                                                                                                                |
+| `trafficPolicy`    | Specifies the traffic distribution policy supported in a gslb deployment. |
 | `sourceIpPersistenceId`| Specifies the unique source IP persistence ID. This attribute enables persistence based on the source IP address for the inbound packets. The `sourceIpPersistenceId` attribute should be a multiple of 100 and should be unique.  For a sample configuration, see [Example: source IP persistence](#example-source-ip-persistence). |
 | `secLbMethod`    |  Specifies the traffic distribution policy supported among clusters under a group in local-first, canary, or failover.  |
 |  `destination `        | Specifies the Ingress or LoadBalancer service endpoint in each cluster. The destination name should match with the name of GSE.                                                                                      |
 | `weight`               |  Specifies the proportion of traffic to be distributed across clusters. For canary deployment, the proportion is specified as percentage.                                                                                                                                                                                                                                                   |
 |`CIDR`    |Specifies the CIDR to be used in local-first to determine the scope of locality.                                                                                                                                                                                                                                                                                  |
 |`primary`    | Specifies whether the destination is a primary cluster or a backup cluster in the failover deployment.                                                                                                                                                                                                                                                                              |
-|`monType`    |Specifies the type of probe to determine the health of the multi-cluster endpoint.  When the monitor type is HTTPS, SNI is enabled by default during the TLS handshake.                                                                               |
-|`uri`    |Specifies the path to be probed for the health of the multi-cluster endpoint for HTTP and HTTPS.                                                                                                                                                                                                                                                                                  |
-|`respCode`    |Specifies the response code expected to mark the multi-cluster endpoint as healthy for HTTP and HTTPS.                                                                                                                                                                                                               |
+|`monType`    |Specifies the type of probe to determine the health of the gslb endpoint.  When the monitor type is HTTPS, SNI is enabled by default during the TLS handshake.                                                                               |
+|`uri`    |Specifies the path to be probed for the health of the gslb endpoint for HTTP and HTTPS.                                                                                                                                                                                                                                                                                  |
+|`respCode`    |Specifies the response code expected to mark the gslb endpoint as healthy for HTTP and HTTPS.                                                                                                                                                                                                               |
 
 ## GSE CRD definition
 
-GSE CRD definition is available at [gse-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
+GSE CRD definition is available at [gse-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/gslb/Manifest/gse-crd.yaml)
 
 ## Examples: Global traffic policy deployments
 
@@ -439,7 +439,7 @@ You can use the failover deployment when you want to deploy applications in an a
 
 In a failover deployment, the application is deployed in multiple clusters and these clusters are grouped into an active cluster group (group1) and a passive cluster group (group2). At any time, only one set of clusters is active while the other set remains passive. When all the clusters in group1 are unavailable, the clusters in group2 moves to the active state. When any of the clusters in group1 becomes available at a later point, group1 moves to the active state and group2 moves to the passive state.
 
-The following example shows a sample GTP configuration for failover. Using the `primary` field, you can specify which cluster belongs to the active group and which cluster belongs to the passive group. The default value for the field is `True` indicating that the cluster belongs to the active group. You can use the `weight` field to direct more client requests to a specific cluster within a group than the other clusters if the configured method is round robin. The `monitor` parameter in the global traffic policy is used to configure the monitor in the Citrix ADC. The monitor can be bound to endpoints in each cluster to probe their health.
+The following example shows a sample GTP configuration for failover. Using the `primary` field, you can specify which cluster belongs to the active group and which cluster belongs to the passive group. The default value for the field is `True` indicating that the cluster belongs to the active group. You can use the `weight` field to direct more client requests to a specific cluster within a group than the other clusters if the configured method is round robin. The `monitor` parameter in the global traffic policy is used to configure the monitor in the Netscaler. The monitor can be bound to endpoints in each cluster to probe their health.
 
     apiVersion: "citrix.com/v1beta1"
     kind: globaltrafficpolicy

@@ -1,0 +1,200 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: icappolicies.citrix.com
+spec:
+  group: citrix.com
+  names:
+    kind: icappolicy 
+    plural: icappolicies
+    singular: icappolicy 
+  scope: Namespaced
+  versions: 
+  - name: v1beta1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      jsonPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      jsonPath: .status.status_message
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          status:
+            type: object
+            properties:
+              state:
+                type: string
+              status_message:
+                type: string
+          spec:
+            type: object
+            properties:
+              ingressclass:
+                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                type: string
+                maxLength: 127
+              services:
+                type: array
+                description: 'Name of the services for which the icap policy needs to be bound'
+                items:
+                  type: string
+              icap-servers:
+                type: object
+                description: "ICAP service for the ICAP server that will be part of the load balancing setup. The service that you add provides the ICAP connection between the NetScaler appliance and load balancing virtual servers."
+                properties:
+                  servers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ip:
+                          type: string
+                          description: 'IP of the ICAP Server'
+                          format: ipv4
+                        port:
+                          type: integer
+                          description: 'Port number of the ICAP Server.'
+                          minimum: 1
+                          maximum: 65535
+                      required:
+                        - ip
+                        - port
+                  server-type:
+                    type: string
+                    description: 'Type of ICAP Server.'
+                    enum: ['TCP', 'SSL_TCP']
+                    default: 'SSL_TCP'
+                  server_host_cert:
+                    description: |+
+                                 'Name of the SSL certificate to be used with ICAP server.
+                                  This certificate is mandatory for server-type SSL_TCP'
+                    type: object
+                    properties:
+                      tls_secret:
+                        type: string
+                        description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
+                        pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                      preconfigured:
+                        type: string
+                        maxLength: 63
+                        description: |+
+                                      'Preconfigured SSL certkey name on NetScaler with the
+                                      certificate and key already added on NetScaler'
+                    oneOf:
+                      - required: [tls_secret]
+                      - required: [preconfigured]
+                required:
+                - servers
+              icap:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    preconfigured-profile: 
+                      description: 'Names of the preconfigured ICAP profile.'
+                      type: string
+                      maxLength: 127
+                    direction:
+                      description: 'ICAP Mode of operation. It is a mandatory argument while creating an icapprofile.'
+                      type: string
+                      enum: ['REQUEST','RESPONSE']
+                    profile:
+                      type: object
+                      description: 'ICAP profile(s) of the NetScaler.'
+                      properties:
+                        preview:
+                          description: 'Enable or Disable preview header with ICAP request. This feature allows an ICAP server to see the beginning of a transaction, then decide if it wants to opt-out of the transaction early instead of receiving the remainder of the request message.'
+                          type: string
+                          enum: ["ENABLED", "DISABLED"]
+                        preview-length:
+                          description: 'Value of Preview Header field. NetScaler uses the minimum of this set value and the preview size received on OPTIONS'
+                          type: integer
+                          minimum: 0
+                          maximum: 4294967294
+                        uri:
+                          description: 'URI representing icap service. It is a mandatory argument while creating an icapprofile.'
+                          type: string
+                          maxLength: 511
+                        host-header:
+                          description: 'ICAP Host Header.'
+                          type: string
+                          maxLength: 255
+                        user-agent-header:
+                          description: 'ICAP User Agent Header'
+                          type: string
+                          maxLength: 255
+                        query-params:
+                          description: 'Query parameters to be included with ICAP request URI. Entered values should be in arg=value format. For more than one parameters, add & separated values. e.g.: arg1=val1&arg2=val2'
+                          type: string
+                          maxLength: 511
+                        connection-keep-alive:
+                          description: 'Enable or Disable sending Allow: 204 header in ICAP request.'
+                          type: string
+                          enum: ["ENABLED", "DISABLED"]
+                        insert-icap-headers:
+                          description: 'Insert custom ICAP headers in the ICAP request to send to ICAP server. The headers can be static or can be dynamically constructed using PI Policy Expression. For example, to send static user agent and Client''s IP address, the expression can be specified as "User-Agent: NS-ICAP-Client/V1.0r0-Client-IP: "+CLIENT.IP.SRC+"r0. The NetScaler does not check the validity of the specified header name-value. You must manually validate the specified header syntax.'
+                          type: string
+                          maxLength: 8191
+                        insert-http-request:
+                          description: 'Exact HTTP request, in the form of an expression, which the NetScaler encapsulates and sends to the ICAP server. If you set this parameter, the ICAP request is sent using only this header. This can be used when the HTTP header is not available to send or ICAP server only needs part of the incoming HTTP request. The request expression is constrained by the feature for which it is used. The NetScaler does not check the validity of this request. You must manually validate the request.'
+                          type: string
+                          maxLength: 8191
+                        req-timeout:
+                          description: 'Time, in seconds, within which the remote server should respond to the ICAP-request. If the Netscaler does not receive full response with this time, the specified request timeout action is performed. Zero value disables this timeout functionality.'
+                          type: integer
+                          minimum: 0
+                          maximum: 86400
+                        req-timeout-action:
+                          description: 'Name of the action to perform if the Vserver/Server representing the remote service does not respond with any response within the timeout value configured. The Supported actions are * BYPASS - This Ignores the remote server response and sends the request/response to Client/Server. * If the ICAP response with Encapsulated headers is not received within the request-timeout value configured, this Ignores the remote ICAP server response and sends the Full request/response to Server/Client'
+                          type: string
+                          enum: ['BYPASS', 'DROP', 'RESET']
+                        log-action:
+                          description: 'Name of the audit message action which would be evaluated on receiving the ICAP response to emit the logs'
+                          type: string
+                          maxLength: 127
+                      required:
+                        - uri
+                    content-inspection-criteria:
+                      description: 'Expression that the policy uses to determine whether to execute the specified action.'
+                      type: string
+                      maxLength: 1499
+                    default-action: 
+                      description: 'Action to perform if the result of policy evaluation is undefined (UNDEF). An UNDEF event indicates an internal error condition. Only the above built-in actions can be used'
+                      type: string
+                      maxLength: 127
+                    log-action:
+                      description: 'Name of the messagelog action to use for requests that match this policy.'
+                      type: string
+                      maxLength: 127
+                    goto-priority-expression:
+                      description: 'Expression or other value specifying the next policy to be evaluated if the current policy evaluates to TRUE.Specify one of the following values:* NEXT - Evaluate the policy with the next higher priority number.* END - End policy evaluation.Default value of goto-priority-expression: END'
+                      type: string
+                    operation:
+                      description: 'Type of operation this action is going to perform. following actions are available to configure: * ICAP - forward the incoming request or response to an ICAP server for modification. * INLINEINSPECTION - forward the incoming or outgoing packets to IPS server for Intrusion Prevention. * MIRROR - Forwards cloned packets for Intrusion Detection. * NOINSPECTION - This does not forward incoming and outgoing packets to the Inspection device. * NSTRACE - capture current and further incoming packets on this transaction.'
+                      type: string
+                      enum: ['ICAP', 'INLINEINSPECTION', 'MIRROR', 'NOINSPECTION']
+                    server-failure-action:
+                      description: 'Name of the action to perform if the Vserver representing the remote service is not UP. This is not supported for NOINSPECTION Type. The Supported actions are: * RESET - Reset the client connection by closing it. The client program, such as a browser, will handle this and may inform the user. The client may then resend the request if desired. * DROP - Drop the request without sending a response to the user. * CONTINUE - It bypasses the ContentIsnpection and Continues/resumes the Traffic-Flow to Client/Server.'
+                      type: string
+                      enum: ['CONTINUE', 'DROP', 'RESET']
+                  oneOf:
+                    - required: [preconfigured-profile]
+                    - required: [profile]
+                  required:
+                    - direction
+                    - content-inspection-criteria
+                    - operation
+            required:
+              - ingressclass
+              - services
+              - icap-servers
+              - icap
