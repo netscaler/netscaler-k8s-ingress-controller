@@ -1,7 +1,7 @@
 # Advanced content routing for Kubernetes Ingress using the HTTPRoute CRD
 
-Kubernetes native Ingress offers basic host and path-based routing which is supported by the Citrix ingress controller. 
-Citrix also provides an alternative approach using content routing CRDs for supporting advanced routing capabilities. Content Routing CRDs include Listener CRD and HTTPRoute CRD. These CRDs provide advanced content routing features such as regex based expression and content switching based on query parameters, cookies, HTTP headers, and other Citrix ADC custom expressions.
+Kubernetes native Ingress offers basic host and path-based routing which is supported by the Netscaler ingress controller. 
+Citrix also provides an alternative approach using content routing CRDs for supporting advanced routing capabilities. Content Routing CRDs include Listener CRD and HTTPRoute CRD. These CRDs provide advanced content routing features such as regex based expression and content switching based on query parameters, cookies, HTTP headers, and other Netscaler custom expressions.
 
 With the Ingress version `networking.k8s.io/v1`, Kubernetes introduces support for [resource backends](https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend). A resource backend is an `ObjectRef` to another Kubernetes resource within the same namespace as an Ingress object.
 
@@ -33,24 +33,33 @@ Following is a sample Ingress resource named as `sample-ingress.yaml`.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: kuard-ingress
   annotations:
-    ingress.citrix.com/frontend-ip: "x.x.x.x"
-    kubernetes.io/ingress.class: citrix
-    ingress.citrix.com/insecure-termination: "redirect"
+    ingress.citrix.com/frontend-ip: x.x.x.x
+    ingress.citrix.com/insecure-termination: redirect
+  name: kuard-ingress
 spec:
-  tls:
-  - secretName: web-ingress-secret
+  ingressClassName: citrix
   rules:
   - host: kuard.example.com
     http:
       paths:
-      - pathType: ImplementationSpecific
-        backend:
+      - backend:
           resource:
             apiGroup: citrix.com
             kind: HTTPRoute
             name: kuard-example-route
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: web-ingress-secret
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: citrix
+spec:
+  controller: citrix.com/ingress-controller
+---
+
 ```
 
 After defining the Ingress resource in a YAML file, deploy the YAML file using the following command. Here, `sample-ingress.yaml` is the YAML file definition.

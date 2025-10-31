@@ -40,7 +40,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the ratelimit policies are applied.'
                 type: array
@@ -64,7 +64,7 @@ spec:
                         type: array
                         items:
                           type: string
-                          enum: ['GET', 'PUT', 'POST','DELETE']
+                          enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                       header_name:
                         description: "HTTP header that identifies the unique API client for e.g. X-apikey"
                         type: string
@@ -88,4 +88,17 @@ spec:
               redirect_url:
                 type: string
                 description: "Redirect-URL"
+              logpackets:
+                type: object
+                description: 'Adds an audit message action. The action specifies whether to log the message, and to which log.'
+                properties:
+                  logexpression:
+                    description: 'Default-syntax expression that defines the format and content of the log message.'
+                    type: string
+                    maxLength: 7991
+                  loglevel:
+                    description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                    type: string
+                    enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+                required: [logexpression, loglevel]
             required: [req_threshold]

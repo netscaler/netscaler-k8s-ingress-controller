@@ -1,8 +1,8 @@
-# Configure bot management policies with the Citrix ingress controller
+# Configure bot management policies with the Netscaler ingress controller
 
 A bot is a software application that automates manual tasks. Using Bot management policies you can allow useful bots to access your cloud native environment and block the malicious bots.
 
-Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the Bot CRD provided by Citrix, you can configure the bot management policies with the Citrix ingress controller on the Citrix ADC VPX. The Bot CRD enables communication between the Citrix ingress controller and Citrix ADC for enforcing bot management policies.
+Custom Resource Definitions (CRDs) are the primary way of configuring policies in cloud native deployments. Using the Bot CRD provided by Citrix, you can configure the bot management policies with the Netscaler ingress controller on the Netscaler VPX. The Bot CRD enables communication between the Netscaler ingress controller and Netscaler for enforcing bot management policies.
 
 In a Kubernetes deployment, you can enforce bot management policy on the requests and responses from and to the server using the Bot CRD. For more information on security vulnerabilities, see [Bot Detection](https://docs.citrix.com/en-us/citrix-adc/current-release/bot-management/bot-detection.html).
 
@@ -22,7 +22,7 @@ Based on the type of protections required, you can specify the metadata and use 
  
 ## Bot CRD definition
 
-The Bot CRD is available in the Citrix ingress controller GitHub repo at [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml). The Bot CRD provides attributes for the various options that are required to define the bot management policies on Citrix ADC.
+The Bot CRD is available in the Netscaler ingress controller GitHub repo at [bot-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/bot/bot-crd.yaml). The Bot CRD provides attributes for the various options that are required to define the bot management policies on Netscaler.
 
 ## Bot CRD attributes
 
@@ -43,7 +43,7 @@ The following table lists the various attributes provided in the Bot CRD:
 | `signatures` | Location of external bot signature file. |
 | `target` | Determines which traffic to be inspected by the bot. If you do not specify the traffic targeted, every traffic is inspected by default. |
 | `paths` | List of HTTP URLs to be inspected. |
-| `method` | List of HTTP methods to be inspected. |
+| `method` | List of HTTP methods to be inspected. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT.|
 | `header` | List of HTTP headers to be inspected. |
 
 ## Deploy the Bot CRD
@@ -65,13 +65,13 @@ customresourcedefinition.apiextensions.k8s.io/bots.citrix.com created
 
 After you have deployed the Bot CRD provided by Citrix in the Kubernetes cluster, you can define the bot management policy configuration in a YAML file. In the YAML file, specify bot in the kind field. In the spec section, add the Bot CRD attributes based on your requirements for the policy configuration.
 
-After you deploy the YAML file, the Citrix ingress controller applies the bot configuration on the Ingress Citrix ADC device.
+After you deploy the YAML file, the Netscaler ingress controller applies the bot configuration on the Ingress Netscaler device.
 
 **Examples**
 
 **Block malicious traffic using known IP, subnet, or ADC policy expressions**
 
-When you want to define and employ a web bot management policy in Citrix ADC to enable bot for blocking malicious traffic, you can create a YAML file called `botblocklist.yaml` and use the appropriate CRD attributes to define the bot policy as follows:
+When you want to define and employ a web bot management policy in Netscaler to enable bot for blocking malicious traffic, you can create a YAML file called `botblocklist.yaml` and use the appropriate CRD attributes to define the bot policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1
@@ -152,7 +152,7 @@ spec:
 
 **Enable the bot device fingerprint and customize the action**
 
-Device fingerprinting involves inserting a JavaScript snippet in the HTML response to the client. This JavaScript snippet, when invoked by the browser on the client, collects the attributes of the browser and client. And sends a POST request to Citrix ADC with that information. These attributes are examined to determine whether the connection is requested from a bot or a human being. You can create a YAML file called `botdfp.yaml` and use the appropriate CRD attributes to define the bot policy as follows:
+Device fingerprinting involves inserting a JavaScript snippet in the HTML response to the client. This JavaScript snippet, when invoked by the browser on the client, collects the attributes of the browser and client. And sends a POST request to Netscaler with that information. These attributes are examined to determine whether the connection is requested from a bot or a human being. You can create a YAML file called `botdfp.yaml` and use the appropriate CRD attributes to define the bot policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1

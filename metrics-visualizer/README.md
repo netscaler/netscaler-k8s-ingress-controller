@@ -1,7 +1,7 @@
-Metrics Visualization of Citrix ADC Appliances in Kubernetes
+Metrics Visualization of Netscaler Appliances in Kubernetes
 ===
 
-This document describes how the [Citrix ADC Metrics Exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
+This document describes how the [Netscaler Metrics Exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) can be used to auto-detect and monitor VPX/CPX ingress devices and CPX-EW (east-west) devices. Moitoring dashboards setup for detected devices will be brought up as Grafana dashboard.
 
 
 Launching Promethus-Operator
@@ -89,9 +89,9 @@ kubectl apply -f prometheus-service.yaml
 kubectl apply -f grafana-service.yaml
 ```
 
-Configuring Citrix ADC Metrics Exporter
+Configuring Netscaler Metrics Exporter
 ---
-This section describes how to integrate the Citrix ADC Metrics Exporter with the VPX/CPX ingress or CPX-EW devices. 
+This section describes how to integrate the Netscaler Metrics Exporter with the VPX/CPX ingress or CPX-EW devices. 
 
 <details>
 <summary>VPX Ingress Device</summary>
@@ -181,7 +181,7 @@ spec:
       containers:
         # Adding exporter as a side-car
         - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:14.1-17.38"
           tty: true
           securityContext:
             privileged: true
@@ -267,7 +267,7 @@ spec:
       hostNetwork: true
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27"
+          image: "quay.io/citrix/citrix-k8s-cpx-ingress:14.1-17.38"
           securityContext: 
              privileged: true
           env:
@@ -318,7 +318,7 @@ Here, the exporter uses the ```192.168.0.2``` local IP to fetch metrics from the
 
 ServiceMonitors to Detect NetScalers
 ---
-Till this point, Citrix ADC Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
+Till this point, Netscaler Metrics Exporters were setup to collect data from the VPX/CPX ingress and CPX-EW devices. Now, these Exporters needs to be detected by Prometheus Operator so that the metrics which are collected can be timestamped, stored, and exposed for visualization on Grafana. Prometheus Operator uses the concept of ```ServiceMonitors``` to detect pods belonging to a service, using the labels attached to that service. 
 
 The following example file will detect all the Exporter endpoints associated with Exporter services which have the label ```service-type: citrix-adc-monitor``` associated with them.
 
@@ -385,7 +385,7 @@ The NetScaler instances which were detected for monitoring will appear in the ``
 To view the metrics graphically,
 1. Log into grafana using ```http://<k8s_cluster_ip>:<grafana_nodeport>``` with default credentials ```admin:admin```
 
-2. Import [k8s ingress services grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/k8s_cic_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
+2. Import [k8s ingress services grafana dashboard](https://github.com/netscaler/netscaler-adc-metrics-exporter/blob/master/k8s_cic_ingress_service_stats.json) or [sampe system grafana dashboard](https://github.com/netscaler/netscaler-adc-metrics-exporter/blob/master/sample_system_stats.json) by selecting the ```+``` icon on the left panel and clicking import.
 
 <img src="./images/grafana-import-json.png" width="200">
 

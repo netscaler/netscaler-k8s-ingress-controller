@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.citrix.com/canary-by-header: "\u201Cheader-name\u201D"
+    ingress.citrix.com/canary-by-header-value: "[\u201Cvalue1\u201D,\u201Cvalue2\"\
+      ,\u201Cvalue3\u201D,\u201Cvalue4\"]"
+    ingress.citrix.com/frontend-ip: 192.0.2.179
+  name: guestbook
+spec:
+  ingressClassName: "\u201Ccitrix\u201D"
+  rules:
+  - host: guestbook.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: "\u201Ccitrix\u201D"
+spec:
+  controller: citrix.com/ingress-controller
+---

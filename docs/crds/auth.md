@@ -1,12 +1,12 @@
-# Define authentication and authorization policies on the Ingress Citrix ADC
+# Authentication and authorization policies for Kubernetes with Netscaler
 
 Authentication and authorization policies are used to enforce access restrictions to the resources hosted by an application or API server. While you can verify the identity using the authentication policies, authorization policies are used to verify whether a specified request has the necessary permissions to access a resource.
 
-Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called the **Auth CRD** that you can use with the Citrix ingress controller to define authentication policies on the ingress Citrix ADC.
+Citrix provides a Kubernetes [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) called the **Auth CRD** that you can use with the Netscaler ingress controller to define authentication policies on the ingress Netscaler.
 
 ## Auth CRD definition
 
-The Auth CRD is available in the Citrix ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for the various options that are required to define the authentication policies on the Ingress Citrix ADC.
+The Auth CRD is available in the Netscaler ingress controller GitHub repo at: [auth-crd.yaml](https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/auth/auth-crd.yaml). The Auth CRD provides [attributes](#auth-crd-attributes) for the various options that are required to define the authentication policies on the Ingress Netscaler.
 
 ## Auth CRD attributes
 
@@ -26,10 +26,10 @@ The name of the services for which the authentication and authorization policies
 
 The following authentication mechanisms are supported:
 
-- Using request headers:  
+-  Using request headers:  
 Enables user authentication using the request header. You can use this mechanism when the credentials or API keys are passed in a header (typically Authorization header). For example, you can use authentication using request headers for basic, digest, bearer authentication, or API keys.
 
-- Using forms:
+-  Using forms:
 You can use this mechanism with user or web authentication including the relying party configuration for OpenID connect and the service provider configuration for SAML.
 
 When the authentication mechanism is not specified, the default is authentication using the request header.
@@ -38,7 +38,7 @@ The following are the attributes for forms based authentication.
 
 | Attribute | Description |
 | --------- | ----------- |
-| `authentication_host` | Specifies a fully qualified domain name (FQDN) to which the user must be redirected for ADC authentication service. This FQDN should be unique and should resolve to the front-end IP address of Citrix ADC with Ingress/service type LoadBalancer or the VIP address of the Listener CRD.|
+| `authentication_host` | Specifies a fully qualified domain name (FQDN) to which the user must be redirected for ADC authentication service. This FQDN should be unique and should resolve to the front-end IP address of Netscaler with Ingress/service type LoadBalancer or the VIP address of the Listener CRD.|
 | `authentication_host_cert` | Specifies the name of the SSL certificate to be used with the `authentication_host`. This certificate is mandatory while performing authentication using the form.|
 |`ingress_name`| Specifies the Ingress name for which the authentication using forms is applicable.|
 | `lb_service_name`| Specifies the name of the service of type LoadBalancer for which the authentication using forms is applicable.|
@@ -51,15 +51,15 @@ The following are the attributes for forms based authentication.
 
 ### Authentication providers
 
-The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism. 
+The **providers** define the authentication mechanism and parameters that are required for the authentication mechanism.
 
 #### Basic authentication
 
-Specifies that local authentication is used with the HTTP basic authentication scheme. To use basic authentication, you must create user accounts on the ingress Citrix ADC.
+Specifies that local authentication is used with the HTTP basic authentication scheme. To use basic authentication, you must create user accounts on the ingress Netscaler.
 
 #### OAuth authentication
 
-The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to a Citrix ADC as an access credential, the Citrix ADC validates the token using the configured values. If the token validation is successful then Citrix ADC grants access to the client.
+The OAuth authentication mechanism, requires an external identity provider to authenticate the client using oAuth2 and issue an Access token. When the client presents the Access token to a Netscaler as an access credential, the Netscaler validates the token using the configured values. If the token validation is successful then Netscaler grants access to the client.
 
 ##### OAuth authentication attributes
 
@@ -82,7 +82,7 @@ OpenID Connect (OIDC) is a simple identity layer on top of the OAuth 2.0 protoco
 | Attribute | Description |
 | --------- | ----------- |
 | `metadata_url` | Specifies the URL that is used to get OAUTH or OIDC provider metadata.|
-| `user_field` | Specifies the attribute in the token from which the user name should be extracted. By default, Citrix ADC examines the email attribute for user ID.|
+| `user_field` | Specifies the attribute in the token from which the user name should be extracted. By default, Netscaler examines the email attribute for user ID.|
 | `default_group` | Specifies the group assigned to the request if authentication succeeds. This group is in addition to any extracted groups from the token. |
 | `grant_type` | Specifies the type of flow to the token end point. The default value is `CODE`.|
 | `pkce` | Specifies whether to enable Proof Key for Code Exchange (PKCE). The default value is `ENABLED`.|
@@ -90,7 +90,7 @@ OpenID Connect (OIDC) is a simple identity layer on top of the OAuth 2.0 protoco
 
 #### SAML authentication
 
-Security assertion markup language (SAML) is an XML-based open standard which enables authentication of users across products or organizations. The SAML authentication mechanism, requires an external identity provider to authenticate the client. SAML works by transferring the client identity from the identity provider to the Citrix ADC. On successful validation of the client identity, the Citrix ADC grants access to the client.
+Security assertion markup language (SAML) is an XML-based open standard which enables authentication of users across products or organizations. The SAML authentication mechanism, requires an external identity provider to authenticate the client. SAML works by transferring the client identity from the identity provider to the Netscaler. On successful validation of the client identity, the Netscaler grants access to the client.
 
 The following are the attributes for SAML authentication.
 
@@ -100,7 +100,7 @@ The following are the attributes for SAML authentication.
 | `metadata_refresh_interval` | Specifies the interval in minutes for fetching metadata from the specified metadata URL.|
 | `signing_cert` | Specifies the SSL certificate to sign requests from the service provider (SP) to the identity provider (IdP).|
 | `audience` | Specifies the identity of the service or application for which the token is applicable.|
-| `issuer_name` | Specifies the name used in requests sent from SP to IdP to identify the Citrix ADC.|
+| `issuer_name` | Specifies the name used in requests sent from SP to IdP to identify the Netscaler.|
 | `binding` | Specifies the transport mechanism of the SAML message. The default value is `POST`.|
 | `artifact_resolution_service_url` | Specifies the URL of the artifact resolution service on IdP.|
 | `logout_binding` | Specifies the transport mechanism of the SAML logout. The default value is `POST`.|
@@ -108,7 +108,7 @@ The following are the attributes for SAML authentication.
 |`user_field`| Specifies the SAML user ID specified in the SAML assertion|
 |`default_authentication_group`| Specifies the default group that is chosen when the authentication succeeds in addition to extracted groups.|
 |`skewtime`| Specifies the allowed clock skew time in minutes on an incoming SAML assertion.|
-|`attributes_to_save`| Specifies the list of attribute names separated by commas which needs to be extracted and stored as key-value pairs for the session on Citrix ADC.|
+|`attributes_to_save`| Specifies the list of attribute names separated by commas which needs to be extracted and stored as key-value pairs for the session on Netscaler.|
 
 #### LDAP authentication
 
@@ -125,44 +125,67 @@ The following are the attributes for LDAP authentication.
 | `server_port` | Specifies the port on which the LDAP server accepts connections. The default value is 389.|
 | `base` | Specifies the base node on which to start LDAP searches. If the LDAP server is running locally, the default value of base is `dc=netscaler`, `dc=com`.|
 | `server_login_credentials` | Specifies the Kubernetes secret object providing credentials to log in to the LDAP server. The secret data should have user name and password.|
-| `login_name` | Specifies the **LDAP login name** attribute. The Citrix ADC uses the LDAP login name to query external LDAP servers or Active Directories.|
-| `security_type` | Specifies the type of security used for communications between the Citrix ADC and the LDAP server. The default is TLS.|
+| `login_name` | Specifies the **LDAP login name** attribute. The Netscaler uses the LDAP login name to query external LDAP servers or Active Directories.|
+| `security_type` | Specifies the type of security used for communications between the Netscaler and the LDAP server. The default is TLS.|
 | `validate_server_cert` | Validates LDAP server certificates. The default value is `NO`.|
 |`hostname`|Specifies the host name for the LDAP server. If `validate_server_cert` is `ON`, this value must be the host name on the certificate from the LDAP. A host name mismatch causes a connection failure.|
 |`sub_attribute_name`| Specifies the LDAP group subattribute name. This attribute is used for group extraction from the LDAP server.|
 |`group_attribute_name`| Specifies the LDAP group attribute name. This attribute is used for group extraction on the LDAP server.|
 |`search_filter`| Specifies the string to be combined with the default LDAP user search string to form the search value. For example, if the search filter "vpnallowed=true" is combined with the LDAP login name "samaccount" and the user-supplied user name is "bob", the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)"". Enclose the search string in two sets of double quotation marks.|
-|`auth_timeout`| Specifies the number of seconds the Citrix ADC waits for a response from the server. The default value is 3.|
+|`auth_timeout`| Specifies the number of seconds the Netscaler waits for a response from the server. The default value is 3.|
 |`password_change`|Allows password change requests. The default value is `DISABLED`. |
-|`attributes_to_save`| List of attribute names separated by comma which needs to be fetched from the LDAP server and stored as key-value pairs for the session on Citrix ADC. |
+|`attributes_to_save`| List of attribute names separated by comma which needs to be fetched from the LDAP server and stored as key-value pairs for the session on Netscaler. |
 
 ### Authentication policies
 
 The **authentication_policies** allow you to define the traffic selection criteria to apply the authentication mechanism and also to specify the provider that you want to use for the selected traffic.
 
-The following are the attributes for policies:
+Authentication policy supports two formats through which you can specify authentication rules:
+
+-  resource format
+-  expression format
+
+The following are the attributes for policies with resource format:
 
 | Attribute | Description |
 | --------- | ----------- |
 | `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
-| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
+| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT. </br>**Note:** The traffic is selected if the incoming request URI matches with any of the paths AND any of the listed methods. If the method is not specified then the path alone is used for the traffic selection criteria.|
 | `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
 
-**Note:** If you want to skip authentication for a specific end point, create a policy with the `provider` attribute set as empty list. Otherwise, the request is denied. 
+The following attributes are for authentication policies with expression format:
+
+| Attribute | Description |
+| --------- | ----------- |
+| `expression` | Specifies Netscaler expression to be evaluated based on authentication  |
+| `provider` | Specifies the authentication mechanism that needs to be used. If the authentication mechanism is not provided, then authentication is not performed.|
+
+**Note:** If you want to skip authentication for a specific end point, create a policy with the `provider` attribute set as empty list. Otherwise, the request is denied.
 
 ### Authorization policies
 
 Authorization policies allow you to define the traffic selection criteria to apply the authorization requirements for the selected traffic.
 
-The following are the attributes for authorization policies:
+Authorization policy supports two formats through which the you can specify the authorization rules:
+
+-  resource format
+-  expression format
+
+The following are the attributes for authorization policies with resource format:
 
 | Attribute | Description |
 | --------- | ----------- |
 | `path` | An array of URL path prefixes that refer to a specific API endpoint. For example, `/api/v1/products/`.  |
-| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, or DELETE. |
+| `method` | An array of HTTP methods. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT. |
 | `claims` | Specifies the claims required to access a specific API endpoint. `name` indicates the claim name and `values` indicate the required permissions. You can have more than one claim. If an empty list is specified, it implies that authorization is not required. </br> **Note:** Any claim that needs to be used for authorization, should be saved as part of authentication.|
 
-**Note:** Citrix ADC requires both authentication and authorization policies for the API traffic. Therefore, you must configure an authorization policy with an authentication policy. Even if you do not have any authorization checks, you must create an authorization policy with empty claims. Otherwise, the request is denied with a 403 error.
+The following are the attributes for authorization policies with expression format:
+
+| Attribute | Description |
+| --------- | ----------- |
+| `expression` | Specifies an expression to be evaluated for authorization.   |
+
+**Note:** Netscaler requires both authentication and authorization policies for the API traffic. Therefore, you must configure an authorization policy with an authentication policy. Even if you do not have any authorization checks, you must create an authorization policy with empty claims. Otherwise, the request is denied with a 403 error.
 
 **Note:** Authorization would be successful if the incoming request matches a policy (path, method, and claims). All policies are tried until there is a match. If it is required to selectively bypass authorization for a specific end point, an explicit policy needs to be created.
 
@@ -186,7 +209,7 @@ Perform the following to deploy the Auth CRD:
 
 After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the authentication policy configuration in a `.yaml` file. In the `.yaml` file, use `authpolicy` in the `kind` field and in the `spec` section add the **Auth CRD** attributes based on your requirement for the policy configuration.
 
-After you deploy the `.yaml` file, the Citrix ingress controller applies the authentication policy configuration on the Ingress Citrix ADC device.
+After you deploy the `.yaml` file, the Netscaler ingress controller applies the authentication policy configuration on the Ingress Netscaler device.
 
 ### Local auth provider
 
@@ -230,10 +253,10 @@ spec:
 ```
 
 The sample policy definition performs the following:
-- Citrix ADC performs the local authentication on the requests to the following:
+- Netscaler performs the local authentication on the requests to the following:
   - **GET** or **POST** operation on orders and shipping end points.
-- Citrix ADC does not perform the authentication for **GET** operation on the **products** endpoint.
-- Citrix ADC does not apply any authorization permissions.
+- Netscaler does not perform the authentication for **GET** operation on the **products** endpoint.
+- Netscaler does not apply any authorization permissions.
 
 ### oAuth JWT verification
 
@@ -294,19 +317,17 @@ spec:
             method: [GET]
             claims: []
 ```
+
 The sample policy definition performs the following:
 
-- Citrix ADC performs JWT verification on the requests to the following:
+- Netscaler performs JWT verification on the requests to the following:
   –	**GET** or **POST** operation on **orders** and **shipping** endpoints.
-- Citrix ADC skips authentication for the **GET** operation on the **products** endpoint.
--	Citrix ADC requires the scope claim with `read` and `write` permissions for **POST** operation on **orders** and **shipping** endpoints.
--	Citrix ADC requires the scope claim with the read permission for **GET** operation on the **orders** endpoint.
--	Citrix ADC does not need any permissions for **GET** operation on the **shipping** end point.
-
-
+- Netscaler skips authentication for the **GET** operation on the **products** endpoint.
+-	Netscaler requires the scope claim with `read` and `write` permissions for **POST** operation on **orders** and **shipping** endpoints.
+-	Netscaler requires the scope claim with the read permission for **GET** operation on the **orders** endpoint.
+-	Netscaler does not need any permissions for **GET** operation on the **shipping** end point.
 
 For OAuth, if the token is present in a custom header, it can be specified using the `token_in_hdr` attribute as follows:
-
 
           oauth:
             issuer: "https://sts.windows.net/tenant1/"
@@ -368,9 +389,9 @@ spec:
 ```
 The sample policy definition performs the following:
 
--	Citrix ADC performs the oAuth introspection as specified in the provider “introspect-provider” for all requests.
--	Citrix ADC requires the scope claim with `read` and `write` permissions for all **POST** requests.
--	Citrix ADC requires the scope claim with the read permission for all **GET** requests.
+-	Netscaler performs the oAuth introspection as specified in the provider “introspect-provider” for all requests.
+-	Netscaler requires the scope claim with `read` and `write` permissions for all **POST** requests.
+-	Netscaler requires the scope claim with the read permission for all **GET** requests.
 
 ### Creating a secrets object with client credentials for introspection
 
@@ -439,16 +460,17 @@ spec:
             claims: []
 
 ```
+
 The sample policy definition performs the following:
 
--	Citrix ADC performs SAML authentication as specified in the provider `saml-auth-provider` for all requests. 
+-	Netscaler performs SAML authentication as specified in the provider `saml-auth-provider` for all requests. 
   **Note:** Granular authentication is not supported for the forms mechanism.
--	Citrix ADC requires the group claim with `admin` permission for all **POST** requests.
--	Citrix ADC does not require any specific permission for **GET** requests.
+-	Netscaler requires the group claim with `admin` permission for all **POST** requests.
+-	Netscaler does not require any specific permission for **GET** requests.
 
 ### OpenID Connect authentication using forms
 
-The following is an example for creating OpenID Connect authentication to configure Citrix ADC in a Relaying Party (RP) role to authenticate users for an external identity provider. The `authentication_mechanism` must be set to `using_forms` to trigger the OpenID Connect procedures.
+The following is an example for creating OpenID Connect authentication to configure Netscaler in a Relaying Party (RP) role to authenticate users for an external identity provider. The `authentication_mechanism` must be set to `using_forms` to trigger the OpenID Connect procedures.
 
 ```yml
 apiVersion: citrix.com/v1beta1
@@ -492,11 +514,12 @@ spec:
             method: []
             claims: []
 ```
+
 The sample policy definition performs the following:
 
--	Citrix ADC performs OIDC authentication (relying party) as specified in the provider “oidc-provider” for all requests.
+-  Netscaler performs OIDC authentication (relying party) as specified in the provider “oidc-provider” for all requests.
   **Note:** Granular authentication is not supported for the forms mechanism.
-- Citrix ADC does not require any authorization permissions.
+-  Netscaler does not require any authorization permissions.
 
 ### LDAP authentication using the request header
 
@@ -598,12 +621,11 @@ spec:
 ```
 
 The sample policy definition performs the following:
--	Citrix ADC performs the LDAP authentication for entire traffic (all requests).
--	Citrix ADC does not apply any authorization permission.
 
+-  Netscaler performs the LDAP authentication for entire traffic (all requests).
+-  Netscaler does not apply any authorization permission.
 
 **LDAP_secret.yaml**
-
 
 The following is an example for `LDAP_secret.yaml`.
 
@@ -618,4 +640,42 @@ stringData:
   password: 'ldap_server_password'
 
 ```
-        
+
+### Example for Netscaler expression support with Auth CRD
+
+This example shows how you can specify Netscaler expressions along with authentication and authorization policies:
+
+```yaml
+apiVersion: citrix.com/v1beta1
+kind: authpolicy
+metadata:
+  name: authexample
+spec:
+    servicenames:
+    - frontend
+
+    authentication_mechanism:
+      using_request_header: 'ON'
+
+    authentication_providers:
+        - name: "ldap-auth-provider"
+          ldap:
+              
+              server_ip: "192.2.156.160"
+              base: 'dc=aaa,dc=local'
+              login_name: accountname
+              sub_attribute_name: CN
+              server_login_credentials: ldapcredential
+              # "memberof" attribute details are extracted from LDAP server.
+              attributes_to_save: memberof
+
+    authentication_policies:
+        # Perform LDAP authentication for the host hotdrink.beverages.com
+        - expression: 'HTTP.REQ.HOSTNAME.SET_TEXT_MODE(IGNORECASE).EQ("hotdrink.beverages.com")'
+          provider: ["ldap-auth-provider"]
+
+
+    authorization_policies:
+        # ALLOW the session only if the authenticated user is associated with attribute "memberof" having value "grp4"
+        - expression: 'aaa.user.attribute("memberof").contains("grp4")'
+```

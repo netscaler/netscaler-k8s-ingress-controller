@@ -15,7 +15,7 @@ locals {
   // Parse the Input YAML File
   input_yaml_file = "input-config.yaml"
   input_data = "${yamldecode(file(local.input_yaml_file))}"
-  // Parse Citrix ADC Details from Input 
+  // Parse Netscaler Details from Input 
   citrix_adc_ip = local.input_data["citrixadc"]["managementip"]
   citrix_username = local.input_data["citrixadc"]["username"]
   citrix_password = local.input_data["citrixadc"]["password"]
