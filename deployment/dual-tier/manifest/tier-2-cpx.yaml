@@ -1,11 +1,10 @@
-#Cluster role required by CPX
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: cpx
+  name: cpx-ingress-k8s-role
 rules:
   - apiGroups: [""]
-    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces"]
+    resources: ["endpoints", "ingresses", "pods", "secrets", "nodes", "routes", "namespaces", "configmaps", "services"]
     verbs: ["get", "list", "watch"]
   # services/status is needed to update the loadbalancer IP in service status for integrating
   # service of type LoadBalancer with external-dns
@@ -13,14 +12,14 @@ rules:
     resources: ["services/status"]
     verbs: ["patch"]
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "watch", "patch"]
-  - apiGroups: [""]
     resources: ["events"]
     verbs: ["create"]
   - apiGroups: ["extensions"]
     resources: ["ingresses", "ingresses/status"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "ingresses/status", "ingressclasses"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch"]
@@ -28,11 +27,11 @@ rules:
     resources: ["deployments"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies", "canarycrds", "authpolicies", "ratelimits"]
-    verbs: ["get", "list", "watch"]
+    resources: ["rewritepolicies", "authpolicies", "ratelimits", "listeners", "httproutes", "continuousdeployments", "apigatewaypolicies", "wafs", "bots"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch"]
   - apiGroups: ["citrix.com"]
-    resources: ["rewritepolicies/status", "canarycrds/status", "authpolicies/status", "ratelimits/status"]
-    verbs: ["get", "list", "patch"]
+    resources: ["rewritepolicies/status", "continuousdeployments/status", "authpolicies/status", "ratelimits/status", "listeners/status", "httproutes/status", "wafs/status", "apigatewaypolicies/status", "bots/status"]
+    verbs: ["patch"]
   - apiGroups: ["citrix.com"]
     resources: ["vips"]
     verbs: ["get", "list", "watch", "create", "delete"]
@@ -48,124 +47,129 @@ rules:
   - apiGroups: ["crd.projectcalico.org"]
     resources: ["ipamblocks"]
     verbs: ["get", "list", "watch"]
+
 ---
-#Cluster role bindings required by CPX
+
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: cpx
+  name: cpx-ingress-k8s-role
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cpx
+  name: cpx-ingress-k8s-role
 subjects:
 - kind: ServiceAccount
-  name: cpx
+  name: cpx-ingress-k8s-role
   namespace: default
 apiVersion: rbac.authorization.k8s.io/v1
+
 ---
-#Service account for CPX
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cpx
+  name: cpx-ingress-k8s-role
   namespace: default
+
 ---
-#Deploy a standalone CPX as an ingress device
+
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  labels:
-    app: cpx-ingress
-  name: cpx-ingress
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: cpx-ingress
-  template:
-    metadata:
-      labels:
-        app: cpx-ingress
-      name: cpx-ingress
-    spec:
-      serviceAccountName: cpx
-      containers:
-      - env:
-        - name: EULA
-          value: "yes"
-        - name: KUBERNETES_TASK_ID
-        image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-83.27
-        imagePullPolicy: Always
-        name: cpx-ingress
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        - containerPort: 443
-          name: https
-          protocol: TCP
-        - containerPort: 9080
-          name: nitro-http
-          protocol: TCP
-        - containerPort: 9443
-          name: nitro-https
-          protocol: TCP
-        readinessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 60
-          periodSeconds: 5
-          successThreshold: 1
-          tcpSocket:
-            port: 9080
-          timeoutSeconds: 1
-        securityContext:
-          privileged: true
-      - args:
-        - --ingress-classes tier-2-cpx
-        env:
-        - name: EULA
-          value: "yes"
-        - name: NS_IP
-          value: 127.0.0.1
-        - name: NS_PROTOCOL
-          value: HTTP
-        - name: NS_PORT
-          value: "80"
-        - name: NS_DEPLOYMENT_MODE
-          value: SIDECAR
-        - name: NS_ENABLE_MONITORING
-          value: "YES"
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
-        image: quay.io/citrix/citrix-k8s-ingress-controller:1.21.9
-        imagePullPolicy: Always
-        name: cic
----
-#Expose the CPX as a service
-kind: Service
-apiVersion: v1
 metadata:
   name: cpx-ingress
   labels:
     name: cpx-ingress
+    app: cpx-ingress
 spec:
   selector:
-    app: cpx-ingress
-  ports:
-    - name: http
-      port: 80
-      targetPort: http
-    - name: https
-      port: 443
-      targetPort: https
+    matchLabels:
+      app: cpx-ingress
+  replicas: 1
+  template:
+    metadata:
+      name: cpx-ingress
+      labels:
+        app: cpx-ingress
+      annotations: null
+    spec:
+      serviceAccountName: cpx-ingress-k8s-role
+      containers:
+        - name: cpx-ingress
+          image: quay.io/netscaler/netscaler-cpx:14.1-38.53
+          tty: true
+          securityContext:
+             privileged: true
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "KUBERNETES_TASK_ID"
+            value: ""
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/deviceinfo
+              name: shared-data
+            - mountPath: /cpx/
+              name: cpx-volume
+            - mountPath: /cpx/conf
+              name: cpx-volume-conf
+        # Add cic as a sidecar
+        - name: cic
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34
+          volumeMounts:
+          - mountPath: /var/deviceinfo
+            name: shared-data
+          args:
+          - --ingress-classes tier-2-cpx
+          env:
+          - name: "EULA"
+            value: "yes"
+          - name: "NS_IP"
+            value: "127.0.0.1"
+          - name: "NS_PROTOCOL"
+            value: "HTTP"
+          - name: "NS_PORT"
+            value: "80"
+          - name: "NS_DEPLOYMENT_MODE"
+            value: "SIDECAR"
+          - name: "NS_ENABLE_MONITORING"
+            value: "YES"
+          - name: "LOGLEVEL"
+            value: "INFO"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          imagePullPolicy: Always
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      - name: cpx-volume
+        emptyDir: {}
+      - name: cpx-volume-conf
+        emptyDir: {}
 ---
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpx-service
+  labels:
+    app: cpx-service
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    protocol: TCP
+    name: https
+  selector:
+    app: cpx-ingress

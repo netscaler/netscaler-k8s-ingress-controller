@@ -6,6 +6,16 @@ spec:
   servicenames:
     - frontend
   redirect_url: "/error_page.html"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
   security_checks:
     ratelimit: "ON"
   bindings:
@@ -21,6 +31,4 @@ spec:
       - ip:
           rate: 2000
           timeslice: 1000
-          action:
-              - "log"
-              - "reset"
+          action: ["log", "redirect"]

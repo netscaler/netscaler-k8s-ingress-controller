@@ -1,0 +1,32 @@
+apiVersion: citrix.com/v1
+kind: bot
+metadata:
+    name: botcaptcha
+spec:
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  bindings:
+    captcha:
+      - rule:
+          url: /index2.html
+          wait_time: 30
+          grace_period: 70
+          mute_period: 80
+          action: ["log","redirect"]
+      - rule:
+          url: /form_submit.html
+          wait_time: 30
+          grace_period: 60
+          mute_period: 60
+          action: ["log","redirect"]

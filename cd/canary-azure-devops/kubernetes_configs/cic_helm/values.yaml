@@ -2,8 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Citrix Ingress Controller config details
-image: quay.io/citrix/citrix-k8s-ingress-controller:1.21.9
+# Netscaler ingress controller config details
+image: quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34
 pullPolicy: IfNotPresent
 openshift: false
 adcCredentialSecret:
@@ -47,12 +47,12 @@ exporter:
   ports:
     containerPort: 8888
 
-# For CRDs supported by Citrix Ingress Controller
+# For CRDs supported by Netscaler ingress controller
 crds:
   install: false
   retainOnDelete: false
 
-# Config required to be done by Citrix Ingress Controller for sending metrics to Citrix Observability Exporter
+# Config required to be done by Netscaler ingress controller for sending metrics to Citrix Observability Exporter
 coeConfig:
   required: false
   distributedTracing:

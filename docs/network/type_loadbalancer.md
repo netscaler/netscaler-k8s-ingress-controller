@@ -9,9 +9,9 @@ A service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-ne
 
 ## Citrix solution for services of type LoadBalancer
 
-There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Citrix ingress controller and Citrix ADC.
+There may be several situations where you want to deploy your Kubernetes cluster on bare metal or on-premises rather than deploy it on public cloud. When you are running your applications on bare metal Kubernetes clusters, it is much easier to route TCP or UDP traffic using a service of type `LoadBalancer` than using Ingress. Even for HTTP traffic, it is sometimes more convenient than Ingress. However, there is no load balancer implementation natively available for bare metal Kubernetes clusters. Citrix provides a way to load balance such services using the Netscaler ingress controller and Netscaler.
 
-In the Citrix solution for services of type `LoadBalancer`, the Citrix ingress controller deployed inside the Kubernetes cluster configures a Citrix ADC deployed outside the cluster to load balance the incoming traffic. Using the Citrix solution, you can load balance the incoming traffic to the Kubernetes cluster regardless of whether the deployment is on bare metal, on-premises, or public cloud. Since the Citrix ingress controller provides flexible IP address management that enables multi-tenancy for Citrix ADCs, you can use a single Citrix ADC to load balance multiple services as well as to perform Ingress functions. Hence, you can maximize the utilization of load balancer resources and significantly reduce your operational expenses.
+In the Citrix solution for services of type `LoadBalancer`, the Netscaler ingress controller deployed inside the Kubernetes cluster configures a Netscaler deployed outside the cluster to load balance the incoming traffic. Using the Citrix solution, you can load balance the incoming traffic to the Kubernetes cluster regardless of whether the deployment is on bare metal, on-premises, or public cloud. Since the Netscaler ingress controller provides flexible IP address management that enables multi-tenancy for Netscalers, you can use a single Netscaler to load balance multiple services as well as to perform Ingress functions. Hence, you can maximize the utilization of load balancer resources and significantly reduce your operational expenses.
 
 **Services of type LoadBalancer VS Kubernetes Ingress**
 
@@ -27,14 +27,14 @@ The following table summarizes a comparison between the Kubernetes Ingress and s
 
 By default, a service of type `LoadBalancer` simply exposes NodePorts for the service in a bare-metal Kubernetes cluster. It does not configure external load balancers.
 
-Citrix offers an end-to-end solution for services of type `LoadBalancer` in a bare-metal Kubernetes cluster by providing both IP management and external load balancer configuration. With the Citrix solution, when a service of type `LoadBalancer` is created in the bare-metal cluster, the Citrix ingress controller configures the Citrix ADC outside the Kubernetes cluster (Tier-1) with a load balancing virtual server. The load balancing virtual server is configured with an IP address either automatically assigned by the Citrix [IPAM controller](#ip-address-management-using-the-ipam-controller) or manually specified in the service definition using the `spec.loadBalancerIP` field. Once the IP address is configured for a service, you can use the configured IP address to access the service externally.
+Citrix offers an end-to-end solution for services of type `LoadBalancer` in a bare-metal Kubernetes cluster by providing both IP management and external load balancer configuration. With the Citrix solution, when a service of type `LoadBalancer` is created in the bare-metal cluster, the Netscaler ingress controller configures the Netscaler outside the Kubernetes cluster (Tier-1) with a load balancing virtual server. The load balancing virtual server is configured with an IP address either automatically assigned by the Citrix [IPAM controller](#ip-address-management-using-the-ipam-controller) or manually specified in the service definition using the `spec.loadBalancerIP` field. Once the IP address is configured for a service, you can use the configured IP address to access the service externally.
 
 ### IP address management using the IPAM controller
 
-The IPAM controller is a container provided by Citrix for IP address management and it runs in parallel to the Citrix ingress controller a pod in the Kubernetes cluster. For services of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use the IPAM controller to automatically allocate IP addresses to services from a specified IP address range. You can specify this IP range in the YAML file while deploying the IPAM controller using YAML. The Citrix ingress controller configures the IP address allocated to the service as a virtual IP address (VIP) in Citrix ADC MPX or VPX.
+The IPAM controller is a container provided by Citrix for IP address management and it runs in parallel to the Netscaler ingress controller a pod in the Kubernetes cluster. For services of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), you can use the IPAM controller to automatically allocate IP addresses to services from a specified IP address range. You can specify this IP range in the YAML file while deploying the IPAM controller using YAML. The Netscaler ingress controller configures the IP address allocated to the service as a virtual IP address (VIP) in Netscaler MPX or VPX.
 Using this IP address, you can externally access the service.
 
-The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix. The VIP CRD contains fields for service-name, namespace, and IP address. The VIP CRD is used for internal communication between the Citrix ingress controller and the IPAM controller.
+The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix. The VIP CRD contains fields for service-name, namespace, and IP address. The VIP CRD is used for internal communication between the Netscaler ingress controller and the IPAM controller.
 
 The following diagram shows a deployment of service type load balancer where the IPAM controller is used to assign an IP address to a service.
 
@@ -42,9 +42,9 @@ The following diagram shows a deployment of service type load balancer where the
 
 When a new service of type `Loadbalancer` is created, the following events occur:
 
-  1. The Citrix ingress controller creates a VIP CRD object for the service whenever the `loadBalancerIP` field in the service is empty.
+  1. The Netscaler ingress controller creates a VIP CRD object for the service whenever the `loadBalancerIP` field in the service is empty.
   2. The IPAM controller assigns an IP address for the VIP CRD object.
-  3. Once the VIP CRD object is updated with the IP address, the Citrix ingress controller automatically configures the Citrix ADC.
+  3. Once the VIP CRD object is updated with the IP address, the Netscaler ingress controller automatically configures the Netscaler.
 
 **Note:** Custom resource definitions (CRDs) offered by Citrix also supports services of type `LoadBalancer`. That means, you can specify a service of type `LoadBalancer` as a service name when you create a CRD object and apply the CRD to the service.
 
@@ -57,7 +57,7 @@ This topic provides information on how to expose services of type LoadBalancer w
 To expose a service of type load balancer with an IP address from the IPAM controller, perform the following steps:
 
   1. Deploy the VIP CRD
-  2. Deploy the Citrix ingress controller
+  2. Deploy the Netscaler ingress controller
   3. Deploy the IPAM controller.
   4. Deploy a sample application.
   5. Create a service of type `LoadBalancer` to expose the application.
@@ -65,24 +65,24 @@ To expose a service of type load balancer with an IP address from the IPAM contr
 
 ### Step1: Deploy the VIP CRD
 
-Perform the following step to deploy the Citrix VIP CRD which enables communication between the Citrix ingress controller and the IPAM controller.
+Perform the following step to deploy the Citrix VIP CRD which enables communication between the Netscaler ingress controller and the IPAM controller.
 
 
      kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
 
  For more information on VIP CRD see, the [VIP CustomResourceDefinition](../crds/vip.md).
 
-### Step2: Deploy the Citrix ingress controller
+### Step2: Deploy the Netscaler ingress controller
 
-Perform the following steps to deploy the Citrix ingress controller with the IPAM controller argument.
+Perform the following steps to deploy the Netscaler ingress controller with the IPAM controller argument.
 
 1. Download the `citrix-k8s-ingress-controller.yaml` using the following command:
 
         wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-2. Edit the Citrix ingress controller YAML file:
+2. Edit the Netscaler ingress controller YAML file:
   
-    - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    - Specify the values of the environment variables as per your requirements. For more information on specifying the environment variables, see the [Deploy Netscaler ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
 
     - Specify the IPAM controller as an argument using the following:
 
@@ -90,7 +90,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
               - --ipam
                 citrix-ipam-controller
 
-     Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
+     Here is a snippet of a sample Netscaler ingress controller YAML file with the IPAM controller argument:
 
      **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements.
 
@@ -105,9 +105,9 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
           serviceAccountName: cic-k8s-role
           containers:
           - name: cic-k8s-ingress-controller
-            image: "quay.io/citrix/citrix-k8s-ingress-controller:1.21.9"
+            image: "quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34"
             env:
-            # Set Citrix ADC NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
+            # Set Netscaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled) 
               - name: "NS_IP"
                 value: "x.x.x.x"
                 # Set the username
@@ -135,84 +135,17 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
             imagePullPolicy: Always
       
 
-3. Deploy the Citrix ingress controller using the edited YAML file with the following command;
+3. Deploy the Netscaler ingress controller using the edited YAML file with the following command;
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
-    For more information on how to deploy the Citrix ingress controller, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    For more information on how to deploy the Netscaler ingress controller, see the [Deploy Netscaler ingress controller](https://docs.netscaler.com/en-us/citrix-k8s-ingress-controller/deploy/cic-yaml.html).
 
 ### Step3: Deploy the IPAM controller
 
 Perform the following steps to deploy the IPAM controller.
 
-1. Create a file named `citrix-ipam-controller.yaml` with the following configuration:
-
-          ---
-          apiVersion: v1
-          kind: ServiceAccount
-          metadata:
-            name: citrix-ipam-controller
-            namespace: kube-system
-          ---
-          apiVersion: rbac.authorization.k8s.io/v1
-          kind: ClusterRole
-          metadata:
-            name: citrix-ipam-controller
-          rules:
-          - apiGroups:
-            - citrix.com
-            resources:
-            - vips
-            verbs:
-            - '*'
-          - apiGroups:
-            - apiextensions.k8s.io
-            resources:
-            - customresourcedefinitions
-            verbs:
-            - '*'
-          ---
-          apiVersion: rbac.authorization.k8s.io/v1
-          kind: ClusterRoleBinding
-          metadata:
-            name: citrix-ipam-controller
-          subjects:
-          - kind: ServiceAccount
-            name: citrix-ipam-controller
-            namespace: kube-system
-          roleRef:
-            kind: ClusterRole
-            apiGroup: rbac.authorization.k8s.io
-            name: citrix-ipam-controller
-          ---
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            labels:
-              app: citrix-ipam-controller
-            name: citrix-ipam-controller
-            namespace: kube-system
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: citrix-ipam-controller
-            template:
-              metadata:
-                labels:
-                  app: citrix-ipam-controller
-              spec:
-                serviceAccountName: citrix-ipam-controller
-                containers:
-                - image: quay.io/citrix/citrix-ipam-controller:latest
-                  imagePullPolicy: IfNotPresent
-                  name: citrix-ipam-controller
-                  env:
-                  # This IPAM controller takes environment variable VIP_RANGE. IPs in this range are used to assign values for IP range
-                  - name: VIP_RANGE
-                    value: '["`VPX_VIP`"]'
-                  # The IPAM controller can also be configured with name spaces for which it would work through the environment variable
-                  # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
+1. Download the [citrix-ipam-controller.yaml](../../example/ipam-controller/citrix-ipam-controller.yaml) file
 
     The manifest contains two environment variables, `VIP_RANGE` and `VIP_NAMESPACES`. You can specify the appropriate routable IP range with a valid CIDR under the `VIP_RANGE`. If necessary, you can also specify a set of namespaces under  `VIP_NAMESPACES`  so that the IPAM controller allocates addresses only for services from specific namespaces.
 
@@ -302,7 +235,7 @@ Perform the following to create a service (`apache`) of type `LoadBalancer`.
 
         kubectl create -f apache-service.yaml
 
-    When you create the service, the IPAM controller assigns an IP address to the `apache` service from the IP address range you had defined in the IPAM controller deployment. The IP address allocated by the IPAM controller is provided in the `status.loadBalancer.ingress:` field of the service definition. The Citrix ingress controller configures the IP address allocated to the service as a virtual IP (VIP) in the Citrix ADC.
+    When you create the service, the IPAM controller assigns an IP address to the `apache` service from the IP address range you had defined in the IPAM controller deployment. The IP address allocated by the IPAM controller is provided in the `status.loadBalancer.ingress:` field of the service definition. The Netscaler ingress controller configures the IP address allocated to the service as a virtual IP (VIP) in the Netscaler.
 
 3.  View the service using the following command:
 
@@ -332,7 +265,7 @@ You can also expose a service of type LoadBalancer manually by specifying an IP 
       type: LoadBalancer
       loadBalancerIP: "<ip-address>"
 
-When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Citrix ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as a virtual IP (VIP) address in Citrix ADC.
+When you create a service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer), the Netscaler ingress controller configures the IP address you have defined in the `spec.loadBalancerIP` field as a virtual IP (VIP) address in Netscaler.
 
 ### **Example:** Expose an Apache application using service of type LoadBalancer by specifying an IP address
 
@@ -412,7 +345,7 @@ Perform the following:
 
         kubectl create -f apache-service.yaml
 
-    When you create the service (`apache`), the Citrix ingress controller configures `192.217.212.16` as a virtual IP address (VIP) in Citrix ADC VPX.
+    When you create the service (`apache`), the Netscaler ingress controller configures `192.217.212.16` as a virtual IP address (VIP) in Netscaler VPX.
 
 6. Access the `apache` service using the IP address (`192.217.212.16`) that you had assigned to the service. Use the `curl` command to access the service:
 
@@ -422,11 +355,11 @@ Perform the following:
 
         <html><body><h1>It works!</h1></body></html>
 
-## **Example use case:** Expose microservices using services of type LoadBalancer in a Citrix ADC dual-tier deployment
+## **Example use case:** Expose microservices using services of type LoadBalancer in a Netscaler dual-tier deployment
 
-This example shows how to expose microservices deployed in Kubernetes to clients outside the cluster using services of type LoadBalancer in a Citrix ADC [dual-tier](../deployment-topologies#dual-tier-topology) deployment.
+This example shows how to expose microservices deployed in Kubernetes to clients outside the cluster using services of type LoadBalancer in a Netscaler [dual-tier](../deployment-topologies#dual-tier-topology) deployment.
 
-You can deploy Citrix ADC VPX, MPX, or CPX as a load balancer in Tier-1 to manage high scale North-South traffic to the microservices. In Tier-2, you can deploy Citrix ADC CPX as an intelligent L7 microservices router for North-South and East-West traffic. In this example, a Citrix ADC VPX (service of type `LoadBalancer`) is used in Tier-1 and a Citrix ADC CPX (Ingress) is used in Tier-2.
+You can deploy Netscaler VPX, MPX, or CPX as a load balancer in Tier-1 to manage high scale North-South traffic to the microservices. In Tier-2, you can deploy Netscaler CPX as an intelligent L7 microservices router for North-South and East-West traffic. In this example, a Netscaler VPX (service of type `LoadBalancer`) is used in Tier-1 and a Netscaler CPX (Ingress) is used in Tier-2.
 
 The following diagram depicts the microservice deployment in this example. The deployment contains three services that are highlighted in blue, red, and green colors respectively. The deployment contains 12 pods running across two worker nodes. These deployments are logically categorized using Kubernetes namespaces.
 
@@ -438,7 +371,7 @@ Ensure that you have:
 
 - Deployed a Kubernetes cluster. For more information, see [https://kubernetes.io/docs/setup/scratch/](https://kubernetes.io/docs/setup/scratch/).
 - Set up the Kubernetes dashboard for deploying containerized applications. For more information, see [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/).
-- The route configuration present in the Tier-1 Citrix ADC so that the Ingress Citrix ADC is able to reach the Kubernetes pod network for seamless connectivity. For detailed instructions, see [manually configure a route on the Citrix ADC instance](staticrouting.md#manually-configure-route-on-the-citrix-adc-instance).
+- The route configuration present in the Tier-1 Netscaler so that the Ingress Netscaler is able to reach the Kubernetes pod network for seamless connectivity. For detailed instructions, see [manually configure a route on the Netscaler instance](staticrouting.md#manually-configure-route-on-the-citrix-adc-instance).
 
 ### Deploy microservices using Kubernetes service of type LoadBalancer solution
 
@@ -467,7 +400,7 @@ Ensure that you have:
         kubectl create -f vip.yaml
         kubectl create -f ipam_deploy.yaml
 
-5. Deploy the Citrix ADC CPX for `hotdrink`, `colddrink`, and `guestbook` microservices using the following commands:
+5. Deploy the Netscaler CPX for `hotdrink`, `colddrink`, and `guestbook` microservices using the following commands:
 
         kubectl create -f cpx.yaml -n tier-2-adc
         kubectl create -f hotdrink-secret.yaml -n tier-2-adc
@@ -486,15 +419,15 @@ Ensure that you have:
 
         kubectl create -f team_guestbook.yaml -n team-guestbook
 
-9. Log on to the Tier-1 Citrix ADC to verify that configuration is not pushed from the Citrix ingress controller before automating the Tier-1 Citrix ADC.
+9. Log on to the Tier-1 Netscaler to verify that configuration is not pushed from the Netscaler ingress controller before automating the Tier-1 Netscaler.
 
-10. Deploy the Citrix ingress controller to push the Citrix ADC CPX configuration to the Tier-1 Citrix ADC automatically. In the `cic_vpx.yaml`, change the value of the `NS_IP` environment variable with the NS IP of your Citrix ADC VPX. For more information on the Citrix ingress controller deployment, see [Deploy the Citrix ingress controller using YAML](../deploy/deploy-cic-yaml.md).
+10. Deploy the Netscaler ingress controller to push the Netscaler CPX configuration to the Tier-1 Netscaler automatically. In the `cic_vpx.yaml`, change the value of the `NS_IP` environment variable with the NS IP of your Netscaler VPX. For more information on the Netscaler ingress controller deployment, see [Deploy the Netscaler ingress controller using YAML](../deploy/deploy-cic-yaml.md).
     
     After you update the `cic_vpx.yaml` file, deploy the file using the following command:
 
         kubectl create -f cic_vpx.yaml -n tier-2-adc
 
-11. Verify if the IPAM controller has assigned IP addresses to Citrix ADC CPX services using the following command:
+11. Verify if the IPAM controller has assigned IP addresses to Netscaler CPX services using the following command:
 
         kubectl get svc -n tier-2-adc
 

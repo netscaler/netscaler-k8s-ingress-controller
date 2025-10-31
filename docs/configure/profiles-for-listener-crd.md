@@ -4,7 +4,7 @@ You can use individual entities such as [HTTP profile](https://docs.citrix.com/e
 
 ## HTTP profile
 
-An [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/current-release/system/http-configurations.html#sample-http-configurations) is a collection of HTTP settings. A default HTTP profile called `nshttp_default_profile` is configured to set the HTTP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the HTTP configurations for a Listener resource by specifying `spec.policies.httpprofile`. If specified, Citrix ingress controller creates a new HTTP profile with the default values derived from the default HTTP profile and configures the values specified.
+An [HTTP profile](https://docs.citrix.com/en-us/citrix-adc/current-release/system/http-configurations.html#sample-http-configurations) is a collection of HTTP settings. A default HTTP profile called `nshttp_default_profile` is configured to set the HTTP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the HTTP configurations for a Listener resource by specifying `spec.policies.httpprofile`. If specified, Netscaler ingress controller creates a new HTTP profile with the default values derived from the default HTTP profile and configures the values specified.
 
 It helps to derive the default values from the default HTTP profile and configures the values specified.
 
@@ -48,7 +48,7 @@ spec:
 
 ## TCP profile
 
-A TCP profile is a collection of TCP settings. A default TCP profile called `nstcp_default_profile` is configured to set the TCP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the TCP settings by specifying `spec.policies.tcpprofile`. When you specify `spec.policies.tcpprofile`, Citrix ingress controller creates a TCP profile that is derived from the default TCP profile and applies the values provided in the specification, and binds it to the front-end virtual server.
+A TCP profile is a collection of TCP settings. A default TCP profile called `nstcp_default_profile` is configured to set the TCP configurations. These configurations are applied, by default, globally to all services and virtual servers. You can customize the TCP settings by specifying `spec.policies.tcpprofile`. When you specify `spec.policies.tcpprofile`, Netscaler ingress controller creates a TCP profile that is derived from the default TCP profile and applies the values provided in the specification, and binds it to the front-end virtual server.
 
 For information about all the possible key-value pairs for a TCP profile, see [TCP profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ns/nstcpprofile/).
 
@@ -93,15 +93,15 @@ spec:
 
 An SSL profile is a collection of settings for SSL entities. SSL profile makes configuration easier and flexible. You can configure the settings in a profile and bind that profile to a virtual server instead of configuring the settings on each entity. An SSL profile allows you to customize many SSL parameters such as TLS protocol and ciphers. For more information about SSL profile, see [SSL profile infrastructure](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ssl-profiles/ssl-enabling-the-default-profile.html).
 
-**Note:** By default, Citrix ADC creates a legacy SSL profile. The legacy SSL profile has many drawbacks including non-support for advanced protocols such as SSLv3. Hence, it is recommended to enable the default SSL profiles in Citrix ADC before Citrix ingress controller is launched.
+**Note:** By default, Netscaler creates a legacy SSL profile. The legacy SSL profile has many drawbacks including non-support for advanced protocols such as SSLv3. Hence, it is recommended to enable the default SSL profiles in Netscaler before Netscaler ingress controller is launched.
 
-To enable the advanced SSL profile, use the following command in the Citrix ADC command line:
+To enable the advanced SSL profile, use the following command in the Netscaler command line:
 
     set ssl parameter -defaultProfile ENABLED
 
 The command enables the default SSL profile for all the existing SSL virtual servers and the SSL service groups.
 
-You can specify `spec.policies.sslprofile` to customize the SSL profile. When specified, Citrix ingress controller creates an SSL profile derived from the default SSL front-end profile: `ns_default_ssl_profile_frontend`.
+You can specify `spec.policies.sslprofile` to customize the SSL profile. When specified, Netscaler ingress controller creates an SSL profile derived from the default SSL front-end profile: `ns_default_ssl_profile_frontend`.
 
 For information about key-value pairs supported in the SSL profile, see [SSL profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/ssl/sslprofile/).
 
@@ -152,7 +152,7 @@ spec:
 
 ## SSL ciphers
 
-The Ingress Citrix ADC has [built-in cipher groups](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-ADC-appliances.html). By default, virtual servers use a DEFAULT cipher group for an SSL transaction. To use ciphers which are not part of the DEFAULT cipher group, you must explicitly bind them to an SSL profile. You can use `spec.policies.sslciphers` to provide a list of ciphers, list of [built-in cipher groups](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-ADC-appliances.html), or the list of [user-defined cipher groups](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html). 
+The Ingress Netscaler has [built-in cipher groups](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-ADC-appliances.html). By default, virtual servers use a DEFAULT cipher group for an SSL transaction. To use ciphers which are not part of the DEFAULT cipher group, you must explicitly bind them to an SSL profile. You can use `spec.policies.sslciphers` to provide a list of ciphers, list of [built-in cipher groups](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-ADC-appliances.html), or the list of [user-defined cipher groups](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-ADC-appliances/configure-user-defined-cipher-groups-on-the-adc-appliance.html). 
 
 **Note:** The order of priority of ciphers is the same order defined in the list. The first one in the list gets the first priority and likewise.
 
@@ -179,9 +179,9 @@ The following example shows how to provide a list of built-in cipher suites.
       - 'TLS1.2-ECDHE-RSA-AES-256-SHA384'
 ```
 
-For information about the list of cipher suites available in Citrix ADC, see [SSL profile infrastructure](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
+For information about the list of cipher suites available in Netscaler, see [SSL profile infrastructure](https://docs.citrix.com/en-us/citrix-adc/current-release/ssl/ciphers-available-on-the-citrix-adc-appliances.html).
 
-Ensure that Citrix ADC has a user-defined cipher group for using a user-defined cipher group. Perform the following steps to configure a user-defined cipher group: 
+Ensure that Netscaler has a user-defined cipher group for using a user-defined cipher group. Perform the following steps to configure a user-defined cipher group: 
 
 1.	Create a user-defined cipher group. For example, `MY-CUSTOM-GROUP`.
 2.	Bind all the required ciphers to the user-defined cipher group.
@@ -191,7 +191,7 @@ For detailed instructions, see [Configure a user-defined cipher group](https://d
 
 **Note:** The order of priority of ciphers is the same order defined in the list. The first one in the list gets the first priority and likewise.
 
-The following example shows how to provide a list of built-in cipher groups and/or user defined cipher group. The user-defined cipher groups must be present in Citrix ADC before you apply it to Listener.
+The following example shows how to provide a list of built-in cipher groups and/or user defined cipher group. The user-defined cipher groups must be present in Netscaler before you apply it to Listener.
 
 ```yml
   apiVersion: citrix.com/v1
@@ -213,17 +213,17 @@ The following example shows how to provide a list of built-in cipher groups and/
       - 'MY-CUSTOM-CIPHERS'
 ```
 
-In the preceding example, `SECURE` and `HIGH` are built-in cipher groups in Citrix ADC. `MY-CUSTOM-CIPHERS` is the pre-configured user-defined cipher groups. 
+In the preceding example, `SECURE` and `HIGH` are built-in cipher groups in Netscaler. `MY-CUSTOM-CIPHERS` is the pre-configured user-defined cipher groups. 
 
-**Note:** If you have specified the pre-configured SSL profile, you must bind the ciphers manually through Citrix ADC and `spec.policies.sslciphers` is not applied on the pre-configured SSL profile.
+**Note:** If you have specified the pre-configured SSL profile, you must bind the ciphers manually through Netscaler and `spec.policies.sslciphers` is not applied on the pre-configured SSL profile.
 
-**Note:** The built-in cipher groups can be used in Tier-1 and Tier-2 Citrix ADC. The user-defined cipher group can be used only in a Tier-1 Citrix ADC.
+**Note:** The built-in cipher groups can be used in Tier-1 and Tier-2 Netscaler. The user-defined cipher group can be used only in a Tier-1 Netscaler.
 
 ## Analytics profile
 
-Analytics profile enables Citrix ADC to export the type of transactions or data to an external platform. If you are using [Citrix ADC Observability Exporter](https://github.com/citrix/citrix-observability-exporter) to collect metrics and transactions data and export it to endpoints such Elasticsearch or Prometheus, you can configure the analytics profile to select the type of data that needs to be exported.
+Analytics profile enables Netscaler to export the type of transactions or data to an external platform. If you are using [Netscaler Observability Exporter](https://github.com/citrix/citrix-observability-exporter) to collect metrics and transactions data and export it to endpoints such Elasticsearch or Prometheus, you can configure the analytics profile to select the type of data that needs to be exported.
 
-**Note:** For the Analytics profile to be functional, you must configure the Citrix ADC Observability Exporter. [Analytics configuration support using ConfigMap](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map-coe/#:~:text=You%20can%20use%20Citrix%20Observability,the%20Citrix%20ingress%20controller%20configuration).
+**Note:** For the Analytics profile to be functional, you must configure the Netscaler Observability Exporter. [Analytics configuration support using ConfigMap](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/configure/config-map-coe/#:~:text=You%20can%20use%20Citrix%20Observability,the%20Citrix%20ingress%20controller%20configuration).
 
 The following example shows how to enable `webinsight` and `tcpinsight` in the analytics profile. 
 
@@ -247,7 +247,7 @@ apiVersion: citrix.com/v1
        - type: tcpinsight
 ```
 
-The following example shows how to select the additional parameters for the type of `webinsight` which you want to be exported to Citrix ADC Observability Exporter. For information about the valid key-value pair, see [Analytics Profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/).
+The following example shows how to select the additional parameters for the type of `webinsight` which you want to be exported to Netscaler Observability Exporter. For information about the valid key-value pair, see [Analytics Profile](https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/).
 
 ```yml
 apiVersion: citrix.com/v1

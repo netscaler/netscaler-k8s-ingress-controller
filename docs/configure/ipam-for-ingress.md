@@ -1,10 +1,10 @@
 # IP address management using the Citrix IPAM controller for Ingress resources
 
-IPAM controller is an application provided by Citrix for IP address management and it runs in parallel to the Citrix ingress controller in the Kubernetes cluster. Automatically allocating IP addresses to services of type LoadBalancer from a specified IP address range using the IPAM controller is already supported. Now, you can also assign IP addresses to Ingress resources from a specified range using the IPAM controller.
+IPAM controller is an application provided by Citrix for IP address management and it runs in parallel to the Netscaler ingress controller in the Kubernetes cluster. Automatically allocating IP addresses to services of type LoadBalancer from a specified IP address range using the IPAM controller is already supported. Now, you can also assign IP addresses to Ingress resources from a specified range using the IPAM controller.
 
-You can specify IP address ranges in the YAML file while deploying the IPAM controller using YAML. The Citrix ingress controller configures the IP address allocated to the Ingress resource as a virtual IP address (VIP) in Citrix ADC MPX or VPX.
+You can specify IP address ranges in the YAML file while deploying the IPAM controller using YAML. The Netscaler ingress controller configures the IP address allocated to the Ingress resource as a virtual IP address (VIP) in Netscaler MPX or VPX.
 
-The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Citrix ingress controller and the IPAM controller.
+The IPAM controller requires the VIP [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) provided by Citrix. The VIP CRD is used for internal communication between the Netscaler ingress controller and the IPAM controller.
 
 ## Assign IP address for Ingress resource using the IPAM controller
 
@@ -13,29 +13,29 @@ This topic provides information on how to use the IPAM controller to assign IP a
 To configure an Ingress resource with an IP address from the IPAM controller, perform the following steps:
 
 1.  Deploy the VIP CRD
-2.	Deploy the Citrix ingress controller
+2.	Deploy the Netscaler ingress controller
 3.	Deploy the IPAM controller
 4.	Deploy the application and Ingress resource
 
 ### Step 1: Deploy the VIP CRD
 
-Perform the following step to deploy the Citrix VIP CRD which enables communication between the Citrix ingress controller and the IPAM controller.
+Perform the following step to deploy the Citrix VIP CRD which enables communication between the Netscaler ingress controller and the IPAM controller.
 
     kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/crd/vip/vip.yaml
 
 For more information on VIP CRD, see the VIP [CustomResourceDefinition](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/vip/).
 
-### Step 2: Deploy the Citrix ingress controller
+### Step 2: Deploy the Netscaler ingress controller
 
-Perform the following steps to deploy the Citrix ingress controller with the IPAM controller argument.
+Perform the following steps to deploy the Netscaler ingress controller with the IPAM controller argument.
 
 1. Download the `citrix-k8s-ingress-controller.yaml` file using the following command:
 
         wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
-1. Edit the Citrix ingress controller YAML file:
+1. Edit the Netscaler ingress controller YAML file:
 
-    - Specify the values of the environment variables as per your requirements. For more information on     specifying the environment variables, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). Here, you don’t need to specify `NS_VIP`.
+    - Specify the values of the environment variables as per your requirements. For more information on     specifying the environment variables, see the [Deploy Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/). Here, you don’t need to specify `NS_VIP`.
 
     - Specify the IPAM controller as an argument using the following:
 
@@ -43,9 +43,9 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
             - --ipam
               citrix-ipam-controller
 
-    Here is a snippet of a sample Citrix ingress controller YAML file with the IPAM controller argument:
+    Here is a snippet of a sample Netscaler ingress controller YAML file with the IPAM controller argument:
 
-    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
+    **Note:** This YAML is for demonstration purpose only and not the full version. Always, use the latest version of the YAML and edit as per your requirements. For the latest version see the [citrix-k8s-ingress-controller.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file.
 
     
 
@@ -57,7 +57,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
               serviceAccountName: cic-k8s-role
               containers:
               - name: cic-k8s-ingress-controller
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.21.9"
+                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34"
                 env:
                   - name: "NS_IP"
                     value: "x.x.x.x"
@@ -88,11 +88,11 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
                 imagePullPolicy: Always
     
 
-3. Deploy the Citrix ingress controller using the edited YAML file with the following command:
+3. Deploy the Netscaler ingress controller using the edited YAML file with the following command:
 
         kubectl create -f citrix-k8s-ingress-controller.yaml
 
-    For more information on how to deploy the Citrix ingress controller, see the [Deploy Citrix ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
+    For more information on how to deploy the Netscaler ingress controller, see the [Deploy Netscaler ingress controller](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/deploy/deploy-cic-yaml/).
 
 ### Step 3: Deploy the IPAM controller
 
@@ -119,7 +119,7 @@ Perform the following steps to deploy the Citrix ingress controller with the IPA
               serviceAccountName: citrix-ipam-controller
               containers:
               - name: citrix-ipam-controller
-                image: quay.io/citrix/citrix-ipam-controller:1.0.3
+                image: quay.io/netscaler/netscaler-ipam-controller:2.1.2
                 env:
                 # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
                 - name: "VIP_RANGE"
@@ -151,25 +151,36 @@ Perform the following steps to deploy a sample application and Ingress resource.
         apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          name: guestbook-ingress
           annotations:
-        annotations:
-          ingress.citrix.com/ipam-range: "two-ip"
-          #ingress.citrix.com/frontend-ip: "5.5.5.5"
-          kubernetes.io/ingress.class: "cic-vpx"
+            ingress.citrix.com/ipam-range: two-ip
+          name: guestbook-ingress
         spec:
+          ingressClassName: cic-vpx
           rules:
-          - host:  www.guestbook.com
+          - host: www.guestbook.com
             http:
               paths:
-              - path: /
-                backend:
+              - backend:
                   serviceName: frontend
                   servicePort: 80
+                path: /
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: cic-vpx
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
 
 3. Deploy the Ingress resource.
 
         kubectl create -f guestbook-ingress.yaml
+
+**Note:** For Ingress without any frontend-ip annotation, the order of IP assignment is as follows:
+-  If the default `NS_VIP` environment variable is provided, Netscaler ingress controller makes a request to IPAM controller only if the range-name (`ingress.citrix.com/ipam-range:`) is provided in the ingress. If the annotation is not provided, `NS_VIP` is used for that ingress.
+-  If the default `NS_VIP` environment variable is not provided, Netscaler ingress controller always make a request to IPAM controller for IP assignment.
 
 **Multiple IP address allocations**
 

@@ -4,7 +4,6 @@ metadata:
   name: httproutes.citrix.com
 spec:
   group: citrix.com
-  version: null
   names:
     kind: HTTPRoute
     plural: httproutes
@@ -32,7 +31,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               hostname:
                 type: array
                 description: "List of domain names that share the same route, default is '*'"
@@ -195,7 +194,7 @@ spec:
                             description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
                           policyExpression:
                             type: string
-                            description: "Citrix ADC policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
+                            description: "Netscaler policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
                     action:
                       type: object
                       description: "Action for the matched rule"
@@ -226,12 +225,12 @@ spec:
                                       description: "Use Secure communications to the backends"
                                       type: boolean
                                     lbConfig:
-                                      description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                      description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
                                     servicegroupConfig:
-                                      description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                      description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
@@ -249,7 +248,7 @@ spec:
                               description: "Host name specified is used for redirection with URL intact"
                               type: string
                             targetExpression:
-                              description: "A target can be specified using Citrix ADC policy expression"
+                              description: "A target can be specified using Netscaler policy expression"
                               type: string
                             responseCode:
                               description: "Default response code is 302, which can be customised using this attribute"

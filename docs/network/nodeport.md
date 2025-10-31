@@ -1,14 +1,14 @@
 # Expose Service of type NodePort using Ingress
 
-In a single-tier deployment, the Ingress Citrix ADC (VPX or MPX) outside the Kubernetes cluster receives all the Ingress traffic to the microservices deployed in the Kubernetes cluster. You need to establish network connectivity between the Ingress Citrix ADC instance and the pods for the ingress traffic to reach the microservices.
+In a single-tier deployment, the Ingress Netscaler (VPX or MPX) outside the Kubernetes cluster receives all the Ingress traffic to the microservices deployed in the Kubernetes cluster. You need to establish network connectivity between the Ingress Netscaler instance and the pods for the ingress traffic to reach the microservices.
 
-As the pods run on overlay network, the pod IP addresses are private IP addresses and the Ingress Citrix ADC instance cannot reach the microservices running within the pods. To make the service accessible from outside of the cluster, you can create the service of type [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport). The Citrix ADC instance load balances the Ingress traffic to the nodes that contain the pods.
+As the pods run on overlay network, the pod IP addresses are private IP addresses and the Ingress Netscaler instance cannot reach the microservices running within the pods. To make the service accessible from outside of the cluster, you can create the service of type [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport). The Netscaler instance load balances the Ingress traffic to the nodes that contain the pods.
 
 To create the service of type [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport), in your service definition file, specify `spec.type:NodePort` and optionally specify a port in the range 30000–32767.
 
 ## Sample deployment
 
-Consider a scenario wherein you are using a NodePort based service, for example, an `apache` app and want to expose the app to North-South traffic using an ingress. In this case, you need to create the `apache` app deployment, define the service of type `NodePort`, and create an ingress definition to configure ingress Citrix ADC to send the North-South traffic to the nodeport of the `apache` app.
+Consider a scenario wherein you are using a NodePort based service, for example, an `apache` app and want to expose the app to North-South traffic using an ingress. In this case, you need to create the `apache` app deployment, define the service of type `NodePort`, and create an ingress definition to configure ingress Netscaler to send the North-South traffic to the nodeport of the `apache` app.
 
 In this section, we shall create a Deployment, `apache`, and deploy it in your Kubernetes cluster. The following is a manifest for the Deployment:
 
@@ -80,7 +80,7 @@ Copy the manifest to a file named `apache-service.yaml` and create the service u
 
 The sample deploys and exposes the apache web server as a service. You can access the service using the `<NodeIP>:<NodePort>` address.
 
-After you have deployed the service, create an ingress definition to configure the ingress Citrix ADC to send the North-South traffic to the nodeport of the `apache` app. The following is a manifest for the ingress definition:
+After you have deployed the service, create an ingress definition to configure the ingress Netscaler to send the North-South traffic to the nodeport of the `apache` app. The following is a manifest for the ingress definition:
 
 ```yml
 apiVersion: networking.k8s.io/v1

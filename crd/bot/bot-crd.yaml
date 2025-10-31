@@ -41,7 +41,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the bot policies are applied.'
                 type: array
@@ -69,7 +69,7 @@ spec:
                     description: "List of http methods to inspect"
                     items:
                       type: string
-                      enum: ['GET', 'PUT', 'POST','DELETE']
+                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                   header:
                     type: array
                     description: "List of http headers to inspect"
@@ -87,8 +87,14 @@ spec:
                     type: string
                     enum: ['ON', 'OFF']
                   device_fingerprint:
+                    type: string
+                    enum: ['ON', 'OFF']
+                  device_fingerprint_action:     
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
+                  headless_browser:
+                    type: string
+                    enum: ['ON','OFF']
                   reputation:
                     type: string
                     enum: ['ON', 'OFF']
@@ -116,10 +122,15 @@ spec:
                         ip:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
+                        ipv6:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        ipv6_subnet:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         expression:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
-
                   block_list:
                     type: array
                     items:
@@ -131,6 +142,12 @@ spec:
                         ip:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
+                        ipv6:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true    
+                        ipv6_subnet:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true      
                         expression:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
@@ -147,11 +164,26 @@ spec:
                           x-kubernetes-preserve-unknown-fields: true
                         cookie:
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true      
+                        geolocation:
+                          type: object
                           x-kubernetes-preserve-unknown-fields: true
                   reputation:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   captcha:
+                    type: array
+                    items:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                      properties:
+                  logexp:
+                    type: array
+                    items:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                      properties:
+                  kbmexpr:
                     type: array
                     items:
                       type: object
@@ -169,7 +201,9 @@ spec:
                       ip:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
+                      url:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
                   trapinsertion:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
-

@@ -1,0 +1,82 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: appqoepolicies.citrix.com
+spec:
+  group: citrix.com
+  names:
+    kind: appqoepolicy 
+    plural: appqoepolicies
+    singular: appqoepolicy 
+  scope: Namespaced
+  versions: 
+  - name: v1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      jsonPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      jsonPath: .status.status_message
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          status:
+            type: object
+            properties:
+              state:
+                 type: string
+              status_message:
+                 type: string
+          spec:
+            type: object
+            properties:
+              appqoe-policies:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    servicenames:
+                      description: 'Name of the services that needs to be binded to appqoe policy.'
+                      type: array
+                      items:
+                        type: string
+                        maxLength: 127
+                    appqoe-policy:
+                      type: object
+                      properties:
+                        operation-retry:
+                          type: object
+                          properties:
+                            on-reset:
+                              description: "To set Retry on Connection Reset or Not"
+                              type: string
+                              enum: ['YES','NO']
+                            on-timeout:
+                              description: "Time in milliseconds for retry"
+                              type: integer
+                              minimum: 30
+                              maximum: 2000
+                        number-of-retries:
+                          description: "To set number of retries"
+                          type: integer
+                          minimum: 1
+                          maximum: 7
+                          required: [operation-retry]
+                        appqoe-criteria:
+                          description: 'Expression against which traffic is evaluated.'
+                          type: string
+                          maxLength: 1299
+                        direction:
+                          description: 'Bind point to which to bind the policy.'
+                          type: string
+                          enum: ["REQUEST","RESPONSE"]
+                      required: [appqoe-criteria, operation-retry]
+                  required: [appqoe-policy]

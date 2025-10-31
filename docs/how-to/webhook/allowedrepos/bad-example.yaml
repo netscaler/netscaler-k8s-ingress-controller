@@ -6,4 +6,4 @@ metadata:
 spec:
   containers:
     - name: test-cic
-      image: in-docker-reg.eng.citrite.net/cpx-dev/citrix-k8s-ingress-controller:latest
+      image: quay.io/citrix/citrix-k8s-ingress-controller:latest

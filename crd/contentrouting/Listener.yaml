@@ -4,7 +4,6 @@ metadata:
   name: listeners.citrix.com
 spec:
   group: citrix.com
-  version: null
   names:
     kind: Listener
     plural: listeners
@@ -33,9 +32,12 @@ spec:
               ingressclass:
                 type: string
                 description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+              multicluster:
+                description: "Is the csvserver IP shared by multiclusters and CICs"
+                type: boolean
               protocol:
                 type: string
-                enum: ["https", "http"]
+                enum: ["tcp", "udp", "https", "http"]
                 description: "Protocol for this listener"
               vip:
                 type: string

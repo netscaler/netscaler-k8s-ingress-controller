@@ -1,8 +1,8 @@
 # HTTP callout with the rewrite and responder policy
 
-An HTTP callout allows Citrix ADC to generate and send an HTTP or HTTPS request to an external server (callout agent) as part of the policy evaluation. The information that is retrieved from the server (callout agent) can be analyzed by advanced policy expressions and an appropriate action can be performed. For more information about the HTTP callout, see the [Citrix ADC documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/appexpert/http-callout.html).
+An HTTP callout allows Netscaler to generate and send an HTTP or HTTPS request to an external server (callout agent) as part of the policy evaluation. The information that is retrieved from the server (callout agent) can be analyzed by advanced policy expressions and an appropriate action can be performed. For more information about the HTTP callout, see the [Netscaler documentation](https://docs.citrix.com/en-us/citrix-adc/current-release/appexpert/http-callout.html).
 
-You can initiate the HTTP callout through the following expressions with the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) provided by Citrix:
+You can initiate the HTTP callout through the following expressions with the [rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml) provided by Citrix:
 
 - `sys.http_callout()`: This expression is used for blocking the call when the httpcallout agent response needs to be evaluated.
 
@@ -26,7 +26,7 @@ The following table explains the attributes of the HTTP callout request in the r
 |`headers`| Specifies one or more headers to insert into the HTTP request. Each header  `name` and `exp`, where `exp` is an expression that is evaluated at runtime to provide the value for the named header. |
 |`parameters`|Specifies one or more query parameters to insert into the HTTP request URL (for a GET request) or into the request body (for a POST request). Each parameter is represented by a `name` and an `expr`, where `expr` is an expression that is evaluated at run time to provide the value for the named parameter (name=value). The parameter values are URL encoded.|
 |`body_expr`|An advanced string expression for generating the body of the request. The expression can contain a literal string or an expression that derives the value (for example, client.ip.src).|
-|`full_req_expr`|Specifies the exact HTTP request, in the form of an expression, which the Citrix ADC sends to the callout agent. The request expression is constrained by the feature for which the callout is used. For example, an HTTP.RES expression cannot be used in a request-time policy bank or in a TCP content switching policy bank.|
+|`full_req_expr`|Specifies the exact HTTP request, in the form of an expression, which the Netscaler sends to the callout agent. The request expression is constrained by the feature for which the callout is used. For example, an HTTP.RES expression cannot be used in a request-time policy bank or in a TCP content switching policy bank.|
 |`scheme`| Specifies the type of scheme for the callout server. Example: HTTP, HTTPS|
 |`return_type`|Specifies the type of data that the target callout agent returns in response to the callout. The available settings function as follows: TEXT - Treat the returned value as a text string. NUM - Treat the returned value as a number. BOOL - Treat the returned value as a boolean value.|
 |`cache_for_secs`|Specifies the duration, in seconds, for which the callout response is cached. The cached responses are stored in an integrated caching content group named `calloutContentGroup`. If the duration is not configured, the callout responses are not cached unless a normal caching configuration is used to cache them. This parameter takes precedence over any normal caching configuration that would otherwise apply to these responses.|   
@@ -52,7 +52,7 @@ The following diagram explains the workflow of a request where each number in th
 
 The following is a sample YAML file (`ip_validate_responder.yaml`) for validating a blocklisted IP address:
 
-**Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `ip_validate_responder` YAML file. 
+**Note:** You must deploy the [rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml) before deploying the `ip_validate_responder` YAML file. 
 
 ```yml
 apiVersion: citrix.com/v1
@@ -106,7 +106,7 @@ The work flow of a request is explained in the following diagram where each numb
 
 The following is a sample YAML (`path_rewrite`) file.
 
-**Note:** You must deploy the [rewrite and responder CRD](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) before deploying the `path_rewrite` YAML file.
+**Note:** You must deploy the [rewrite and responder CRD](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-policy/rewrite-responder-policies-deployment.yaml) before deploying the `path_rewrite` YAML file.
 
 ```yml
 apiVersion: citrix.com/v1
