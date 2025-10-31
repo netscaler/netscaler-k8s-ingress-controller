@@ -1,0 +1,19 @@
+apiVersion: citrix.com/v1
+kind: waf
+metadata:
+    name: waffieldformat
+spec:
+    html_error_object: "http://x.x.x.x/crd/hipster.html"
+    servicenames:
+        - frontend
+    security_checks:
+        html:
+          field_format: "on"
+    enforcements:
+        html:
+          field_format:
+            - rule:
+                field_name: state
+                url: /cart/checkout
+                field_type: any
+                max_len: 2

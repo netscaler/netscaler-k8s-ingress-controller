@@ -1,0 +1,20 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredAnnotations
+metadata:
+  name: ingress-class
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+    - apiGroups:
+      - extensions
+      - networking.k8s.io
+      kinds:
+      - Ingress
+  parameters:
+    annotations:
+    - allowedRegex: ^citrix-ingress$
+      key: kubernetes.io/ingress.class
+    message: 'All ingress objects must have the annotation `kubernetes.io/ingress.class:
+      citrix-ingress`'
+---

@@ -1,0 +1,57 @@
+#Sample CRD instance
+
+#apiVersion: citrix.com/v1
+#description: VIP for apache service
+#kind: vip
+#metadata:
+#  name: service-apache
+#  namespace: default
+#spec:
+#  description: VIP for the apache Service
+#  ipaddress: 10.99.98.90
+#  kind: service
+#  name: apache
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: vips.citrix.com
+spec:
+  group: citrix.com
+  names:
+    kind: vip
+    plural: vips
+    singular: vip
+  scope: Namespaced
+  versions: 
+  - name: v1
+    served: true
+    storage: true
+    additionalPrinterColumns:
+    - jsonPath: .spec.ipaddress
+      name: VIP
+      type: string
+    - name: Age
+      type: date
+      jsonPath: .metadata.creationTimestamp
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              ipaddress:
+                type: string
+              name:
+                type: string
+              kind:
+                type: string
+                enum: ["service", "ingress", "listener"]
+              description:
+                type: string
+              range-name:
+                type: string
+              multicluster:
+                description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
+                type: boolean
