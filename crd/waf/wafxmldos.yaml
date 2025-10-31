@@ -5,7 +5,8 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: XML
+    application_type:
+        - XML
     security_checks:
         xml:
           dos: "on"

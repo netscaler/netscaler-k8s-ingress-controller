@@ -5,8 +5,9 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: JSON
-    json_page_url: "http://x.x.x.x/crd/error_page.json"
+    application_type:
+        - JSON
+    json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
           dos: "on"

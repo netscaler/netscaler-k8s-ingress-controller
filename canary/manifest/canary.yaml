@@ -1,28 +1,33 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fronthotdrinksapp-canary-deployment
   labels:
-      name: fronthotdrinksapp
+    name: fronthotdrinksapp
+  name: fronthotdrinksapp-canary-deployment
   namespace: default
 spec:
   replicas: 4
+  selector:
+    matchLabels:
+      dep: cddep
+      name: fronthotdrinksapp
+      version: canary_version
   strategy:
-    type: RollingUpdate
     rollingUpdate:
       maxSurge: 10
       maxUnavailable: 10
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        name: fronthotdrinksapp
         dep: cddep
-        version: "canary_version"
+        name: fronthotdrinksapp
+        version: canary_version
     spec:
       containers:
-      - name: fronthotdrinksapp
-        image: "quay.io/sample-apps/fronthotdrinksapp:v2"
+      - image: quay.io/sample-apps/fronthotdrinksapp:v2
         imagePullPolicy: Always
+        name: fronthotdrinksapp
         ports:
-        - name: port-8080
-          containerPort: 8080
+        - containerPort: 8080
+          name: port-8080

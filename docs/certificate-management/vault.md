@@ -1,8 +1,8 @@
-# Deploy an HTTPS web application on Kubernetes with Citrix ingress controller and HashiCorp Vault using cert-manager
+# Deploy an HTTPS web application on Kubernetes with Netscaler ingress controller and HashiCorp Vault using cert-manager
 
-For ingress resources deployed with the Citrix ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert manager.
+For ingress resources deployed with the Netscaler ingress controller, you can automate TLS certificate provisioning, revocation, and renewal using cert-manager and HashiCorp Vault. This topic provides a sample workflow that uses HashiCorp Vault as a self-signed certificate authority for certificate signing requests from cert-manager.
 
-Specifically, the workflow uses the Vault PKI Secrets Engine to create a certificate authority (CA). This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications. For external facing applications that require public trust, see [automating TLS certificates using letsencrypt CA](./acme.md).
+Specifically, the workflow uses the Vault PKI Secrets Engine to create a certificate authority (CA). This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications. For external facing applications that require public trust, see [automating TLS certificates using Let’s Encrypt CA](./acme.md).
 
 The workflow uses a Vault secret engine and authentication methods. For the full list of Vault features, see the following Vault documentation:
 
@@ -12,7 +12,7 @@ The workflow uses a Vault secret engine and authentication methods. For the full
 
 This topic provides you information on how to deploy an HTTPS web application on a Kubernetes cluster, using:
 
--  Citrix ingress controller
+-  Netscaler ingress controller
 -  JetStack's [cert-manager](https://cert-manager.io/docs/) to provision TLS certificates from [HashiCorp Vault](https://www.vaultproject.io/)
 -  [HashiCorp Vault](https://www.vaultproject.io/)
 
@@ -24,17 +24,17 @@ Ensure that you have:
 
 -  Enabled RBAC on your Kubernetes cluster.
 
--  Deployed Citrix ADC MPX, VPX, or CPX in Tier 1 or Tier 2 deployment model.
+-  Deployed Netscaler MPX, VPX, or CPX in Tier 1 or Tier 2 deployment model.
 
-    In the Tier 1 deployment model, Citrix ADC MPX or VPX is used as an Application Delivery Controller (ADC). The Citrix ingress controller running in the Kubernetes cluster configures the virtual services for the services running on the Kubernetes cluster. Citrix ADC runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
-  
-    In the Tier 2 deployment, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in the Kubernetes cluster. Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
+    In the Tier 1 deployment model, Netscaler MPX or VPX is used as an Application Delivery Controller (ADC). The Netscaler ingress controller running in the Kubernetes cluster configures the virtual services for the services running on the Kubernetes cluster. Netscaler runs the virtual service on the publicly routable IP address and offloads SSL for client traffic with the help of the Let's Encrypt generated certificate.
 
--  Deployed Citrix ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
+    In the Tier 2 deployment, a TCP service is configured on the Netscaler (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Netscaler CPX instances running in the Kubernetes cluster. Netscaler CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure that you have administrator permission.
+-  Deployed Netscaler ingress controller. See [Deployment Topologies](../deployment-topologies.md) for various deployment scenarios.
 
-**Note:** The following procedure shows steps to configure Vault as a certificate authority with Citrix ADC CPX used as the ingress device. When a Citrix ADC VPX or MPX is used as the ingress device, the steps are the same except the steps to verify the ingress configuration in the Citrix ADC.
+-  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure that you have the administrator permission.
+
+**Note:** The following procedure shows steps to configure Vault as a certificate authority with Netscaler CPX used as the ingress device. When a Netscaler VPX or MPX is used as the ingress device, the steps are the same except the steps to verify the ingress configuration in the Netscaler.
 
 
 ## Deploy cert-manager using the manifest file
@@ -81,6 +81,7 @@ Perform the following steps to deploy a sample web application.
     [Kuard](https://github.com/kubernetes-up-and-running/kuard), a Kubernetes demo application is used for reference in this topic.
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration.
+```yml
 
         apiVersion: apps/v1
         kind: Deployment
@@ -88,6 +89,9 @@ Perform the following steps to deploy a sample web application.
           name: kuard
         spec:
           replicas: 1
+          selector:
+            matchLabels:
+              app: kuard
           template:
             metadata:
               labels:
@@ -99,6 +103,7 @@ Perform the following steps to deploy a sample web application.
                 name: kuard
                 ports:
                 - containerPort: 8080
+```
 
 1.  Deploy the Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands.
 
@@ -109,7 +114,7 @@ Perform the following steps to deploy a sample web application.
         kuard-6fc4d89bfb-djljt   1/1     Running   0          24s
 
 1.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration.
-
+```yml
         apiVersion: v1
         kind: Service
         metadata:
@@ -121,6 +126,7 @@ Perform the following steps to deploy a sample web application.
             protocol: TCP
           selector:
             app: kuard
+```
 
 1.  Deploy and verify the service using the following command.
 
@@ -130,28 +136,43 @@ Perform the following steps to deploy a sample web application.
         NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
         kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-1.  Expose this service to the outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+1.  Expose this service to the outside world by creating an Ingress that is deployed on Netscaler CPX or VPX as Content switching virtual server.
 
         **Note:**
-        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Citrix ingress controller is started.
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which Netscaler ingress controller is started.
 
-        apiVersion: extensions/v1beta1
+```yml
+        apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
+          annotations: {}
           name: kuard
-          annotations:
-            kubernetes.io/ingress.class: "citrix"
         spec:
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
               paths:
               - backend:
-                  serviceName: kuard
-                  servicePort: 80
-  
+                  service:
+                    name: kuard
+                    port:
+                      number: 80
+                path: /
+                pathType: Prefix
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
+  ```
+
     !!! info "Important"
-        Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
+        Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Netscaler CPX or VPX.
 
 1.  Deploy the Ingress using the following command.
 
@@ -161,7 +182,7 @@ Perform the following steps to deploy a sample web application.
         NAME    HOSTS               ADDRESS   PORTS   AGE
         kuard   kuard.example.com             80      7s
 
-1.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command.
+1.  Verify if the ingress is configured on Netscaler CPX or VPX using the following command.
 
         kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
         root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
@@ -201,9 +222,9 @@ Perform the following steps to deploy a sample web application.
         Date: Thu, 21 Feb 2019 09:09:05 GMT
 
 
-Once you have deployed the sample HTTP application, you can proceed to make the application available over HTTPS. Here the Vault server signs the CSR generated by the cert-manager and a server certificate is automatically generated for the application. 
+Once you have deployed the sample HTTP application, you can proceed to make the application available over HTTPS. Here the Vault server signs the CSR generated by the cert-manager and a server certificate is automatically generated for the application.
 
-In the following procedure, you use the configured Vault as a certificate authority and configure the cert-manager to use the Vault as signing authority for the CSR. 
+In the following procedure, you use the configured Vault as a certificate authority and configure the cert-manager to use the Vault as signing authority for the CSR.
 
 ## Configure HashiCorp Vault as Certificate Authority
 
@@ -250,9 +271,9 @@ After creating the root CA, perform the following steps to create an intermediat
 1.  Enable pki from a different path `PKI_INT` from root CA, typically `pki\_int`. Use the following command:
 
 
-        % export PKI_INT=pki_int 
+        % export PKI_INT=pki_int
         % vault secrets enable -path=${PKI_INT} pki
-        
+
         # Set the max TTL to 3 year
 
         % vault secrets tune -max-lease-ttl=26280h ${PKI_INT}
@@ -309,7 +330,7 @@ An "***AppRole***" represents a set of Vault policies and login constraints that
 
 Create an Approle named "***Kube-role***". The `secret_id` for the cert-manager should not be expired to use this Approle for authentication. Hence, do not set a TTL or set it to 0.
 
-    % vault auth enable approle 
+    % vault auth enable approle
 
     % vault write auth/approle/role/kube-role token_ttl=0
 
@@ -333,11 +354,11 @@ Perform the following steps to associate a policy with an Approle.
 
 The `kube-role` approle allows you to sign the CSR with intermediate CA.
 
-### Generate the `role_id` and `secret_id`
+### Generate the role id and secret id
 
-The role_id and secret_id are used by the cert-manager to authenticate with the Vault.
+The role id and secret id are used by the cert-manager to authenticate with the Vault.
 
-Generate the role id and secret id and encode the `secret_id` with Base64. Perform the following:
+Generate the role id and secret id and encode the secret id with Base64. Perform the following:
 
     % vault read auth/approle/role/kube-role/role-id
     role_id     db02de05-fa39-4855-059b-67221c5c2f63
@@ -350,12 +371,13 @@ Generate the role id and secret id and encode the `secret_id` with Base64. Perfo
     % echo 6a174c20-f6de-a53c-74d2-6018fcceff64 | base64
     NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg==
 
+
 ## Configure issuing certificates in Kubernetes
 
 
 After you have configured Vault as the intermediate CA, and the Approle authentication method for the cert-manager to access Vault, you need to configure the certificate for the ingress.
 
-### Create a secret with Approle secret-id
+### Create a secret with Approle secret id
 
 Perform the following to create a secret with Approle secret id.
 
@@ -371,7 +393,7 @@ Perform the following to create a secret with Approle secret id.
           secretId: "NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg=="
 
     !!! note "Note"
-        `data.secretId` is the base64 encoded Secret Id generated in [Generate the Role id and Secret id](#generate-the-role-id-and-secret-id). If you are using an Issuer resource in the next step, the secret must be in the same namespace as the `Issuer`. For `ClusterIssuer`, the secret must be in the `cert-manager` namespace.
+        `data.secretId` is the base64 encoded secret Id generated in [Generate the role id and secret id](#generate-the-role-id-and-secret-id). If you are using an Issuer resource in the next step, the secret must be in the same namespace as the `Issuer`. For `ClusterIssuer`, the secret must be in the `cert-manager` namespace.
 
 2.  Deploy the secret file (`secretid.yaml`) using the following command.
 
@@ -420,7 +442,7 @@ Perform the following steps to deploy the Vault cluster issuer.
             Type:                  Ready
         Events:                    <none>
 
-Now, you have successfully setup the cert-manager for Vault as the CA. The next step is securing the ingress by generating the server certificate. There are two different options for securing your ingress. You can proceed with one of the approaches to secure your ingresses. 
+Now, you have successfully setup the cert-manager for Vault as the CA. The next step is securing the ingress by generating the server certificate. There are two different options for securing your ingress. You can proceed with one of the approaches to secure your ingresses.
 
 -	Ingress Shim approach
 - Manually creating the `certificate` CRD object for the certificate.
@@ -428,31 +450,44 @@ Now, you have successfully setup the cert-manager for Vault as the CA. The next 
 
 ### Ingress-shim approach
 
-In this approach, you modify the ingress annotation for the cert-manager to automatically generate the certificate for the given host name and store it in the specified secret. 
+In this approach, you modify the ingress annotation for the cert-manager to automatically generate the certificate for the given host name and store it in the specified secret.
 
 
 1.	Modify the ingress with the `tls` section specifying a host name and secret. Also, specify the cert-manager annotation `cert-manager.io/cluster-issuer` as follows.
-
-        apiVersion: extensions/v1beta1
+```yml
+        apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
-          name: kuard
           annotations:
-            kubernetes.io/ingress.class: citrix
             cert-manager.io/cluster-issuer: vault-issuer
+          name: kuard
         spec:
-          tls:
-          - hosts:
-            - kuard.example.com
-            secretName: kuard-example-tls
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
               paths:
-              - path: /
-                backend:
-                  serviceName: kuard-service
-                  servicePort: 80
+              - backend:
+                  service:
+                    name: kuard-service
+                    port:
+                      number: 80
+                path: /
+                pathType: Prefix
+          tls:
+          - hosts:
+            - kuard.example.com
+            secretName: kuard-example-tls
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
+```
 
 
 1. Deploy the modified ingress as follows.
@@ -485,6 +520,7 @@ To create a "certificate" CRD object for the certificate, perform the following:
 
 1.  Create a file called `certificate.yaml` with the following configuration.
 
+```yml
         apiVersion: cert-manager.io/v1
         kind: Certificate
         metadata:
@@ -502,6 +538,7 @@ To create a "certificate" CRD object for the certificate, perform the following:
           commonName: kuard.example.com
           dnsNames:
           - www.kuard.example.com
+  ```
 
     The certificate has CN=`kuard.example.com` and SAN=`Kuard.example.com,www.kuard.example.com`.
     `spec.secretName` is the name of the secret where the certificate is stored after the certificate is issued successfully.
@@ -536,24 +573,39 @@ Perform the following steps to modify the ingress to use the generated secret.
 
 1.  Edit the original ingress and add a `spec.tls` section specifying the secret `kuard-example-tls` as follows.
 
-        apiVersion: extensions/v1beta1
+```yml
+        apiVersion: networking.k8s.io/v1
         kind: Ingress
         metadata:
+          annotations: {}
           name: kuard
-          annotations:
-            kubernetes.io/ingress.class: "citrix"
         spec:
-          tls:
-          - hosts:
-            - kuard.example.com
-            secretName: kuard-example-tls
+          ingressClassName: citrix
           rules:
           - host: kuard.example.com
             http:
               paths:
               - backend:
-                  serviceName: kuard
-                  servicePort: 80
+                  service:
+                    name: kuard
+                    port:
+                      number: 80
+                path: /
+                pathType: Prefix
+          tls:
+          - hosts:
+            - kuard.example.com
+            secretName: kuard-example-tls
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: IngressClass
+        metadata:
+          name: citrix
+        spec:
+          controller: citrix.com/ingress-controller
+        ---
+
+```
 
 1.  Deploy the ingress using the following command.
 
@@ -564,11 +616,11 @@ Perform the following steps to modify the ingress to use the generated secret.
         NAME    HOSTS               ADDRESS   PORTS     AGE
         kuard   kuard.example.com             80, 443   12s
 
-**Verify the Ingress configuration in Citrix ADC**
+**Verify the Ingress configuration in Netscaler**
 
- Once the certificate is successfully generated, Citrix ingress controller uses this certificate for configuring the front-end SSL virtual server. You can verify it with the following steps. 
+ Once the certificate is successfully generated, Netscaler ingress controller uses this certificate for configuring the front-end SSL virtual server. You can verify it with the following steps.
 
-1.  Log on to Citrix ADC CPX and verify if the Certificate is bound to the SSL virtual server.
+1.  Log on to Netscaler CPX and verify if the Certificate is bound to the SSL virtual server.
 
         % kubectl exec -it cpx-ingress-668bf6695f-4fwh8 bash
         cli_script.sh 'shsslvs'
@@ -647,15 +699,14 @@ Perform the following steps to modify the ingress to use the generated secret.
           3) VServer name: k8s-10.244.3.148:443:ssl Server Certificate for SNI
         Done
 
-   The HTTPS webserver is UP with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the 'RenewBefore" parameter in the Certificate, before expiry of the certificate.
+      The HTTPS webserver is up with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the `RenewBefore` parameter in the certificate, before expiry of the certificate.
 
-    **Note:**
-    The Vault signing of the certificate fails if the expiry of a certificate is beyond the expiry of the root CA or intermediate CA. You should ensure that the CA certificates are renewed in advance before the expiry.
+      **Note:** The Vault signing of the certificate fails if the expiry of a certificate is beyond the expiry of the root CA or intermediate CA. You should ensure that the CA certificates are renewed in advance before the expiry.
 
-1. Verify that the application is accessible using the HTTPS protocol.  
+1. Verify that the application is accessible using the HTTPS protocol.
 
-       % curl -sS -D - https://kuard.example.com -k -o /dev/null
-       HTTP/1.1 200 OK
-       Content-Length: 1472
-       Content-Type: text/html
-       Date: Tue, 11 May 2021 20:39:23 GMT
+        % curl -sS -D - https://kuard.example.com -k -o /dev/null
+        HTTP/1.1 200 OK
+        Content-Length: 1472
+        Content-Type: text/html
+        Date: Tue, 11 May 2021 20:39:23 GMT

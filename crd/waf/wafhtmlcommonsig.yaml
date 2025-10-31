@@ -5,9 +5,10 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
+    application_type:
+        - HTML
     signatures: "http://x.x.x.x/crd/sig.xml"
-    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           allow_url: "on"

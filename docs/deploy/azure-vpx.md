@@ -1,15 +1,15 @@
-# Create a Citrix ADC VPX instance from Azure Marketplace
+# Create a Netscaler VPX instance from Azure Marketplace
 
-This topic explains the steps to create a Citrix ADC VPX instance from Azure Marketplace.
+This topic explains the steps to create a Netscaler VPX instance from Azure Marketplace.
 
 **Prerequisites:**
 
 - A valid Azure Marketplace account and subscription
 - An existing Kubernetes cluster in Azure
   
-## Deploy Citrix ADC VPX from Azure Marketplace
+## Deploy Netscaler VPX from Azure Marketplace
 
-Perform the following steps to create a Citrix ADC VPX instance from Azure Marketplace.
+Perform the following steps to create a Netscaler VPX instance from Azure Marketplace.
 
 1. Log in to your [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us) account.
 
@@ -26,16 +26,16 @@ Perform the following steps to create a Citrix ADC VPX instance from Azure Marke
      
      <img src="../media/azurem-image-vpx1.png" width="500">
      
-3. Add Citrix ADC VPX in the resource group located in step 2.
+3. Add Netscaler VPX in the resource group located in step 2.
    
    - From the resource group page, click **+Add**.
   
-   - Search for `Citrix ADC 12.1`, select a software plan, and click **Create**.
+   - Search for `Netscaler 12.1`, select a software plan, and click **Create**.
     
      <img src="../media/azurem-image-vpx2.png" width="500">
      
 
-4. Specify the required details for Citrix ADC VPX.
+4. Specify the required details for Netscaler VPX.
 
    - Specify a virtual machine name.
    
@@ -43,7 +43,7 @@ Perform the following steps to create a Citrix ADC VPX instance from Azure Marke
    
       <img src="../media/azurem-image-vpx3.png" width="500">
     
-    - Specify the size for the Citrix ADC VPX.
+    - Specify the size for the Netscaler VPX.
    
       <img src="../media/azurem-image-vpx4.png" width="500">
    
@@ -73,10 +73,10 @@ Perform the following steps to create a Citrix ADC VPX instance from Azure Marke
      
       <img src="../media/azurem-image-vpx10.png" width="500">
   
-    - Review all details of the Citrix ADC VPX, and then click **Create**. Wait for some time until the deployment is complete.
+    - Review all details of the Netscaler VPX, and then click **Create**. Wait for some time until the deployment is complete.
      <img src="../media/azurem-image-vpx11.png" width="500">
 
-5. Set the Citrix ADC VPX networking configurations required as part of ingress or the Citrix ingress controller deployment in the cluster.
+5. Set the Netscaler VPX networking configurations required as part of ingress or the Netscaler ingress controller deployment in the cluster.
 
    - Go to the `Networking` section on the deployed VPX Page, and select **Network Interface** on the right.
   
@@ -100,7 +100,7 @@ Perform the following steps to create a Citrix ADC VPX instance from Azure Marke
   
        <img src="../media/azurem-image-vpx17.png" width="500">
 
-6. Verify if you are able to SSH into Citrix ADC VPX using the primary public IP address and the user name and password set during the Citrix ADC VPX deployment.
+6. Verify if you are able to SSH into Netscaler VPX using the primary public IP address and the user name and password set during the Netscaler VPX deployment.
   
   **Note:**
   Before proceeding with the verification, make sure that all the necessary firewall settings are configured. Verify the SSH access and access to other ports like 80 and 443.

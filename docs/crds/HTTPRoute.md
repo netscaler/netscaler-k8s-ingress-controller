@@ -10,7 +10,7 @@ Currently HTTPRoute supports routing based on the following:
 - Cookie based routing
 - Query parameter based routing
 - HTTP method based routing
-- Routing using Citrix ADC policy expressions
+- Routing using Netscaler policy expressions
 
 You can define one or more rules as part of an HTTPRoute object with each rule acts as a matching criteria for routing. An action is defined for each rule when the matching criteria is met for the incoming HTTP request. An action could be one of 'backend' in which the traffic is load balanced to the backend service or 'redirect' where the redirect response is sent back to the client. 'Backend' action creates Content switching policies in ADC and 'redirect' action creates responder policies in ADC.
 
@@ -22,7 +22,7 @@ There are three different ways of matching criteria as explained in the followin
 | `prefix`          | Matches prefix of the incoming request. For example: `/a` matches to `/a/b` and `/a/c`.         |
 | `contains`         | Matches if the incoming request contains the specified keyword. |
 
-This topic contains a sample HTTPRoute CRD object and also explains the various attributes of the HTTPRoute CRD. For the complete CRD definition, see [HTTPRoute.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
+This topic contains a sample HTTPRoute CRD object and also explains the various attributes of the HTTPRoute CRD. For the complete CRD definition, see [HTTPRoute.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/contentrouting/HTTPRoute.yaml).
 
 ## HTTP CRD object example
 
@@ -31,49 +31,49 @@ The following is a sample HTTP CRD object.
 ```yml
 apiVersion: citrix.com/v1
 kind: HTTPRoute
- metadata:
-    name: test-route
-    labels:
-      domain: abc.com
- spec:
-   hostname:
-   - abc.com
-   rules:
-   - name: exactpath
-     match:
-     - path:
-         exact: /resources
-     action:
-       backend:
-         kube:
-           service: resource
-           port: 80
-   - name: prefixpath
-     match:
-     - path:
-         prefix: /cart
-     action:
-       backend:
-         kube:
-           service: cart
-           port: 80
-   - name: header
-     match:
-     - headers:
-       - headerName:
-           contains: Mobile
-     action:
-       backend:
-         kube:
-           service: mobile
-           port: 443
-           backendConfig:
-             secureBackend: true
-             lbConfig:
-               lbmethod: ROUNDROBIN
+metadata:
+  name: test-route
+  labels:
+    domain: abc.com
+spec:
+  hostname:
+  - abc.com
+  rules:
+  - name: exactpath
+    match:
+    - path:
+        exact: /resources
+    action:
+      backend:
+        kube:
+          service: resource
+          port: 80
+  - name: prefixpath
+    match:
+    - path:
+        prefix: /cart
+    action:
+      backend:
+        kube:
+          service: cart
+          port: 80
+  - name: header
+    match:
+    - headers:
+      - headerName:
+          contains: Mobile
+    action:
+      backend:
+        kube:
+          service: mobile
+          port: 443
+          backendConfig:
+            secureBackend: true
+            lbConfig:
+              lbmethod: ROUNDROBIN
 ```
 
-For more examples, see [HTTP Route Examples](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/crd/contentrouting/HTTPRoute_examples).
+For more examples, see [HTTP Route Examples](https://github.com/netscaler/netscaler-k8s-ingress-controller/tree/master/crd/contentrouting/HTTPRoute_examples).
 
 ## HTTPRoute.spec
 
@@ -92,7 +92,7 @@ HTTPRoute custom resource defines a spec field which represents the HTTP routing
 
 | Field  | Description                                                                                                                                              |Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                     | Required |
 |--------|-------------------------------------------------------------------------------------------------------------------------------------------------------| --------------------------------------------------------------------------------------------| --------------|
-| `name`  | Specifies a name to represent the rule. This field is used as an identifier in the content routing policy name in Citrix ADC.  <Br>**Note:** For each rule, the name must be unique.                  | string          | Yes      |
+| `name`  | Specifies a name to represent the rule. This field is used as an identifier in the content routing policy name in Netscaler.  <Br>**Note:** For each rule, the name must be unique.                  | string          | Yes      |
 | `action` |Specifies an action for the matching rule.                   | rules.action    | Yes      |
 | `match`  | List of matching routes with the same action. If more than one entry is present, this matching rule treated as an `OR` condition and the same action is chosen for any match. | [ ] [rules.match](#HTTPRouterulesmatch)  | No       |
 
@@ -107,14 +107,14 @@ HTTPRoute custom resource defines a spec field which represents the HTTP routing
 | `cookies`          |Specifies the list of cookie based matches for content routing. If there is more than one rule, this matching criteria is treated as an `AND` condition and all rules must match.                    | [ ] [HTTPRoute.rules.match.cookies](#HTTPRouterulesmatchcookies)     | No       |
 | `queryParams`      |Specifies the list of query parameters for content routing. If there is more than one rule, this matching criteria is treated as an `AND` condition and all rules must match.                    | [ ] [HTTPRoute.rules.match.queryParams](#HTTPRouterulesmatchqueryParams) | No       |
 | `method`           |Specifies HTTP method based routing rules. Possible options are: GET, POST, PUT, and so on. An action is chosen for the HTTP request with the matching method. | string                               | No       |
-| `policyExpression` |Specifies Citrix ADC policy expression based routing rules. Any custom Citrix ADC policy expression can be specified for content routing rules. The Citrix ingress controller does not check the correctness of the expression. Hence, you must check the correctness of the expression. For more information on policy expression, see [Expression Prefix](https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf). For example: `HTTP.REQ.URL.PATH.GET(1).EQ("foo")`      | string                               | No       |
+| `policyExpression` |Specifies Netscaler policy expression based routing rules. Any custom Netscaler policy expression can be specified for content routing rules. The Netscaler ingress controller does not check the correctness of the expression. Hence, you must check the correctness of the expression. For more information on policy expression, see [Expression Prefix](https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf). For example: `HTTP.REQ.URL.PATH.GET(1).EQ("foo")`      | string                               | No       |
 
 ## HTTPRoute.rules.match.path
 
 This attribute specifies the path based matching for content routing.
 
 Following is an example for the `HTTPRoute.rules.match.path` attribute.
-
+```yml
      match:
      - path:
          prefix: /resources
@@ -132,6 +132,7 @@ Following is an example for the `HTTPRoute.rules.match.path` attribute.
          kube:
            service: resource
            port: 80
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.path` attribute.
 
@@ -139,7 +140,7 @@ The following table explains the various fields in the `HTTPRoute.rules.match.pa
 |--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|
 | `prefix` | Specifies the prefix expression of paths as a matching criteria. If the beginning path of an HTTP request matches the specified path, perform a match. For example, `/a` matches URLs `/a` and `/a/b`.                                            | string | No       |
 | `exact`  | Specifies the exact path as a matching criteria. Performs a match only if the request path exactly matches the specified path.                                                           | string | No       |
-| `regex`  | Specifies regular expressions as a matching criteria for paths. Performs a match if the specified regular expression matches with the incoming request. Only regular expressions in the Perl Compatible Regular Expression (PCRE) format are supported. For more information on regular expressions supported by Citrix ADC, see [Regular Expressions](https://docs.citrix.com/en-us/netscaler/12/appexpert/policies-and-expressions/ns-regex-wrapper-con.html).                                                       | string | No       |
+| `regex`  | Specifies regular expressions as a matching criteria for paths. Performs a match if the specified regular expression matches with the incoming request. Only regular expressions in the Perl Compatible Regular Expression (PCRE) format are supported. For more information on regular expressions supported by Netscaler, see [Regular Expressions](https://docs.citrix.com/en-us/netscaler/12/appexpert/policies-and-expressions/ns-regex-wrapper-con.html).                                                       | string | No       |
 
 ## HTTPRoute.rules.match.headers
 
@@ -158,6 +159,7 @@ This attribute represents the header name based matching for content routing.
 
 Following example shows sample snippets for the `HTTPRoute.rules.match.headers.headerName` attribute configuration.
 
+```yml
     match:
     - headers:
       - headerName:
@@ -177,6 +179,7 @@ Following example shows sample snippets for the `HTTPRoute.rules.match.headers.h
         kube:
           service: resource-service
           port: 80
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.headers.headerName` attribute.
 
@@ -192,7 +195,7 @@ The following table explains the various fields in the `HTTPRoute.rules.match.he
 This attribute represents the header name and value matching for content routing. The header name is matched exactly and value is matched according to the fields specified.
 
 The following example shows sample snippets for the `HTTPRoute.rules.match.headers.headerValue` attribute configuration.
-
+```yml
 
      match:
      - headers:
@@ -227,7 +230,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.heade
          kube:
            service: example
            port: 80
-
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.headers.headerValue` attribute.
 
@@ -246,7 +249,7 @@ This attribute represents the cookie based matching for content routing. The coo
 
 The following example shows sample snippets for the `HTTPRoute.rules.match.cookies` attribute configuration.
 
-
+```yml
      match:
      - cookies:
        - name: version
@@ -276,6 +279,7 @@ The following example shows sample snippets for the `HTTPRoute.rules.match.cooki
          kube:
            service: v1-app
            port: 80
+```
 
 The following table explains the various fields in the `HTTPRoute.rules.match.cookies` attribute.
 
@@ -290,7 +294,7 @@ The following table explains the various fields in the `HTTPRoute.rules.match.co
 ## HTTPRoute.rules.match.queryParams
 
 This attribute represents the HTTP query parameters in the URL matching for content routing.
-
+```yml
 
     match:
      - queryParams:
@@ -322,6 +326,7 @@ This attribute represents the HTTP query parameters in the URL matching for cont
         kube:
           service: mobile
           port: 80
+```
 
 The following example shows sample snippets for the `HTTPRoute.rules.match.cookies` attribute configuration.
 
@@ -380,7 +385,7 @@ The following table explains the various fields in the `HTTPRoute.rules.action.b
 
 ## BackendConfig
 
-This attribute represents the back end configurations of Citrix ADC.
+This attribute represents the back end configurations of Netscaler.
 Following is an example for the `BackendConfig` attribute configuration.
 
 
@@ -397,8 +402,8 @@ The following table explains the various fields in the `BackendConfig` attribute
 | Field              | Description                                                                                                                                                                             | Type   | Required |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|
 | `secureBackend`      | Specifies whether the communication is secure or not. If the value of `secureBackend` field is  `true` secure communication is used to communicate with the back end. The default value is `false`, that means HTTP is used for the back end communication.                                            |        |          |
-| `lbConfig`          | Specifies the Citrix ADC load balancing virtual server configurations for the given back end. One can specify key-value pairs as shown in the example which sets the LBVserver configurations for the back end. For all the valid configurations, see [LB virtual server configurations](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/).             | object | No       |
-| `servicegroupConfig` | Specifies the Citrix ADC service group configurations for the given back end. One can specify the key-value pairs as shown in the example which sets the service group configurations for the back end. For all the valid configurations, see [service group configurations](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/).| object | No       |
+| `lbConfig`          | Specifies the Netscaler load balancing virtual server configurations for the given back end. One can specify key-value pairs as shown in the example which sets the LBVserver configurations for the back end. For all the valid configurations, see [LB virtual server configurations](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/).             | object | No       |
+| `servicegroupConfig` | Specifies the Netscaler service group configurations for the given back end. One can specify the key-value pairs as shown in the example which sets the service group configurations for the back end. For all the valid configurations, see [service group configurations](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/).| object | No       |
 
 ## HTTPRoute.rules.action.redirect
 
@@ -415,5 +420,5 @@ The following table explains the various fields in the `HTTPRoute.rules.action.r
 |------------------|------------------------------------------------------------------------------------------|---------|----------|
 | `httpsRedirect`    | Redirects the HTTP traffic to HTTPS if this field is set to `yes`. Only the scheme is changed to HTTPS without modifying the other URL part. Either `httpsRedirect`, `hostRedirect` or `targetExpression` is required.                                     | boolean | No       |
 | `hostRedirect`     | Rewrites the host name part of the URL to the value set in this attribute and redirect the traffic. Other part of the URL is not modified during redirection.        | string  | No       |
-| `targetExpression` | Specifies the Citrix ADC expression for redirection. For example, to redirect traffic to HTTPS from HTTP, the following expression can be used: "\"https://\"+HTTP.REQ.HOSTNAME + HTTP.REQ.URL.HTTP_URL_SAFE".                     | string  | No       |
+| `targetExpression` | Specifies the Netscaler expression for redirection. For example, to redirect traffic to HTTPS from HTTP, the following expression can be used: "\"https://\"+HTTP.REQ.HOSTNAME + HTTP.REQ.URL.HTTP_URL_SAFE".                     | string  | No       |
 | `responseCode`    | Specifies the response code. The default response code is 302, which can be customized using this attribute.            | Integer | No       |

@@ -29,7 +29,7 @@ class rbac:
         '''
 
         basicConfigIn = OrderedDict([
-        ("apiVersion", "rbac.authorization.k8s.io/v1beta1"),
+        ("apiVersion", "rbac.authorization.k8s.io/v1"),
         ("kind", "ClusterRole"),
         ("metadata", {
             "name": "%s" % (self.name),
@@ -101,7 +101,7 @@ class rbac:
         '''
 
         basicConfigIn = OrderedDict([
-        ("apiVersion", "rbac.authorization.k8s.io/v1beta1"),
+        ("apiVersion", "rbac.authorization.k8s.io/v1"),
         ("kind", "ClusterRoleBinding"),
         ("metadata", {
             "name": "%s" % (self.name),
@@ -147,8 +147,8 @@ class cpxCic:
         self.name = cpxCicInput["name"]
         self.cicContainerName = "cic"
         self.cpxContainerName = "cpx"
-        self.cpxImage = "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
-        self.cicImage = "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
+        self.cpxImage = "quay.io/netscaler/netscaler-cpx:14.1-38.53"
+        self.cicImage = "quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34"
         self.imagePullPolicy = "Always"
         self.readinessProbe = True
         self.serviceAccountName = "citrix"
@@ -346,6 +346,10 @@ class ingress:
             self.protocol = ingressInput["protocol"]
             self.tls = ingressInput["tls"]
             self.serviceDetails = ingressInput["serviceDetails"]
+            self.adm = False
+            if "admRequired" in ingressInput.keys():
+                if ingressInput["admRequired"]:
+                    self.adm = True
 #            if "port" in ingressInput.keys():
 #                self.tcpPort = ingressInput["port"]
             if "ingressClass" in ingressInput.keys():
@@ -387,6 +391,9 @@ class ingress:
             ("spec", {})
             ])
 
+#        basicConfigIn['metadata']['annotations']["ingress.citrix.com/insecure-termination"] = 'allow'
+        if self.adm:
+            basicConfigIn['metadata']['annotations']['ingress.citrix.com/analyticsprofile'] = '{"webinsight": {"httpurl":"ENABLED", "httpuseragent":"ENABLED", "httphost":"ENABLED", "httpmethod":"ENABLED", "httpcontenttype":"ENABLED"}, "tcpinsight": {"tcpBurstReporting":"DISABLED"}}'
         if self.protocol == "tcp":
             basicConfigIn['metadata']['annotations']['ingress.citrix.com/insecure-service-type'] = "tcp"
             basicConfigIn['metadata']['annotations']['ingress.citrix.com/insecure-port'] = self.serviceDetails['servicePort']
@@ -486,6 +493,7 @@ class service:
             ("kind", "Service"),
             ("metadata", {
                 "name": self.name,
+                "labels": {"citrix-adc": "cpx"},
             }),
             ("spec", {
                 "ports": [],

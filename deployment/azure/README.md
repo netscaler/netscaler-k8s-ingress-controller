@@ -1,17 +1,11 @@
-# Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
+# Netscaler as an Ingress in Azure Kubernetes Engine
 
-Azure Kubernetes Engine (AKS) provides the following two modes for networking:
+## Netscaler CPX as an Ingress in Azure Kubernetes Engine
 
--  [Kubenet (basic) networking](https://docs.microsoft.com/en-us/azure/aks/concepts-network#kubenet-basic-networking)
--  [Azure CNI (advanced) networking](https://docs.microsoft.com/en-us/azure/aks/concepts-network#azure-cni-advanced-networking)
+You can deploy Netscaler CPX as an Ingress in AKS. For detailed instructions, see:
 
-## Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
+-  [Deploy Netscaler CPX as an Ingress device in an Azure Kubernetes Service cluster](../../docs/deploy/deploy-azure.md).
 
-You can deploy Citrix ADC CPX as an Ingress in AKS using these modes. For detailed instructions, refer:
+## Netscaler VPX in HA INC mode an Ingress in Azure Kubernetes Services
 
--  [Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster](../../docs/deploy/deploy-azure.md).
--  [Deploy Citrix ADC CPX as an Ingress device in an Azure Kubernetes Service cluster with advanced networking mode](../../docs/deploy/deploy-azure-cni.md)
-
-## Citrix ingress controller in Azure Kubernetes Engine with Citrix ADX VPX
-
-You can deploy the Citrix ingress controller in AKS with Citrix ADC VPX. For detailed instructions, see [Deploy the Citrix ingress controller in an Azure Kubernetes Service cluster with Citrix ADC VPX](../../docs/deploy/deploy-azure-cic.md).
+You can deploy Netscaler VPX in High Availability INC mode as ingress for Azure Kubernetes Services. For information, see [Netscaler VPX in High Availability INC mode as ingress for Azure Kubernetes Services](../../docs/deploy/deploy-vpx-ha-inc-on-azure.md).

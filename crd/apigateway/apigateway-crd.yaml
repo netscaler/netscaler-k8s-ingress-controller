@@ -1,24 +1,135 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: apigatewaypolicies.citrix.com
 spec:
   group: citrix.com
-  version: v1beta1
   names:
     kind: apigatewaypolicy
     plural: apigatewaypolicies
     singular: apigatewaypolicy
   scope: Namespaced
-  subresources:
-    status: {}
-  additionalPrinterColumns:
+  versions:
+  - name: v1beta1
+    served: true
+    storage: true
+    additionalPrinterColumns:
     - name: Status
       type: string
       description: "Current Status of the CRD"
-      JSONPath: .status.state
+      jsonPath: .status.state
     - name: Message
       type: string
       description: "Status Message"
-      JSONPath: .status.status_message
-
+      jsonPath: .status.status_message
+    subresources:
+      status: {}
+    schema:
+      openAPIV3Schema:
+        type: object
+        required: [spec]
+        properties:
+          status:
+            type: object
+            properties:
+              state:
+                 type: string
+              status_message:
+                 type: string
+          spec:
+            type: object
+            properties:
+              api_definition:
+                type: object
+                properties:
+                  repository:
+                    type: string
+                  branch:
+                    type: string
+                  oas_secret_ref:
+                    type: string
+                  files:
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 127
+              api_proxy:
+                type: object
+                properties:
+                  ipaddress:
+                    type: string
+                  port:
+                    type: integer
+                  protocol:
+                    type: string
+                  secret:
+                    type: string
+              policies:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    selector:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          tags:
+                            type: array
+                            items:
+                              type: string
+                          api:
+                            type: string
+                          method:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 127
+                    upstream:
+                      type: object
+                      properties:
+                        service:
+                          type: string
+                        port:
+                          type: integer
+                    policy_bindings:
+                      type: object
+                      properties:
+                        ratelimit:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                        waf:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                        rewritepolicy:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                        bot:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+              aaa:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    crd_name:
+                      type: string
+                    mappings:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          petstore_auth:
+                            type: string
+                          api_key:
+                            type: string
