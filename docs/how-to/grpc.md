@@ -1,4 +1,4 @@
-# Enable gRPC support using the Citrix ingress controller
+# Enable gRPC support using the Netscaler ingress controller
 
 gRPC is a high performance, open-source universal RPC framework created by Google. In gRPC, a client application can directly call methods on a server application from a different server in the same way you call local methods.
 You can easily create distributed applications and services using GRPC.
@@ -15,64 +15,16 @@ Perform the following steps to enable GRPC support using HTTP2.
 
            kubectl apply -f cic-configmap.yaml
 
-3. Edit the `cic.yaml` file for deploying the Citrix ingress controller to support ConfigMap.
+3. Edit the `cic.yaml` file for deploying the Netscaler ingress controller to support ConfigMap.
 
-        
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: cic-k8s-ingress-controller
-        spec:
-          selector:
-            matchLabels:
-              app: cic-k8s-ingress-controller
-          replicas: 1
-          template:
-            metadata:
-              name: cic-k8s-ingress-controller
-              labels:
-                app: cic-k8s-ingress-controller
-              annotations:
-            spec:
-              serviceAccountName: cic-k8s-role
-              containers:
-              - name: cic-k8s-ingress-controller
-                image: "quay.io/citrix/citrix-k8s-ingress-controller:1.8.19"
-                env:
-                # Set NetScaler NSIP/SNIP, SNIP in case of HA (mgmt has to be enabled)
-                - name: "NS_IP"
-                  value: "10.106.143.133"
-                # Set username for Nitro
-                - name: "NS_USER"
-                  valueFrom:
-                    secretKeyRef:
-                    name: nslogin
-                    key: username
-                # Set user password for Nitro
-                - name: "NS_PASSWORD"
-                  valueFrom:
-                    secretKeyRef:
-                    name: nslogin
-                    key: password
-                # Set log level
-                - name: "EULA"
-                  value: "yes"
-                envFrom:
-                - configMapRef:
-                    name: cic-configmap
+                ```yml
                 args:
                   - --ingress-classes
                     citrix
-                  - --feature-node-watch
-                    true
-                  - --default-ssl-certificate
-                    default/default.secret
                   - --configmap
                     default/cic-configmap
-                # imagePullPolicy: IfNotPresent
-                imagePullPolicy: Always
-
-4. Deploy the Citrix ingress controller as a stand-alone pod by applying the edited YAML file.
+                ```
+4. Deploy the Netscaler ingress controller as a stand-alone pod by applying the edited YAML file.
 
         kubectl apply -f cic.yaml
 
@@ -87,7 +39,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
     Following is a sample content for the `grpc-service.yaml` file. 
          
-
+          ```yml
           apiVersion: apps/v1
           kind: Deployment
           metadata:
@@ -124,7 +76,7 @@ Perform the following steps to enable GRPC support using HTTP2.
               app: grpc-service
             sessionAffinity: None
             type: NodePort
-
+          ```
 7. Create a certificate for the gRPC Ingress configuration.
 
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=grpc.example.com/O=grpc.example.com"
@@ -133,7 +85,7 @@ Perform the following steps to enable GRPC support using HTTP2.
 
         secret "grpc-secret" created
 
-8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Citrix ingress controller.
+8. Enable HTTP2 using Ingress annotations. See [HTTP/2 support](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/docs/how-to/http-use-cases.md) for steps to enable HTTP2 using the Netscaler ingress controller.
 
    - Create a YAML file for the front-end Ingress configuration and apply it to enable HTTP/2 on the content switching virtual server.
   
@@ -141,20 +93,32 @@ Perform the following steps to enable GRPC support using HTTP2.
   
      The content of the `frontend-ingress.yaml` file is provided as follows:
 
-          apiVersion: extensions/v1beta1
+          ```yml
+          apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: frontend-ingress
             annotations:
-              kubernetes.io/ingress.class: "citrix"
-              ingress.citrix.com/frontend-ip: "192.0.2.1"
-              ingress.citrix.com/secure-port: "443"
-              ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled", "http2direct" : "enabled"}'
+              ingress.citrix.com/frontend-httpprofile: '{"http2":"enabled", "http2direct" :
+                "enabled"}'
+              ingress.citrix.com/frontend-ip: 192.0.2.1
+              ingress.citrix.com/secure-port: '443'
+            name: frontend-ingress
           spec:
-            tls:
-              - hosts:
+            ingressClassName: citrix
             rules:
-            - host:
+            - {}
+            tls:
+            - {}
+          ---
+          apiVersion: networking.k8s.io/v1
+          kind: IngressClass
+          metadata:
+            name: citrix
+          spec:
+            controller: citrix.com/ingress-controller
+          ---
+
+          ```
 
    - Create a YAML file for the back-end Ingress configuration with the following content and apply it to enable HTTP2 on back-end (service group).
 
@@ -162,39 +126,52 @@ Perform the following steps to enable GRPC support using HTTP2.
 
       The content of the `backend-ingress.yaml` file is provided as follows:
 
-          apiVersion: extensions/v1beta1
+          ```yml
+          apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: grpc-ingress
             annotations:
-              # Note that gRPC services must be specified as backend services.
-              kubernetes.io/ingress.class: "citrix"
-              ingress.citrix.com/frontend-ip: "192.0.2.2"
-              ingress.citrix.com/secure-port: "443"
-              ingress.citrix.com/backend-httpprofile: '{"grpc-service":{"http2": "enabled", "http2direct" : "enabled"}}'
+              ingress.citrix.com/backend-httpprofile: '{"grpc-service":{"http2": "enabled",
+                "http2direct" : "enabled"}}'
+              ingress.citrix.com/frontend-ip: 192.0.2.2
+              ingress.citrix.com/secure-port: '443'
+            name: grpc-ingress
           spec:
-            tls:
-              - hosts:
-                # Certificate domain name
-                - grpc.example.com
-                secretName: grpc-secret
+            ingressClassName: citrix
             rules:
-            # gRPC service domain name
             - host: grpc.example.com
               http:
                 paths:
-                - path: /
-                  backend:
-                    serviceName: grpc-service
-                    servicePort: 50051
+                - backend:
+                    service:
+                      name: grpc-service
+                      port:
+                        number: 50051
+                  path: /
+                  pathType: Prefix
+            tls:
+            - hosts:
+              - grpc.example.com
+              secretName: grpc-secret
+          ---
+          apiVersion: networking.k8s.io/v1
+          kind: IngressClass
+          metadata:
+            name: citrix
+          spec:
+            controller: citrix.com/ingress-controller
+          ---
+
+          ```
 
 3. Test the gRPC traffic using the `grpcurl` command.
 
-
+        ```
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
-
+        ```
     The output of the command is shown as follows:
 
+        ```
         Resolved method descriptor:
         rpc SayHello ( .helloworld.HelloRequest ) returns ( .helloworld.HelloReply );
  
@@ -216,18 +193,19 @@ Perform the following steps to enable GRPC support using HTTP2.
         Response trailers received:
         (empty)
         Sent 1 request and received 1 response
+        ```
 
 ## Validate the rate limit CRD
 
 Perform the following steps to validate the rate limit CRD.
 
-1. Apply the rate limit CRD using the [ratelimit-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/ratelimit/ratelimit-crd.yaml) file.
+1. Apply the rate limit CRD using the [ratelimit-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/ratelimit/ratelimit-crd.yaml) file.
 
        kubectl create -f ratelimit-crd.yaml
 
 2. Create a YAML file (ratelimit-crd-object.yaml) with the following content for the rate limit policy.
 
-
+          ```yml
           apiVersion: citrix.com/v1beta1
           kind: ratelimit
           metadata:
@@ -243,7 +221,7 @@ Perform the following steps to validate the rate limit CRD.
             req_threshold: 5
             timeslice: 60000
             throttle_action: "RESPOND"
-         
+          ```
 
 1. Apply the YAML file using the following command.
   
@@ -251,26 +229,29 @@ Perform the following steps to validate the rate limit CRD.
 
 2. Test gRPC traffic using the `grpcurl` command.
 
-
+        ```
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
+        ```
 
       The command returns the following error in response after the rate limit is reached:
 
+        ```
         Error invoking method "helloworld.Greeter.SayHello": failed to query for service descriptor "helloworld.Greeter": rpc error: code = Unavailable desc =
 
         Too Many Requests: HTTP status code 429; transport: missing content-type field
+        ```
 
 ## Validate the Rewrite and Responder CRD with gRPC
 
 Perform the following steps to validate the Rewrite and Responder CRD.
 
-1. Apply the Rewrite and Responder CRD using the [rewrite-responder-policies-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) file.
+1. Apply the Rewrite and Responder CRD using the [rewrite-responder-policies-deployment.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml) file.
 
        kubectl create -f rewrite-responder-policies-deployment.yaml
 
 2. Create a YAML file (rewrite-crd-object.yaml) with the following content for the rewrite policy.
 
-      
+        ```yml      
         apiVersion: citrix.com/v1
         kind: rewritepolicy
         metadata:
@@ -286,7 +267,7 @@ Perform the following steps to validate the Rewrite and Responder CRD.
                 comment: 'insert SessionID in header'
                 direction: RESPONSE
                 rewrite-criteria: 'http.res.is_valid'
-
+        ```
 
 1. Apply the YAML file using the following command. 
 
@@ -294,11 +275,13 @@ Perform the following steps to validate the Rewrite and Responder CRD.
 
 3. Test the gRPC traffic using the `grpcurl` command.
 
+        ```
         grpcurl -v -insecure -d '{"name": "gRPC"}' grpc.example.com:443 helloworld.Greeter.SayHello
-
+        ```
     
      This command adds a session id in the gRPC request response.
 
+        ```
         Resolved method descriptor:
         rpc SayHello ( .helloworld.HelloRequest ) returns ( .helloworld.HelloReply );
 
@@ -317,3 +300,4 @@ Perform the following steps to validate the Rewrite and Responder CRD.
         Response trailers received:
         (empty)
         Sent 1 request and received 1 response
+        ```

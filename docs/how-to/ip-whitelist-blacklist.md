@@ -4,7 +4,7 @@
 
 **Blocklisting IP addresses** is a basic access control mechanism. It denies access to the users accessing your domain using the IP addresses that you have blocklisted.
 
-The [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) provided by Citrix enables you to define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the Ingress Citrix ADC.
+The [Rewrite and Responder CRD](https://developer-docs.citrix.com/projects/citrix-k8s-ingress-controller/en/latest/crds/rewrite-responder/) provided by Citrix enables you to define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the Ingress Netscaler.
 
 Using the rewrite or responder policies you can allowlist or blocklist the IP addresses/CIDR using which users can access your domain.
 

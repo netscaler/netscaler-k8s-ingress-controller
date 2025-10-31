@@ -1,6 +1,6 @@
-# Configure web application firewall policies with the Citrix ingress controller
+# Configure web application firewall policies with the Netscaler ingress controller
 
-Citrix provides a Custom Resource Definition (CRD) called the WAF CRD for Kubernetes. You can use the WAF CRD to configure the web application firewall policies with the Citrix ingress controller on the Citrix ADC VPX, MPX, SDX, and CPX. The WAF CRD enables communication between the Citrix ingress controller and Citrix ADC for enforcing web application firewall policies.
+Citrix provides a Custom Resource Definition (CRD) called the WAF CRD for Kubernetes. You can use the WAF CRD to configure the web application firewall policies with the Netscaler ingress controller on the Netscaler VPX, MPX, SDX, and CPX. The WAF CRD enables communication between the Netscaler ingress controller and Netscaler for enforcing web application firewall policies.
 
 In a Kubernetes deployment, you can enforce a web application firewall policy to protect the server using the WAF CRD. For more information about web application firewall, see [Web application security](https://docs.citrix.com/en-us/citrix-adc/13/application-firewall/introduction/web-application-security.html).
 
@@ -45,144 +45,7 @@ Based on the type of security checks, you can specify the metadata and use the C
  
 ## WAF CRD definition
 
-The WAF CRD is available in the Citrix ingress controller GitHub repository at [waf-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Citrix ADC.
-
-The following is the WAF CRD definition:
-
-```yml
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-    name: wafs.citrix.com
-spec:
-    group: citrix.com
-    version: v1
-    names:
-        kind: waf
-        plural: wafs 
-        singular: waf
-    scope: Namespaced
-    subresources:
-        status: {}
-    additionalPrinterColumns:
-      - name: Status
-        type: string
-        description: "Current Status of the CRD"
-        JSONPath: .status.state
-      - name: Message
-        type: string
-        description: "Status Message"
-        JSONPath: .status.status_message
-    validation:
-        openAPIV3Schema:
-            required: [spec]
-            properties:
-                spec:
-                    type: object
-                    properties:
-                        servicenames:
-                            description: 'Name of the services to which the waf policies are applied.'
-                            type: array
-                            items:
-                                type: string
-                                maxLength: 127
-                        application_type:
-                            description: 'Type of applications to protect'
-                            oneOf:
-                                - type: string
-                                - type: array
-                            enum: ['HTML', 'JSON', 'XML']
-                        signatures:
-                            description: 'Location of external signature file'
-                            type: string
-                        redirect_url:
-                            description: ''
-                            type: string
-                        html_error_object:
-                            description: 'Location of customized error page to respond when html or common violation are hit'
-                            type: string
-                        xml_error_object:
-                            description: 'Location of customized error page to respond when xml violations are hit'
-                            type: string
-                        json_error_object:
-                            description: 'Location of customized error page to respond when json violations are hit'
-                            type: string
-                        ip_reputation:
-                            description: 'Enabling IP reputation feature'
-                            oneOf:
-                                - type: string
-                                - type: object
-                        target:
-                            description: 'To control what traffic to be inspected by Web Application Firewall. If you do not provide the target, everything will be inspected by default'
-                            type: object
-                            properties:
-                                paths:
-                                    type: array
-                                    description: "List of http urls to inspect"
-                                    items:
-                                        type: string
-                                        description: "URL path"
-                                method:
-                                    type: array
-                                    description: "List of http methods to inspect"
-                                    items:
-                                        type: string
-                                        enum: ['GET', 'PUT', 'POST','DELETE']
-                                header:
-                                    type: array
-                                    description: "List of http headers to inspect"
-                                    items:
-                                        type: string
-                                        description: "header name"
-                        security_checks:
-                            description: 'To enable/disable application firewall security checks'
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object
-                        settings:
-                            description: 'To fine tune application firewall security checks default settings'
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object
-                        relaxations:
-                            description: 'Section which contains relaxation rules for known traffic and false positives'
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object
-                        enforcements:
-                            description: 'Section which contains enforcement or restriction rules'
-                            type: object
-                            properties:
-                                common:
-                                    type: object
-                                html:
-                                    type: object
-                                json:
-                                    type: object
-                                xml:
-                                    type: object                                 
-```
+The WAF CRD is available in the Netscaler ingress controller GitHub repository at [waf-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml). The WAF CRD provides attributes for the various options that are required to define the web application firewall policies on Netscaler.
 
 ## WAF CRD attributes
 
@@ -216,7 +79,7 @@ The following table lists the various attributes provided in the WAF CRD:
 | `ip_reputation` | Enables the IP reputation feature. |
 | `target` | Determines the traffic to be inspected by the WAF. If you do not specify the traffic targeted, all traffic is inspected by default. |
 | `paths` | Specifies the list of HTTP URLs to be inspected. |
-| `method` | Specifies the list of HTTP methods to be inspected. |
+| `method` | Specifies the list of HTTP methods to be inspected. Allowed values are GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE or CONNECT.|
 | `header` | Specifies the list of HTTP headers to be inspected. |
 
 
@@ -224,7 +87,7 @@ The following table lists the various attributes provided in the WAF CRD:
 
 Perform the following steps to deploy the WAF CRD:
 
-1. Download the CRD ([waf-crd.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml)).
+1. Download the CRD ([waf-crd.yaml](https://github.com/netscaler/netscaler-k8s-ingress-controller/blob/master/crd/waf/waf-crd.yaml)).
 
 2. Deploy the WAF CRD using the following command:
 
@@ -241,13 +104,13 @@ Perform the following steps to deploy the WAF CRD:
 
 After you have deployed the WAF CRD provided by Citrix in the Kubernetes cluster, you can define the web application firewall policy configuration in a .yaml file. In the .yaml file, use waf in the kind field. In the spec section add the WAF CRD attributes based on your requirements for the policy configuration.
 
-After you deploy the .yaml file, the Citrix ingress controller applies the WAF configuration on the Ingress Citrix ADC device.
+After you deploy the .yaml file, the Netscaler ingress controller applies the WAF configuration on the Ingress Netscaler device.
 
 ### Examples
 
 **Enable protection for cross-site scripting and SQL injection attacks**
 
-Consider a scenario in which you want to define and specify a web application firewall policy in the Citrix ADC to enable protection for the cross-site scripting and SQL injection attacks. You can create a .yaml file called `wafhtmlxsssql.yaml` and use the appropriate CRD attributes to define the WAF policy as follows:
+Consider a scenario in which you want to define and specify a web application firewall policy in the Netscaler to enable protection for the cross-site scripting and SQL injection attacks. You can create a .yaml file called `wafhtmlxsssql.yaml` and use the appropriate CRD attributes to define the WAF policy as follows:
 
 ```yml
 apiVersion: citrix.com/v1
@@ -258,7 +121,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -279,7 +142,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           content_type: "on"
@@ -305,8 +168,8 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    signatures: "http://10.217.14.99/crd/sig.xml"
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    signatures: "http://x.x.x.x/crd/sig.xml"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -327,7 +190,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"
@@ -356,7 +219,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     target:
         path:
             - /
@@ -393,7 +256,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           credit_card: "on"
@@ -409,7 +272,7 @@ spec:
           safe_object:
             - rule:
                 name: aadhar
-                expression: '[1-9]{4,4}\s[1-9]{4,4}\s[1-9]{4,4}'
+                expression: "[1-9]{4,4}\s[1-9]{4,4}\s[1-9]{4,4}"
                 max_match_len: 19
                 action: ["log","block"]
 ```
@@ -428,7 +291,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_error_object: "http://10.217.14.99/crd/error_page.html"
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         html:
           cross_site_scripting: "on"
@@ -452,7 +315,7 @@ spec:
     servicenames:
         - frontend
     application_type: HTML
-    html_page_url: "http://10.217.14.99/crd/error_page.html"
+    html_page_url: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"
@@ -618,7 +481,7 @@ spec:
     servicenames:
         - frontend
     application_type: JSON
-    json_error_object: "http://10.217.14.99/crd/error_page.json"
+    json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
           dos: "on"
@@ -653,7 +516,7 @@ spec:
     servicenames:
         - frontend
     application_type: JSON
-    json_error_object: "http://10.217.14.99/crd/error_page.json"
+    json_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         json:
           dos: "on"
@@ -689,7 +552,7 @@ spec:
     servicenames:
         - frontend
     application_type: XML
-    xml_error_object: "http://10.217.14.99/crd/error_page.xml"
+    xml_error_object: "http://x.x.x.x/crd/error_page.xml"
     security_checks:
         xml:
           dos: "on"
@@ -740,7 +603,7 @@ spec:
     servicenames:
         - frontend
     application_type: XML
-    xml_error_object: "http://10.217.14.99/crd/error_page.json"
+    xml_error_object: "http://x.x.x.x/crd/error_page.json"
     security_checks:
         xml:
           dos: "on"

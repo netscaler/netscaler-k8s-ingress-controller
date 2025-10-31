@@ -1,6 +1,6 @@
-# Deploy Citrix ADC VPX in active-active high availability in EKS environment using Amazon ELB and Citrix ingress controller
+# Deploy Netscaler VPX in active-active high availability in EKS environment using Amazon ELB and Netscaler ingress controller
 
-The topic covers a solution to deploy Citrix ADC VPX in active-active high availability mode on multiple availability zones in AWS Elastic Container Service (EKS) platform. The solution combines AWS Elastic load balancing (ELB) and Citrix ADC VPX to load balance the Ingress traffic to the microservices deployed in EKS cluster. AWS ELB handles the Layer 4 traffic and the Citrix ADC VPXs provides advanced Layer 7 functionalities such as, advanced load balancing, caching, and content-based routing.
+The topic covers a solution to deploy Netscaler VPX in active-active high availability mode on multiple availability zones in AWS Elastic Container Service (EKS) platform. The solution combines AWS Elastic load balancing (ELB) and Netscaler VPX to load balance the Ingress traffic to the microservices deployed in EKS cluster. AWS ELB handles the Layer 4 traffic and the Netscaler VPXs provides advanced Layer 7 functionalities such as, advanced load balancing, caching, and content-based routing.
 
 ## Solution overview
 
@@ -14,9 +14,9 @@ With the solution, the architecture of the EKS cluster would be as shown in the 
 
 In the AWS cloud, AWS [Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html) handles the Layer 4 TCP connections and load balances the traffic using a flow hash routing algorithm. The ELB can be either Network Load Balancer or a Classic Load Balancer.
 
-AWS ELB listens for incoming connections as defined by its listeners. Each listener forwards a new connection to one of the available Citrix ADC VPX instances. The Citrix ADC VPX instance load balances the traffic to the EKS pods. It also performs other Layer 7 functionalities such as, rewrite policy, responder policy, SSL offloading and so on provided by Citrix ADC VPX.
+AWS ELB listens for incoming connections as defined by its listeners. Each listener forwards a new connection to one of the available Netscaler VPX instances. The Netscaler VPX instance load balances the traffic to the EKS pods. It also performs other Layer 7 functionalities such as, rewrite policy, responder policy, SSL offloading and so on provided by Netscaler VPX.
 
-A Citrix ingress controller is deployed in the EKS cluster for each Citrix ADC VPX instance. The Citrix ingress controllers are configured with the same ingress class. And, it configures the Ingress objects in the EKS cluster on the respective Citrix ADC VPX instances.
+A Netscaler ingress controller is deployed in the EKS cluster for each Netscaler VPX instance. The Netscaler ingress controllers are configured with the same ingress class. And, it configures the Ingress objects in the EKS cluster on the respective Netscaler VPX instances.
 
 AWS Elastic Load Balancing (ELB) has a DNS name to which an IP address is assigned dynamically. The DNS name can be added as Alias A record for your domain in [Route53](https://aws.amazon.com/route53/) to access the application hosted in the EKS cluster.
 
@@ -24,48 +24,48 @@ AWS Elastic Load Balancing (ELB) has a DNS name to which an IP address is assign
 
 Perform the following to deploy the solution:
 
-1.  [Deploy Citrix ADC VPX Instances](#deploy-citrix-adc-vpx-instances).
+1.  [Deploy Netscaler VPX Instances](#deploy-citrix-adc-vpx-instances).
 
-1.  [Deploy Citrix ingress controller](#deploy-citrix-ingress-controller).
+1.  [Deploy Netscaler ingress controller](#deploy-citrix-ingress-controller).
 
 1.  [Set up Amazon Elastic Load Balancing](#setup-elastic-load-balancing). You can either set up [Network Load Balancer](#set-up-network-load-balancer) or [Classic Load Balancer](#set-up-classic-load-balancer).
 
 1.  [Verify the solution](#verify-the-solution).
 
-### Deploy Citrix ADC VPX instances
+### Deploy Netscaler VPX instances
 
-Citrix ADC VPX is available as [CloudFormation Template](cloud-formation-template.md). The CloudFormation template deploys an instance of Citrix ADC VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Citrix ADC VPX instance.
+Netscaler VPX is available as [CloudFormation Template](cloud-formation-template.md). The CloudFormation template deploys an instance of Netscaler VPX with single ENI on a given subnet. It also configures the [NSIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-netscaler-ip-address.html), [VIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-and-managing-virtual-ip-addresses-vips.html), and [SNIP](https://docs.citrix.com/en-us/netscaler/12/networking/ip-addressing/configuring-netscaler-owned-ip-addresses/configuring-subnet-ip-addresses-snips.html) for the Netscaler VPX instance.
 
-For this solution you need to deploy two instances of Citrix ADC VPX. Deploy the Citrix ADC VPX instances on two availability zones by specifying the same Citrix ADC VPX and different public subnet.
+For this solution you need to deploy two instances of Netscaler VPX. Deploy the Netscaler VPX instances on two availability zones by specifying the same Netscaler VPX and different public subnet.
 
-After you deploy the Citrix ADC VPX instances, you can verify the deployment by reviewing the output of the CloudFormation template as shown in the following screenshot. The output must show the various IP addresses (VIP, SNIP, and NSIP) configured for the Citrix VPX instances:
+After you deploy the Netscaler VPX instances, you can verify the deployment by reviewing the output of the CloudFormation template as shown in the following screenshot. The output must show the various IP addresses (VIP, SNIP, and NSIP) configured for the Citrix VPX instances:
 
 ![CloudFormation Template output](../media/cft-output.png)
 
 > **Note:**
-> The CloudFormation template deploys the Citrix ADC VPX instance with primary IP address of the Citrix ADC VPX EC2 instance as VIP and secondary IP address as management IP address.
+> The CloudFormation template deploys the Netscaler VPX instance with primary IP address of the Netscaler VPX EC2 instance as VIP and secondary IP address as management IP address.
 
-After the Citrix ADC VPX instances are successfully deployed, you must edit the security groups to allow traffic from EKS node group security group. Also, you must change the EKS node group security group to allow traffic from VPX instances.
+After the Netscaler VPX instances are successfully deployed, you must edit the security groups to allow traffic from EKS node group security group. Also, you must change the EKS node group security group to allow traffic from VPX instances.
 
-### Deploy Citrix ingress controller
+### Deploy Netscaler ingress controller
 
-Deploy separate instance of Citrix ingress controller for each Citrix ADC VPX instance. Follow the [deployment instructions](deploy-cic-yaml.md) to deploy Citrix ingress controller.
+Deploy separate instance of Netscaler ingress controller for each Netscaler VPX instance. Follow the [deployment instructions](deploy-cic-yaml.md) to deploy Netscaler ingress controller.
 
-After the Citrix ADC VPX instance is up, you must set up a system user account on the Citrix ADC VPX instances. The system user account is used by Citrix ingress controller to log into the Citrix ADC VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Citrix ADC](deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
+After the Netscaler VPX instance is up, you must set up a system user account on the Netscaler VPX instances. The system user account is used by Netscaler ingress controller to log into the Netscaler VPX instances. For instruction to set up the system user account, see [Create System User Account for CIC in Netscaler](deploy-cic-yaml.md#create-system-user-account-for-citrix-ingress-controller-in-citrix-adc).
 
-1.  Edit the Citrix ingress controller deployment YAML ([citrix-ingress-controller.yaml](/deployment/aws/manifest/citrix-ingress-controller.yaml)).
+1.  Edit the Netscaler ingress controller deployment YAML ([citrix-ingress-controller.yaml](/deployment/aws/manifest/citrix-ingress-controller.yaml)).
 
-    Replace `NS_IP` with the `Private NSIP` address of the respective Citrix ADC VPX instance. Also, provide the system user account user name and password that you have created on the Citrix ADC VPX instance. Once you edited the citrix-ingress-controller.yaml file, deploy the updated YAML file using the following command:
+    Replace `NS_IP` with the `Private NSIP` address of the respective Netscaler VPX instance. Also, provide the system user account user name and password that you have created on the Netscaler VPX instance. Once you edited the citrix-ingress-controller.yaml file, deploy the updated YAML file using the following command:
 
         kubectl apply -f citrix-ingress-controller .yaml
 
-1.  Perform Step 1 on the second Citrix ingress controller instance.
+1.  Perform Step 1 on the second Netscaler ingress controller instance.
 
-1.  Ensure that both the pods are UP and running. Also, verify if Citrix ingress controller is able to connect to the respective Citrix ADC VPX instance using the logs:
+1.  Ensure that both the pods are UP and running. Also, verify if Netscaler ingress controller is able to connect to the respective Netscaler VPX instance using the logs:
 
         kubectl logs <cic_pod_name>
 
-After the Citrix ingress controller pods are deployed and running in the EKS cluster. Any, Kubernetes Ingress resource configured with `citrix` ingress class is automatically configured on both the Citrix ADC VPX instances.
+After the Netscaler ingress controller pods are deployed and running in the EKS cluster. Any, Kubernetes Ingress resource configured with `citrix` ingress class is automatically configured on both the Netscaler VPX instances.
 
 ### Setup elastic load balancing
 
@@ -76,7 +76,7 @@ Depending upon your requirement you can configure any of the following load bala
 
 #### Set up network load balancer
 
-Network Load Balancer (NLB) is a good option for handling TCP connection load balancing. In this solution, NLB is used to accept the incoming traffic and route it to one of the Citrix ADC VPX instances. NLB load balances using the flow hash algorithm based on the protocol, source IP address, source port, destination IP address, destination port, and TCP sequence number.
+Network Load Balancer (NLB) is a good option for handling TCP connection load balancing. In this solution, NLB is used to accept the incoming traffic and route it to one of the Netscaler VPX instances. NLB load balances using the flow hash algorithm based on the protocol, source IP address, source port, destination IP address, destination port, and TCP sequence number.
 
 To set up NLB:
 
@@ -112,7 +112,7 @@ To set up NLB:
 
 1.  Once you have created the target groups, you must register the target instances.
     1.  Select the created target group in the list page, click the **Target** tab, and select **edit**.
-    2.  In the **Instances** tab, select the two Citrix ADC VPX instances and click **Add to registered**.
+    2.  In the **Instances** tab, select the two Netscaler VPX instances and click **Add to registered**.
 
 1.  Repeat **Step 5** for the other target group that you have created.
 
@@ -130,7 +130,7 @@ To set up NLB:
 
         ![Add listener](../media/configure-lb.png)
 
-    4.  In the Availability Zones section, select the VPC, availability zones, and subnets where the Citrix ADC VPX instances are deployed.
+    4.  In the Availability Zones section, select the VPC, availability zones, and subnets where the Netscaler VPX instances are deployed.
 
         ![Availability Zones](../media/availability-zones-section.png)
 
@@ -176,19 +176,19 @@ Alternative to Amazon Network load balancer, you can set up Classic Load Balance
 
     1.  In the **Load Balancer name** field, enter a name for the load balancer.
     
-    1.  In the **Create LB Inside** list, select your Citrix ADC VPX.
+    1.  In the **Create LB Inside** list, select your Netscaler VPX.
     
     1.   In the **Listener Configuration** section, click **Add** and add two entries with `TCP` as the load balancer protocol and `80` and `443` as the load balancer port respectively. Also, select `TCP` as instance protocol and `80` and `443` as the instance port respectively as shown in the following image:
 
          ![Classic Define Load Balancer](../media/classic-define-lb.png)
 
-     1.  In the **Select Subnets** section, select two public subnets in two different availability zones for the Classic Load balancer to route the traffic. These subnets are same as where you have deployed the Citrix ADC VPX instances.
+     1.  In the **Select Subnets** section, select two public subnets in two different availability zones for the Classic Load balancer to route the traffic. These subnets are same as where you have deployed the Netscaler VPX instances.
 
           ![Classic Select Subnet](../media/classic-select-subnet.png)
 
 
-      1.  In the **Assign Security Groups** page, select a security group for the ELB instance. The security group can be same as the security group attached to Citrix ADC VPX ENI or it can be a new security group. 
-          If you are using a new security group, make sure that you allow traffic to the Citrix ADC VPX security group from the ELB security group and conversely.
+      1.  In the **Assign Security Groups** page, select a security group for the ELB instance. The security group can be same as the security group attached to Netscaler VPX ENI or it can be a new security group. 
+          If you are using a new security group, make sure that you allow traffic to the Netscaler VPX security group from the ELB security group and conversely.
 
           ![Classic Assign Security Group](../media/classic-assign-sg.png)
 
@@ -196,7 +196,7 @@ Alternative to Amazon Network load balancer, you can set up Classic Load Balance
 
            ![Classic Health Check](../media/classic-health-check.png)
 
-       1.  In the **Add EC2 Instances** page, select two Citrix ADC VPX instances that were deployed earlier.
+       1.  In the **Add EC2 Instances** page, select two Netscaler VPX instances that were deployed earlier.
 
             ![Classic ADD EC2 Instances](../media/classic-add-ec2.png)
 
@@ -208,7 +208,7 @@ Alternative to Amazon Network load balancer, you can set up Classic Load Balance
 
 ### Verify the solution
 
-After you have successfully deployed Citrix ADC VPX, AWS ELB, and Citrix ingress controller, you can verify the solution using a sample service.
+After you have successfully deployed Netscaler VPX, AWS ELB, and Netscaler ingress controller, you can verify the solution using a sample service.
 
 Perform the following:
 
@@ -216,10 +216,10 @@ Perform the following:
 
         kubectl apply -f app.yaml
 
-1.  Log on to the Citrix ADC VPX instance and verify if the Content Switching vserver are successfully configured on both the Citrix ADC VPX instance. Do the following:
+1.  Log on to the Netscaler VPX instance and verify if the Content Switching vserver are successfully configured on both the Netscaler VPX instance. Do the following:
 
-    1.  Log on to the Citrix ADC VPX instance. Perform the following:
-        1.  Use an SSH client, such as PuTTy, to open an SSH connection to the Citrix ADC VPX instance.
+    1.  Log on to the Netscaler VPX instance. Perform the following:
+        1.  Use an SSH client, such as PuTTy, to open an SSH connection to the Netscaler VPX instance.
 
         1.  Log on to the instance by using the administrator credentials.
     1.  Verify if the Content Switching (cs) vserver is configured on the instance using the following command:
@@ -228,7 +228,7 @@ Perform the following:
 
         **Output:**
 
-               1)	k8s-10.0.139.87:80:http (10.0.139.87:80) - HTTP	Type: CONTENT
+               1)	k8s-192.0.139.87:80:http (192.0.139.87:80) - HTTP	Type: CONTENT
                         State: UP
                         Last state change was at Fri Apr 12 14:24:13 2019
                         Time since last state change: 3 days, 03:09:18.920
@@ -269,9 +269,9 @@ Perform the following:
 | **Problem** | **Resolution** |
 | ----------- | -------------- |
 | CloudFormation stack failure | -  Ensure that the IAM user or role has sufficient privilege to create EC2 instances and Lambda configurations.  </br> -  Ensure that you haven't exceeded the resource quota. |
-| Citrix ingress controller unable to communicate with the Citrix ADC VPX instances. | - Ensure that user name and password is correct in `citrix-ingress-controller.yaml` file.  </br> -  Ensure that the Citrix ADC VPX security group allows the traffic on port `80` and `443` from the EKS node group security group. |
-| The services are DOWN in the Citrix ADC VPX instances. | Ensure that the Citrix ADC VPX traffic can reach the EKS cluster. Modify the security group of EKS node group to allow traffic from Citrix ADC VPX security group.|
-| Traffic not routing to Citrix ADC VPX instance from ELB. | Ensure that security group of Citrix ADC VPX allows traffic from the ELB security group. |
+| Netscaler ingress controller unable to communicate with the Netscaler VPX instances. | - Ensure that user name and password is correct in `citrix-ingress-controller.yaml` file.  </br> -  Ensure that the Netscaler VPX security group allows the traffic on port `80` and `443` from the EKS node group security group. |
+| The services are DOWN in the Netscaler VPX instances. | Ensure that the Netscaler VPX traffic can reach the EKS cluster. Modify the security group of EKS node group to allow traffic from Netscaler VPX security group.|
+| Traffic not routing to Netscaler VPX instance from ELB. | Ensure that security group of Netscaler VPX allows traffic from the ELB security group. |
 
 
 

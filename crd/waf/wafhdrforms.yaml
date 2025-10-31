@@ -5,8 +5,9 @@ metadata:
 spec:
     servicenames:
         - frontend
-    application_type: HTML
-    html_page_url: "http://x.x.x.x/crd/error_page.html"
+    application_type:
+        - HTML
+    html_error_object: "http://x.x.x.x/crd/error_page.html"
     security_checks:
         common:
           buffer_overflow: "on"

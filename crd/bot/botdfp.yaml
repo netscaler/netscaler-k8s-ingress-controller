@@ -1,13 +1,22 @@
 apiVersion: citrix.com/v1
 kind: bot
 metadata:
-    name: botdfp
+  name: botdfp
 spec:
-    servicenames:
-        - frontend
-    redirect_url: "/error_page.html"
-    security_checks:
-       device_fingerprint:
-           action:
-               - "log"
-               - "drop"
+  servicenames:
+    - frontend
+  redirect_url: "/error_page.html"
+  target:
+    path:
+      - index.html
+      - payment.php
+      - login.php
+    method:
+      - GET
+      - POST
+    header:
+      - Host
+  security_checks:
+    device_fingerprint: "ON"
+    device_fingerprint_action:
+      action: ["LOG", "redirect"]

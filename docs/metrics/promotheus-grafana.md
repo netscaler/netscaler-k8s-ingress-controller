@@ -1,10 +1,14 @@
-# View metrics of Citrix ADCs using Prometheus and Grafana
+# View metrics of Netscalers using Prometheus and Grafana
 
-You can use the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
+You can use the [Netscaler metrics exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Netscaler VPX or CPX ingress devices and Netscaler CPX (east-west) devices.
 
-## Citrix ADC metrics exporter
+## Netscaler metrics exporter
 
-Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter).
+Netscaler metrics exporter is a simple server that collects Netscaler stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Netscaler stats. For more information see, [Netscaler metrics exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter).
+
+> **Note:**
+>
+> Netscaler metrics exporter supports exporting metrics from the admin partitions of Netscaler.
 
 ## Launch prometheus operator
 
@@ -83,13 +87,13 @@ After you modify the `grafana-service.yaml`file, apply the changes to the Kubern
 
     kubectl apply -f grafana-service.yaml
 
-## Configure Citrix ADC metrics exporter
+## Configure Netscaler metrics exporter
 
-This topic describes how to integrate the [Citrix ADC metrics exporter](https://github.com/citrix/citrix-adc-metrics-exporter) with Citrix ADC VPX or CPX ingress or Citrix ADC CPX (east-west) devices.
+This topic describes how to integrate the [Netscaler metrics exporter](https://github.com/netscaler/netscaler-adc-metrics-exporter) with Netscaler VPX or CPX ingress or Netscaler CPX (east-west) devices.
 
-**Citrix ADC VPX Ingress device**:
+**Netscaler VPX Ingress device**:
 
-To monitor an ingress Citrix ADC VPX device, the Citrix ADC metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Citrix ADC VPX ingress device is provided as an argument to the Citrix ADC metrics exporter. To provide the login credentials to access ADC, create a secret and mount the volume at mountpath "/mnt/nslogin".
+To monitor an ingress Netscaler VPX device, the Netscaler metrics exporter is run as a pod within the Kubernetes cluster. The IP address of the Netscaler VPX ingress device is provided as an argument to the Netscaler metrics exporter. To provide the login credentials to access ADC, create a secret and mount the volume at mount path "/mnt/nslogin".
 ```
 kubectl create secret generic nslogin --from-literal=username=<citrix-adc-user> --from-literal=password=<citrix-adc-password> -n <namespace>
 ```
@@ -105,7 +109,7 @@ metadata:
 spec:
   containers:
     - name: exporter
-      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.7"
+      image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.9"
       imagePullPolicy: IfNotPresent
       args:
         - "--target-nsip=<IP_of_VPX>"
@@ -129,27 +133,27 @@ metadata:
     service-type: citrix-adc-monitor
 spec:
   selector:
-    name: exporter-vpx-ingress
+    app: exporter-vpx-ingress
   ports:
     - name: exporter-port
       port: 8888
       targetPort: 8888
 ```
 
-The IP address and the port of the Citrix ADC VPX device needs to be provided in the `--target-nsip` parameter. For example, `--target-nsip=10.0.0.20`.
+The IP address and the port of the Netscaler VPX device needs to be provided in the `--target-nsip` parameter. For example, `--target-nsip=192.0.0.20`.
 
-**Citrix ADC CPX Ingress device**:
+**Netscaler CPX Ingress device**:
 
-To monitor a Citrix ADC CPX ingress device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADC CPX.The following is a sample YAML file of a Citrix ADC CPX ingress device with the exporter as a side car:
+To monitor a Netscaler CPX ingress device, the Netscaler metrics exporter is added as a sidecar to the Netscaler CPX. The following is a sample YAML file of a Netscaler CPX ingress device with the exporter as a side car:
 
 ```YAML
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cpx-ingress
   labels:
     app: cpx-ingress
+  name: cpx-ingress
 spec:
   replicas: 1
   selector:
@@ -157,50 +161,54 @@ spec:
       app: cpx-ingress
   template:
     metadata:
-      labels:
-        app: cpx-ingress
       annotations:
         NETSCALER_AS_APP: "True"
+      labels:
+        app: cpx-ingress
     spec:
-      serviceAccountName: cpx
       containers:
-        - name: cpx-ingress
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            privileged: true
-          env:
-            - name: "EULA"
-              value: "YES"
-            - name: "NS_PROTOCOL"
-              value: "HTTP"
-            #Define the NITRO port here
-            - name: "NS_PORT"
-              value: "9080"
-          ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
-            - name: nitro-http
-              containerPort: 9080
-            - name: nitro-https
-              containerPort: 9443
-        # Adding exporter as a sidecar
-        - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.7"
-          imagePullPolicy: IfNotPresent
-          args:
-            - "--target-nsip=192.0.0.2"
-            - "--port=8888"
-            - "--secure=no"
-          env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          securityContext:
-            readOnlyRootFilesystem: true
+      - env:
+        - name: EULA
+          value: "YES"
+        - name: NS_PROTOCOL
+          value: HTTP
+        - name: NS_PORT
+          value: "9080"
+        #Define the NITRO port here
+        image: quay.io/netscaler/netscaler-cpx:14.1-38.53
+        imagePullPolicy: IfNotPresent
+        name: cpx-ingress
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 9080
+          name: nitro-http
+          protocol: TCP
+        - containerPort: 9443
+          name: nitro-https
+          protocol: TCP
+        securityContext:
+          privileged: true
+      # Adding exporter as a sidecar
+      - args:
+        - --target-nsip=192.0.0.2
+        - --port=8888
+        - --secure=no
+        env:
+        - name: NS_USER
+          value: nsroot
+        - name: NS_PASSWORD
+          value: nsroot
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.9
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        securityContext:
+          readOnlyRootFilesystem: true
+      serviceAccountName: cpx
 ---
 kind: Service
 apiVersion: v1
@@ -217,55 +225,62 @@ spec:
       targetPort: 8888
 ```
 
-Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from the Citrix ADC CPX.
+Here, the exporter uses the local IP address (`192.0.0.2`) to fetch metrics from the Netscaler CPX.
 
-**Citrix ADC CPX (east-west) device**:
+**Netscaler CPX (east-west) device**:
 
-To monitor a Citrix ADC CPX (east-west) device, the Citrix ADC metrics exporter is added as a sidecar to the Citrix ADCCPX.The following is a sample YAML file of a Citrix ADC CPX (east-west) device with the exporter as a side car:
+To monitor a Netscaler CPX (east-west) device, the Netscaler metrics exporter is added as a sidecar to the Netscaler CPX. The following is a sample YAML file of a Netscaler CPX (east-west) device with the exporter as a side car:
 
 ```YAML
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "0"
+  labels:
+    app: cpx-ew
   name: cpx-ew
 spec:
+  selector:
+    matchLabels:
+      app: cpx-ew
   template:
     metadata:
-      name: cpx-ew
-      labels:
-        app: cpx-ew
       annotations:
         NETSCALER_AS_APP: "True"
+      labels:
+        app: cpx-ew
+      name: cpx-ew
     spec:
-      serviceAccountName: cpx
-      hostNetwork: true
       containers:
-        - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:13.0-52.24"
-          securityContext:
-             privileged: true
-          env:
-          - name: "EULA"
-            value: "yes"
-          - name: "NS_NETMODE"
-            value: "HOST"
-          #- name: "kubernetes_url"
-          #  value: "https://10..xx.xx:6443"
-        # Add exporter as a sidecar
-        - name: exporter
-          image: "quay.io/citrix/citrix-adc-metrics-exporter:1.4.7"
-          args:
-            - "--target-nsip=192.168.0.2"
-            - "--port=8888"
-            - "--secure=no"
-          env:
-          - name: "NS_USER"
-            value: "nsroot"
-          - name: "NS_PASSWORD"
-            value: "nsroot"
-          securityContext:
-            readOnlyRootFilesystem: true
-          imagePullPolicy: IfNotPresent
+      - env:
+        - name: EULA
+          value: "yes"
+        - name: NS_NETMODE
+          value: HOST
+        #- name: "kubernetes_url"
+        #  value: "https://10..xx.xx:6443"
+        image: quay.io/netscaler/netscaler-cpx:14.1-38.53
+        imagePullPolicy: IfNotPresent
+        name: cpx
+        securityContext:
+          privileged: true
+      # Add exporter as a sidecar
+      - args:
+        - --target-nsip=192.168.0.2
+        - --port=8888
+        - --secure=no
+        env:
+        - name: NS_USER
+          value: nsroot
+        - name: NS_PASSWORD
+          value: nsroot
+        image: quay.io/citrix/citrix-adc-metrics-exporter:1.4.9
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        securityContext:
+          readOnlyRootFilesystem: true
+      serviceAccountName: cpx
 ---
 kind: Service
 apiVersion: v1
@@ -282,11 +297,11 @@ spec:
       targetPort: 8888
 ```
 
-Here, the exporter uses the local IP (`192.168.0.2`) to fetch metrics from the Citrix ADC CPX (east-west) device.
+Here, the exporter uses the local IP (`192.168.0.2`) to fetch metrics from the Netscaler CPX (east-west) device.
 
-### ServiceMonitors to detect Citrix ADC
+### ServiceMonitors to detect Netscaler
 
-The Citrix ADC metrics exporter helps collect data from the Citrix ADC VPX or CPX ingress and Citrix ADC CPX (east-west) devices. The Prometheus Operator needs to detect these exporters so that the metrics can be timestamped, stored, and exposed for visualization on Grafana. The Prometheus Operator uses the concept of ServiceMonitors to detect pods that belong to a service, using the labels attached to that service.
+The Netscaler metrics exporter helps collect data from the Netscaler VPX or CPX ingress and Netscaler CPX (east-west) devices. The Prometheus Operator needs to detect these exporters so that the metrics can be timestamped, stored, and exposed for visualization on Grafana. The Prometheus Operator uses the concept of ServiceMonitors to detect pods that belong to a service, using the labels attached to that service.
 
 The following example YAML file detects all the exporter services (given in the sample YAML files) which have the label `service-type: citrix-adc-monitor` associated with them.
 
@@ -313,7 +328,7 @@ spec:
 The `ServiceMonitor` directs Prometheus to detect Exporters in the `default` and `monitoring` namespaces only. To detect Exporters from other namespaces add the names of those namespaces under the `namespaceSelector:` field.
 
 !!! note "Note"
-    If the Exporter that needs to be monitored exists in a namespace other than the `default` or `monitoring` namespace, then additional RBAC privileges must be provided to Prometheus to access those namespaces. The following is sample YAML (`prometheus-clusterRole.yaml`) file the provides Prometheus full access to resources across the namespaces:
+    If the Exporter that needs to be monitored exists in a namespace other than the `default` or `monitoring` namespace, then additional RBAC privileges must be provided to Prometheus to access those namespaces. The following is a sample YAML (`prometheus-clusterRole.yaml`) file that provides Prometheus full access to resources across the namespaces:
 
 ```yml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -339,17 +354,17 @@ To provide additional privileges Prometheus, deploy the sample YAML using the fo
 
     kubectl apply -f prometheus-clusterRole.yaml
 
-### View the metrics in grafana
+### View the metrics in Grafana
 
-The Citrix ADC instances that are detected for monitoring appears in the **Targets** page of the prometheus container. You can be access the **Targets** page using the following URL: `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets`:
+The Netscaler instances that are detected for monitoring appears in the **Targets** page of the prometheus container. You can be access the **Targets** page using the following URL: `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets`:
 
 ![Metrics](../media/metrics.png)
 
 To view the metrics graphically:
 
-1.  Log into grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
+1.  Log into Grafana using `http://<k8s_cluster_ip>:<grafafa_nodeport>` with default credentials *admin:admin*
 
-1.  On the left panel, select **+** and click **Import** to import the [sample grafana dashboard](https://github.com/citrix/citrix-adc-metrics-exporter/blob/master/sample_lb_stats.json).
+1.  On the left panel, select **+** and click **Import** to import the [sample Grafana dashboard](https://github.com/netscaler/netscaler-adc-metrics-exporter/blob/master/sample_lb_stats.json).
 
     ![metrics-graph](../media/metrics-graph.png)
 

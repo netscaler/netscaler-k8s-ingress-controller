@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kuard
@@ -7,7 +7,10 @@ spec:
   - host: kuard.example.com
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: kuard
-          servicePort: 80 
+      - backend:
+          service:
+            name: kuard
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

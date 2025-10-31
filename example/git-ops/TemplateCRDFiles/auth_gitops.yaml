@@ -1,0 +1,30 @@
+apiVersion: citrix.com/v1beta1
+kind: authpolicy
+metadata:
+  name: authgitops
+spec:
+    servicenames: []
+
+    authentication_providers:
+        - name: "jwt-auth-provider"
+          oauth:
+            issuer: "https://sts.windows.net/335836de-42fe-43a2-b145-348c2ee9ca5b/"
+            jwks_uri: "https://login.microsoftonline.com/335836de-42fe-43a2-b145-348c2ee9ca5b/discovery/v2.0/keys"
+            audience : ["api://apigw.service.net"]
+            claims_to_save: ["scope1"]
+
+        - name: "introspect-auth-provider"
+          oauth:
+            issuer: "ns-idp"
+            jwks_uri: "https://192.2.156.160/oauth/idp/certs"
+            audience : ["https://app1.citrix.com"]
+            client_credentials: "oauthsecret"
+            introspect_url: "https://192.2.156.180/oauth/idp/introspect"
+            claims_to_save: ["scope"]
+
+        - name: "basicAuth"
+          basic_local_db:
+            use_local_auth: 'YES'
+
+    authentication_policies: []
+    authorization_policies: []
