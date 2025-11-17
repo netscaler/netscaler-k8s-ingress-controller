@@ -36,7 +36,7 @@ spec:
         - name: EULA
           value: "YES"
         - name: KUBERNETES_TASK_ID
-        image: quay.io/netscaler/netscaler-cpx:14.1-38.53
+        image: quay.io/netscaler/netscaler-cpx:14.1-47.48
         imagePullPolicy: Always
         name: cpx-ingress
         ports:

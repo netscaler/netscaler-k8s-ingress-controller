@@ -9,8 +9,8 @@ To upgrade a Netscaler CPX with the Netscaler ingress controller as a sidecar, y
 If you want to upgrade by modifying the **YAML** definition file, perform the following:
 
 1.  Change the version of the Netscaler ingress controller and Netscaler CPX image under `containers` section to the following:
-    -  Netscaler CPX version: 14.1-25.111 (`quay.io/netscaler/netscaler-cpx:14.1-38.53`)
-    -  Netscaler ingress controller version: 2.1.4 (`quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34`)
+    -  Netscaler CPX version: 14.1-25.111 (`quay.io/netscaler/netscaler-cpx:14.1-47.48`)
+    -  Netscaler ingress controller version: 2.1.4 (`quay.io/netscaler/netscaler-k8s-ingress-controller:3.3.2`)
   
 2.  Update the `CluterRole` as follows:
 
@@ -71,7 +71,7 @@ If you want to upgrade Netscaler ingress controller to version 1.5.25 by modifyi
                 env: ...
                 args: ...
 
-    You should change the version of the image to version 1.5.25. For example, `quay.io/netscaler/netscaler-k8s-ingress-controller:3.1.34`.
+    You should change the version of the image to version 1.5.25. For example, `quay.io/netscaler/netscaler-k8s-ingress-controller:3.3.2`.
 
 2.  Update the `ClusterRole` as follows:
 
