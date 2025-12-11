@@ -174,3 +174,5 @@ spec:
     name: https
   selector:
     app: cpx-ingress
+---
+password: 'hvs.LVMuw0YUOchH5LpLAFf7zgmg1
