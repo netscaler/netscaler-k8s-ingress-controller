@@ -181,6 +181,8 @@ The following ingress YAML shows for how back-end service `service-test` is secu
           name: ingress-demo
           namespace: netscaler
         spec:
+          tls
+          - {}
           ingressClassName: netscaler
           rules:
           - host: example.com
