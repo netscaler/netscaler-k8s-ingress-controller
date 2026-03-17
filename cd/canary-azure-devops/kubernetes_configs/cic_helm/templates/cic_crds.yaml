@@ -43,6 +43,9 @@ spec:
           spec:
             type: object
             properties:
+              ingressclass:
+                type: string
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               rewrite-policies:
                 type: array
                 items:
@@ -130,7 +133,7 @@ spec:
                           type: string
                           maxLength: 255
                       required: [rewrite-criteria, operation, target, direction]
-                  required: [servicenames, rewrite-policy]
+                  required: [rewrite-policy]
 
               responder-policies:
                 type: array
@@ -230,7 +233,7 @@ spec:
                           maxLength: 255
                       required: [respond-criteria]
                       oneOf: [required: [redirect], required: [respondwith], required: [noop], required: [reset], required: [drop]]
-                  required: [servicenames, responder-policy]
+                  required: [responder-policy]
 
               dataset:
                 type: array
@@ -383,7 +386,7 @@ spec:
                       type: string
                     full_req_expr:
                       description: |+
-                                   'Exact HTTP request, in the form of an expression, which the Netscaler sends
+                                   'Exact HTTP request, in the form of an expression, which the NetScaler sends
                                     to the callout agent. The request expression is constrained by the feature
                                     for which the callout is used. For example, an HTTP.RES expression cannot be
                                     used in a request-time policy bank or in a TCP content switching policy bank.'
@@ -497,7 +500,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the ratelimit policies are applied.'
                 type: array
@@ -521,7 +524,7 @@ spec:
                         type: array
                         items:
                           type: string
-                          enum: ['GET', 'PUT', 'POST','DELETE']
+                          enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                       header_name:
                         description: "HTTP header that identifies the unique API client for e.g. X-apikey"
                         type: string
@@ -545,7 +548,20 @@ spec:
               redirect_url:
                 type: string
                 description: "Redirect-URL"
-            required: [servicenames, req_threshold]
+              logpackets:
+                type: object
+                description: 'Adds an audit message action. The action specifies whether to log the message, and to which log.'
+                properties:
+                  logexpression:
+                    description: 'Default-syntax expression that defines the format and content of the log message.'
+                    type: string
+                    maxLength: 7991
+                  loglevel:
+                    description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                    type: string
+                    enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+                required: [logexpression, loglevel]
+            required: [req_threshold]
 ---
 #Sample CRD instance
 
@@ -600,11 +616,14 @@ spec:
                 type: string
               kind:
                 type: string
-                enum: ["service", "ingress"]
+                enum: ["service", "ingress", "listener"]
               description:
                 type: string
               range-name:
                 type: string
+              multicluster:
+                description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
+                type: boolean
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -652,7 +671,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: |+
                              'Name of the services for which the policies applied'
@@ -682,7 +701,7 @@ spec:
                             description: |+
                                          'Fully qualified domain name (FQDN) for authentication.
                                           This FQDN should be unique and should resolve to frontend IP of
-                                          ADC with Ingress/service type LoadBalancer (or) vip of Listener CRD'
+                                          NetScaler with Ingress/service type LoadBalancer (or) vip of Listener CRD'
                             type: string
                             maxLength: 255
                           authentication_host_cert:
@@ -699,8 +718,8 @@ spec:
                                   type: string
                                   maxLength: 63
                                   description: |+
-                                               'Preconfigured SSL certkey name on ADC with the
-                                                certificate and key already added on ADC'
+                                               'Preconfigured SSL certkey name on NetScaler with the
+                                                certificate and key already added on NetScaler'
                             oneOf:
                             - properties:
                               required: [tls_secret]
@@ -827,7 +846,7 @@ spec:
                             user_field:
                                 description: |+
                                              'Attribute in the token from which username should be extracted.
-                                              by default, ADC looks at email attribute for user id'
+                                              by default, NetScaler looks at email attribute for user id'
                                 type: string
                                 maxLength: 127
                             default_group:
@@ -890,13 +909,13 @@ spec:
                                 type: string
                             login_name:
                                 description: |+
-                                             'LDAP login name attribute. The Netscaler uses the LDAP login name
+                                             'LDAP login name attribute. The NetScaler uses the LDAP login name
                                               to query external LDAP servers or Active Directories'
                                 type: string
                                 maxLength: 127
                             security_type:
                                 description: |+
-                                             'Type of security used for communications between the Netscaler
+                                             'Type of security used for communications between the NetScaler
                                               and the LDAP server. Default is TLS'
                                 type: string
                                 enum: ['PLAINTEXT', 'TLS', 'SSL']
@@ -930,7 +949,7 @@ spec:
                                 maxLength: 255
                             auth_timeout:
                                 description: |+
-                                             'Number of seconds the Netscaler waits for a response from the server
+                                             'Number of seconds the NetScaler waits for a response from the server
                                               Default is 3'
                                 type: integer
                                 minimum: 1
@@ -942,7 +961,7 @@ spec:
                             attributes_to_save:
                                 description: |+
                                              'List of attribute names separated by comma which needs to be fetched
-                                              from LDAP server and stored as key-value pair for the session on ADC'
+                                              from LDAP server and stored as key-value pair for the session on NetScaler'
                                 type: string
                                 maxLength: 2047
                         oneOf:
@@ -980,8 +999,8 @@ spec:
                                       type: string
                                       maxLength: 63
                                       description: |+
-                                                   'Preconfigured SSL certkey name on ADC with the
-                                                    certificate and key already added on ADC'
+                                                   'Preconfigured SSL certkey name on NetScaler with the
+                                                    certificate and key already added on NetScaler'
                                 oneOf:
                                 - properties:
                                   required: [tls_secret]
@@ -992,7 +1011,7 @@ spec:
                                 type: string
                                 maxLength: 127
                             issuer_name:
-                                description: 'The name to be used in requests sent from SP to IDP to identify Netscaler'
+                                description: 'The name to be used in requests sent from SP to IDP to identify NetScaler'
                                 type: string
                                 maxLength: 63
                             binding:
@@ -1032,7 +1051,7 @@ spec:
                             attributes_to_save:
                                 description: |+
                                              'List of attribute names separated by comma which needs to be extracted
-                                              and stored as key-value pair for the session on ADC'
+                                              and stored as key-value pair for the session on NetScaler'
                                 type: string
                                 maxLength: 2047
                         required:
@@ -1041,11 +1060,11 @@ spec:
                       basic_local_db:
                         type: object
                         description: |+
-                                     'Basic HTTP authentication supported by ADC, user data in local DB of ADC. 
-                                      Users needs to be added on ADC'
+                                     'Basic HTTP authentication supported by NetScaler, user data in local DB of NetScaler. 
+                                      Users needs to be added on NetScaler'
                         properties:
                           use_local_auth:
-                            description: 'Use ADC authentication'
+                            description: 'Use NetScaler authentication'
                             type: string
                             enum: ['YES']
 
@@ -1073,9 +1092,13 @@ spec:
                             type: array
                             items:
                               type: string
-                              enum: ['GET', 'PUT', 'POST','DELETE']
+                              enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                         required:
                           - path
+                    expression:
+                      description: 'NetScaler syntax expression for authentication'
+                      type: string
+                      maxLength: 1229
                     provider:
                       description: 'name of the authentication provider for the policy, empty if no authentication required'
                       type: array
@@ -1083,9 +1106,9 @@ spec:
                         type: string
                         maxLength: 127
                       maxItems: 1
-                  required:
-                    - resource
-                    - provider
+                  oneOf:
+                    - required: [resource, provider]
+                    - required: [expression, provider]
 
               authorization_policies:
                 description: 'Authorization policies'
@@ -1109,7 +1132,7 @@ spec:
                             type: array
                             items:
                               type: string
-                              enum: ['GET', 'PUT', 'POST','DELETE']
+                              enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                           claims:
                             description: 'authorization scopes required for selected resource saved as claims or attributes'
                             type: array
@@ -1132,9 +1155,13 @@ spec:
                                   - values
                         required:
                           - claims
-
-            required:
-              - servicenames
+                    expression:
+                      description: 'NetScaler syntax expression for authorization'
+                      type: string
+                      maxLength: 1229
+                  oneOf:
+                    - required: [resource]
+                    - required: [expression]
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1170,13 +1197,22 @@ spec:
           spec:
             type: object
             required: [protocol]
+            x-kubernetes-validations:
+              - rule: "!(has(self.passthrough) && self.passthrough == true && has(self.routes))"
+                message: "passthrough cannot be used with routes. Passthrough is only available when listener is referenced in ingress annotation."
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+              multicluster:
+                description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
+                type: boolean
+              passthrough:
+                type: boolean
+                description: "Enables SSL Passthrough. Traffic is forwarded without decryption to the backend. Only available when listener is referenced in ingress annotation."
               protocol:
                 type: string
-                enum: ["https", "http"]
+                enum: ["udp", "tcp", "https", "http"]
                 description: "Protocol for this listener"
               vip:
                 type: string
@@ -1205,7 +1241,7 @@ spec:
                   properties:
                     preconfigured:
                       type: string
-                      description: "Preconfigured Certificate name on ADC "
+                      description: "Preconfigured Certificate name on NetScaler "
                     secret:
                       type: object
                       description: "Kuberentes secret object"
@@ -1238,7 +1274,7 @@ spec:
                         description: "Preconfigured or Built-in HTTP profile name"
                       config:
                         type: object
-                        description: "HTTP profile configuration for the listener. For individual fields, refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nshttpprofile/nshttpprofile/  Name field is auto populated"
+                        description: "HTTP profile configuration for the listener. For individual fields, refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ns/nshttpprofile  Name field is auto populated"
                         additionalProperties:
                           type: string
                     oneOf:
@@ -1246,14 +1282,14 @@ spec:
                     - required: ["config"]
                   tcpprofile:
                     type: object
-                    description: "TCP level configurations, uses  ns tcpprofile of Netscaler"
+                    description: "TCP level configurations, uses  ns tcpprofile of NetScaler"
                     properties:
                       preconfigured:
                         description: "Preconfigured or Built-in TCP profile name"
                         type: string
                       config:
                         type: object
-                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nstcpprofile/ ; Name field is auto populated"
+                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ns/nstcpprofile ; Name field is auto populated"
                         additionalProperties:
                           type: string
                     oneOf:
@@ -1270,9 +1306,9 @@ spec:
                     properties:
                       preconfigured:
                         type: string
-                        description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
+                        description: "SSL profile which is preconfigured in NetScaler. Ciphers bound to the profile is not overriden"
                       config:
-                        description: "Netscaler frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                        description: "NetScaler frontend SSL profile configurations. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ssl/sslprofile.html  for all configurations; Name field is auto generated"
                         type: object
                         additionalProperties:
                           type: string
@@ -1312,7 +1348,7 @@ spec:
                                enum: ["webinsight", "tcpinsight", "securityinsight", "videoinsight", "hdxinsight", "gatewayinsight", "timeseries", "lsninsight", "botinsight"]
                             parameters:
                               type: object
-                              description: "Additional parameters for analytics profile. Please refer:https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/"
+                              description: "Additional parameters for analytics profile. Please refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/analytics/analyticsprofile/"
                               additionalProperties:
                                 type: string
                     oneOf:
@@ -1375,12 +1411,12 @@ spec:
                                 description: "Use Secure communications to the backends"
                                 type: boolean
                               lbConfig:
-                                description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                description: "NetScaler LB vserver configurations for the backend. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/lb/lbvserver.html for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
                               servicegroupConfig:
-                                description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                description: "NetScaler service group configurations for the backend; Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/basic/servicegroup.html for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
@@ -1398,7 +1434,7 @@ spec:
                         description: "Host name specified is used for redirection with URL intact"
                         type: string
                       targetExpression:
-                        description: "A target can be specified using Netscaler policy expression"
+                        description: "A target can be specified using NetScaler policy expression"
                         type: string
                       responseCode:
                         description: "Default response code is 302, which can be customised using this attribute"
@@ -1412,14 +1448,6 @@ spec:
       # status enables the status subresource.
       status: {}
 ---
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: httproutes.citrix.com
-{{- if .Values.crds.retainOnDelete }}
-  annotations:
-    "helm.sh/resource-policy": keep
-{{- end }}
 spec:
   group: citrix.com
   names:
@@ -1449,7 +1477,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               hostname:
                 type: array
                 description: "List of domain names that share the same route, default is '*'"
@@ -1467,7 +1495,7 @@ spec:
                   properties:
                     name:
                       type: string
-                      description: "A name to represent the rule, this is used as an identifier in content routing policy name in ADC"
+                      description: "A name to represent the rule, this is used as an identifier in content routing policy name in NetScaler"
                       minLength: 1
                       maxLength: 20
                       pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
@@ -1612,7 +1640,7 @@ spec:
                             description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
                           policyExpression:
                             type: string
-                            description: "Netscaler policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
+                            description: "NetScaler policy expressions; refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/policy/policyexpression.html"
                     action:
                       type: object
                       description: "Action for the matched rule"
@@ -1643,12 +1671,12 @@ spec:
                                       description: "Use Secure communications to the backends"
                                       type: boolean
                                     lbConfig:
-                                      description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                      description: "NetScaler LB vserver configurations for the backend. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/lb/lbvserver.html for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
                                     servicegroupConfig:
-                                      description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                      description: "NetScaler service group configurations for the backend; Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/basic/servicegroup.html for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
@@ -1666,7 +1694,7 @@ spec:
                               description: "Host name specified is used for redirection with URL intact"
                               type: string
                             targetExpression:
-                              description: "A target can be specified using Netscaler policy expression"
+                              description: "A target can be specified using NetScaler policy expression"
                               type: string
                             responseCode:
                               description: "Default response code is 302, which can be customised using this attribute"
@@ -1760,7 +1788,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the waf policies are applied.'
                 type: array
@@ -1777,7 +1805,7 @@ spec:
                 description: 'Location of external signature file'
                 type: string
               redirect_url:
-                description: ''
+                description: 'When a URL is blocked/down, redirect_url represents the alternate URL where the client requests should be sent.'
                 type: string
               html_error_object:
                 description: 'Location of customized error page to respond when html or common violation are hit'
@@ -1807,10 +1835,32 @@ spec:
                     description: "List of http methods to inspect"
                     items:
                       type: string
-                      enum: ['GET', 'PUT', 'POST','DELETE']
+                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                   header:
                     type: array
                     description: "List of http headers to inspect"
+                    items:
+                      type: string
+                      description: "header name"
+              exclude:
+                description: 'To control what traffic to be excluded by Web Application Firewall. If you do not provide the exclude list, nothing will be skipped by default explicitly'
+                type: object
+                properties:
+                  path:
+                    type: array
+                    description: "List of http urls to exclude"
+                    items:
+                      type: string
+                      description: "URL path"
+                  method:
+                    type: array
+                    description: "List of http methods to exclude"
+                    items:
+                      type: string
+                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT', 'UNKNOWN_METHOD']
+                  header:
+                    type: array
+                    description: "List of http headers to exclude"
                     items:
                       type: string
                       description: "header name"
@@ -1926,7 +1976,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the bot policies are applied.'
                 type: array
@@ -1954,7 +2004,7 @@ spec:
                     description: "List of http methods to inspect"
                     items:
                       type: string
-                      enum: ['GET', 'PUT', 'POST','DELETE']
+                      enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
                   header:
                     type: array
                     description: "List of http headers to inspect"
@@ -1972,8 +2022,14 @@ spec:
                     type: string
                     enum: ['ON', 'OFF']
                   device_fingerprint:
+                    type: string
+                    enum: ['ON', 'OFF']
+                  device_fingerprint_action:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
+                  headless_browser:
+                    type: string
+                    enum: ['ON','OFF']
                   reputation:
                     type: string
                     enum: ['ON', 'OFF']
@@ -2001,6 +2057,12 @@ spec:
                         ip:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
+                        ipv6:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        ipv6_subnet:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         expression:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
@@ -2014,6 +2076,12 @@ spec:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
                         ip:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        ipv6:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        ipv6_subnet:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
                         expression:
@@ -2033,10 +2101,25 @@ spec:
                         cookie:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
+                        geolocation:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                   reputation:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   captcha:
+                    type: array
+                    items:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                      properties:
+                  logexp:
+                    type: array
+                    items:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                      properties:
+                  kbmexpr:
                     type: array
                     items:
                       type: object
@@ -2054,7 +2137,7 @@ spec:
                       ip:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
-                      host:
+                      url:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
                   trapinsertion:
@@ -2249,7 +2332,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'The list of Kubernetes services to which you want to apply the cors policies.'
                 type: array

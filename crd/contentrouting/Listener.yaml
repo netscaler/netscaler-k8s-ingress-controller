@@ -28,16 +28,22 @@ spec:
           spec:
             type: object
             required: [protocol]
+            x-kubernetes-validations:
+              - rule: "!(has(self.passthrough) && self.passthrough == true && has(self.routes))"
+                message: "passthrough cannot be used with routes. Passthrough is only available when listener is referenced in ingress annotation."
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all citrix ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               multicluster:
-                description: "Is the csvserver IP shared by multiclusters and CICs"
+                description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
                 type: boolean
+              passthrough:
+                type: boolean
+                description: "Enables SSL Passthrough. Traffic is forwarded without decryption to the backend. Only available when listener is referenced in ingress annotation."
               protocol:
                 type: string
-                enum: ["tcp", "udp", "https", "http"]
+                enum: ["udp", "tcp", "https", "http"]
                 description: "Protocol for this listener"
               vip:
                 type: string
@@ -66,7 +72,7 @@ spec:
                   properties:
                     preconfigured:
                       type: string
-                      description: "Preconfigured Certificate name on ADC "
+                      description: "Preconfigured Certificate name on NetScaler "
                     secret:
                       type: object
                       description: "Kuberentes secret object"
@@ -99,7 +105,7 @@ spec:
                         description: "Preconfigured or Built-in HTTP profile name"
                       config:
                         type: object
-                        description: "HTTP profile configuration for the listener. For individual fields, refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nshttpprofile/nshttpprofile/  Name field is auto populated"
+                        description: "HTTP profile configuration for the listener. For individual fields, refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ns/nshttpprofile  Name field is auto populated"
                         additionalProperties:
                           type: string
                     oneOf:
@@ -107,14 +113,14 @@ spec:
                     - required: ["config"]
                   tcpprofile:
                     type: object
-                    description: "TCP level configurations, uses  ns tcpprofile of citrix ADC"
+                    description: "TCP level configurations, uses  ns tcpprofile of NetScaler"
                     properties:
                       preconfigured:
                         description: "Preconfigured or Built-in TCP profile name"
                         type: string
                       config:
                         type: object
-                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nstcpprofile/ ; Name field is auto populated"
+                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ns/nstcpprofile ; Name field is auto populated"
                         additionalProperties:
                           type: string
                     oneOf:
@@ -131,9 +137,9 @@ spec:
                     properties:
                       preconfigured:
                         type: string
-                        description: "SSL profile which is preconfigured in ADC. Ciphers bound to the profile is not overriden"
+                        description: "SSL profile which is preconfigured in NetScaler. Ciphers bound to the profile is not overriden"
                       config:
-                        description: "Citrix ADC frontend SSL profile configurations. Refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ssl/sslprofile/  for all configurations; Name field is auto generated"
+                        description: "NetScaler frontend SSL profile configurations. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ssl/sslprofile.html  for all configurations; Name field is auto generated"
                         type: object
                         additionalProperties:
                           type: string
@@ -173,7 +179,7 @@ spec:
                                enum: ["webinsight", "tcpinsight", "securityinsight", "videoinsight", "hdxinsight", "gatewayinsight", "timeseries", "lsninsight", "botinsight"]
                             parameters:
                               type: object
-                              description: "Additional parameters for analytics profile. Please refer:https://developer-docs.citrix.com/projects/citrix-adc-nitro-api-reference/en/latest/configuration/analytics/analyticsprofile/"
+                              description: "Additional parameters for analytics profile. Please refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/analytics/analyticsprofile/"
                               additionalProperties:
                                 type: string
                     oneOf:
@@ -236,12 +242,12 @@ spec:
                                 description: "Use Secure communications to the backends"
                                 type: boolean
                               lbConfig:
-                                description: "Citrix ADC LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                description: "NetScaler LB vserver configurations for the backend. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/lb/lbvserver.html for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
                               servicegroupConfig:
-                                description: "Citrix ADC service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                description: "NetScaler service group configurations for the backend; Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/basic/servicegroup.html for all configurations"
                                 type: object
                                 additionalProperties:
                                   type: string
@@ -259,7 +265,7 @@ spec:
                         description: "Host name specified is used for redirection with URL intact"
                         type: string
                       targetExpression:
-                        description: "A target can be specified using Citrix ADC policy expression"
+                        description: "A target can be specified using NetScaler policy expression"
                         type: string
                       responseCode:
                         description: "Default response code is 302, which can be customised using this attribute"

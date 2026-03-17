@@ -9,7 +9,7 @@ spec:
     plural: wafs
     singular: waf
   scope: Namespaced
-  versions: 
+  versions:
   - name: v1
     served: true
     storage: true
@@ -41,7 +41,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the waf policies are applied.'
                 type: array
@@ -58,7 +58,7 @@ spec:
                 description: 'Location of external signature file'
                 type: string
               redirect_url:
-                description: ''
+                description: 'When a URL is blocked/down, redirect_url represents the alternate URL where the client requests should be sent.'
                 type: string
               html_error_object:
                 description: 'Location of customized error page to respond when html or common violation are hit'

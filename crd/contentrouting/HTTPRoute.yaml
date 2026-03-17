@@ -31,7 +31,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               hostname:
                 type: array
                 description: "List of domain names that share the same route, default is '*'"
@@ -49,7 +49,7 @@ spec:
                   properties:
                     name:
                       type: string
-                      description: "A name to represent the rule, this is used as an identifier in content routing policy name in ADC"
+                      description: "A name to represent the rule, this is used as an identifier in content routing policy name in NetScaler"
                       minLength: 1
                       maxLength: 20
                       pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
@@ -194,7 +194,7 @@ spec:
                             description: "HTTP method for content routing eg: POST, PUT, DELETE etc"
                           policyExpression:
                             type: string
-                            description: "Netscaler policy expressions; refer: https://docs.citrix.com/en-us/netscaler/media/expression-prefix.pdf"
+                            description: "NetScaler policy expressions; refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/policy/policyexpression.html"
                     action:
                       type: object
                       description: "Action for the matched rule"
@@ -225,12 +225,12 @@ spec:
                                       description: "Use Secure communications to the backends"
                                       type: boolean
                                     lbConfig:
-                                      description: "Netscaler LB vserver configurations for the backend. Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/load-balancing/lbvserver/lbvserver/ for all configurations"
+                                      description: "NetScaler LB vserver configurations for the backend. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/lb/lbvserver.html for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
                                     servicegroupConfig:
-                                      description: "Netscaler service group configurations for the backend; Refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/basic/servicegroup/servicegroup/ for all configurations"
+                                      description: "NetScaler service group configurations for the backend; Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/basic/servicegroup.html for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
@@ -248,7 +248,7 @@ spec:
                               description: "Host name specified is used for redirection with URL intact"
                               type: string
                             targetExpression:
-                              description: "A target can be specified using Netscaler policy expression"
+                              description: "A target can be specified using NetScaler policy expression"
                               type: string
                             responseCode:
                               description: "Default response code is 302, which can be customised using this attribute"

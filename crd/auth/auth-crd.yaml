@@ -40,7 +40,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all Netscaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: |+
                              'Name of the services for which the policies applied'
@@ -70,7 +70,7 @@ spec:
                             description: |+
                                          'Fully qualified domain name (FQDN) for authentication.
                                           This FQDN should be unique and should resolve to frontend IP of
-                                          ADC with Ingress/service type LoadBalancer (or) vip of Listener CRD'
+                                          NetScaler with Ingress/service type LoadBalancer (or) vip of Listener CRD'
                             type: string
                             maxLength: 255
                           authentication_host_cert:
@@ -87,8 +87,8 @@ spec:
                                   type: string
                                   maxLength: 63
                                   description: |+
-                                               'Preconfigured SSL certkey name on ADC with the
-                                                certificate and key already added on ADC'
+                                               'Preconfigured SSL certkey name on NetScaler with the
+                                                certificate and key already added on NetScaler'
                             oneOf:
                             - properties:
                               required: [tls_secret]
@@ -215,7 +215,7 @@ spec:
                             user_field:
                                 description: |+
                                              'Attribute in the token from which username should be extracted.
-                                              by default, ADC looks at email attribute for user id'
+                                              by default, NetScaler looks at email attribute for user id'
                                 type: string
                                 maxLength: 127
                             default_group:
@@ -278,13 +278,13 @@ spec:
                                 type: string
                             login_name:
                                 description: |+
-                                             'LDAP login name attribute. The Netscaler uses the LDAP login name
+                                             'LDAP login name attribute. The NetScaler uses the LDAP login name
                                               to query external LDAP servers or Active Directories'
                                 type: string
                                 maxLength: 127
                             security_type:
                                 description: |+
-                                             'Type of security used for communications between the Netscaler
+                                             'Type of security used for communications between the NetScaler
                                               and the LDAP server. Default is TLS'
                                 type: string
                                 enum: ['PLAINTEXT', 'TLS', 'SSL']
@@ -318,7 +318,7 @@ spec:
                                 maxLength: 255
                             auth_timeout:
                                 description: |+
-                                             'Number of seconds the Netscaler waits for a response from the server
+                                             'Number of seconds the NetScaler waits for a response from the server
                                               Default is 3'
                                 type: integer
                                 minimum: 1
@@ -330,7 +330,7 @@ spec:
                             attributes_to_save:
                                 description: |+
                                              'List of attribute names separated by comma which needs to be fetched
-                                              from LDAP server and stored as key-value pair for the session on ADC'
+                                              from LDAP server and stored as key-value pair for the session on NetScaler'
                                 type: string
                                 maxLength: 2047
                         oneOf:
@@ -368,8 +368,8 @@ spec:
                                       type: string
                                       maxLength: 63
                                       description: |+
-                                                   'Preconfigured SSL certkey name on ADC with the
-                                                    certificate and key already added on ADC'
+                                                   'Preconfigured SSL certkey name on NetScaler with the
+                                                    certificate and key already added on NetScaler'
                                 oneOf:
                                 - properties:
                                   required: [tls_secret]
@@ -380,7 +380,7 @@ spec:
                                 type: string
                                 maxLength: 127
                             issuer_name:
-                                description: 'The name to be used in requests sent from SP to IDP to identify Netscaler'
+                                description: 'The name to be used in requests sent from SP to IDP to identify NetScaler'
                                 type: string
                                 maxLength: 63
                             binding:
@@ -420,7 +420,7 @@ spec:
                             attributes_to_save:
                                 description: |+
                                              'List of attribute names separated by comma which needs to be extracted
-                                              and stored as key-value pair for the session on ADC'
+                                              and stored as key-value pair for the session on NetScaler'
                                 type: string
                                 maxLength: 2047
                         required:
@@ -429,11 +429,11 @@ spec:
                       basic_local_db:
                         type: object
                         description: |+
-                                     'Basic HTTP authentication supported by ADC, user data in local DB of ADC. 
-                                      Users needs to be added on ADC'
+                                     'Basic HTTP authentication supported by NetScaler, user data in local DB of NetScaler. 
+                                      Users needs to be added on NetScaler'
                         properties:
                           use_local_auth:
-                            description: 'Use ADC authentication'
+                            description: 'Use NetScaler authentication'
                             type: string
                             enum: ['YES']
 
@@ -465,7 +465,7 @@ spec:
                         required:
                           - path
                     expression:
-                      description: 'ADC syntax expression for authentication'
+                      description: 'NetScaler syntax expression for authentication'
                       type: string
                       maxLength: 1229
                     provider:
@@ -525,7 +525,7 @@ spec:
                         required:
                           - claims
                     expression:
-                      description: 'ADC syntax expression for authorization'
+                      description: 'NetScaler syntax expression for authorization'
                       type: string
                       maxLength: 1229
                   oneOf:
