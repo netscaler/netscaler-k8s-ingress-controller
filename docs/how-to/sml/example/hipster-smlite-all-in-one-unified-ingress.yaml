@@ -1288,7 +1288,6 @@ spec:
       app: cic-k8s-ingress-controller
   template:
     metadata:
-      annotations: null
       labels:
         app: cic-k8s-ingress-controller
       name: cic-k8s-ingress-controller
