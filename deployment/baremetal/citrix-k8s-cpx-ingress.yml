@@ -91,7 +91,6 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations: null
     spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
@@ -115,7 +114,7 @@ spec:
               name: cpx-volume-conf
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/netscaler/netscaler-k8s-ingress-controller:3.4.4
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:4.0.16
           volumeMounts:
           - mountPath: /var/deviceinfo
             name: shared-data

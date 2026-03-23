@@ -175,7 +175,6 @@ spec:
       name: cpx-ingress
       labels:
         app: cpx-ingress
-      annotations: null
     spec:
       serviceAccountName: cpx
       containers:

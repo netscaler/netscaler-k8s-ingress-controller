@@ -5,11 +5,11 @@ metadata:
 spec:
   group: citrix.com
   names:
-    kind: appqoepolicy 
+    kind: appqoepolicy
     plural: appqoepolicies
-    singular: appqoepolicy 
+    singular: appqoepolicy
   scope: Namespaced
-  versions: 
+  versions:
   - name: v1
     served: true
     storage: true

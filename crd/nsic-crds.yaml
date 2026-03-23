@@ -40,7 +40,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               rewrite-policies:
                 type: array
                 items:
@@ -491,7 +491,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the ratelimit policies are applied.'
                 type: array
@@ -654,7 +654,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: |+
                              'Name of the services for which the policies applied'
@@ -1176,13 +1176,22 @@ spec:
           spec:
             type: object
             required: [protocol]
+            x-kubernetes-validations:
+              - rule: "!(has(self.passthrough) && self.passthrough == true && has(self.routes))"
+                message: "passthrough cannot be used with routes. Passthrough is only available when listener is referenced in ingress annotation."
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+              multicluster:
+                description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
+                type: boolean
+              passthrough:
+                type: boolean
+                description: "Enables SSL Passthrough. Traffic is forwarded without decryption to the backend. Only available when listener is referenced in ingress annotation."
               protocol:
                 type: string
-                enum: ["https", "http"]
+                enum: ["udp", "tcp", "https", "http"]
                 description: "Protocol for this listener"
               vip:
                 type: string
@@ -1244,7 +1253,7 @@ spec:
                         description: "Preconfigured or Built-in HTTP profile name"
                       config:
                         type: object
-                        description: "HTTP profile configuration for the listener. For individual fields, refer:https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nshttpprofile/nshttpprofile/  Name field is auto populated"
+                        description: "HTTP profile configuration for the listener. For individual fields, refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ns/nshttpprofile  Name field is auto populated"
                         additionalProperties:
                           type: string
                     oneOf:
@@ -1259,7 +1268,7 @@ spec:
                         type: string
                       config:
                         type: object
-                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/12.0/configuration/ns/nstcpprofile/ ; Name field is auto populated"
+                        description: "TCPprofile configurations for the listener. For individual fields refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ns/nstcpprofile ; Name field is auto populated"
                         additionalProperties:
                           type: string
                     oneOf:
@@ -1278,7 +1287,7 @@ spec:
                         type: string
                         description: "SSL profile which is preconfigured in NetScaler. Ciphers bound to the profile is not overriden"
                       config:
-                        description: "NetScaler frontend SSL profile configurations. Refer:https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ssl/sslprofile.html  for all configurations; Name field is auto generated"
+                        description: "NetScaler frontend SSL profile configurations. Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/ssl/sslprofile.html  for all configurations; Name field is auto generated"
                         type: object
                         additionalProperties:
                           type: string
@@ -1318,7 +1327,7 @@ spec:
                                enum: ["webinsight", "tcpinsight", "securityinsight", "videoinsight", "hdxinsight", "gatewayinsight", "timeseries", "lsninsight", "botinsight"]
                             parameters:
                               type: object
-                              description: "Additional parameters for analytics profile. Please refer:https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/analytics/analyticsprofile/"
+                              description: "Additional parameters for analytics profile. Please refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/analytics/analyticsprofile/"
                               additionalProperties:
                                 type: string
                     oneOf:
@@ -1451,7 +1460,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               hostname:
                 type: array
                 description: "List of domain names that share the same route, default is '*'"
@@ -1650,7 +1659,7 @@ spec:
                                       additionalProperties:
                                         type: string
                                     servicegroupConfig:
-                                      description: "NetScaler service group configurations for the backend; Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/basic/servicegroup.html  for all configurations"
+                                      description: "NetScaler service group configurations for the backend; Refer: https://developer-docs.netscaler.com/en-us/adc-nitro-api/current-release/configuration/basic/servicegroup.html for all configurations"
                                       type: object
                                       additionalProperties:
                                         type: string
@@ -1754,7 +1763,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the waf policies are applied.'
                 type: array
@@ -1938,7 +1947,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'Name of the services to which the bot policies are applied.'
                 type: array
@@ -2286,7 +2295,7 @@ spec:
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler ingress controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
               servicenames:
                 description: 'The list of Kubernetes services to which you want to apply the cors policies.'
                 type: array
