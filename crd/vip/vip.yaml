@@ -55,3 +55,8 @@ spec:
               multicluster:
                 description: "The setting of this indicates that the VIP/csvserver IP address is shared by multiple netscaler ingress controllers on the VPX/MPX. For CPX, this field is not applicable"
                 type: boolean
+              hostnames:
+                description: "Hostnames associated with the VIP"
+                type: array
+                items:
+                  type: string

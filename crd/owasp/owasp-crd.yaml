@@ -1,0 +1,494 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: owasppolicies.citrix.com
+spec:
+  conversion:
+    strategy: None
+  group: citrix.com
+  names:
+    kind: owasppolicy
+    listKind: owasppolicyList
+    plural: owasppolicies
+    singular: owasppolicy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Current Status of the CRD
+      jsonPath: .status.state
+      name: Status
+      type: string
+    - description: Status Message
+      jsonPath: .status.status_message
+      name: Message
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            properties:
+              bot:
+                properties:
+                  allow-and-block-list:
+                    properties:
+                      rules:
+                        items:
+                          properties:
+                            action:
+                              enum:
+                              - allow
+                              - block
+                              type: string
+                            expression:
+                              description: Rule expression for allow/block logic
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  bot-signature:
+                    type: string
+                  bot-tps:
+                    type: object
+                    properties:
+                      action:
+                        default: drop
+                        enum:
+                        - reset
+                        - drop
+                        - none
+                        type: string
+                      enforcement-type:
+                        type: string
+                        description: Bot requests per second (TPS) based enforcement type
+                        default: ClientIP
+                        enum: 
+                        - ClientIP
+                        - GeoLocation
+                        - Host
+                        - SourceUrl
+                      minimum-tps:
+                        type: integer
+                        description: Minimum bot TPS threshold for enforcement
+                      maximum-tps-percentage:
+                        type: integer
+                        description: Maximum TPS increase percentage (per 30-minute interval)
+                  bot-trap:
+                    properties:
+                      enforcements:
+                        items:
+                          properties:
+                            action:
+                              default: block
+                              enum:
+                              - block
+                              - log
+                              - redirect
+                              - none
+                              type: string
+                            enforcement-url:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  device-fingerprint:
+                    properties:
+                      action:
+                        default: log
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                    type: object
+                  geo-blocking:
+                    properties:
+                      blocked-countries:
+                        items:
+                          description: ISO country codes to block (e.g., US, CN, RU)
+                          type: string
+                        type: array
+                    type: object
+                  ip-reputation:
+                    properties:
+                      categories:
+                        properties:
+                          anonymous-or-suspicious-proxies:
+                            default: true
+                            type: boolean
+                          botnets-ransomware-ccs:
+                            default: true
+                            type: boolean
+                          cloud:
+                            default: true
+                            type: boolean
+                          cloud-aws:
+                            default: true
+                            type: boolean
+                          cloud-azure:
+                            default: true
+                            type: boolean
+                          cloud-ibm:
+                            default: true
+                            type: boolean
+                          cloud-oracle:
+                            default: true
+                            type: boolean
+                          cloud-salesforce:
+                            default: true
+                            type: boolean
+                          dos:
+                            default: true
+                            type: boolean
+                          ip:
+                            default: true
+                            type: boolean
+                          mobile-threats:
+                            default: true
+                            type: boolean
+                          network:
+                            default: true
+                            type: boolean
+                          phishing:
+                            default: true
+                            type: boolean
+                          reputation:
+                            default: true
+                            type: boolean
+                          scanners:
+                            default: true
+                            type: boolean
+                          spam-sources:
+                            default: true
+                            type: boolean
+                          tor-proxies:
+                            default: true
+                            type: boolean
+                          web-exploits:
+                            default: true
+                            type: boolean
+                          windows-exploits:
+                            default: true
+                            type: boolean
+                        type: object
+                    type: object
+                  rate-limit:
+                    properties:
+                      policies:
+                        items:
+                          type: object
+                          properties:
+                            action:
+                              type: string
+                              description: "Action to take when rate limit is exceeded"
+                              enum:
+                              - drop
+                              - log
+                              - reset
+                            requests-per-second:
+                              type: integer
+                              description: "Number of requests allowed per second"
+                            url-pattern:
+                              type: string
+                              description: "URL pattern for rate limiting (regex supported)"
+                            session-cookie:
+                              type: string
+                              description: "Cookie name to use for rate limiting"
+                            sourceip:
+                              type: boolean
+                              description: "Enable rate limiting based on source IP"
+                              enum: [true]
+                          required:
+                          - requests-per-second
+                          oneOf:
+                          - required:
+                            - url-pattern
+                          - required:
+                            - session-cookie
+                          - required:
+                            - sourceip
+                        type: array
+                    type: object
+                type: object
+              ingressclass:
+                description: Ingress class, if not specified then all NetScaler Ingress
+                  Controllers in the cluster will process the resource otherwise only
+                  the controller with that ingress class will process this resource
+                type: string
+              servicenames:
+                description: Name of the services to which the owasp policies are
+                  applied.
+                items:
+                  maxLength: 127
+                  type: string
+                type: array
+              waf:
+                properties:
+                  buffer-overflow:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      json-protection:
+                        properties:
+                          max-array-length:
+                            default: 10000
+                            type: integer
+                          max-container-depth:
+                            default: 5
+                            type: integer
+                          max-document-length:
+                            default: 20000000
+                            type: integer
+                          max-object-key-count:
+                            default: 10000
+                            type: integer
+                          max-object-key-length:
+                            default: 128
+                            type: integer
+                          max-string-length:
+                            default: 1000000
+                            type: integer
+                        type: object
+                      max-cookie-length:
+                        default: 4096
+                        type: integer
+                      max-header-length:
+                        default: 4096
+                        type: integer
+                      max-url-length:
+                        default: 1024
+                        type: integer
+                    type: object
+                  command-injection:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      content-type:
+                        default: all
+                        enum:
+                        - HTML
+                        - JSON
+                        - all
+                        type: string
+                      exceptions:
+                        items:
+                          properties:
+                            type:
+                              enum:
+                              - JSON
+                              - HTML
+                              type: string
+                            url-pattern:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  cookie-consistency:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      exceptions:
+                        items:
+                          properties:
+                            cookie-name:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  cross-site-scripting:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      content-type:
+                        default: all
+                        enum:
+                        - HTML
+                        - JSON
+                        - all
+                        type: string
+                      exceptions:
+                        items:
+                          properties:
+                            type:
+                              enum:
+                              - JSON
+                              - HTML
+                              type: string
+                            url-pattern:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  csrf:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      content-type:
+                        default: HTML
+                        enum:
+                        - HTML
+                        type: string
+                      exceptions:
+                        items:
+                          properties:
+                            url-pattern:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  data-leak-prevention:
+                    properties:
+                      safe-objects:
+                        items:
+                          properties:
+                            action:
+                              default: block
+                              enum:
+                              - block
+                              - log
+                              - mask
+                              - none
+                              type: string
+                            max-match-length:
+                              type: integer
+                            regex:
+                              description: Custom regex pattern for Custom type
+                              type: string
+                            type:
+                              enum:
+                              - SSN
+                              - CreditCard
+                              - Custom
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  field-consistency:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      content-type:
+                        default: HTML
+                        enum:
+                        - HTML
+                        type: string
+                      exceptions:
+                        items:
+                          properties:
+                            url-pattern:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  field-format:
+                    properties:
+                      enforcements:
+                        items:
+                          properties:
+                            action:
+                              default: block
+                              enum:
+                              - block
+                              - log
+                              - none
+                              type: string
+                            field-name:
+                              description: Regex pattern for field name (default .* for all fields)
+                              type: string
+                            customregex:
+                              description: Custom regex pattern when field-format
+                                is 'Custom'
+                              type: string
+                            format:
+                              enum:
+                              - Integer
+                              - Alphabets
+                              - Alphanumeric
+                              - NoHTML
+                              - Any
+                              - SSN
+                              - CreditCard
+                              - Custom
+                              type: string
+                            max-length:
+                              type: integer
+                            min-length:
+                              type: integer
+                            url-pattern:
+                              type: string
+                          type: object
+                          x-kubernetes-validations:
+                          - rule: "!has(self.customregex) || self.format == 'Custom'"
+                            message: "custom regex can only be specified when format is 'Custom'"
+                          - rule: "self.format != 'Custom' || has(self.customregex)"
+                            message: "custom regex is required when format is 'Custom'"
+                        type: array
+                    type: object
+                  sql-injection:
+                    properties:
+                      action:
+                        default: block
+                        enum:
+                        - block
+                        - log
+                        - none
+                        type: string
+                      exceptions:
+                        items:
+                          properties:
+                            type:
+                              enum:
+                              - JSON
+                              - HTML
+                              type: string
+                            url-pattern:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  waf-signature:
+                    type: string
+                type: object
+            type: object
+          status:
+            properties:
+              state:
+                type: string
+              status_message:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

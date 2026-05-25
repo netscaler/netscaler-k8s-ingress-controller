@@ -80,6 +80,9 @@ spec:
                     host:
                       type: string
                       description: "Domain for which GSLB support will be applied"
+                    ingressHostName:
+                      type: string
+                      description: "Optional hostname to match against ingress hostname records. If not specified, the 'host' field is used for matching."
                     policy:
                       required: ["targets","trafficPolicy"]
                       properties:
@@ -102,6 +105,18 @@ spec:
                         secLbMethod:
                           type: string
                           description: "The traffic distribution policy supported among clusters under a group in local-first, canary or failover"
+                        multipleIPResponse:
+                          type: string
+                          enum:
+                          - ENABLED
+                          - DISABLED
+                          description: "When ENABLED, the GSLB vserver responds with multiple IP addresses in a single DNS response (Multiple IP Response / MIR). Optional."
+                        emptyDownResponse:
+                          type: string
+                          enum:
+                          - ENABLED
+                          - DISABLED
+                          description: "When ENABLED, the GSLB vserver returns an empty response if all the bound GSLB services are DOWN (Empty Down Response / EDR). Optional."
                         targets:
                           items:
                             required: ["destination"]

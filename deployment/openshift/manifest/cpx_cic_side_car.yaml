@@ -93,7 +93,7 @@ spec:
       serviceAccountName: citrix
       containers:
         - name: cpx
-          image: "quay.io/citrix/citrix-k8s-cpx-ingress:14.1-17.38"
+          image: "quay.io/netscaler/netscaler-cpx:14.1-66.59"
           tty: true
           securityContext: 
              privileged: true
@@ -112,7 +112,7 @@ spec:
           imagePullPolicy: IfNotPresent
         # Add cic as a sidecar
         - name: cic
-          image: "quay.io/netscaler/netscaler-k8s-ingress-controller:4.0.16"
+          image: "quay.io/netscaler/netscaler-k8s-ingress-controller:4.1.17"
           volumeMounts:
             - mountPath: /var/deviceinfo
               name: shared-data
