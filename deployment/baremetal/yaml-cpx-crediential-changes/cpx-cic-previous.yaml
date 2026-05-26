@@ -95,7 +95,7 @@ spec:
       serviceAccountName: cpx-ingress-k8s-role
       containers:
         - name: cpx
-          image: quay.io/citrix/citrix-k8s-cpx-ingress:13.0-58.30
+          image: quay.io/netscaler/netscaler-cpx:14.1-66.59
           securityContext:
              privileged: true
           env:
@@ -111,7 +111,7 @@ spec:
               name: cpx-volume2
         # Add cic as a sidecar
         - name: cic
-          image: quay.io/netscaler/netscaler-k8s-ingress-controller:4.0.16
+          image: quay.io/netscaler/netscaler-k8s-ingress-controller:4.1.17
           args:
           - --ingress-classes
               citrix
