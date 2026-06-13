@@ -24,7 +24,7 @@ You need to specify the `ingress.citrix.com/frontend_sslprofile` annotation to a
         metadata:
           annotations:
             ingress.citrix.com/ca-secret: '{"ingress-demo": "tls-ca"}'
-            ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "sni": "enabled"}'
+            ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "snienable": "enabled"}'
           name: ingress-demo
           namespace: netscaler
         spec:
@@ -90,9 +90,9 @@ Perform the following steps to generate a Kubernetes secret for an existing cert
             ingress.citrix.com/backend-ca-secret: '{"service-test":"example-test-ca"}'
             ingress.citrix.com/backend-secret: '{"service-test": "tls-example-test"}'
             ingress.citrix.com/backend-sslprofile: '{"service-test":{"serverauth": "enabled",
-              "sni": "enabled"}}'
+              "snienable": "enabled"}}'
             ingress.citrix.com/ca-secret: '{"ingress-demo": "tls-ca"}'
-            ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "sni": "enabled"}'
+            ingress.citrix.com/frontend_sslprofile: '{"clientauth":"ENABLED", "snienable": "enabled"}'
             ingress.citrix.com/secure-backend: 'True'
           name: ingress-demo
           namespace: netscaler
