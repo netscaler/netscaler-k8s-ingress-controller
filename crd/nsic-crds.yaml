@@ -735,7 +735,7 @@ spec:
                 type: string
               kind:
                 type: string
-                enum: ["service", "ingress", "listener"]
+                enum: ["service", "ingress", "listener", "gateway"]
               description:
                 type: string
               range-name:
