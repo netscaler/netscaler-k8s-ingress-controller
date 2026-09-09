@@ -153,6 +153,7 @@ spec:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
                   ratelimit:
+                    description: "Rate-limit bindings. Each entry carries rate, timeslice and optionally action, limittype (BURSTY|SMOOTH), condition, logmessage and comment. A `condition` is required on an `ip` entry when `bindings.tps.ip` is also configured - both are SOURCE_IP and the NetScaler refuses the second binding without one. limittype, condition, logmessage, comment and the ja3_fingerprint type need NetScaler 14.1-72.57 or later; the CRD is refused on an older build."
                     type: array
                     items:
                       type: object
@@ -167,6 +168,9 @@ spec:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
                         geolocation:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        ja3_fingerprint:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
                   reputation:
@@ -191,6 +195,7 @@ spec:
                       x-kubernetes-preserve-unknown-fields: true
                       properties:
                   tps:
+                    description: "TPS bindings, one per type. Each entry needs at least one of threshold or percentage, and optionally action, enabled (ON|OFF), logmessage and comment. enabled, logmessage and comment need NetScaler 14.1-72.57 or later; the CRD is refused on an older build."
                     type: object
                     properties:
                       geolocation:
