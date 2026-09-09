@@ -50,6 +50,14 @@ spec:
                     type: string
                   bot-tps:
                     type: object
+                    description: >-
+                      TPS based bot enforcement. Use `enforcements` to configure
+                      more than one enforcement type; the inline fields below are
+                      the single-enforcement short form and are ignored when
+                      `enforcements` is present. `enforcement-type: ClientIP`
+                      becomes NetScaler type SOURCE_IP, which cannot coexist with
+                      a `rate-limit` policy using `sourceip` unless that policy
+                      carries a `condition`.
                     properties:
                       action:
                         default: drop
@@ -62,7 +70,7 @@ spec:
                         type: string
                         description: Bot requests per second (TPS) based enforcement type
                         default: ClientIP
-                        enum: 
+                        enum:
                         - ClientIP
                         - GeoLocation
                         - Host
@@ -70,9 +78,57 @@ spec:
                       minimum-tps:
                         type: integer
                         description: Minimum bot TPS threshold for enforcement
+                        minimum: 1
+                        maximum: 4294967295
                       maximum-tps-percentage:
                         type: integer
                         description: Maximum TPS increase percentage (per 30-minute interval)
+                        minimum: 10
+                        maximum: 4294967295
+                      enabled:
+                        type: string
+                        description: Enable or disable this TPS binding on the NetScaler
+                        enum:
+                        - 'ON'
+                        - 'OFF'
+                      enforcements:
+                        type: array
+                        description: One TPS binding per enforcement type
+                        items:
+                          type: object
+                          properties:
+                            action:
+                              default: drop
+                              enum:
+                              - reset
+                              - drop
+                              - none
+                              type: string
+                            enforcement-type:
+                              type: string
+                              description: Bot requests per second (TPS) based enforcement type
+                              default: ClientIP
+                              enum:
+                              - ClientIP
+                              - GeoLocation
+                              - Host
+                              - SourceUrl
+                            minimum-tps:
+                              type: integer
+                              description: Minimum bot TPS threshold for enforcement
+                              minimum: 1
+                              maximum: 4294967295
+                            maximum-tps-percentage:
+                              type: integer
+                              description: Maximum TPS increase percentage (per 30-minute interval)
+                              minimum: 10
+                              maximum: 4294967295
+                            enabled:
+                              type: string
+                              description: Enable or disable this TPS binding on the NetScaler
+                              enum:
+                              - 'ON'
+                              - 'OFF'
                   bot-trap:
                     properties:
                       enforcements:
@@ -188,12 +244,43 @@ spec:
                             requests-per-second:
                               type: integer
                               description: "Number of requests allowed per second"
+                              minimum: 1
+                              maximum: 4294967295
+                            time-slice:
+                              type: integer
+                              description: "Interval in milliseconds over which requests are counted"
+                              default: 1000
+                              minimum: 10
+                              maximum: 4294967295
+                            limit-type:
+                              type: string
+                              description: >-
+                                Rate-limiting traffic type. Needs NetScaler 14.1-72.57 or
+                                later; the policy is refused on an older build.
+                              enum:
+                              - BURSTY
+                              - SMOOTH
+                            condition:
+                              type: string
+                              description: >-
+                                Boolean NetScaler expression gating this policy. Required on a
+                                `sourceip` policy when `bot-tps` enforces on `ClientIP`, since
+                                both are SOURCE_IP and the NetScaler otherwise refuses the
+                                second binding. For example HTTP.REQ.IS_VALID. Needs NetScaler
+                                14.1-72.57 or later; the policy is refused on an older build.
+                              maxLength: 8191
                             url-pattern:
                               type: string
                               description: "URL pattern for rate limiting (regex supported)"
+                              minLength: 1
                             session-cookie:
                               type: string
                               description: "Cookie name to use for rate limiting"
+                              minLength: 1
+                            geolocation:
+                              type: string
+                              description: "Country code to rate limit on, for example IN"
+                              minLength: 1
                             sourceip:
                               type: boolean
                               description: "Enable rate limiting based on source IP"
@@ -205,6 +292,8 @@ spec:
                             - url-pattern
                           - required:
                             - session-cookie
+                          - required:
+                            - geolocation
                           - required:
                             - sourceip
                         type: array
