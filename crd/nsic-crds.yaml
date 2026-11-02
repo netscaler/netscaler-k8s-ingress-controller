@@ -5,11 +5,11 @@ metadata:
 spec:
   group: citrix.com
   names:
-    kind: rewritepolicy 
+    kind: rewritepolicy
     plural: rewritepolicies
-    singular: rewritepolicy 
+    singular: rewritepolicy
   scope: Namespaced
-  versions: 
+  versions:
   - name: v1
     served: true
     storage: true
@@ -18,11 +18,11 @@ spec:
     additionalPrinterColumns:
     - name: Status
       type: string
-      description: "Current Status of the CRD"
+      description: Current Status of the CRD
       jsonPath: .status.state
     - name: Message
       type: string
-      description: "Status Message"
+      description: Status Message
       jsonPath: .status.status_message
     schema:
       openAPIV3Schema:
@@ -32,446 +32,554 @@ spec:
             type: object
             properties:
               state:
-                 type: string
+                type: string
               status_message:
-                 type: string
+                type: string
           spec:
             type: object
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
-              gatewayClassName:
-                type: string
-                description: "Name of the GatewayClass that this SSL profile should be applied to."
-              targetRef:
-                type: array
-                description: "A list of target resources where this profile will be applied."
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: "Name of the target resource."
-                    namespace:
-                      type: string
-                      description: "Namespace of the target resource."
-                    group:
-                      type: string
-                      description: "Group of the target resource."
-                    kind:
-                      type: string
-                      description: "Kind of the target resource."
-                    sectionName:
-                      type: string
-                      description: "Specific section within the target resource."
+                description: Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource
               rewrite-policies:
                 type: array
                 items:
                   type: object
                   properties:
                     servicenames:
-                      description: 'Name of the services that needs to be binded to rewrite policy.'
+                      description: Name of the services that needs to be binded to rewrite policy.
                       type: array
                       items:
                         type: string
                         maxLength: 127
                     goto-priority-expression:
-                      description: 'Expression or other value specifying the next policy to be
-                                    evaluated if the current policy evaluates to TRUE.
-                                    Specify one of the following values:
-                                    * NEXT - Evaluate the policy with the next higher priority number.
-                                    * END - End policy evaluation.
-                                    Default value of goto-priority-expression: END'
+                      description: 'Expression or other value specifying the next policy to be evaluated if the current policy evaluates to TRUE. Specify one of the following values: * NEXT - Evaluate the policy with the next higher priority number. * END - End policy evaluation. Default value of goto-priority-expression: END'
                       type: string
                       maxLength: 1499
                     logpackets:
                       type: object
-                      description: 'Adds an audit message action.
-                                    The action specifies whether to log the message, and to which log.'
+                      description: Adds an audit message action. The action specifies whether to log the message, and to which log.
                       properties:
                         logexpression:
-                          description: 'Default-syntax expression that defines the format and content of the log message.'
+                          description: Default-syntax expression that defines the format and content of the log message.
                           type: string
                           maxLength: 7991
                         loglevel:
-                          description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                          description: Audit log level, which specifies the severity level of the log message being generated.
                           type: string
-                          enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
-                      required: [logexpression, loglevel]
+                          enum:
+                          - EMERGENCY
+                          - ALERT
+                          - CRITICAL
+                          - ERROR
+                          - WARNING
+                          - NOTICE
+                          - INFORMATIONAL
+                          - DEBUG
+                      required:
+                      - logexpression
+                      - loglevel
                     rewrite-policy:
                       type: object
                       properties:
                         rewrite-criteria:
-                          description: 'Expression against which traffic is evaluated.'
+                          description: Expression against which traffic is evaluated.
                           type: string
                           maxLength: 1299
                         default-action:
-                          description: 'Action to perform if the result of policy evaluation is undefined (UNDEF). 
-                                        An UNDEF event indicates an internal error condition.'
+                          description: Action to perform if the result of policy evaluation is undefined (UNDEF). An UNDEF event indicates an internal error condition.
                           type: string
                           maxLength: 77
-                          enum: ['NOREWRITE', 'RESET', 'DROP']
+                          enum:
+                          - NOREWRITE
+                          - RESET
+                          - DROP
                         operation:
-                          description: 'Type of user-defined rewrite action.'
+                          description: Type of user-defined rewrite action.
                           type: string
-                          enum: ["noop", "delete", "insert_http_header", "delete_http_header",
-                                  "corrupt_http_header", "insert_before", "insert_after", "replace",
-                                  "replace_http_res", "delete_all", "replace_all", "insert_before_all",
-                                  "insert_after_all", "clientless_vpn_encode", "clientless_vpn_encode_all",
-                                  "clientless_vpn_decode", "clientless_vpn_decode_all", "insert_sip_header",
-                                  "delete_sip_header", "corrupt_sip_header", "replace_sip_res", "replace_diameter_header_field",
-                                  "replace_dns_header_field", "replace_dns_answer_section"]
+                          enum:
+                          - noop
+                          - delete
+                          - insert_http_header
+                          - delete_http_header
+                          - corrupt_http_header
+                          - insert_before
+                          - insert_after
+                          - replace
+                          - replace_http_res
+                          - delete_all
+                          - replace_all
+                          - insert_before_all
+                          - insert_after_all
+                          - clientless_vpn_encode
+                          - clientless_vpn_encode_all
+                          - clientless_vpn_decode
+                          - clientless_vpn_decode_all
+                          - insert_sip_header
+                          - delete_sip_header
+                          - corrupt_sip_header
+                          - replace_sip_res
+                          - replace_diameter_header_field
+                          - replace_dns_header_field
+                          - replace_dns_answer_section
                         target:
-                          description: 'Default syntax expression that specifies which part of the request or response to rewrite.'
+                          description: Default syntax expression that specifies which part of the request or response to rewrite.
                           type: string
                           maxLength: 1229
                         modify-expression:
-                          description: 'Default syntax expression that specifies the content to insert into the request 
-                                        or response at the specified location, or that replaces the specified string.'
+                          description: Default syntax expression that specifies the content to insert into the request or response at the specified location, or that replaces the specified string.
                           type: string
                           maxLength: 7991
                         multiple-occurence-modify:
-                          description: 'Search facility that is used to match multiple strings in the request or response.'
+                          description: Search facility that is used to match multiple strings in the request or response.
                           type: string
                           maxLength: 171
                         additional-multiple-occurence-modify:
-                          description: 'Specify additional criteria to refine the results of the search.
-                                        Always starts with the "extend(m,n)" operation, where "m" specifies number of bytes to the left of selected data
-                                        and "n" specifies number of bytes to the right of selected data.
-                                        You can use refineSearch only on body expressions, and only when rewrite-criteria is any one of this:
-                                        INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, and DELETE_ALL.'
+                          description: 'Specify additional criteria to refine the results of the search. Always starts with the "extend(m,n)" operation, where "m" specifies number of bytes to the left of selected data and "n" specifies number of bytes to the right of selected data. You can use refineSearch only on body expressions, and only when rewrite-criteria is any one of this: INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, and DELETE_ALL.'
                           type: string
                           maxLength: 1299
                         direction:
-                          description: 'Bind point to which to bind the policy.'
+                          description: Bind point to which to bind the policy.
                           type: string
-                          enum: ["REQUEST","RESPONSE"]
+                          enum:
+                          - REQUEST
+                          - RESPONSE
+                          - HTTP_EVENT_REQUEST
+                          - HTTP_EVENT_RESPONSE
                         comment:
-                          description: 'Any comments to preserve information about this rewrite policy.' 
+                          description: Any comments to preserve information about this rewrite policy.
                           type: string
                           maxLength: 255
-                      required: [rewrite-criteria, operation, target, direction]
-                  required: [rewrite-policy]
-
+                      required:
+                      - rewrite-criteria
+                      - operation
+                      - target
+                      - direction
+                  required:
+                  - rewrite-policy
               responder-policies:
                 type: array
                 items:
                   type: object
                   properties:
                     servicenames:
-                      description: 'Name of the services that needs to be binded to responder policy.' 
+                      description: Name of the services that needs to be binded to responder policy.
                       type: array
                       items:
                         type: string
                         maxLength: 127
                     goto-priority-expression:
-                      description: 'Expression or other value specifying the next policy to be
-                                    evaluated if the current policy evaluates to TRUE.
-                                    Specify one of the following values:
-                                    * NEXT - Evaluate the policy with the next higher priority number.
-                                    * END - End policy evaluation.
-                                    Default value of goto-priority-expression: END'
+                      description: 'Expression or other value specifying the next policy to be evaluated if the current policy evaluates to TRUE. Specify one of the following values: * NEXT - Evaluate the policy with the next higher priority number. * END - End policy evaluation. Default value of goto-priority-expression: END'
                       type: string
                       maxLength: 1499
                     logpackets:
                       type: object
-                      description: 'Adds an audit message action.
-                                    The action specifies whether to log the message, and to which log.'
+                      description: Adds an audit message action. The action specifies whether to log the message, and to which log.
                       properties:
                         logexpression:
-                          description: 'Default-syntax expression that defines the format and content of the log message.'
+                          description: Default-syntax expression that defines the format and content of the log message.
                           type: string
                           maxLength: 7991
                         loglevel:
-                          description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                          description: Audit log level, which specifies the severity level of the log message being generated.
                           type: string
-                          enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING",
-                                  "NOTICE", "INFORMATIONAL", "DEBUG"]
-                      required: [logexpression, loglevel]
+                          enum:
+                          - EMERGENCY
+                          - ALERT
+                          - CRITICAL
+                          - ERROR
+                          - WARNING
+                          - NOTICE
+                          - INFORMATIONAL
+                          - DEBUG
+                      required:
+                      - logexpression
+                      - loglevel
                     responder-policy:
                       type: object
                       properties:
                         redirect:
                           type: object
-                          description: 'Use this option when you want to Redirect the request when request matches to policy.'
+                          description: Use this option when you want to Redirect the request when request matches to policy.
                           properties:
                             url:
-                              description: 'URL on which you want to redirect the request.'
+                              description: URL on which you want to redirect the request.
                               type: string
                               maxLength: 7991
                             redirect-status-code:
-                              description: 'HTTP response status code, for example 200, 302, 404, etc.'
+                              description: HTTP response status code, for example 200, 302, 404, etc.
                               type: integer
                               minimum: 100
                               maximum: 599
                             redirect-reason:
-                              description: 'Expression specifying the reason for redirecting the request.'
+                              description: Expression specifying the reason for redirecting the request.
                               type: string
                               maxLength: 7991
-                          required: [url]
+                          required:
+                          - url
                         respondwith:
                           type: object
-                          description: 'Use this parameter when you want to respond to the request when request matches to policy.'
+                          description: Use this parameter when you want to respond to the request when request matches to policy.
                           properties:
                             http-payload-string:
-                              description: 'Expression that you want to sent as response to the request.'
+                              description: Expression that you want to sent as response to the request.
                               type: string
                               maxLength: 7991
-                          required: [http-payload-string]
+                          required:
+                          - http-payload-string
                         noop:
                           type: string
-                          description: 'Use this option when you want to send the request to the protected server instead of 
-                                        responding to it when request matches to policy.'
+                          description: Use this option when you want to send the request to the protected server instead of responding to it when request matches to policy.
                           properties:
                             target:
-                              description: 'Default syntax expression that specifies to perform noop operation on'
+                              description: Default syntax expression that specifies to perform noop operation on
                               type: string
                               maxLength: 1229
                         reset:
                           type: string
-                          description: 'Use this option when you want to Reset the client connection by closing it when request matches to policy.'
-                          properties:
+                          description: Use this option when you want to Reset the client connection by closing it when request matches to policy.
+                          properties: null
                         drop:
                           type: string
-                          description: 'Use this option when you want to drop the request without sending a response to the user when request matches to policy.'
-                          properties:
+                          description: Use this option when you want to drop the request without sending a response to the user when request matches to policy.
+                          properties: null
                         respond-criteria:
-                          description: 'Default syntax expression that the policy uses to determine whether to respond to the specified request.'
+                          description: Default syntax expression that the policy uses to determine whether to respond to the specified request.
                           type: string
                           maxLength: 1299
                         default-action:
-                          description: 'Action to perform if the result of policy evaluation is undefined (UNDEF).
-                                        An UNDEF event indicates an internal error condition.'
+                          description: Action to perform if the result of policy evaluation is undefined (UNDEF). An UNDEF event indicates an internal error condition.
                           type: string
                           maxLength: 77
-                          enum: ['NOOP', 'RESET', 'DROP']
+                          enum:
+                          - NOOP
+                          - RESET
+                          - DROP
                         comment:
-                          description: 'Any comments to preserve information about this responder policy.'
+                          description: Any comments to preserve information about this responder policy.
                           type: string
                           maxLength: 255
-                      required: [respond-criteria]
-                      oneOf: [required: [redirect], required: [respondwith], required: [noop], required: [reset], required: [drop]]
-                  required: [responder-policy]
-
+                      required:
+                      - respond-criteria
+                      oneOf:
+                      - required:
+                        - redirect
+                      - required:
+                        - respondwith
+                      - required:
+                        - noop
+                      - required:
+                        - reset
+                      - required:
+                        - drop
+                  required:
+                  - responder-policy
+              mcp-tool-filters:
+                type: array
+                description: Per-role filters that prune the MCP tools/list response so each role sees only the tools it may use. Each entry generates a delete_all rewrite action over the event stream plus the role-gated policy and binding.
+                items:
+                  type: object
+                  properties:
+                    servicenames:
+                      description: Name of the services whose vserver this filter binds to.
+                      type: array
+                      items:
+                        type: string
+                        maxLength: 127
+                    direction:
+                      description: Bind point for the generated rewrite policy. For MCP tool-list filtering use HTTP_EVENT_RESPONSE (streamed response).
+                      type: string
+                      enum:
+                      - REQUEST
+                      - RESPONSE
+                      - HTTP_EVENT_REQUEST
+                      - HTTP_EVENT_RESPONSE
+                    goto-priority-expression:
+                      description: 'Expression or other value specifying the next policy to be evaluated if the current policy evaluates to TRUE. Specify one of the following values: * NEXT - Evaluate the policy with the next higher priority number. * END - End policy evaluation. Default value of goto-priority-expression: END'
+                      type: string
+                      maxLength: 1499
+                    role:
+                      type: object
+                      description: Identifies the caller role this filter applies to (header value mapped through a stringmap).
+                      properties:
+                        header:
+                          description: Request header carrying the user/role identifier, e.g. X-Citrix-SPA-User.
+                          type: string
+                          maxLength: 255
+                        stringmap:
+                          description: Name of a stringmap (defined in this CR) mapping the header value to a role.
+                          type: string
+                          maxLength: 32
+                        equals:
+                          description: Role value the mapped header must equal for this filter to apply.
+                          type: string
+                          maxLength: 255
+                      required:
+                      - header
+                      - stringmap
+                      - equals
+                    allow-patset:
+                      description: Name of a patset (defined in this CR) of operation substrings; only tools whose name contains a member are kept (all others removed).
+                      type: string
+                      maxLength: 32
+                    deny-patset:
+                      description: Name of a patset (defined in this CR) of operation substrings; tools whose name contains a member are removed.
+                      type: string
+                      maxLength: 32
+                    always-allow:
+                      description: Tool-name prefixes never removed regardless of allow/deny (e.g. get_tool_details).
+                      type: array
+                      items:
+                        type: string
+                        maxLength: 127
+                    tools-json-path:
+                      description: JSON path selecting each tool object in the tools/list result. Default /result/tools/*
+                      type: string
+                      maxLength: 171
+                    name-json-path:
+                      description: JSON path (relative to a tool object) of the field matched against the patsets. Default /name
+                      type: string
+                      maxLength: 171
+                  required:
+                  - role
+                  - direction
+                  anyOf:
+                  - required:
+                    - allow-patset
+                  - required:
+                    - deny-patset
               dataset:
                 type: array
                 items:
                   type: object
                   properties:
                     name:
-                      description: 'Name of the dataset.'
+                      description: Name of the dataset.
                       type: string
                       maxLength: 32
                     type:
-                      description: 'Type of value to bind to the dataset.'
+                      description: Type of value to bind to the dataset.
                       type: string
-                      enum: ["ipv4", "number", "ipv6", "ulong", "double", "mac"]
+                      enum:
+                      - ipv4
+                      - number
+                      - ipv6
+                      - ulong
+                      - double
+                      - mac
                     comment:
-                      description: 'Any comments to preserve information about this dataset.'
+                      description: Any comments to preserve information about this dataset.
                       type: string
                       maxLength: 255
                     values:
-                      description: 'Value of the specified type that is associated with this dataset.'
+                      description: Value of the specified type that is associated with this dataset.
                       type: array
                       items:
                         type: string
-                  required: [name, type, values]
-
+                  required:
+                  - name
+                  - type
+                  - values
               patset:
                 type: array
                 items:
                   type: object
                   properties:
                     name:
-                      description: 'Name of the Patset.'
+                      description: Name of the Patset.
                       type: string
                       maxLength: 32
                     comment:
-                      description: 'Any comments to preserve information about this patset.'
+                      description: Any comments to preserve information about this patset.
                       type: string
                       maxLength: 255
                     values:
-                      description: 'String of characters that constitutes a pattern and is associated with this patset.'
+                      description: String of characters that constitutes a pattern and is associated with this patset.
                       type: array
                       items:
                         type: string
-                  required: [name, values]
-
+                  required:
+                  - name
+                  - values
               stringmap:
                 type: array
                 items:
                   type: object
                   properties:
                     name:
-                      description: 'Name of the Stringmap.'
+                      description: Name of the Stringmap.
                       type: string
                       maxLength: 32
                     comment:
-                      description: 'Any comments to preserve information about this stringmap.'
+                      description: Any comments to preserve information about this stringmap.
                       type: string
                       maxLength: 255
                     values:
-                      description: 'List of (key,value) pairs to be bound to this string map.'
+                      description: List of (key,value) pairs to be bound to this string map.
                       type: array
                       items:
                         type: object
                         properties:
                           key:
-                            description: 'Character string constituting the key to be bound to this string map.'
+                            description: Character string constituting the key to be bound to this string map.
                             type: string
                             maxLength: 2047
                           value:
-                            description: 'Character string constituting the value associated with the key.'
+                            description: Character string constituting the value associated with the key.
                             type: string
                             maxLength: 2047
-                  required: [name, values]
-
+                  required:
+                  - name
+                  - values
               httpcallout_policy:
                 type: array
                 items:
                   type: object
                   properties:
                     name:
-                      description: 'httpcallout name'
+                      description: httpcallout name
                       type: string
                       maxLength: 32
                     server_ip:
-                      description: 'IP Address of the server(callout agent) to which the callout is sent.'
+                      description: IP Address of the server(callout agent) to which the callout is sent.
                       type: string
                     server_port:
-                      description: 'Port of the server(callout agent) to which the callout is sent.'
+                      description: Port of the server(callout agent) to which the callout is sent.
                       type: integer
                       minimum: 1
                       maximum: 65535
                     http_method:
-                      description: |+
-                                   'Method used in the HTTP request that this callout sends.
-                                    Default http method is GET'
+                      description: "'Method used in the HTTP request that this callout sends.\n Default http method is GET'\n"
                       type: string
-                      enum: ['GET', 'POST']
+                      enum:
+                      - GET
+                      - POST
                     host_expr:
-                      description: |+
-                                   'String expression to configure the Host header. Can contain a literal value
-                                    (for example, 10.101.10.11) or a derived value (for example, http.req.header("Host")).
-                                    The literal value can be an IP address or a fully qualified domain name. Mutually
-                                    exclusive with the full HTTP request expression.'
+                      description: "'String expression to configure the Host header. Can contain a literal value\n (for example, 10.101.10.11) or a derived value (for example, http.req.header(\"Host\")).\n The literal value can be an IP address or a fully qualified domain name. Mutually\n exclusive with the full HTTP request expression.'\n"
                       type: string
                       maxLength: 255
-                    url_stem_expr: 
-                      description: |+
-                                   'String expression for generating the URL stem. Can contain a literal string
-                                    (for example, "/mysite/index.html") or an expression that derives the value
-                                    (for example, http.req.url).'
+                    url_stem_expr:
+                      description: "'String expression for generating the URL stem. Can contain a literal string\n (for example, \"/mysite/index.html\") or an expression that derives the value\n (for example, http.req.url).'\n"
                       type: string
                       maxLength: 8191
                     headers:
                       type: array
-                      description: |+
-                                   'One or more headers to insert into the HTTP request. Each header is represented by
-                                    name and expr, where expr is an expression that is evaluated at runtime to provide
-                                    the value for the named header. You can configure a maximum of eight headers for
-                                    an HTTP callout.'
+                      description: "'One or more headers to insert into the HTTP request. Each header is represented by\n name and expr, where expr is an expression that is evaluated at runtime to provide\n the value for the named header. You can configure a maximum of eight headers for\n an HTTP callout.'\n"
                       items:
                         type: object
                         properties:
                           name:
-                            description: 'header name'
-                            type: string                   
+                            description: header name
+                            type: string
                           expr:
-                            description: 'header expression'
-                            type: string    
+                            description: header expression
+                            type: string
                     parameters:
                       type: array
-                      description: |+
-                                   'One or more query parameters to insert into the HTTP request URL (for a GET request)
-                                    or into the request body (for a POST request). Each parameter is represented by
-                                    name and expr, where expr is an expression that is evaluated at run time to provide
-                                    the value for the named parameter (name=value). The parameter values are URL encoded.'
+                      description: "'One or more query parameters to insert into the HTTP request URL (for a GET request)\n or into the request body (for a POST request). Each parameter is represented by\n name and expr, where expr is an expression that is evaluated at run time to provide\n the value for the named parameter (name=value). The parameter values are URL encoded.'\n"
                       items:
                         type: object
                         properties:
                           name:
-                            description: 'parameter name'
-                            type: string                   
+                            description: parameter name
+                            type: string
                           expr:
-                            description: 'parameter expression'
-                            type: string  
+                            description: parameter expression
+                            type: string
                     body_expr:
-                      description: |+
-                                   'An advanced string expression for generating the body of the request.
-                                    The expression can contain a literal string or an expression that derives
-                                    the value (for example, client.ip.src).'
+                      description: "'An advanced string expression for generating the body of the request.\n The expression can contain a literal string or an expression that derives\n the value (for example, client.ip.src).'\n"
                       type: string
                     full_req_expr:
-                      description: |+
-                                   'Exact HTTP request, in the form of an expression, which the NetScaler sends
-                                    to the callout agent. The request expression is constrained by the feature
-                                    for which the callout is used. For example, an HTTP.RES expression cannot be
-                                    used in a request-time policy bank or in a TCP content switching policy bank.'
+                      description: "'Exact HTTP request, in the form of an expression, which the NetScaler sends\n to the callout agent. The request expression is constrained by the feature\n for which the callout is used. For example, an HTTP.RES expression cannot be\n used in a request-time policy bank or in a TCP content switching policy bank.'\n"
                       type: string
                     scheme:
-                      description: |+
-                                   'Type of scheme for the callout server.
-                                    Default scheme is HTTP'
+                      description: "'Type of scheme for the callout server.\n Default scheme is HTTP'\n"
                       type: string
-                      enum: ['HTTP', 'HTTPS']
+                      enum:
+                      - HTTP
+                      - HTTPS
                     cache_for_secs:
-                      description: |+
-                                   'Duration, in seconds, for which the callout response is cached.
-                                    The cached responses are stored in an integrated caching content
-                                    group named "calloutContentGroup". If no duration is configured, 
-                                    the callout responses will not be cached unless normal caching
-                                    configuration is used to cache them. This parameter takes precedence over any
-                                    normal caching configuration that would otherwise apply to these responses.'
+                      description: "'Duration, in seconds, for which the callout response is cached.\n The cached responses are stored in an integrated caching content\n group named \"calloutContentGroup\". If no duration is configured, \n the callout responses will not be cached unless normal caching\n configuration is used to cache them. This parameter takes precedence over any\n normal caching configuration that would otherwise apply to these responses.'\n"
                       type: integer
                       minimum: 1
                       maximum: 31536000
                     return_type:
-                      description: |+
-                                   'Type of data that the target callout agent returns in response to the callout
-                                    Available settings function as follows:
-                                    * TEXT - Treat the returned value as a text string.
-                                    * NUM - Treat the returned value as a number.
-                                    * BOOL - Treat the returned value as a Boolean value.'
+                      description: "'Type of data that the target callout agent returns in response to the callout\n Available settings function as follows:\n * TEXT - Treat the returned value as a text string.\n * NUM - Treat the returned value as a number.\n * BOOL - Treat the returned value as a Boolean value.'\n"
                       type: string
-                      enum: ['TEXT', 'NUM', 'BOOL']
+                      enum:
+                      - TEXT
+                      - NUM
+                      - BOOL
                     result_expr:
-                      description: |+
-                                   'Expression that extracts the callout results from the response sent by the HTTP callout
-                                    agent. Must be a response based expression, that is, it must begin with HTTP.RES. The
-                                    operations in this expression must match the return type. For example, if you configure
-                                    a return type of TEXT, the result expression must be a text based expression. If the
-                                    return type is NUM, the result  expression (resultExpr) must return a numeric value,
-                                    as in the following example: http.res.body(10000).length.'       
+                      description: "'Expression that extracts the callout results from the response sent by the HTTP callout\n agent. Must be a response based expression, that is, it must begin with HTTP.RES. The\n operations in this expression must match the return type. For example, if you configure\n a return type of TEXT, the result expression must be a text based expression. If the\n return type is NUM, the result  expression (resultExpr) must return a numeric value,\n as in the following example: http.res.body(10000).length.'       \n"
                       type: string
                       maxLength: 8191
                     comment:
-                      description: 'Any comments to preserve information about this HTTP callout.'
+                      description: Any comments to preserve information about this HTTP callout.
                       type: string
                       maxLength: 255
                   allOf:
-                  - properties:
-                    required: [name, server_ip, server_port]
-                  - properties:
+                  - properties: null
+                    required:
+                    - name
+                    - server_ip
+                    - server_port
+                  - properties: null
                     oneOf:
-                    - properties:
-                      required: [full_req_expr]
-                    - properties:
+                    - properties: null
+                      required:
+                      - full_req_expr
+                    - properties: null
                       anyOf:
-                      - properties:
-                        required: [http_method]
-                      - properties:
-                        required: [host_expr]
-                      - properties:
-                        required: [url_stem_expr]
-                      - properties:
-                        required: [headers]
-                      - properties:
-                        required: [parameters]
-                      - properties:
-                        required: [body_expr]
-            anyOf: [required: [rewrite-policies], required: [responder-policies]]
+                      - properties: null
+                        required:
+                        - http_method
+                      - properties: null
+                        required:
+                        - host_expr
+                      - properties: null
+                        required:
+                        - url_stem_expr
+                      - properties: null
+                        required:
+                        - headers
+                      - properties: null
+                        required:
+                        - parameters
+                      - properties: null
+                        required:
+                        - body_expr
+              gatewayClassName:
+                type: string
+                description: Name of the GatewayClass that this SSL profile should be applied to.
+              targetRef:
+                type: array
+                description: A list of target resources where this profile will be applied.
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the target resource.
+                    namespace:
+                      type: string
+                      description: Namespace of the target resource.
+                    group:
+                      type: string
+                      description: Group of the target resource.
+                    kind:
+                      type: string
+                      description: Kind of the target resource.
+                    sectionName:
+                      type: string
+                      description: Specific section within the target resource.
+            anyOf:
+            - required:
+              - rewrite-policies
+            - required:
+              - responder-policies
+            - required:
+              - mcp-tool-filters
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -484,7 +592,7 @@ spec:
     plural: ratelimits
     singular: ratelimit
   scope: Namespaced
-  versions: 
+  versions:
   - name: v1beta1
     served: true
     storage: true
@@ -493,11 +601,11 @@ spec:
     additionalPrinterColumns:
     - name: Status
       type: string
-      description: "Current Status of the CRD"
+      description: Current Status of the CRD
       jsonPath: .status.state
     - name: Message
       type: string
-      description: "Status Message"
+      description: Status Message
       jsonPath: .status.status_message
     schema:
       openAPIV3Schema:
@@ -507,184 +615,313 @@ spec:
             type: object
             properties:
               state:
-                 type: string
+                type: string
               status_message:
-                 type: string
+                type: string
           spec:
             type: object
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource
               servicenames:
-                description: 'Name of the services to which the ratelimit policies are applied.'
+                description: Name of the services to which the ratelimit policies are applied.
                 type: array
                 items:
                   type: string
                   maxLength: 127
-              gatewayClassName:
-                type: string
-                description: "Name of the GatewayClass that this SSL profile should be applied to."
-              targetRef:
-                type: array
-                description: "A list of target resources where this profile will be applied."
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: "Name of the target resource."
-                    namespace:
-                      type: string
-                      description: "Namespace of the target resource."
-                    group:
-                      type: string
-                      description: "Group of the target resource."
-                    kind:
-                      type: string
-                      description: "Kind of the target resource."
-                    sectionName:
-                      type: string
-                      description: "Specific section within the target resource."
               selector_keys:
                 type: object
-                description: 'Traffic match criteria to which apply above rate-limit/throttling. All keys are applied as AND condition. If no keys are specified, rate-limit applies at service level'
+                description: Traffic match criteria to which apply above rate-limit/throttling. All keys are applied as AND condition. If no keys are specified, rate-limit applies at service level
                 properties:
                   basic:
                     type: object
-                    description: "Basic traffic stream selection criteria to which to apply the ratelimit"
+                    description: Basic traffic stream selection criteria to which to apply the ratelimit
                     properties:
                       path:
                         type: array
-                        description: "api resource path prefix match. e.g. /api/v1/products"
+                        description: api resource path prefix match. e.g. /api/v1/products
                         items:
                           type: string
                       method:
                         type: array
                         items:
                           type: string
-                          enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
+                          enum:
+                          - GET
+                          - PUT
+                          - POST
+                          - DELETE
+                          - HEAD
+                          - OPTIONS
+                          - TRACE
+                          - CONNECT
+                          - PATCH
+                          - UNKNOWN_METHOD
                       header_name:
-                        description: "HTTP header that identifies the unique API client for e.g. X-apikey"
+                        description: HTTP header that identifies the unique API client for e.g. X-apikey
                         type: string
                       per_client_ip:
-                        description: "Setting this applies the throttling limit to each unique Client IP address accessing the API resource"
+                        description: Setting this applies the throttling limit to each unique Client IP address accessing the API resource
                         type: boolean
+                  advanced:
+                    type: object
+                    description: Advanced selector keyed on arbitrary NetScaler stream-selector expressions (e.g. JSON-RPC body fields for MCP per-tool limits). Mutually exclusive with 'basic'.
+                    properties:
+                      rules:
+                        type: array
+                        description: NetScaler stream-selector expressions; each item is one selectlet, e.g. HTTP.REQ.BODY(100000).XPATH_JSON(xp%/params/name%)
+                        items:
+                          type: string
+                          maxLength: 7991
+                        minItems: 1
+                        maxItems: 5
+                      include_base_selectors:
+                        type: boolean
+                        description: When true (default) HTTP.REQ.LB_VSERVER.NAME and HTTP.REQ.HOSTNAME are appended to the selector. Set false to use only the rules above (e.g. a global per-tool limit).
+                      match:
+                        type: string
+                        description: Optional NetScaler boolean expression AND-ed into the rate-limit responder policy so the limit applies only to matching traffic, e.g. http.req.body(100000).xpath_json(xp%/method%).eq("tools/call")
+                        maxLength: 7991
+              req_threshold:
+                description: Max requests per timeslice units to be allowed
+                type: integer
+              timeslice:
+                description: Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds
+                type: integer
+              limittype:
+                description: Burst mode or smooth. Defaults to smooth limittype if not specified
+                type: string
+                enum:
+                - BURSTY
+                - SMOOTH
+              throttle_action:
+                type: string
+                enum:
+                - DROP
+                - RESET
+                - REDIRECT
+                - RESPOND
+                description: Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'
+              redirect_url:
+                type: string
+                description: Redirect-URL
+              logpackets:
+                type: object
+                description: Adds an audit message action. The action specifies whether to log the message, and to which log.
+                properties:
+                  logexpression:
+                    description: Default-syntax expression that defines the format and content of the log message.
+                    type: string
+                    maxLength: 7991
+                  loglevel:
+                    description: Audit log level, which specifies the severity level of the log message being generated.
+                    type: string
+                    enum:
+                    - EMERGENCY
+                    - ALERT
+                    - CRITICAL
+                    - ERROR
+                    - WARNING
+                    - NOTICE
+                    - INFORMATIONAL
+                    - DEBUG
+                required:
+                - logexpression
+                - loglevel
+              goto_priority_expression:
+                type: string
+                description: gotoPriorityExpression applied to the rate-limit responder policy bindings of this resource. NEXT continues policy evaluation after this policy; END stops it.
+                enum:
+                - NEXT
+                - END
               ratelimits:
                 type: array
-                description: 'List of stream identifier configurations for traffic analytics and tracking.'
+                description: List of stream identifier configurations for traffic analytics and tracking.
                 items:
                   type: object
-                  required: [req_threshold]
+                  required:
+                  - req_threshold
                   properties:
                     req_threshold:
-                      description: 'Max requests per timeslice units to be allowed'
+                      description: Max requests per timeslice units to be allowed
                       type: integer
                     timeslice:
-                      description: 'Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds'
+                      description: Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds
                       type: integer
                     limittype:
-                      description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+                      description: Burst mode or smooth. Defaults to smooth limittype if not specified
                       type: string
-                      enum: ['BURSTY','SMOOTH']
+                      enum:
+                      - BURSTY
+                      - SMOOTH
                     mode:
-                      description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+                      description: Burst mode or smooth. Defaults to smooth limittype if not specified
                       type: string
-                      enum: ['REQUEST_RATE', 'CONNECTION', 'TOKEN_RATE']
+                      enum:
+                      - REQUEST_RATE
+                      - CONNECTION
+                      - TOKEN_RATE
                     alertsintimeslice:
-                      description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+                      description: Burst mode or smooth. Defaults to smooth limittype if not specified
                       type: integer
                     throttle_action:
                       type: string
-                      enum: ['DROP', 'RESET','REDIRECT', 'RESPOND', 'NOOP']
-                      description: "Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'"
+                      enum:
+                      - DROP
+                      - RESET
+                      - REDIRECT
+                      - RESPOND
+                      - NOOP
+                      description: Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'
                     redirect_url:
                       type: string
-                      description: "Redirect-URL"
+                      description: Redirect-URL
+                    respond_with:
+                      type: string
+                      description: Custom NetScaler respondwith target expression used when throttle_action is RESPOND; overrides the default HTTP 429 response. e.g. an MCP JSON-RPC error body that echoes the request jsonrpc/id fields.
+                      maxLength: 7991
                     logpackets:
                       type: object
-                      description: 'Adds an audit message action. The action specifies whether to log the message, and to which log.'
+                      description: Adds an audit message action. The action specifies whether to log the message, and to which log.
                       properties:
                         logexpression:
-                          description: 'Default-syntax expression that defines the format and content of the log message.'
+                          description: Default-syntax expression that defines the format and content of the log message.
                           type: string
                           maxLength: 7991
                         loglevel:
-                          description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                          description: Audit log level, which specifies the severity level of the log message being generated.
                           type: string
-                          enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
-                      required: [logexpression, loglevel]
+                          enum:
+                          - EMERGENCY
+                          - ALERT
+                          - CRITICAL
+                          - ERROR
+                          - WARNING
+                          - NOTICE
+                          - INFORMATIONAL
+                          - DEBUG
+                      required:
+                      - logexpression
+                      - loglevel
               streams:
                 type: array
-                description: 'List of stream identifier configurations for traffic analytics and tracking.'
+                description: List of stream identifier configurations for traffic analytics and tracking.
                 items:
                   type: object
-                  required: [sort]
+                  required:
+                  - sort
                   properties:
                     interval:
                       type: integer
-                      description: "Number of minutes of data to use when calculating session statistics (number of requests, bandwidth, and response times)."
+                      description: Number of minutes of data to use when calculating session statistics (number of requests, bandwidth, and response times).
                       minimum: 1
                       maximum: 10080
                     sampleCount:
                       type: integer
-                      description: "Size of the sample from which to select a request for evaluation. To evaluate all requests, set the sample count to 1."
+                      description: Size of the sample from which to select a request for evaluation. To evaluate all requests, set the sample count to 1.
                       minimum: 1
                       maximum: 65535
                     sort:
                       type: string
-                      description: "Sort stored records by the specified statistics column, in descending order."
-                      enum: ['REQUESTS', 'CONNECTIONS', 'RESPTIME', 'BANDWIDTH', 'RESPTIME_BREACHES', 'TOKENS', 'NONE']
-                      default: 'REQUESTS'
+                      description: Sort stored records by the specified statistics column, in descending order.
+                      enum:
+                      - REQUESTS
+                      - CONNECTIONS
+                      - RESPTIME
+                      - BANDWIDTH
+                      - RESPTIME_BREACHES
+                      - TOKENS
+                      - NONE
+                      default: REQUESTS
                     snmpTrap:
                       type: string
-                      description: "Enable/disable SNMP trap for stream identifier."
-                      enum: ['ENABLED', 'DISABLED']
+                      description: Enable/disable SNMP trap for stream identifier.
+                      enum:
+                      - ENABLED
+                      - DISABLED
                     appflowLog:
                       type: string
-                      description: "Enable/disable Appflow logging for stream identifier."
-                      enum: ['ENABLED', 'DISABLED']
+                      description: Enable/disable Appflow logging for stream identifier.
+                      enum:
+                      - ENABLED
+                      - DISABLED
                     trackAckOnlyPackets:
                       type: string
-                      description: "Track ack only packets as well. Applicable only when packet rate limiting is being used."
-                      enum: ['ENABLED', 'DISABLED']
+                      description: Track ack only packets as well. Applicable only when packet rate limiting is being used.
+                      enum:
+                      - ENABLED
+                      - DISABLED
                     trackTransactions:
                       type: string
-                      description: "Track transactions exceeding configured threshold. When set to TOKENS, minTransactionThreshold, maxTransactionThreshold, acceptanceThreshold and breachThreshold are not applicable."
-                      enum: ['RESPTIME', 'TOKENS', 'NONE']
+                      description: Track transactions exceeding configured threshold. When set to TOKENS, minTransactionThreshold, maxTransactionThreshold, acceptanceThreshold and breachThreshold are not applicable.
+                      enum:
+                      - RESPTIME
+                      - TOKENS
+                      - NONE
                     maxTransactionThreshold:
                       type: integer
-                      description: "Maximum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute."
+                      description: Maximum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute.
                       minimum: 0
                     minTransactionThreshold:
                       type: integer
-                      description: "Minimum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute."
+                      description: Minimum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute.
                       minimum: 0
                     acceptanceThreshold:
                       type: string
-                      description: "Non-Breaching transactions to Total transactions threshold expressed in percent. Maximum of 6 decimal places is supported."
+                      description: Non-Breaching transactions to Total transactions threshold expressed in percent. Maximum of 6 decimal places is supported.
                       maxLength: 10
                     breachThreshold:
                       type: integer
-                      description: "Breaching transactions threshold calculated over interval."
+                      description: Breaching transactions threshold calculated over interval.
                       minimum: 0
                     log:
                       type: string
-                      description: "Location where objects collected on the identifier will be logged."
-                      enum: ['SYSLOG', 'NONE']
+                      description: Location where objects collected on the identifier will be logged.
+                      enum:
+                      - SYSLOG
+                      - NONE
                     logInterval:
                       type: integer
-                      description: "Time interval in minutes for logging the collected objects. Should be greater than or equal to the interval of the stream identifier."
+                      description: Time interval in minutes for logging the collected objects. Should be greater than or equal to the interval of the stream identifier.
                       minimum: 1
                       maximum: 10080
                     logLimit:
                       type: integer
-                      description: "Maximum number of objects to be logged in the log interval."
+                      description: Maximum number of objects to be logged in the log interval.
                       minimum: 1
                       maximum: 1000
+              gatewayClassName:
+                type: string
+                description: Name of the GatewayClass that this SSL profile should be applied to.
+              targetRef:
+                type: array
+                description: A list of target resources where this profile will be applied.
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the target resource.
+                    namespace:
+                      type: string
+                      description: Namespace of the target resource.
+                    group:
+                      type: string
+                      description: Group of the target resource.
+                    kind:
+                      type: string
+                      description: Kind of the target resource.
+                    sectionName:
+                      type: string
+                      description: Specific section within the target resource.
             anyOf:
-              - required: [ratelimits]
-              - required: [streams]
+            - required:
+              - req_threshold
+            - required:
+              - ratelimits
+            - required:
+              - streams
 ---
 #Sample CRD instance
 
@@ -715,6 +952,8 @@ spec:
   - name: v1
     served: true
     storage: true
+    subresources:
+      status: {}
     additionalPrinterColumns:
     - jsonPath: .spec.ipaddress
       name: VIP
@@ -722,10 +961,25 @@ spec:
     - name: Age
       type: date
       jsonPath: .metadata.creationTimestamp
+    - name: Status
+      type: string
+      description: "Current Status of the CRD"
+      jsonPath: .status.state
+    - name: Message
+      type: string
+      description: "Status Message"
+      jsonPath: .status.status_message
     schema:
       openAPIV3Schema:
         type: object
         properties:
+          status:
+            type: object
+            properties:
+              state:
+                type: string
+              status_message:
+                type: string
           spec:
             type: object
             properties:
@@ -760,21 +1014,21 @@ spec:
     plural: authpolicies
     singular: authpolicy
   scope: Namespaced
-  versions: 
+  versions:
   - name: v1beta1
     served: true
     storage: true
     subresources:
       status: {}
     additionalPrinterColumns:
-      - name: Status
-        type: string
-        description: 'Current Status of the CRD'
-        jsonPath: .status.state
-      - name: Message
-        type: string
-        description: 'Status Message'
-        jsonPath: .status.status_message
+    - name: Status
+      type: string
+      description: Current Status of the CRD
+      jsonPath: .status.state
+    - name: Message
+      type: string
+      description: Status Message
+      jsonPath: .status.status_message
     schema:
       openAPIV3Schema:
         type: object
@@ -783,505 +1037,519 @@ spec:
             type: object
             properties:
               state:
-                 type: string
+                type: string
               status_message:
-                 type: string
+                type: string
           spec:
             type: object
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource
               servicenames:
-                description: |+
-                             'Name of the services for which the policies applied'
+                description: '''Name of the services for which the policies applied''
+
+                  '
                 type: array
                 items:
                   type: string
                   maxLength: 63
               authentication_mechanism:
                 type: object
-                description: |+
-                            'Authentication mechanism. Options: using forms or using request header.
-                             Default is Authentication using request header, when no option is specified'
+                description: "'Authentication mechanism. Options: using forms or using request header.\n Default is Authentication using request header, when no option is specified'\n"
                 properties:
-                      using_request_header:
-                        description: |+
-                                     'Enable user authentication using request header. Use when the credentials
-                                      or api keys are passed in a header. For example, when using Basic, Digest,
-                                      Bearer authentication or api keys.
-                                      When authentication using forms is provided, this is set to OFF'
-
-                        type: string
-                      using_forms:
-                        type: object
-                        description: 'Enables authentication using forms. Use with user/web authentication.'
-                        properties:
-                          authentication_host:
-                            description: |+
-                                         'Fully qualified domain name (FQDN) for authentication.
-                                          This FQDN should be unique and should resolve to frontend IP of
-                                          NetScaler with Ingress/service type LoadBalancer (or) vip of Listener CRD'
-                            type: string
-                            maxLength: 255
-                          authentication_host_cert:
-                            description: |+
-                                         'Name of the SSL certificate to be used with authentication_host.
-                                          This certificate is mandatory while using_forms'
-                            type: object
-                            properties:
-                                tls_secret:
-                                  type: string
-                                  description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
-                                  pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                                preconfigured:
-                                  type: string
-                                  maxLength: 63
-                                  description: |+
-                                               'Preconfigured SSL certkey name on NetScaler with the
-                                                certificate and key already added on NetScaler'
-                            oneOf:
-                            - properties:
-                              required: [tls_secret]
-                            - properties:
-                              required: [preconfigured]
-                          ingress_name:
-                            description: |+
-                                         'Ingress name for which the authentication using forms
-                                          is applicable.'
-                            type: string
-                            maxLength: 63
-                          lb_service_name:
-                            description: |+
-                                         'Service of type LoadBalancer for which the authentication using forms
-                                          is applicable.'
-                            type: string
-                            maxLength: 63
-                          listener_name:
-                            description: |+
-                                         'Listener CRD name for which the authentication using forms is applicable.'
-                            type: string
-                            maxLength: 63
-                          vip:
-                            description: |+
-                                         'Frontend IP of ingress for which the authentication
-                                          using forms is applicable. This refers to frontend-ip provided
-                                          with Ingress. It is suggested to use vip, if more than one Ingress
-                                          resource use the same frontend-ip'
-                            type: string
-                        required: [authentication_host, authentication_host_cert]
-                        oneOf:
-                        - properties:
-                          required: [ingress_name]
-                        - properties:
-                          required: [lb_service_name]
-                        - properties:
-                          required: [listener_name]
-                        - properties:
-                          required: [vip]
-                oneOf:
-                  - properties:
-                      using_request_header:
-                        enum: ['ON']
-                    required: [using_request_header]
-                  - properties:
-                    required: [using_forms]
-
-              authentication_providers:
-                description: |+
-                             'Authentication Configuration for required authentication providers/schemes.
-                              One or more of these can be created'
-                type: array
-                items:
-                    description: 'Create config for a single authentication provider of a particular type'
+                  using_request_header:
+                    description: "'Enable user authentication using request header. Use when the credentials\n or api keys are passed in a header. For example, when using Basic, Digest,\n Bearer authentication or api keys.\n When authentication using forms is provided, this is set to OFF'\n\n"
+                    type: string
+                  authentication_host_cert:
+                    description: "'SSL certificate to bind to the authentication vserver created for the\n request-header/401 authentication mechanism. Optional.'\n"
                     type: object
                     properties:
-                      name:
-                        description: 'Name for this provider, has to be unique, referenced by authentication policies'
+                      tls_secret:
                         type: string
-                        maxLength: 127
-
-                      oauth:
-                        description: 'Authentication provided by external oAuth provider'
+                        description: Name of the Kubernetes Secret of type tls referring to Certificate
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                      preconfigured:
+                        type: string
+                        maxLength: 63
+                        description: Preconfigured SSL certkey name on NetScaler
+                    oneOf:
+                    - properties: null
+                      required:
+                      - tls_secret
+                    - properties: null
+                      required:
+                      - preconfigured
+                  using_forms:
+                    type: object
+                    description: Enables authentication using forms. Use with user/web authentication.
+                    properties:
+                      authentication_host:
+                        description: "'Fully qualified domain name (FQDN) for authentication.\n This FQDN should be unique and should resolve to frontend IP of\n NetScaler with Ingress/service type LoadBalancer (or) vip of Listener CRD'\n"
+                        type: string
+                        maxLength: 255
+                      authentication_host_cert:
+                        description: "'Name of the SSL certificate to be used with authentication_host.\n This certificate is mandatory while using_forms'\n"
                         type: object
                         properties:
-                            issuer:
-                                description: 'Identity of the server whose tokens are to be accepted'
-                                type: string
-                                maxLength: 127
-                            audience:
-                                description: 'Audience for which token sent by Authorization server is applicable'
-                                type: array
-                                items:
-                                  type: string
-                                  maxLength: 127
-                            jwks_uri:
-                                description: |+
-                                            'URL of the endpoint that contains JWKs (Json Web Key) for
-                                             JWT (Json Web Token) verification'
-                                type: string
-                                maxLength: 127
-                            introspect_url:
-                                description: ' URL of the introspection server'
-                                type: string
-                                maxLength: 127
-                            client_credentials:
-                                description: |+
-                                             'secrets object that contains Client Id and secret as known
-                                              to Introspection server'
-                                type: string
-                                maxLength: 253
-                            token_in_hdr:
-                                description: |+
-                                             'custom header name where token is present,
-                                              default is Authorization header'
-                                type: array
-                                items:
-                                  type: string
-                                  maxLength: 127
-                                maxItems: 2
-                            token_in_param:
-                                description: 'query parameter name where token is present'
-                                type: array
-                                items:
-                                  type: string
-                                  maxLength: 127
-                                maxItems: 2
-                            signature_algorithms:
-                                description: 'list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed'
-                                type: array
-                                items:
-                                  type: string
-                                  enum: ['HS256', 'RS256', 'RS512']
-                            claims_to_save:
-                                description: 'list of claims to be saved, used to create authorization policies'
-                                type: array
-                                items:
-                                  type: string
-                                  maxLength: 127
-                            metadata_url:
-                                description: 'URL used to get OAUTH/OIDC provider metadata'
-                                type: string
-                                maxLength: 255
-                            user_field:
-                                description: |+
-                                             'Attribute in the token from which username should be extracted.
-                                              by default, NetScaler looks at email attribute for user id'
-                                type: string
-                                maxLength: 127
-                            default_group:
-                                description: |+
-                                             'group assigned to the request if authentication succeeds,
-                                              this is in addition to any extracted groups from token'
-                                type: string
-                                maxLength: 63
-                            grant_type:
-                                description: 'used to specify the type of flow to the token end point, defaults to CODE'
-                                type: array
-                                items:
-                                  type: string
-                                  enum: ['CODE','PASSWORD']
-                            pkce:
-                                description: 'specify whether to enable Proof Key Code Exchange, defaults to ENABLED'
-                                type: string
-                                enum: ['ENABLED', 'DISABLED']
-                            token_ep_auth_method:
-                                description: |+
-                                             'authentication method to be used with token end point,
-                                              defaults to client_secret_post'
-                                type: string
-                                enum: ['client_secret_post', 'client_secret_jwt']
-
-                        anyOf:
-                        - properties:
-                          required : [jwks_uri]
-                        - properties:
-                          required : [introspect_url, client_credentials]
-                        - properties:
-                          required : [metadata_url]
-
-                      ldap:
-                        description: 'LDAP authentication provider'
-                        type: object
-                        properties:
-                            server_ip:
-                                description: 'IP address assigned to the LDAP server'
-                                type: string
-                            server_name:
-                                description: 'LDAP server name as a FQDN'
-                                type: string
-                                maxLength: 127
-                            server_port:
-                                description: 'Port on which the LDAP server accepts connections. Default is 389'
-                                type: integer
-                                minimum: 1
-                                maximum: 65535
-                            base:
-                                description: |+
-                                             'Base (node) from which to start LDAP searches. If the LDAP server is
-                                              running locally, the default value of base is dc=netscaler, dc=com'
-                                type: string
-                                maxLength: 127
-                            server_login_credentials:
-                                description: |+
-                                             'Kubernetes secret object providing credentials to login to LDAP server,
-                                              The secret data should have username and password'
-                                type: string
-                            login_name:
-                                description: |+
-                                             'LDAP login name attribute. The NetScaler uses the LDAP login name
-                                              to query external LDAP servers or Active Directories'
-                                type: string
-                                maxLength: 127
-                            security_type:
-                                description: |+
-                                             'Type of security used for communications between the NetScaler
-                                              and the LDAP server. Default is TLS'
-                                type: string
-                                enum: ['PLAINTEXT', 'TLS', 'SSL']
-                            validate_server_cert:
-                                description: 'Validate LDAP Server certs. Default is NO'
-                                type: string
-                                enum: ['YES', 'NO']
-                            hostname:
-                                description: |+
-                                             'Hostname for the LDAP server. If validate_server_cert is ON,
-                                              this must be the host name on the certificate from the LDAP
-                                              A hostname mismatch will cause a connection failure'
-                                type: string
-                                maxLength: 127
-                            sub_attribute_name:
-                                description: 'LDAP group sub-attribute name. Used for group extraction from the LDAP server.'
-                                type: string
-                                maxLength: 31
-                            group_attribute_name:
-                                description: 'LDAP group attribute name. Used for group extraction on the LDAP server.'
-                                type: string
-                                maxLength: 31
-                            search_filter:
-                                description: |+
-                                             'String to be combined with the default LDAP user search string to form the
-                                              search value. For example, if the search filter "vpnallowed=true" is combined
-                                              with the LDAP login name "samaccount" and the user-supplied username is "bob",
-                                              the result is the LDAP search string ""(&(vpnallowed=true)(samaccount=bob)""
-                                              (Be sure to enclose the search string in two sets of double quotation marks)'
-                                type: string
-                                maxLength: 255
-                            auth_timeout:
-                                description: |+
-                                             'Number of seconds the NetScaler waits for a response from the server
-                                              Default is 3'
-                                type: integer
-                                minimum: 1
-                                maximum: 4294967295
-                            password_change:
-                                description: 'Allow password change requests. Default is DISABLED'
-                                type: string
-                                enum: ['ENABLED', 'DISABLED']
-                            attributes_to_save:
-                                description: |+
-                                             'List of attribute names separated by comma which needs to be fetched
-                                              from LDAP server and stored as key-value pair for the session on NetScaler'
-                                type: string
-                                maxLength: 2047
-                        oneOf:
-                          - properties:
-                            required: [server_ip]
-                          - properties:
-                            required: [server_name]
-
-                      saml:
-                        description: |+
-                                     'SAML authentication provider.
-                                      Currently SAML is supported only with authentication mechanism using forms'
-                        type: object
-                        properties:
-                            metadata_url:
-                                description: 'URL is used for obtaining saml metadata.'
-                                type: string
-                                maxLength: 255
-                            metadata_refresh_interval:
-                                description: |+
-                                             'Interval in minutes for fetching metadata from specified metadata URL.
-                                              Default is 36000'
-                                type: integer
-                                minimum: 1
-                                maximum: 4294967295
-                            signing_cert:
-                                description: 'SSL certificate to sign requests from SP to IDP'
-                                type: object
-                                properties:
-                                    tls_secret:
-                                      type: string
-                                      description: 'Name of the Kubernetes Secret of type tls referring to Certificate'
-                                      pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
-                                    preconfigured:
-                                      type: string
-                                      maxLength: 63
-                                      description: |+
-                                                   'Preconfigured SSL certkey name on NetScaler with the
-                                                    certificate and key already added on NetScaler'
-                                oneOf:
-                                - properties:
-                                  required: [tls_secret]
-                                - properties:
-                                  required: [preconfigured]
-                            audience:
-                                description: 'Audience for which assertion sent by IdP is applicable'
-                                type: string
-                                maxLength: 127
-                            issuer_name:
-                                description: 'The name to be used in requests sent from SP to IDP to identify NetScaler'
-                                type: string
-                                maxLength: 63
-                            binding:
-                                description: 'Specifies the transport mechanism of saml message. Default is POST'
-                                type: string
-                                enum: ['REDIRECT', 'POST', 'ARTIFACT']
-                            artifact_resolution_service_url:
-                                description: 'URL of the Artifact Resolution Service on IdP'
-                                type: string
-                                maxLength: 255
-                            logout_binding:
-                                description: 'Specifies the transport mechanism of saml logout.  Default is POST'
-                                type: string
-                                enum: ['REDIRECT', 'POST']
-                            reject_unsigned_assertion:
-                                description: |+
-                                             'Reject unsigned SAML assertions. ON, rejects assertion without signature.
-                                              STRICT ensure that both Response and Assertion are signed. Default is ON'
-                                type: string
-                                enum: ['ON', 'OFF', 'STRICT']
-                            user_field:
-                                description: 'SAML user ID, as given in the SAML assertion'
-                                type: string
-                                maxLength: 63
-                            default_authentication_group:
-                                description: |+
-                                             'This is the default group that is chosen when the authentication
-                                              succeeds in addition to extracted groups'
-                                type: string
-                                maxLength: 63
-                            skew_time:
-                                description: |+
-                                             'Allowed clock skew in number of minutes on an incoming assertion.
-                                              Default is 5'
-                                type: integer
-                                minimum: 1
-                            attributes_to_save:
-                                description: |+
-                                             'List of attribute names separated by comma which needs to be extracted
-                                              and stored as key-value pair for the session on NetScaler'
-                                type: string
-                                maxLength: 2047
-                        required:
-                          - metadata_url
-
-                      basic_local_db:
-                        type: object
-                        description: |+
-                                     'Basic HTTP authentication supported by NetScaler, user data in local DB of NetScaler. 
-                                      Users needs to be added on NetScaler'
-                        properties:
-                          use_local_auth:
-                            description: 'Use NetScaler authentication'
+                          tls_secret:
                             type: string
-                            enum: ['YES']
+                            description: Name of the Kubernetes Secret of type tls referring to Certificate
+                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          preconfigured:
+                            type: string
+                            maxLength: 63
+                            description: "'Preconfigured SSL certkey name on NetScaler with the\n certificate and key already added on NetScaler'\n"
+                        oneOf:
+                        - properties: null
+                          required:
+                          - tls_secret
+                        - properties: null
+                          required:
+                          - preconfigured
+                      ingress_name:
+                        description: "'Ingress name for which the authentication using forms\n is applicable.'\n"
+                        type: string
+                        maxLength: 63
+                      lb_service_name:
+                        description: "'Service of type LoadBalancer for which the authentication using forms\n is applicable.'\n"
+                        type: string
+                        maxLength: 63
+                      listener_name:
+                        description: '''Listener CRD name for which the authentication using forms is applicable.''
 
+                          '
+                        type: string
+                        maxLength: 63
+                      vip:
+                        description: "'Frontend IP of ingress for which the authentication\n using forms is applicable. This refers to frontend-ip provided\n with Ingress. It is suggested to use vip, if more than one Ingress\n resource use the same frontend-ip'\n"
+                        type: string
                     required:
-                      - name
-
+                    - authentication_host
+                    - authentication_host_cert
+                    oneOf:
+                    - properties: null
+                      required:
+                      - ingress_name
+                    - properties: null
+                      required:
+                      - lb_service_name
+                    - properties: null
+                      required:
+                      - listener_name
+                    - properties: null
+                      required:
+                      - vip
+                oneOf:
+                - properties:
+                    using_request_header:
+                      enum:
+                      - 'ON'
+                  required:
+                  - using_request_header
+                - properties: null
+                  required:
+                  - using_forms
+              authentication_providers:
+                description: "'Authentication Configuration for required authentication providers/schemes.\n One or more of these can be created'\n"
+                type: array
+                items:
+                  description: Create config for a single authentication provider of a particular type
+                  type: object
+                  properties:
+                    name:
+                      description: Name for this provider, has to be unique, referenced by authentication policies
+                      type: string
+                      maxLength: 127
+                    oauth:
+                      description: Authentication provided by external oAuth provider
+                      type: object
+                      properties:
+                        issuer:
+                          description: Identity of the server whose tokens are to be accepted
+                          type: string
+                          maxLength: 127
+                        audience:
+                          description: Audience for which token sent by Authorization server is applicable
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 127
+                        jwks_uri:
+                          description: "'URL of the endpoint that contains JWKs (Json Web Key) for\n JWT (Json Web Token) verification'\n"
+                          type: string
+                          maxLength: 127
+                        introspect_url:
+                          description: ' URL of the introspection server'
+                          type: string
+                          maxLength: 127
+                        scopes:
+                          description: OAuth scopes expected, space separated as per RFC 6749
+                          type: string
+                          maxLength: 1024
+                        client_credentials:
+                          description: "'secrets object that contains Client Id and secret as known\n to Introspection server'\n"
+                          type: string
+                          maxLength: 253
+                        token_in_hdr:
+                          description: "'custom header name where token is present,\n default is Authorization header'\n"
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 127
+                          maxItems: 2
+                        token_in_param:
+                          description: query parameter name where token is present
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 127
+                          maxItems: 2
+                        signature_algorithms:
+                          description: list of allowed signature algorithms, by default HS256, RS256, RS512 are allowed
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - HS256
+                            - RS256
+                            - RS512
+                        claims_to_save:
+                          description: list of claims to be saved, used to create authorization policies
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 127
+                        metadata_url:
+                          description: URL used to get OAUTH/OIDC provider metadata
+                          type: string
+                          maxLength: 255
+                        user_field:
+                          description: "'Attribute in the token from which username should be extracted.\n by default, NetScaler looks at email attribute for user id'\n"
+                          type: string
+                          maxLength: 127
+                        default_group:
+                          description: "'group assigned to the request if authentication succeeds,\n this is in addition to any extracted groups from token'\n"
+                          type: string
+                          maxLength: 63
+                        grant_type:
+                          description: used to specify the type of flow to the token end point, defaults to CODE
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - CODE
+                            - PASSWORD
+                        pkce:
+                          description: specify whether to enable Proof Key Code Exchange, defaults to ENABLED
+                          type: string
+                          enum:
+                          - ENABLED
+                          - DISABLED
+                        token_ep_auth_method:
+                          description: "'authentication method to be used with token end point,\n defaults to client_secret_post'\n"
+                          type: string
+                          enum:
+                          - client_secret_post
+                          - client_secret_jwt
+                      anyOf:
+                      - properties: null
+                        required:
+                        - jwks_uri
+                      - properties: null
+                        required:
+                        - introspect_url
+                        - client_credentials
+                      - properties: null
+                        required:
+                        - metadata_url
+                    ldap:
+                      description: LDAP authentication provider
+                      type: object
+                      properties:
+                        server_ip:
+                          description: IP address assigned to the LDAP server
+                          type: string
+                        server_name:
+                          description: LDAP server name as a FQDN
+                          type: string
+                          maxLength: 127
+                        server_port:
+                          description: Port on which the LDAP server accepts connections. Default is 389
+                          type: integer
+                          minimum: 1
+                          maximum: 65535
+                        base:
+                          description: "'Base (node) from which to start LDAP searches. If the LDAP server is\n running locally, the default value of base is dc=netscaler, dc=com'\n"
+                          type: string
+                          maxLength: 127
+                        server_login_credentials:
+                          description: "'Kubernetes secret object providing credentials to login to LDAP server,\n The secret data should have username and password'\n"
+                          type: string
+                        login_name:
+                          description: "'LDAP login name attribute. The NetScaler uses the LDAP login name\n to query external LDAP servers or Active Directories'\n"
+                          type: string
+                          maxLength: 127
+                        security_type:
+                          description: "'Type of security used for communications between the NetScaler\n and the LDAP server. Default is TLS'\n"
+                          type: string
+                          enum:
+                          - PLAINTEXT
+                          - TLS
+                          - SSL
+                        validate_server_cert:
+                          description: Validate LDAP Server certs. Default is NO
+                          type: string
+                          enum:
+                          - 'YES'
+                          - 'NO'
+                        hostname:
+                          description: "'Hostname for the LDAP server. If validate_server_cert is ON,\n this must be the host name on the certificate from the LDAP\n A hostname mismatch will cause a connection failure'\n"
+                          type: string
+                          maxLength: 127
+                        sub_attribute_name:
+                          description: LDAP group sub-attribute name. Used for group extraction from the LDAP server.
+                          type: string
+                          maxLength: 31
+                        group_attribute_name:
+                          description: LDAP group attribute name. Used for group extraction on the LDAP server.
+                          type: string
+                          maxLength: 31
+                        search_filter:
+                          description: "'String to be combined with the default LDAP user search string to form the\n search value. For example, if the search filter \"vpnallowed=true\" is combined\n with the LDAP login name \"samaccount\" and the user-supplied username is \"bob\",\n the result is the LDAP search string \"\"(&(vpnallowed=true)(samaccount=bob))\"\"\n (Be sure to enclose the search string in two sets of double quotation marks)'\n"
+                          type: string
+                          maxLength: 255
+                        auth_timeout:
+                          description: "'Number of seconds the NetScaler waits for a response from the server\n Default is 3'\n"
+                          type: integer
+                          minimum: 1
+                          maximum: 4294967295
+                        password_change:
+                          description: Allow password change requests. Default is DISABLED
+                          type: string
+                          enum:
+                          - ENABLED
+                          - DISABLED
+                        attributes_to_save:
+                          description: "'List of attribute names separated by comma which needs to be fetched\n from LDAP server and stored as key-value pair for the session on NetScaler'\n"
+                          type: string
+                          maxLength: 2047
+                      oneOf:
+                      - properties: null
+                        required:
+                        - server_ip
+                      - properties: null
+                        required:
+                        - server_name
+                    saml:
+                      description: "'SAML authentication provider.\n Currently SAML is supported only with authentication mechanism using forms'\n"
+                      type: object
+                      properties:
+                        metadata_url:
+                          description: URL is used for obtaining saml metadata.
+                          type: string
+                          maxLength: 255
+                        metadata_refresh_interval:
+                          description: "'Interval in minutes for fetching metadata from specified metadata URL.\n Default is 36000'\n"
+                          type: integer
+                          minimum: 1
+                          maximum: 4294967295
+                        signing_cert:
+                          description: SSL certificate to sign requests from SP to IDP
+                          type: object
+                          properties:
+                            tls_secret:
+                              type: string
+                              description: Name of the Kubernetes Secret of type tls referring to Certificate
+                              pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                            preconfigured:
+                              type: string
+                              maxLength: 63
+                              description: "'Preconfigured SSL certkey name on NetScaler with the\n certificate and key already added on NetScaler'\n"
+                          oneOf:
+                          - properties: null
+                            required:
+                            - tls_secret
+                          - properties: null
+                            required:
+                            - preconfigured
+                        audience:
+                          description: Audience for which assertion sent by IdP is applicable
+                          type: string
+                          maxLength: 127
+                        issuer_name:
+                          description: The name to be used in requests sent from SP to IDP to identify NetScaler
+                          type: string
+                          maxLength: 63
+                        binding:
+                          description: Specifies the transport mechanism of saml message. Default is POST
+                          type: string
+                          enum:
+                          - REDIRECT
+                          - POST
+                          - ARTIFACT
+                        artifact_resolution_service_url:
+                          description: URL of the Artifact Resolution Service on IdP
+                          type: string
+                          maxLength: 255
+                        logout_binding:
+                          description: Specifies the transport mechanism of saml logout.  Default is POST
+                          type: string
+                          enum:
+                          - REDIRECT
+                          - POST
+                        reject_unsigned_assertion:
+                          description: "'Reject unsigned SAML assertions. ON, rejects assertion without signature.\n STRICT ensure that both Response and Assertion are signed. Default is ON'\n"
+                          type: string
+                          enum:
+                          - 'ON'
+                          - 'OFF'
+                          - STRICT
+                        user_field:
+                          description: SAML user ID, as given in the SAML assertion
+                          type: string
+                          maxLength: 63
+                        default_authentication_group:
+                          description: "'This is the default group that is chosen when the authentication\n succeeds in addition to extracted groups'\n"
+                          type: string
+                          maxLength: 63
+                        skew_time:
+                          description: "'Allowed clock skew in number of minutes on an incoming assertion.\n Default is 5'\n"
+                          type: integer
+                          minimum: 1
+                        attributes_to_save:
+                          description: "'List of attribute names separated by comma which needs to be extracted\n and stored as key-value pair for the session on NetScaler'\n"
+                          type: string
+                          maxLength: 2047
+                      required:
+                      - metadata_url
+                    basic_local_db:
+                      type: object
+                      description: "'Basic HTTP authentication supported by NetScaler, user data in local DB of NetScaler. \n Users needs to be added on NetScaler'\n"
+                      properties:
+                        use_local_auth:
+                          description: Use NetScaler authentication
+                          type: string
+                          enum:
+                          - 'YES'
+                  required:
+                  - name
               authentication_policies:
-                description: 'Authentication policies'
+                description: Authentication policies
                 type: array
                 items:
                   type: object
-                  description: 'Authentication policy'
+                  description: Authentication policy
                   properties:
                     resource:
-                        type: object
-                        description: 'endpoint/resource selection criteria'
-                        properties:
-                          path:
-                            description: 'api resource path e.g. /products. '
-                            type: array
-                            items:
-                              type: string
-                              maxLength: 511
-                          method:
-                            type: array
-                            items:
-                              type: string
-                              enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
-                        required:
-                          - path
+                      type: object
+                      description: endpoint/resource selection criteria
+                      properties:
+                        path:
+                          description: 'api resource path e.g. /products. '
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 511
+                        method:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - GET
+                            - PUT
+                            - POST
+                            - DELETE
+                            - HEAD
+                            - OPTIONS
+                            - TRACE
+                            - CONNECT
+                            - PATCH
+                            - UNKNOWN_METHOD
+                      required:
+                      - path
                     expression:
-                      description: 'NetScaler syntax expression for authentication'
+                      description: NetScaler syntax expression for authentication
                       type: string
                       maxLength: 1229
                     provider:
-                      description: 'name of the authentication provider for the policy, empty if no authentication required'
+                      description: name of the authentication provider for the policy, empty if no authentication required
                       type: array
                       items:
                         type: string
                         maxLength: 127
                       maxItems: 1
                   oneOf:
-                    - required: [resource, provider]
-                    - required: [expression, provider]
-
+                  - required:
+                    - resource
+                    - provider
+                  - required:
+                    - expression
+                    - provider
               authorization_policies:
-                description: 'Authorization policies'
+                description: Authorization policies
                 type: array
                 items:
                   type: object
-                  description: 'Authorization policy'
+                  description: Authorization policy
                   properties:
                     resource:
-                        type: object
-                        description: 'endpoint/resource selection criteria'
-                        properties:
-                          path:
-                            description: 'api resource path e.g. /products. '
-                            type: array
-                            items:
-                              type: string
-                              maxLength: 511
-                          method:
-                            description: ' http method'
-                            type: array
-                            items:
-                              type: string
-                              enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
-                          claims:
-                            description: 'authorization scopes required for selected resource saved as claims or attributes'
-                            type: array
-                            items:
-                                type: object
-                                properties:
-                                  name:
-                                    description: 'name of the claim/attribute to check'
-                                    type: string
-                                    maxLength: 127
-                                  values:
-                                    description: 'list of claim values required for the request'
-                                    type: array
-                                    items:
-                                      type: string
-                                      maxLength: 127
-                                    minItems: 1
-                                required:
-                                  - name
-                                  - values
-                        required:
-                          - claims
+                      type: object
+                      description: endpoint/resource selection criteria
+                      properties:
+                        path:
+                          description: 'api resource path e.g. /products. '
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 511
+                        method:
+                          description: ' http method'
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - GET
+                            - PUT
+                            - POST
+                            - DELETE
+                            - HEAD
+                            - OPTIONS
+                            - TRACE
+                            - CONNECT
+                            - PATCH
+                            - UNKNOWN_METHOD
+                        claims:
+                          description: authorization scopes required for selected resource saved as claims or attributes
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                description: name of the claim/attribute to check
+                                type: string
+                                maxLength: 127
+                              values:
+                                description: list of claim values required for the request
+                                type: array
+                                items:
+                                  type: string
+                                  maxLength: 127
+                                minItems: 1
+                            required:
+                            - name
+                            - values
+                      required:
+                      - claims
                     expression:
-                      description: 'NetScaler syntax expression for authorization'
+                      description: NetScaler syntax expression for authorization
                       type: string
                       maxLength: 1229
                   oneOf:
-                    - required: [resource]
-                    - required: [expression]
+                  - required:
+                    - resource
+                  - required:
+                    - expression
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1358,6 +1626,9 @@ spec:
                     preconfigured:
                       type: string
                       description: "Preconfigured Certificate name on NetScaler "
+                    preconfiguredBundle:
+                      type: boolean
+                      description: "When true, the preconfigured name refers to an sslcertkeybundle (server certkey bundle) on the NetScaler instead of a plain sslcertkey. Defaults to false."
                     secret:
                       type: object
                       description: "Kuberentes secret object"
@@ -1557,6 +1828,11 @@ spec:
                         type: integer
                         minimum: 100
                         maximum: 599
+                  monitor:
+                    type: array
+                    description: "Optional list of NetScaler load-balancing monitors bound to the backend service group of this listener's default route. Each entry is either a mapping of NITRO lbmonitor attributes (for example type, scriptName, scriptArgs, dispatcherIP, dispatcherPort, respTimeout, secure), which the controller creates and names, or an existing NetScaler monitor to bind only: its name as a string, or a mapping with 'name' and 'preconfigured: true'."
+                    items:
+                      x-kubernetes-preserve-unknown-fields: true
                 oneOf:
                 - required: ["backend"]
                 - required: ["redirect"]
@@ -1824,10 +2100,14 @@ spec:
                       oneOf:
                       - required: ["backend"]
                       - required: ["redirect"]
+                    monitor:
+                      type: array
+                      description: "Optional list of NetScaler load-balancing monitors bound to the backend service group of this rule. Each entry is either a mapping of NITRO lbmonitor attributes (for example type, scriptName, scriptArgs, dispatcherIP, dispatcherPort, respTimeout, secure), which the controller creates and names, or an existing NetScaler monitor to bind only: its name as a string, or a mapping with 'name' and 'preconfigured: true'."
+                      items:
+                        x-kubernetes-preserve-unknown-fields: true
     subresources:
       # status enables the status subresource.
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition 
@@ -2445,7 +2725,7 @@ spec:
                   type: string
                   maxLength: 63
               allow_origin:
-                description: 'Represents list of allowed origins, it is used to screen the “origin” in the cors pre flight request'
+                description: 'Represents list of allowed origins, it is used to screen the "origin" in the cors pre flight request'
                 type: array
                 items:
                   type: string

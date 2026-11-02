@@ -9,7 +9,7 @@ spec:
     plural: ratelimits
     singular: ratelimit
   scope: Namespaced
-  versions: 
+  versions:
   - name: v1beta1
     served: true
     storage: true
@@ -18,11 +18,11 @@ spec:
     additionalPrinterColumns:
     - name: Status
       type: string
-      description: "Current Status of the CRD"
+      description: Current Status of the CRD
       jsonPath: .status.state
     - name: Message
       type: string
-      description: "Status Message"
+      description: Status Message
       jsonPath: .status.status_message
     schema:
       openAPIV3Schema:
@@ -32,181 +32,310 @@ spec:
             type: object
             properties:
               state:
-                 type: string
+                type: string
               status_message:
-                 type: string
+                type: string
           spec:
             type: object
             properties:
               ingressclass:
                 type: string
-                description: "Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource"
+                description: Ingress class, if not specified then all NetScaler Ingress Controllers in the cluster will process the resource otherwise only the controller with that ingress class will process this resource
               servicenames:
-                description: 'Name of the services to which the ratelimit policies are applied.'
+                description: Name of the services to which the ratelimit policies are applied.
                 type: array
                 items:
                   type: string
                   maxLength: 127
-              gatewayClassName:
-                type: string
-                description: "Name of the GatewayClass that this SSL profile should be applied to."
-              targetRef:
-                type: array
-                description: "A list of target resources where this profile will be applied."
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: "Name of the target resource."
-                    namespace:
-                      type: string
-                      description: "Namespace of the target resource."
-                    group:
-                      type: string
-                      description: "Group of the target resource."
-                    kind:
-                      type: string
-                      description: "Kind of the target resource."
-                    sectionName:
-                      type: string
-                      description: "Specific section within the target resource."
               selector_keys:
                 type: object
-                description: 'Traffic match criteria to which apply above rate-limit/throttling. All keys are applied as AND condition. If no keys are specified, rate-limit applies at service level'
+                description: Traffic match criteria to which apply above rate-limit/throttling. All keys are applied as AND condition. If no keys are specified, rate-limit applies at service level
                 properties:
                   basic:
                     type: object
-                    description: "Basic traffic stream selection criteria to which to apply the ratelimit"
+                    description: Basic traffic stream selection criteria to which to apply the ratelimit
                     properties:
                       path:
                         type: array
-                        description: "api resource path prefix match. e.g. /api/v1/products"
+                        description: api resource path prefix match. e.g. /api/v1/products
                         items:
                           type: string
                       method:
                         type: array
                         items:
                           type: string
-                          enum: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT','PATCH', 'UNKNOWN_METHOD']
+                          enum:
+                          - GET
+                          - PUT
+                          - POST
+                          - DELETE
+                          - HEAD
+                          - OPTIONS
+                          - TRACE
+                          - CONNECT
+                          - PATCH
+                          - UNKNOWN_METHOD
                       header_name:
-                        description: "HTTP header that identifies the unique API client for e.g. X-apikey"
+                        description: HTTP header that identifies the unique API client for e.g. X-apikey
                         type: string
                       per_client_ip:
-                        description: "Setting this applies the throttling limit to each unique Client IP address accessing the API resource"
+                        description: Setting this applies the throttling limit to each unique Client IP address accessing the API resource
                         type: boolean
+                  advanced:
+                    type: object
+                    description: Advanced selector keyed on arbitrary NetScaler stream-selector expressions (e.g. JSON-RPC body fields for MCP per-tool limits). Mutually exclusive with 'basic'.
+                    properties:
+                      rules:
+                        type: array
+                        description: NetScaler stream-selector expressions; each item is one selectlet, e.g. HTTP.REQ.BODY(100000).XPATH_JSON(xp%/params/name%)
+                        items:
+                          type: string
+                          maxLength: 7991
+                        minItems: 1
+                        maxItems: 5
+                      include_base_selectors:
+                        type: boolean
+                        description: When true (default) HTTP.REQ.LB_VSERVER.NAME and HTTP.REQ.HOSTNAME are appended to the selector. Set false to use only the rules above (e.g. a global per-tool limit).
+                      match:
+                        type: string
+                        description: Optional NetScaler boolean expression AND-ed into the rate-limit responder policy so the limit applies only to matching traffic, e.g. http.req.body(100000).xpath_json(xp%/method%).eq("tools/call")
+                        maxLength: 7991
+              req_threshold:
+                description: Max requests per timeslice units to be allowed
+                type: integer
+              timeslice:
+                description: Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds
+                type: integer
+              limittype:
+                description: Burst mode or smooth. Defaults to smooth limittype if not specified
+                type: string
+                enum:
+                - BURSTY
+                - SMOOTH
+              throttle_action:
+                type: string
+                enum:
+                - DROP
+                - RESET
+                - REDIRECT
+                - RESPOND
+                description: Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'
+              redirect_url:
+                type: string
+                description: Redirect-URL
+              logpackets:
+                type: object
+                description: Adds an audit message action. The action specifies whether to log the message, and to which log.
+                properties:
+                  logexpression:
+                    description: Default-syntax expression that defines the format and content of the log message.
+                    type: string
+                    maxLength: 7991
+                  loglevel:
+                    description: Audit log level, which specifies the severity level of the log message being generated.
+                    type: string
+                    enum:
+                    - EMERGENCY
+                    - ALERT
+                    - CRITICAL
+                    - ERROR
+                    - WARNING
+                    - NOTICE
+                    - INFORMATIONAL
+                    - DEBUG
+                required:
+                - logexpression
+                - loglevel
+              goto_priority_expression:
+                type: string
+                description: gotoPriorityExpression applied to the rate-limit responder policy bindings of this resource. NEXT continues policy evaluation after this policy; END stops it.
+                enum:
+                - NEXT
+                - END
               ratelimits:
                 type: array
-                description: 'List of stream identifier configurations for traffic analytics and tracking.'
+                description: List of stream identifier configurations for traffic analytics and tracking.
                 items:
                   type: object
-                  required: [req_threshold]
+                  required:
+                  - req_threshold
                   properties:
                     req_threshold:
-                      description: 'Max requests per timeslice units to be allowed'
+                      description: Max requests per timeslice units to be allowed
                       type: integer
                     timeslice:
-                      description: 'Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds'
+                      description: Timeslice in miliseconds in multiple of 10. Defaults to 1000 miliseconds
                       type: integer
                     limittype:
-                      description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+                      description: Burst mode or smooth. Defaults to smooth limittype if not specified
                       type: string
-                      enum: ['BURSTY','SMOOTH']
+                      enum:
+                      - BURSTY
+                      - SMOOTH
                     mode:
-                      description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+                      description: Burst mode or smooth. Defaults to smooth limittype if not specified
                       type: string
-                      enum: ['REQUEST_RATE', 'CONNECTION', 'TOKEN_RATE']
+                      enum:
+                      - REQUEST_RATE
+                      - CONNECTION
+                      - TOKEN_RATE
                     alertsintimeslice:
-                      description: "Burst mode or smooth. Defaults to smooth limittype if not specified"
+                      description: Burst mode or smooth. Defaults to smooth limittype if not specified
                       type: integer
                     throttle_action:
                       type: string
-                      enum: ['DROP', 'RESET','REDIRECT', 'RESPOND', 'NOOP']
-                      description: "Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'"
+                      enum:
+                      - DROP
+                      - RESET
+                      - REDIRECT
+                      - RESPOND
+                      - NOOP
+                      description: Drop will drop the requests exceeding limits, RESET will reset the client connection, Redirect will redirect to specified URL, respond will respond with 429 'Exceeded allowed rate of requests'
                     redirect_url:
                       type: string
-                      description: "Redirect-URL"
+                      description: Redirect-URL
+                    respond_with:
+                      type: string
+                      description: Custom NetScaler respondwith target expression used when throttle_action is RESPOND; overrides the default HTTP 429 response. e.g. an MCP JSON-RPC error body that echoes the request jsonrpc/id fields.
+                      maxLength: 7991
                     logpackets:
                       type: object
-                      description: 'Adds an audit message action. The action specifies whether to log the message, and to which log.'
+                      description: Adds an audit message action. The action specifies whether to log the message, and to which log.
                       properties:
                         logexpression:
-                          description: 'Default-syntax expression that defines the format and content of the log message.'
+                          description: Default-syntax expression that defines the format and content of the log message.
                           type: string
                           maxLength: 7991
                         loglevel:
-                          description: 'Audit log level, which specifies the severity level of the log message being generated.'
+                          description: Audit log level, which specifies the severity level of the log message being generated.
                           type: string
-                          enum: ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
-                      required: [logexpression, loglevel]
+                          enum:
+                          - EMERGENCY
+                          - ALERT
+                          - CRITICAL
+                          - ERROR
+                          - WARNING
+                          - NOTICE
+                          - INFORMATIONAL
+                          - DEBUG
+                      required:
+                      - logexpression
+                      - loglevel
               streams:
                 type: array
-                description: 'List of stream identifier configurations for traffic analytics and tracking.'
+                description: List of stream identifier configurations for traffic analytics and tracking.
                 items:
                   type: object
-                  required: [sort]
+                  required:
+                  - sort
                   properties:
                     interval:
                       type: integer
-                      description: "Number of minutes of data to use when calculating session statistics (number of requests, bandwidth, and response times)."
+                      description: Number of minutes of data to use when calculating session statistics (number of requests, bandwidth, and response times).
                       minimum: 1
                       maximum: 10080
                     sampleCount:
                       type: integer
-                      description: "Size of the sample from which to select a request for evaluation. To evaluate all requests, set the sample count to 1."
+                      description: Size of the sample from which to select a request for evaluation. To evaluate all requests, set the sample count to 1.
                       minimum: 1
                       maximum: 65535
                     sort:
                       type: string
-                      description: "Sort stored records by the specified statistics column, in descending order."
-                      enum: ['REQUESTS', 'CONNECTIONS', 'RESPTIME', 'BANDWIDTH', 'RESPTIME_BREACHES', 'TOKENS', 'NONE']
-                      default: 'REQUESTS'
+                      description: Sort stored records by the specified statistics column, in descending order.
+                      enum:
+                      - REQUESTS
+                      - CONNECTIONS
+                      - RESPTIME
+                      - BANDWIDTH
+                      - RESPTIME_BREACHES
+                      - TOKENS
+                      - NONE
+                      default: REQUESTS
                     snmpTrap:
                       type: string
-                      description: "Enable/disable SNMP trap for stream identifier."
-                      enum: ['ENABLED', 'DISABLED']
+                      description: Enable/disable SNMP trap for stream identifier.
+                      enum:
+                      - ENABLED
+                      - DISABLED
                     appflowLog:
                       type: string
-                      description: "Enable/disable Appflow logging for stream identifier."
-                      enum: ['ENABLED', 'DISABLED']
+                      description: Enable/disable Appflow logging for stream identifier.
+                      enum:
+                      - ENABLED
+                      - DISABLED
                     trackAckOnlyPackets:
                       type: string
-                      description: "Track ack only packets as well. Applicable only when packet rate limiting is being used."
-                      enum: ['ENABLED', 'DISABLED']
+                      description: Track ack only packets as well. Applicable only when packet rate limiting is being used.
+                      enum:
+                      - ENABLED
+                      - DISABLED
                     trackTransactions:
                       type: string
-                      description: "Track transactions exceeding configured threshold. When set to TOKENS, minTransactionThreshold, maxTransactionThreshold, acceptanceThreshold and breachThreshold are not applicable."
-                      enum: ['RESPTIME', 'TOKENS', 'NONE']
+                      description: Track transactions exceeding configured threshold. When set to TOKENS, minTransactionThreshold, maxTransactionThreshold, acceptanceThreshold and breachThreshold are not applicable.
+                      enum:
+                      - RESPTIME
+                      - TOKENS
+                      - NONE
                     maxTransactionThreshold:
                       type: integer
-                      description: "Maximum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute."
+                      description: Maximum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute.
                       minimum: 0
                     minTransactionThreshold:
                       type: integer
-                      description: "Minimum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute."
+                      description: Minimum per transaction value of metric. Metric to be tracked is specified by trackTransactions attribute.
                       minimum: 0
                     acceptanceThreshold:
                       type: string
-                      description: "Non-Breaching transactions to Total transactions threshold expressed in percent. Maximum of 6 decimal places is supported."
+                      description: Non-Breaching transactions to Total transactions threshold expressed in percent. Maximum of 6 decimal places is supported.
                       maxLength: 10
                     breachThreshold:
                       type: integer
-                      description: "Breaching transactions threshold calculated over interval."
+                      description: Breaching transactions threshold calculated over interval.
                       minimum: 0
                     log:
                       type: string
-                      description: "Location where objects collected on the identifier will be logged."
-                      enum: ['SYSLOG', 'NONE']
+                      description: Location where objects collected on the identifier will be logged.
+                      enum:
+                      - SYSLOG
+                      - NONE
                     logInterval:
                       type: integer
-                      description: "Time interval in minutes for logging the collected objects. Should be greater than or equal to the interval of the stream identifier."
+                      description: Time interval in minutes for logging the collected objects. Should be greater than or equal to the interval of the stream identifier.
                       minimum: 1
                       maximum: 10080
                     logLimit:
                       type: integer
-                      description: "Maximum number of objects to be logged in the log interval."
+                      description: Maximum number of objects to be logged in the log interval.
                       minimum: 1
                       maximum: 1000
+              gatewayClassName:
+                type: string
+                description: Name of the GatewayClass that this SSL profile should be applied to.
+              targetRef:
+                type: array
+                description: A list of target resources where this profile will be applied.
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the target resource.
+                    namespace:
+                      type: string
+                      description: Namespace of the target resource.
+                    group:
+                      type: string
+                      description: Group of the target resource.
+                    kind:
+                      type: string
+                      description: Kind of the target resource.
+                    sectionName:
+                      type: string
+                      description: Specific section within the target resource.
             anyOf:
-              - required: [ratelimits]
-              - required: [streams]
+            - required:
+              - req_threshold
+            - required:
+              - ratelimits
+            - required:
+              - streams
