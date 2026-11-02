@@ -258,7 +258,11 @@ spec:
                       oneOf:
                       - required: ["backend"]
                       - required: ["redirect"]
+                    monitor:
+                      type: array
+                      description: "Optional list of NetScaler load-balancing monitors bound to the backend service group of this rule. Each entry is either a mapping of NITRO lbmonitor attributes (for example type, scriptName, scriptArgs, dispatcherIP, dispatcherPort, respTimeout, secure), which the controller creates and names, or an existing NetScaler monitor to bind only: its name as a string, or a mapping with 'name' and 'preconfigured: true'."
+                      items:
+                        x-kubernetes-preserve-unknown-fields: true
     subresources:
       # status enables the status subresource.
       status: {}
-
