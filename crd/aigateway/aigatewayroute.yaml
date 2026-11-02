@@ -1,0 +1,929 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: aigatewayroutes.citrix.com
+spec:
+  group: citrix.com
+  names:
+    kind: aigatewayroute
+    listKind: aigatewayroutelist
+    plural: aigatewayroutes
+    singular: aigatewayroute
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.parents[0].conditions[?(@.type=="Accepted")].status
+      name: Accepted
+      type: string
+    - jsonPath: .status.parents[0].conditions[?(@.type=="Programmed")].status
+      name: Programmed
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          AIGatewayRoute combines multiple AIServiceBackends and attaches them to Gateway resources
+          for the NetScaler Kubernetes Gateway.
+
+          This serves as a way to define a "unified" AI API for a Gateway which allows downstream
+          clients to use a single schema API to interact with multiple AI backends across providers.
+
+          NetScaler Kubernetes Gateway provides the following capabilities for AIGatewayRoute:
+
+            - Header and policy-based routing to AI backends via HTTPRoute of the Gateway API.
+              The name of the HTTPRoute is the same as the AIGatewayRoute.
+            - Priority-based model spillover to backup backends, enabling automatic failover
+              when primary AI backends are unavailable or overloaded.
+            - Separate frontend and backend AI gateway profiles for multi-provider deployments,
+              allowing independent configuration of client-facing and upstream AI service policies.
+            - RateLimit and Rewrite Policy CRD support for fine-grained traffic control
+              and request/response transformation.
+            - SSLProfile, TCPProfile, and HTTPProfile CRDs for protocol-level tuning
+              of AI backend connections.
+            - Built-in TCP, HTTP, and streaming analytics for observability of AI traffic
+              patterns, token usage, and backend performance.
+
+          All of these resources are created in the same namespace as the AIGatewayRoute. You can
+          customize the default behavior by attaching NetScaler policy CRDs (RateLimit, Rewrite,
+          SSLProfile, TCPProfile, HTTPProfile) to the generated HTTPRoute.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the details of the AIGatewayRoute.
+            properties:
+              aigatewayprofiles:
+                description: |-
+                  AIGatewayProfiles defines the default AI gateway profiles to apply to
+                  the generated lbvservers and servicegroups. Frontend profiles are applied
+                  to the client-facing lbvserver, spillover-frontend profiles to the spillover
+                  lbvserver, and default-backend profiles to all backend servicegroups unless
+                  overridden per-backendRef.
+                properties:
+                  frontend:
+                    description: |-
+                      Frontend AI gateway profile applied to the primary lbvserver.
+                    properties:
+                      name:
+                        description: Name of the aigatewayprofile CRD resource.
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace of the aigatewayprofile. Defaults to the AIGatewayRoute namespace.
+                        maxLength: 63
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  spillover-frontend:
+                    description: |-
+                      Spillover-frontend AI gateway profile applied to the spillover lbvserver.
+                    properties:
+                      name:
+                        description: Name of the aigatewayprofile CRD resource.
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace of the aigatewayprofile. Defaults to the AIGatewayRoute namespace.
+                        maxLength: 63
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  default-backend:
+                    description: |-
+                      Default backend AI gateway profile applied to all backend servicegroups
+                      unless overridden by a per-backendRef backend-aigatewayprofile.
+                    properties:
+                      name:
+                        description: Name of the aigatewayprofile CRD resource.
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace of the aigatewayprofile. Defaults to the AIGatewayRoute namespace.
+                        maxLength: 63
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        type: string
+                    required:
+                    - name
+                    type: object
+                type: object
+              hostnames:
+                description: |-
+                  Hostnames defines a set of hostnames that should match against the HTTP Host
+                  header to select an AIGatewayRoute used to process the request. Implementations
+                  MUST ignore any port value specified in the HTTP Host header while
+                  performing a match and (absent of any applicable header modification
+                  configuration) MUST forward this header unmodified to the backend.
+
+                  Valid values for Hostnames are determined by RFC 1123 definition of a
+                  hostname with 2 notable exceptions:
+
+                  1. IPs are not allowed.
+                  2. A hostname may be prefixed with a wildcard label (`*.`). The wildcard
+                     label must appear by itself as the first label.
+
+                  If a hostname is specified by both the Listener and AIGatewayRoute, there
+                  must be at least one intersecting hostname for the AIGatewayRoute to be
+                  attached to the Listener.
+
+                  Hostnames that are prefixed with a wildcard label (`*.`) are interpreted
+                  as a suffix match. That means that a match for `*.example.com` would match
+                  both `test.example.com`, and `foo.test.example.com`, but not `example.com`.
+
+                  If both the Listener and AIGatewayRoute have specified hostnames, and none
+                  match with the criteria above, then the AIGatewayRoute is not accepted. The
+                  implementation must raise an 'Accepted' Condition with a status of
+                  `False` in the corresponding RouteParentStatus.
+
+                  Support: Core
+                items:
+                  description: |-
+                    Hostname is the fully qualified domain name of a network host. This matches
+                    the RFC 1123 definition of a hostname with 2 notable exceptions:
+
+                     1. IPs are not allowed.
+                     2. A hostname may be prefixed with a wildcard label (`*.`). The wildcard
+                        label must appear by itself as the first label.
+
+                    Hostname can be "precise" which is a domain name without the terminating
+                    dot of a network host (e.g. "foo.example.com") or "wildcard", which is a
+                    domain name prefixed with a single wildcard label (e.g. `*.example.com`).
+
+                    Note that as per RFC1035 and RFC1123, a *label* must consist of lower case
+                    alphanumeric characters or '-', and must start and end with an alphanumeric
+                    character. No other punctuation is allowed.
+                  maxLength: 253
+                  minLength: 1
+                  pattern: ^(\*\.)?[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                  type: string
+                maxItems: 16
+                type: array
+                x-kubernetes-list-type: atomic
+              parentRefs:
+                description: |-
+                  ParentRefs references the resources (usually Gateways) that a Route wants
+                  to be attached to. Note that the referenced parent resource needs to
+                  allow this for the attachment to be complete. For Gateways, that means
+                  the Gateway needs to allow attachment from Routes of this kind and
+                  namespace. For Services, that means the Service must either be in the same
+                  namespace for a "producer" route, or the mesh implementation must support
+                  and allow "consumer" routes for the referenced Service. ReferenceGrant is
+                  not applicable for governing ParentRefs to Services - it is not possible to
+                  create a "producer" route for a Service in a different namespace from the
+                  Route.
+
+                  There are two kinds of parent resources with "Core" support:
+
+                  * Gateway (Gateway conformance profile)
+                  * Service (Mesh conformance profile, ClusterIP Services only)
+
+                  This API may be extended in the future to support additional kinds of parent
+                  resources.
+
+                  ParentRefs must be _distinct_. This means either that:
+
+                  * They select different objects.  If this is the case, then parentRef
+                    entries are distinct. In terms of fields, this means that the
+                    multi-part key defined by `group`, `kind`, `namespace`, and `name` must
+                    be unique across all parentRef entries in the Route.
+                  * They do not select different objects, but for each optional field used,
+                    each ParentRef that selects the same object must set the same set of
+                    optional fields to different values. If one ParentRef sets a
+                    combination of optional fields, all must set the same combination.
+
+                  Some examples:
+
+                  * If one ParentRef sets `sectionName`, all ParentRefs referencing the
+                    same object must also set `sectionName`.
+                  * If one ParentRef sets `port`, all ParentRefs referencing the same
+                    object must also set `port`.
+                  * If one ParentRef sets `sectionName` and `port`, all ParentRefs
+                    referencing the same object must also set `sectionName` and `port`.
+
+                  It is possible to separately reference multiple distinct objects that may
+                  be collapsed by an implementation. For example, some implementations may
+                  choose to merge compatible Gateway Listeners together. If that is the
+                  case, the list of routes attached to those resources should also be
+                  merged.
+
+                  Note that for ParentRefs that cross namespace boundaries, there are specific
+                  rules. Cross-namespace references are only valid if they are explicitly
+                  allowed by something in the namespace they are referring to. For example,
+                  Gateway has the AllowedRoutes field, and ReferenceGrant provides a
+                  generic way to enable other kinds of cross-namespace reference.
+                items:
+                  description: |-
+                    ParentReference identifies an API object (usually a Gateway) that can be considered
+                    a parent of this resource (usually a route). There are two kinds of parent resources
+                    with "Core" support:
+
+                    * Gateway (Gateway conformance profile)
+                    * Service (Mesh conformance profile, ClusterIP Services only)
+
+                    This API may be extended in the future to support additional kinds of parent
+                    resources.
+
+                    The API object must be valid in the cluster; the Group and Kind must
+                    be registered in the cluster for this reference to be valid.
+                  properties:
+                    group:
+                      default: gateway.networking.k8s.io
+                      description: |-
+                        Group is the group of the referent.
+                        When unspecified, "gateway.networking.k8s.io" is inferred.
+                        To set the core API group (such as for a "Service" kind referent),
+                        Group must be explicitly set to "" (empty string).
+
+                        Support: Core
+                      maxLength: 253
+                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    kind:
+                      default: Gateway
+                      description: |-
+                        Kind is kind of the referent.
+
+                        There are two kinds of parent resources with "Core" support:
+
+                        * Gateway (Gateway conformance profile)
+                        * Service (Mesh conformance profile, ClusterIP Services only)
+
+                        Support for other resources is Implementation-Specific.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                      type: string
+                    name:
+                      description: |-
+                        Name is the name of the referent.
+
+                        Support: Core
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                    namespace:
+                      description: |-
+                        Namespace is the namespace of the referent. When unspecified, this refers
+                        to the local namespace of the Route.
+
+                        Note that there are specific rules for ParentRefs which cross namespace
+                        boundaries. Cross-namespace references are only valid if they are explicitly
+                        allowed by something in the namespace they are referring to. For example:
+                        Gateway has the AllowedRoutes field, and ReferenceGrant provides a
+                        generic way to enable any other kind of cross-namespace reference.
+
+                        Support: Core
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                      type: string
+                    port:
+                      description: |-
+                        Port is the network port this Route targets. It can be interpreted
+                        differently based on the type of parent resource.
+
+                        When the parent resource is a Gateway, this targets all listeners
+                        listening on the specified port that also support this kind of Route(and
+                        select this Route). It's not recommended to set `Port` unless the
+                        networking behaviors specified in a Route must apply to a specific port
+                        as opposed to a listener(s) whose port(s) may be changed. When both Port
+                        and SectionName are specified, the name and port of the selected listener
+                        must match both specified values.
+
+                        Implementations MAY choose to support other parent resources.
+                        Implementations supporting other types of parent resources MUST clearly
+                        document how/if Port is interpreted.
+
+                        For the purpose of status, an attachment is considered successful as
+                        long as the parent resource accepts it partially. For example, Gateway
+                        listeners can restrict which Routes can attach to them by Route kind,
+                        namespace, or hostname. If 1 of 2 Gateway listeners accept attachment
+                        from the referencing Route, the Route MUST be considered successfully
+                        attached. If no Gateway listeners accept attachment from this Route,
+                        the Route MUST be considered detached from the Gateway.
+
+                        Support: Extended
+                      format: int32
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                    sectionName:
+                      description: |-
+                        SectionName is the name of a section within the target resource. In the
+                        following resources, SectionName is interpreted as the following:
+
+                        * Gateway: Listener name. When both Port (experimental) and SectionName
+                        are specified, the name and port of the selected listener must match
+                        both specified values.
+                        * Service: Port name. When both Port (experimental) and SectionName
+                        are specified, the name and port of the selected listener must match
+                        both specified values.
+
+                        Implementations MAY choose to support attaching Routes to other resources.
+                        If that is the case, they MUST clearly document how SectionName is
+                        interpreted.
+
+                        When unspecified (empty string), this will reference the entire resource.
+                        For the purpose of status, an attachment is considered successful if at
+                        least one section in the parent resource accepts it. For example, Gateway
+                        listeners can restrict which Routes can attach to them by Route kind,
+                        namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from
+                        the referencing Route, the Route MUST be considered successfully
+                        attached. If no Gateway listeners accept attachment from this Route, the
+                        Route MUST be considered detached from the Gateway.
+
+                        Support: Core
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 32
+                type: array
+                x-kubernetes-list-type: atomic
+                x-kubernetes-validations:
+                - message: sectionName must be specified when parentRefs includes
+                    2 or more references to the same parent
+                  rule: 'self.all(p1, self.all(p2, p1.group == p2.group && p1.kind
+                    == p2.kind && p1.name == p2.name && (((!has(p1.__namespace__)
+                    || p1.__namespace__ == '''') && (!has(p2.__namespace__) || p2.__namespace__
+                    == '''')) || (has(p1.__namespace__) && has(p2.__namespace__) &&
+                    p1.__namespace__ == p2.__namespace__ )) ? ((!has(p1.sectionName)
+                    || p1.sectionName == '''') == (!has(p2.sectionName) || p2.sectionName
+                    == '''')) : true))'
+                - message: sectionName must be unique when parentRefs includes 2 or
+                    more references to the same parent
+                  rule: self.all(p1, self.exists_one(p2, p1.group == p2.group && p1.kind
+                    == p2.kind && p1.name == p2.name && (((!has(p1.__namespace__)
+                    || p1.__namespace__ == '') && (!has(p2.__namespace__) || p2.__namespace__
+                    == '')) || (has(p1.__namespace__) && has(p2.__namespace__) &&
+                    p1.__namespace__ == p2.__namespace__ )) && (((!has(p1.sectionName)
+                    || p1.sectionName == '') && (!has(p2.sectionName) || p2.sectionName
+                    == '')) || (has(p1.sectionName) && has(p2.sectionName) && p1.sectionName
+                    == p2.sectionName))))
+              rules:
+                description: |-
+                  Rules is the list of AIGatewayRouteRule that this AIGatewayRoute will match the traffic to.
+
+                  The NetScaler AI Gateway controller will generate routing configuration based on these rules,
+                  supporting header-based and policy-based routing to AI backends, priority-based model spillover,
+                  and attachment of NetScaler policy CRDs via ExtensionRef filters.
+
+                  In the matching conditions, the `x-ai-eg-model` header is available for routing decisions
+                  based on the model name. The model name is extracted from the request content before routing.
+                items:
+                  description: AIGatewayRouteRule is a rule that defines the routing
+                    behavior of the AIGatewayRoute.
+                  properties:
+                    backendRefs:
+                      description: |-
+                        BackendRefs is the list of AI service backends that this rule will route the traffic to.
+                        Each backend can have a weight and priority that determine traffic distribution and
+                        spillover behavior.
+
+                        Priority-based model spillover is supported: backends with lower priority values are
+                        preferred. When a primary backend (priority 0) is unavailable or overloaded, traffic
+                        automatically spills over to backup backends with higher priority values.
+
+                        The namespace of each backend defaults to the same namespace as the AIGatewayRoute
+                        when not specified.
+                      items:
+                        description: |-
+                          AIGatewayRouteRuleBackendRef is a reference to an AI service backend
+                          with weight and priority for traffic distribution and spillover.
+                        properties:
+                          group:
+                            default: ""
+                            description: |-
+                              Group is the group of the referent. For example, "gateway.networking.k8s.io".
+                              When unspecified or empty string, core API group is inferred.
+                            maxLength: 253
+                            pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                            type: string
+                          kind:
+                            default: Service
+                            description: |-
+                              Kind is the Kubernetes resource kind of the referent. For example
+                              "Service".
+
+                              Defaults to "Service" when not specified.
+
+                              ExternalName services can refer to CNAME DNS records that may live
+                              outside of the cluster and as such are difficult to reason about in
+                              terms of conformance. They also may not be safe to forward to (see
+                              CVE-2021-25740 for more information). Implementations SHOULD NOT
+                              support ExternalName Services.
+
+                              Support: Core (Services with a type other than ExternalName)
+
+                              Support: Implementation-specific (Services with type ExternalName)
+                            maxLength: 63
+                            minLength: 1
+                            pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                            type: string
+                          name:
+                            description: |-
+                              Name is the name of the backend Service resource.
+                            minLength: 1
+                            type: string
+                          namespace:
+                            description: |-
+                              Namespace is the namespace of the backend resource.
+                              When unspecified, this refers to the local namespace of the AIGatewayRoute.
+                            maxLength: 63
+                            minLength: 1
+                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                            type: string
+                          port:
+                            description: |-
+                              Port specifies the destination port number to use for this backend.
+                            format: int32
+                            maximum: 65535
+                            minimum: 1
+                            type: integer
+                          weight:
+                            default: 1
+                            description: |-
+                              Weight determines the proportion of traffic to send to this backend
+                              relative to other backends in the same rule.
+
+                              Default is 1.
+                            format: int32
+                            minimum: 0
+                            type: integer
+                          is_spillover:
+                            default: false
+                            description: |-
+                              Indicates whether this backend is a spillover backend.
+                              When set to true, this backend receives traffic only when
+                              the primary backends become unavailable or overloaded.
+                              Only one backendRef in the list may have is_spillover set to true.
+
+                              Default is false.
+                            type: boolean
+                          backend-aigatewayprofile:
+                            description: |-
+                              Backend AI gateway profile to apply to this specific backend's
+                              servicegroup. Overrides the spec-level default-backend profile.
+                            properties:
+                              name:
+                                description: Name of the aigatewayprofile CRD resource.
+                                minLength: 1
+                                type: string
+                              namespace:
+                                description: |-
+                                  Namespace of the aigatewayprofile. Defaults to the AIGatewayRoute namespace.
+                                maxLength: 63
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          filters:
+                            description: |-
+                              Filters define per-backend NetScaler policy CRDs to attach to this specific
+                              backend. Use ExtensionRef filter type to reference policy CRDs such as
+                              rewritepolicy for backend-specific request/response transformations
+                              (e.g., spillover-specific rewrite policies).
+                            items:
+                              description: |-
+                                Filter defines a processing step to apply to requests routed to this backend.
+                              properties:
+                                type:
+                                  description: |-
+                                    Type identifies the type of filter. Currently only ExtensionRef is supported
+                                    for referencing NetScaler policy CRDs.
+                                  enum:
+                                  - ExtensionRef
+                                  type: string
+                                extensionRef:
+                                  description: |-
+                                    ExtensionRef is a reference to a NetScaler policy CRD resource.
+                                    Supported kinds include: ratelimit, rewritepolicy, sslprofile,
+                                    tcprofile, httpprofile.
+                                  properties:
+                                    group:
+                                      description: |-
+                                        Group is the API group of the referent, e.g. "citrix.com".
+                                      maxLength: 253
+                                      minLength: 1
+                                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                      type: string
+                                    kind:
+                                      description: |-
+                                        Kind is the kind of the referent, e.g. "ratelimit", "rewritepolicy",
+                                        "sslprofile", "tcprofile", "httpprofile".
+                                      maxLength: 63
+                                      minLength: 1
+                                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                                      type: string
+                                    name:
+                                      description: |-
+                                        Name is the name of the referent.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - group
+                                  - kind
+                                  - name
+                                  type: object
+                              required:
+                              - type
+                              - extensionRef
+                              type: object
+                              x-kubernetes-validations:
+                              - message: extensionRef must be specified for ExtensionRef filter type
+                                rule: 'self.type == ''ExtensionRef'' ? has(self.extensionRef) : true'
+                            maxItems: 16
+                            type: array
+                            x-kubernetes-list-type: atomic
+                        required:
+                        - name
+                        type: object
+                      maxItems: 128
+                      type: array
+                      x-kubernetes-validations:
+                      - message: Only one backendRef may have is_spillover set to true
+                        rule: 'self.filter(b, has(b.is_spillover) && b.is_spillover == true).size() <= 1'
+                    filters:
+                      description: |-
+                        Filters define the NetScaler policy CRDs to attach to this rule.
+                        Use ExtensionRef filter type to reference policy CRDs such as ratelimit,
+                        rewritepolicy, aigatewayprofile, sslprofile, tcprofile, and httpprofile.
+                      items:
+                        description: |-
+                          Filter defines a processing step to apply to requests matching this rule.
+                        properties:
+                          type:
+                            description: |-
+                              Type identifies the type of filter. Currently only ExtensionRef is supported
+                              for referencing NetScaler policy CRDs.
+                            enum:
+                            - ExtensionRef
+                            type: string
+                          extensionRef:
+                            description: |-
+                              ExtensionRef is a reference to a NetScaler policy CRD resource.
+                              Supported kinds include: ratelimit, rewritepolicy, aigatewayprofile,
+                              sslprofile, tcprofile, httpprofile.
+                            properties:
+                              group:
+                                description: |-
+                                  Group is the API group of the referent, e.g. "citrix.com".
+                                maxLength: 253
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                type: string
+                              kind:
+                                description: |-
+                                  Kind is the kind of the referent, e.g. "ratelimit", "rewritepolicy",
+                                  "aigatewayprofile", "sslprofile", "tcprofile", "httpprofile".
+                                maxLength: 63
+                                minLength: 1
+                                pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                                type: string
+                              name:
+                                description: |-
+                                  Name is the name of the referent.
+                                maxLength: 253
+                                minLength: 1
+                                type: string
+                            required:
+                            - group
+                            - kind
+                            - name
+                            type: object
+                        required:
+                        - type
+                        - extensionRef
+                        type: object
+                        x-kubernetes-validations:
+                        - message: extensionRef must be specified for ExtensionRef filter type
+                          rule: 'self.type == ''ExtensionRef'' ? has(self.extensionRef) : true'
+                      maxItems: 16
+                      type: array
+                      x-kubernetes-list-type: atomic
+                    matches:
+                      description: |-
+                        Matches is the list of conditions that determine when this rule applies.
+                        Supports path-based, header-based, and policy expression matching.
+                      items:
+                        properties:
+                          path:
+                            default:
+                              type: PathPrefix
+                              value: /
+                            description: |-
+                              Path specifies a HTTP request path matcher. If this field is not
+                              specified, a default prefix match on the "/" path is provided.
+                            properties:
+                              type:
+                                default: PathPrefix
+                                description: |-
+                                  Type specifies how to match against the path Value.
+
+                                  Support: Core (Exact, PathPrefix)
+
+                                  Support: Implementation-specific (RegularExpression)
+                                enum:
+                                - Exact
+                                - PathPrefix
+                                - RegularExpression
+                                type: string
+                              value:
+                                default: /
+                                description: Value of the HTTP path to match against.
+                                maxLength: 256
+                                type: string
+                            type: object
+                            x-kubernetes-validations:
+                            - message: value must be an absolute path and start with
+                                '/' when type one of ['Exact', 'PathPrefix']
+                              rule: '(self.type in [''Exact'',''PathPrefix'']) ? self.value.startsWith(''/'')
+                                : true'
+                            - message: must not contain '//' when type one of ['Exact',
+                                'PathPrefix']
+                              rule: '(self.type in [''Exact'',''PathPrefix'']) ? !self.value.contains(''//'') : true'
+                            - message: must not contain '/./' when type one of ['Exact',
+                                'PathPrefix']
+                              rule: '(self.type in [''Exact'',''PathPrefix'']) ? !self.value.contains(''/./'') : true'
+                            - message: must not contain '/../' when type one of ['Exact',
+                                'PathPrefix']
+                              rule: '(self.type in [''Exact'',''PathPrefix'']) ? !self.value.contains(''/../'') : true'
+                            - message: type must be one of ['Exact', 'PathPrefix',
+                                'RegularExpression']
+                              rule: self.type in ['Exact','PathPrefix'] || self.type
+                                == 'RegularExpression'
+                          headers:
+                            description: |-
+                              Headers specifies HTTP request header matchers.
+                              Multiple match values are ANDed together.
+                            items:
+                              description: |-
+                                HTTPHeaderMatch describes how to select a HTTP route by matching HTTP request headers.
+                              properties:
+                                name:
+                                  description: |-
+                                    Name is the name of the HTTP Header to be matched. Name matching MUST be
+                                    case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                  maxLength: 256
+                                  minLength: 1
+                                  pattern: ^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$
+                                  type: string
+                                type:
+                                  default: Exact
+                                  description: |-
+                                    Type specifies how to match against the value of the header.
+
+                                    Support: Core (Exact)
+                                    Support: Implementation-specific (RegularExpression)
+                                  enum:
+                                  - Exact
+                                  - RegularExpression
+                                  type: string
+                                value:
+                                  description: Value is the value of HTTP Header to
+                                    be matched.
+                                  maxLength: 4096
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - name
+                              - value
+                              type: object
+                            maxItems: 16
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - name
+                            x-kubernetes-list-type: map
+                          policyExpression:
+                            description: |-
+                              PolicyExpression is a NetScaler policy expression for advanced matching.
+                              When specified, the expression is evaluated in addition to header matches.
+                              An empty string means no additional policy expression is applied.
+                            type: string
+                        type: object
+                      maxItems: 128
+                      type: array
+                    timeouts:
+                      description: |-
+                        Timeouts defines the timeouts that can be configured for an HTTP request.
+
+                        For streaming responses (like chat completions with stream=true), consider setting
+                        longer timeouts as the response may take time until the completion.
+                      properties:
+                        backendRequest:
+                          description: |-
+                            BackendRequest specifies a timeout for an individual request from the gateway
+                            to a backend. This covers the time from when the request first starts being
+                            sent from the gateway to when the full response has been received from the backend.
+
+                            Support: Extended
+                          pattern: ^([0-9]{1,5}(h|m|s|ms)){1,4}$
+                          type: string
+                        request:
+                          description: |-
+                            Request specifies the maximum duration for a gateway to respond to an HTTP request.
+                            If the gateway has not been able to respond before this deadline is met, the gateway
+                            MUST return a timeout error.
+
+                            Support: Extended
+                          pattern: ^([0-9]{1,5}(h|m|s|ms)){1,4}$
+                          type: string
+                      type: object
+                      x-kubernetes-validations:
+                      - message: backendRequest timeout cannot be longer than request
+                          timeout
+                        rule: '!(has(self.request) && has(self.backendRequest) &&
+                          duration(self.request) != duration(''0s'') && duration(self.backendRequest)
+                          > duration(self.request))'
+                  type: object
+                maxItems: 128
+                type: array
+            required:
+            - rules
+            type: object
+          status:
+            description: Status defines the current state of AIGatewayRoute.
+            properties:
+              parents:
+                description: |-
+                  Parents is a list of parent resources (usually Gateways) that are
+                  associated with the route, and the status of the route with respect to
+                  each parent.
+
+                  A maximum of 32 Gateways will be represented in this list. An empty list
+                  means the route has not been attached to any Gateway.
+                items:
+                  description: |-
+                    RouteParentStatus describes the status of a route with respect to an
+                    associated Parent.
+                  properties:
+                    conditions:
+                      description: |-
+                        Conditions describes the status of the route with respect to the Gateway.
+                        Known condition types are: "Accepted", "Programmed", "ResolvedRefs".
+                      items:
+                        description: Condition contains details for one aspect of
+                          the current state of this API Resource.
+                        properties:
+                          lastTransitionTime:
+                            description: |-
+                              lastTransitionTime is the last time the condition transitioned from one status to another.
+                              This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                            format: date-time
+                            type: string
+                          message:
+                            description: |-
+                              message is a human readable message indicating details about the transition.
+                              This may be an empty string.
+                            maxLength: 32768
+                            type: string
+                          observedGeneration:
+                            description: |-
+                              observedGeneration represents the .metadata.generation that the condition was set based upon.
+                              For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                              with respect to the current state of the instance.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          reason:
+                            description: |-
+                              reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                              Producers of specific condition types may define expected values and meanings for this field,
+                              and whether the values are considered a guaranteed API.
+                              The value should be a CamelCase string.
+                              This field may not be empty.
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                            type: string
+                          status:
+                            description: status of the condition, one of True, False,
+                              Unknown.
+                            enum:
+                            - "True"
+                            - "False"
+                            - Unknown
+                            type: string
+                          type:
+                            description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                            maxLength: 316
+                            pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                            type: string
+                        required:
+                        - lastTransitionTime
+                        - message
+                        - reason
+                        - status
+                        - type
+                        type: object
+                      maxItems: 8
+                      minItems: 1
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
+                    controllerName:
+                      description: |-
+                        ControllerName is a domain/path string that indicates the name of the
+                        controller that wrote this status. This corresponds with the
+                        controllerName field on GatewayClass.
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\/[A-Za-z0-9\/\-._~%!$&'()*+,;=:]+$
+                      type: string
+                    parentRef:
+                      description: |-
+                        ParentRef corresponds with a ParentRef in the spec that this
+                        RouteParentStatus struct describes the status of.
+                      properties:
+                        group:
+                          default: gateway.networking.k8s.io
+                          description: Group is the group of the referent.
+                          maxLength: 253
+                          pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                          type: string
+                        kind:
+                          default: Gateway
+                          description: Kind is kind of the referent.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                          type: string
+                        name:
+                          description: Name is the name of the referent.
+                          maxLength: 253
+                          minLength: 1
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace is the namespace of the referent. When unspecified, this refers
+                            to the local namespace of the Route.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        port:
+                          description: Port is the network port this Route targets.
+                          format: int32
+                          maximum: 65535
+                          minimum: 1
+                          type: integer
+                        sectionName:
+                          description: SectionName is the name of a section within
+                            the target resource.
+                          maxLength: 253
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                          type: string
+                      required:
+                      - name
+                      type: object
+                  required:
+                  - conditions
+                  - controllerName
+                  - parentRef
+                  type: object
+                maxItems: 32
+                type: array
+                x-kubernetes-list-type: atomic
+            required:
+            - parents
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

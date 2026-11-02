@@ -1,0 +1,155 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mcpprofiles.citrix.com
+spec:
+  group: citrix.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+      - name: Accepted
+        type: string
+        description: "Whether the controller accepted the mcpprofile spec"
+        jsonPath: '.status.conditions[?(@.type=="Accepted")].status'
+      - name: Programmed
+        type: string
+        description: "Whether the config was programmed to NetScaler"
+        jsonPath: '.status.conditions[?(@.type=="Programmed")].status'
+      - name: ResolvedRefs
+        type: string
+        description: "Whether the mcpTokenOrApi Secret reference resolved"
+        jsonPath: '.status.conditions[?(@.type=="ResolvedRefs")].status'
+      - name: Profile Type
+        type: string
+        description: "FRONTEND or BACKEND MCP profile"
+        jsonPath: .spec.config.profileType
+      - name: Proxy Mode
+        type: string
+        description: "FORWARD or REVERSE proxy deployment"
+        jsonPath: .spec.config.proxyMode
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            status:
+              type: object
+              properties:
+                conditions:
+                  type: array
+                  description: "Gateway-API-style conditions for the mcpprofile (Accepted, Programmed, ResolvedRefs)."
+                  items:
+                    type: object
+                    required:
+                      - type
+                      - status
+                      - reason
+                      - lastTransitionTime
+                    properties:
+                      type:
+                        type: string
+                      status:
+                        type: string
+                        enum: ["True", "False", "Unknown"]
+                      reason:
+                        type: string
+                      message:
+                        type: string
+                      observedGeneration:
+                        type: integer
+                        format: int64
+                      lastTransitionTime:
+                        type: string
+                        format: date-time
+                  x-kubernetes-list-type: map
+                  x-kubernetes-list-map-keys:
+                    - type
+            spec:
+              type: object
+              required:
+                - config
+              properties:
+                config:
+                  type: object
+                  description: "MCP profile configuration applied to NetScaler via NITRO 'add mcpProfile'."
+                  x-kubernetes-validations:
+                    - rule: "!has(oldSelf.profileType) || !has(self.profileType) || self.profileType == oldSelf.profileType"
+                      message: "profileType is immutable once set"
+                  # Defaults below track the NITRO 'add mcpProfile' CLI for BACKEND profiles.
+                  # For a FRONTEND profile the operator programs ONLY profileType, proxyMode and
+                  # comment; the remaining params (incl. apiserver-defaulted ones, and
+                  # protocolVersion/token) are backend concerns that NITRO rejects on FRONTEND
+                  # (ErrorCode 278, Invalid argument). See
+                  # GwyListenerMCPProfile.FRONTEND_ALLOWED_FIELDS / get_nitro_add_spec.
+                  properties:
+                    profileType:
+                      type: string
+                      description: "Whether this profile applies on the client-facing (FRONTEND) or backend-facing (BACKEND) side of the MCP proxy."
+                      enum:
+                        - FRONTEND
+                        - BACKEND
+                      default: BACKEND
+                    proxyMode:
+                      type: string
+                      description: "FORWARD: NetScaler in client env routing to many MCP servers via a custom header. REVERSE: NetScaler in front of a single MCP backend. Programmed on both FRONTEND and BACKEND profiles; defaults to FORWARD, so set REVERSE explicitly if that is what you want."
+                      enum:
+                        - FORWARD
+                        - REVERSE
+                      default: FORWARD
+                    hostReplacement:
+                      type: string
+                      description: "Forward-proxy only. Replace the client Host header with the target MCP server FQDN before forwarding. BACKEND only; ignored for FRONTEND profiles. Dropped by the controller when proxyMode is REVERSE (NITRO rejects it there)."
+                      enum:
+                        - ENABLED
+                        - DISABLED
+                      default: ENABLED
+                    urlReplacement:
+                      type: string
+                      description: "Forward-proxy only. Rewrite the client URL to the backend MCP URL before forwarding. BACKEND only; ignored for FRONTEND profiles. Dropped by the controller when proxyMode is REVERSE (NITRO rejects it there)."
+                      enum:
+                        - ENABLED
+                        - DISABLED
+                      default: ENABLED
+                    insertHeaderInClientRequest:
+                      type: string
+                      description: "If ENABLED, NetScaler injects the PAT from mcpTokenOrApi as an Authorization header on client requests, avoiding the need for a rewrite policy that would expose the token in plaintext. BACKEND only; ignored for FRONTEND profiles."
+                      enum:
+                        - ENABLED
+                        - DISABLED
+                      default: DISABLED
+                    mcpProtocolVersion:
+                      type: string
+                      description: "MCP protocol version advertised during monitoring of an MCP server."
+                      maxLength: 10
+                    mcpTokenOrApi:
+                      type: object
+                      description: "Reference to a Kubernetes Secret whose value is the full Bearer/API token header (NITRO tokenOrApi, max 255 chars). Used for monitoring probes and, when insertHeaderInClientRequest=ENABLED, for client data traffic. The raw token is never inlined in the CR."
+                      required:
+                        - name
+                      properties:
+                        name:
+                          type: string
+                          description: "Name of the Kubernetes Secret containing the PAT."
+                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                        namespace:
+                          type: string
+                          description: "Optional. Must equal the mcpprofile's own namespace; cross-namespace Secret references are not permitted (no ReferenceGrant support) and are rejected. Defaults to the mcpprofile namespace when omitted."
+                          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                        key:
+                          type: string
+                          description: "Key within the Secret data that holds the PAT."
+                          default: token
+                    comment:
+                      type: string
+                      description: "Any information about the MCP profile."
+                      maxLength: 255
+  scope: Namespaced
+  names:
+    plural: mcpprofiles
+    singular: mcpprofile
+    kind: mcpprofile
+    shortNames:
+    - mcpp
