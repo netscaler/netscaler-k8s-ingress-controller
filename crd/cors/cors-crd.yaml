@@ -50,7 +50,7 @@ spec:
                   type: string
                   maxLength: 63
               allow_origin:
-                description: 'Represents list of allowed origins, it is used to screen the “origin” in the cors pre flight request'
+                description: 'Represents list of allowed origins, it is used to screen the "origin" in the cors pre flight request'
                 type: array
                 items:
                   type: string

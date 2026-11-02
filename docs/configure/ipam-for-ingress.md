@@ -57,7 +57,7 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
               serviceAccountName: cic-k8s-role
               containers:
               - name: cic-k8s-ingress-controller
-                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:4.2.26"
+                image: "quay.io/netscaler/netscaler-k8s-ingress-controller:4.3.22"
                 env:
                   - name: "NS_IP"
                     value: "x.x.x.x"
@@ -108,6 +108,8 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
           namespace: kube-system
         spec:
           replicas: 1
+          strategy:
+            type: Recreate
           selector:
             matchLabels:
               app: citrix-ipam-controller
@@ -119,7 +121,7 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
               serviceAccountName: citrix-ipam-controller
               containers:
               - name: citrix-ipam-controller
-                image: quay.io/netscaler/netscaler-ipam-controller:2.4.0
+                image: quay.io/netscaler/netscaler-ipam-controller:2.5.2
                 env:
                 # This IPAM controller takes envirnment variable VIP_RANGE. IPs in this range are used to assign values for IP range
                 - name: "VIP_RANGE"
@@ -128,6 +130,8 @@ Perform the following steps to deploy the Netscaler ingress controller with the 
                 # VIP_NAMESPACES, This expects a set of namespaces passed as space separated string
                 imagePullPolicy: Always
       
+
+    The `citrix-ipam-controller` service account needs access to `vips` and `vips/status` in the `citrix.com` API group, and permission to create events. For a complete manifest with these permissions, see [citrix-ipam-controller.yaml](../../example/ipam-controller/citrix-ipam-controller.yaml).
 
     The manifest contains two environment variables, `VIP_RANGE` and `VIP_NAMESPACES`. You can specify the appropriate routable IP range with a valid CIDR under the `VIP_RANGE`. If necessary, you can also specify a set of namespaces under `VIP_NAMESPACES` so that the IPAM controller allocates addresses only for services or Ingress resources from specific namespaces.
 

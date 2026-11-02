@@ -73,6 +73,9 @@ spec:
                     preconfigured:
                       type: string
                       description: "Preconfigured Certificate name on NetScaler "
+                    preconfiguredBundle:
+                      type: boolean
+                      description: "When true, the preconfigured name refers to an sslcertkeybundle (server certkey bundle) on the NetScaler instead of a plain sslcertkey. Defaults to false."
                     secret:
                       type: object
                       description: "Kuberentes secret object"
@@ -272,6 +275,11 @@ spec:
                         type: integer
                         minimum: 100
                         maximum: 599
+                  monitor:
+                    type: array
+                    description: "Optional list of NetScaler load-balancing monitors bound to the backend service group of this listener's default route. Each entry is either a mapping of NITRO lbmonitor attributes (for example type, scriptName, scriptArgs, dispatcherIP, dispatcherPort, respTimeout, secure), which the controller creates and names, or an existing NetScaler monitor to bind only: its name as a string, or a mapping with 'name' and 'preconfigured: true'."
+                    items:
+                      x-kubernetes-preserve-unknown-fields: true
                 oneOf:
                 - required: ["backend"]
                 - required: ["redirect"]

@@ -21,7 +21,7 @@ spec:
       serviceAccountName: cpx
       containers:
       - name: citrixingresscontroller
-        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:4.2.26"
+        image: "quay.io/netscaler/netscaler-k8s-ingress-controller:4.3.22"
         env:
         # Set kube api-server URL
         - name: "kubernetes_url"
