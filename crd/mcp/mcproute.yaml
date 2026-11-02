@@ -1,0 +1,786 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mcproutes.citrix.com
+spec:
+  group: citrix.com
+  names:
+    kind: mcproute
+    listKind: mcproutelist
+    plural: mcproutes
+    singular: mcproute
+    shortNames:
+    - mcpr
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.parents[0].conditions[?(@.type=="Accepted")].status
+      name: Accepted
+      type: string
+    - jsonPath: .status.parents[0].conditions[?(@.type=="Programmed")].status
+      name: Programmed
+      type: string
+    - jsonPath: .status.parents[0].conditions[?(@.type=="ResolvedRefs")].status
+      name: ResolvedRefs
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          MCPRoute provides complex content-switching for Model Context Protocol (MCP) traffic
+          on the NetScaler Kubernetes Gateway.
+
+          MCP clients select an upstream MCP server with the `x-netscaler-target-mcp-server`
+          request header (value of the form "<host>/<path>"). Routing on this requires stripping
+          the path and substring-matching the host
+          (HTTP.REQ.HEADER("x-netscaler-target-mcp-server").BEFORE_STR("/").CONTAINS("<host>")),
+          which the Gateway API HTTPRoute cannot express. MCPRoute fills that gap while reusing the
+          same controller framework as AIGatewayRoute: a Gateway/Listener creates the CS vserver,
+          and each rule generates a CS policy + CS action routing to a per-backend LB vserver.
+
+          Routing power spans three composable layers, all emitted into the CS policy `-rule`:
+            - the built-in `MCPTargetServer` header match type (the friendly MCP case),
+            - standard Gateway-API matches (path, Exact/RegularExpression headers) - headers in one
+              match are ANDed, matches in one rule are ORed,
+            - a `policyExpression` passthrough that injects any NetScaler advanced (default/PI) policy
+              expression verbatim, for arbitrary complex routing.
+
+          A rule with `default: true` and no matches compiles to `-rule true` (the catch-all). NetScaler
+          policy CRDs (rewritepolicy, ratelimit, sslprofile, httpprofile, tcpprofile, authpolicy) attach
+          per rule via ExtensionRef filters.
+        properties:
+          apiVersion:
+            description: APIVersion defines the versioned schema of this representation of an object.
+            type: string
+          kind:
+            description: Kind is a string value representing the REST resource this object represents.
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the details of the MCPRoute.
+            properties:
+              parentRefs:
+                description: |-
+                  ParentRefs references the Gateways that this MCPRoute wants to attach to. The
+                  referenced Gateway must allow attachment from Routes of this kind and namespace.
+                items:
+                  description: ParentReference identifies a Gateway that is a parent of this route.
+                  properties:
+                    group:
+                      default: gateway.networking.k8s.io
+                      description: Group is the group of the referent. Defaults to gateway.networking.k8s.io.
+                      maxLength: 253
+                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    kind:
+                      default: Gateway
+                      description: Kind is kind of the referent. Defaults to Gateway.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                      type: string
+                    name:
+                      description: Name is the name of the referent Gateway.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                    namespace:
+                      description: Namespace of the referent. Defaults to the route namespace.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                      type: string
+                    port:
+                      description: Port is the network port this Route targets on the Gateway.
+                      format: int32
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                    sectionName:
+                      description: SectionName is the Gateway Listener name to attach to.
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 32
+                type: array
+                x-kubernetes-list-type: atomic
+              hostnames:
+                description: |-
+                  Hostnames defines a set of hostnames that should match against the HTTP Host header
+                  to select an MCPRoute to process the request.
+                items:
+                  maxLength: 253
+                  minLength: 1
+                  pattern: ^(\*\.)?[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                  type: string
+                maxItems: 16
+                type: array
+                x-kubernetes-list-type: atomic
+              rules:
+                description: |-
+                  Rules is the list of MCPRouteRule that this MCPRoute matches traffic against.
+                  Each rule routes to one or more backends and may attach NetScaler policy CRDs.
+                items:
+                  description: MCPRouteRule defines the routing behavior for matching MCP traffic.
+                  properties:
+                    default:
+                      default: false
+                      description: |-
+                        Default marks this rule as the catch-all. When true and the rule has no
+                        matches, it compiles to the literal `-rule true` CS policy bound at the
+                        lowest priority (the conf's mcp_default_cspol). Exactly one default rule is
+                        expected per route.
+                      type: boolean
+                    matches:
+                      description: |-
+                        Matches is the list of conditions that select this rule. Headers within one
+                        match are ANDed; multiple matches are ORed. Omit matches (with default: true)
+                        for the catch-all rule.
+                      items:
+                        properties:
+                          path:
+                            description: Path specifies an HTTP request path matcher.
+                            properties:
+                              type:
+                                default: PathPrefix
+                                enum:
+                                - Exact
+                                - PathPrefix
+                                - RegularExpression
+                                type: string
+                              value:
+                                default: /
+                                maxLength: 256
+                                type: string
+                            type: object
+                          headers:
+                            description: |-
+                              Headers specifies HTTP request header matchers (ANDed together).
+                              Use type MCPTargetServer on the x-netscaler-target-mcp-server header for
+                              MCP server content switching.
+                            items:
+                              properties:
+                                name:
+                                  description: Name of the HTTP header to match (case-insensitive).
+                                  maxLength: 256
+                                  minLength: 1
+                                  pattern: ^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$
+                                  type: string
+                                type:
+                                  default: Exact
+                                  description: |-
+                                    How to match the header value. Exact -> .EQ(...);
+                                    RegularExpression -> .REGEX_MATCH(re#...#);
+                                    MCPTargetServer -> .BEFORE_STR("/").CONTAINS(...) for MCP server routing.
+                                  enum:
+                                  - Exact
+                                  - RegularExpression
+                                  - MCPTargetServer
+                                  type: string
+                                value:
+                                  description: Value of the HTTP header to match against.
+                                  maxLength: 4096
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - name
+                              - value
+                              type: object
+                            maxItems: 16
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - name
+                            x-kubernetes-list-type: map
+                          policyExpression:
+                            description: |-
+                              PolicyExpression is any NetScaler advanced (default/PI) policy expression,
+                              injected verbatim into the CS policy rule and ANDed with the other matches.
+                              Use for arbitrary complex routing beyond the structured matchers.
+                            type: string
+                        type: object
+                      maxItems: 128
+                      type: array
+                    backendRefs:
+                      description: |-
+                        BackendRefs is the list of Service backends this rule routes to. The namespace
+                        of each backend defaults to the MCPRoute namespace when not specified.
+                      items:
+                        properties:
+                          group:
+                            default: ""
+                            description: Group of the backend. Use "" for core Service.
+                            maxLength: 253
+                            pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                            type: string
+                          kind:
+                            default: Service
+                            description: Kind of the backend. Defaults to Service.
+                            maxLength: 63
+                            minLength: 1
+                            pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                            type: string
+                          name:
+                            description: Name is the name of the backend Service.
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            description: |-
+                              Namespace of the backend Service. Defaults to, and must equal, the
+                              route namespace: a cross-namespace backendRef is rejected
+                              (ResolvedRefs=False/RefNotPermitted) until ReferenceGrant is supported.
+                            maxLength: 63
+                            minLength: 1
+                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                            type: string
+                          port:
+                            description: Port is the Service port this backend targets.
+                            format: int32
+                            maximum: 65535
+                            minimum: 1
+                            type: integer
+                          weight:
+                            default: 1
+                            description: |-
+                              Weight controls traffic distribution across backends. NOT IMPLEMENTED
+                              YET: all backendRefs of a rule are bound to one shared lbvserver and
+                              are load-balanced evenly, so a non-default weight (including 0) is
+                              accepted but has no effect.
+                            format: int32
+                            maximum: 1000000
+                            minimum: 0
+                            type: integer
+                          filters:
+                            description: |-
+                              Per-backendRef filters attach a NetScaler policy CRD (via ExtensionRef)
+                              to the lbvserver of the rule that owns this backendRef, in addition to
+                              any rule-level filters. That lbvserver is SHARED by every backendRef of
+                              the rule, so a per-backendRef filter is only meaningful on a rule with a
+                              single backendRef; on a multi-backendRef rule it is rejected
+                              (ResolvedRefs=False/InvalidKind) rather than silently applied to the
+                              sibling backends. Only the ExtensionRef filter type is valid here; the
+                              built-in Gateway API filter types (RequestHeaderModifier,
+                              ResponseHeaderModifier, RequestRedirect, URLRewrite, RequestMirror) are
+                              supported at the rule level only. Supported kinds: rewritepolicy,
+                              ratelimit, bot, waf, appqoepolicy, owasppolicy, authpolicy.
+                              extensionRef.namespace must equal the route namespace; a
+                              cross-namespace reference is rejected
+                              (ResolvedRefs=False/RefNotPermitted) until ReferenceGrant is supported.
+                            items:
+                              properties:
+                                type:
+                                  enum:
+                                  - ExtensionRef
+                                  type: string
+                                extensionRef:
+                                  description: Reference to a NetScaler policy CRD (group citrix.com).
+                                  properties:
+                                    group:
+                                      maxLength: 253
+                                      minLength: 1
+                                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                      type: string
+                                    kind:
+                                      maxLength: 63
+                                      minLength: 1
+                                      pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                                      type: string
+                                    name:
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                    namespace:
+                                      maxLength: 63
+                                      minLength: 1
+                                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                      type: string
+                                  required:
+                                  - group
+                                  - kind
+                                  - name
+                                  type: object
+                              required:
+                              - type
+                              - extensionRef
+                              type: object
+                              x-kubernetes-validations:
+                              - message: extensionRef must be specified for ExtensionRef filter type
+                                rule: 'self.type == ''ExtensionRef'' ? has(self.extensionRef) : true'
+                            maxItems: 16
+                            type: array
+                            x-kubernetes-list-type: atomic
+                        required:
+                        - name
+                        - port
+                        type: object
+                      maxItems: 16
+                      type: array
+                      x-kubernetes-list-type: atomic
+                    filters:
+                      description: |-
+                        Filters define processing steps applied to requests matching this rule.
+                        Supported types: ExtensionRef (NetScaler policy CRDs -- rewritepolicy,
+                        ratelimit, bot, waf, appqoepolicy, owasppolicy, sslprofile, httpprofile,
+                        tcpprofile, mcpprofile, authpolicy) plus the core Gateway API filters
+                        RequestHeaderModifier, ResponseHeaderModifier, RequestRedirect, URLRewrite
+                        and RequestMirror. extensionRef.namespace must equal the route namespace;
+                        a cross-namespace reference is rejected
+                        (ResolvedRefs=False/RefNotPermitted) until ReferenceGrant is supported.
+                      items:
+                        properties:
+                          type:
+                            description: Type identifies the type of filter to apply.
+                            enum:
+                            - RequestHeaderModifier
+                            - ResponseHeaderModifier
+                            - RequestMirror
+                            - RequestRedirect
+                            - URLRewrite
+                            - ExtensionRef
+                            type: string
+                          extensionRef:
+                            description: Reference to a NetScaler policy CRD (group citrix.com).
+                            properties:
+                              group:
+                                maxLength: 253
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                type: string
+                              kind:
+                                maxLength: 63
+                                minLength: 1
+                                pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                                type: string
+                              name:
+                                maxLength: 253
+                                minLength: 1
+                                type: string
+                              namespace:
+                                maxLength: 63
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                type: string
+                            required:
+                            - group
+                            - kind
+                            - name
+                            type: object
+                          requestHeaderModifier:
+                            description: RequestHeaderModifier modifies request headers (Support Core).
+                            properties:
+                              add:
+                                items:
+                                  properties:
+                                    name:
+                                      maxLength: 256
+                                      minLength: 1
+                                      pattern: ^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$
+                                      type: string
+                                    value:
+                                      maxLength: 4096
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - name
+                                  - value
+                                  type: object
+                                maxItems: 16
+                                type: array
+                                x-kubernetes-list-map-keys:
+                                - name
+                                x-kubernetes-list-type: map
+                              remove:
+                                items:
+                                  type: string
+                                maxItems: 16
+                                type: array
+                                x-kubernetes-list-type: set
+                              set:
+                                items:
+                                  properties:
+                                    name:
+                                      maxLength: 256
+                                      minLength: 1
+                                      pattern: ^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$
+                                      type: string
+                                    value:
+                                      maxLength: 4096
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - name
+                                  - value
+                                  type: object
+                                maxItems: 16
+                                type: array
+                                x-kubernetes-list-map-keys:
+                                - name
+                                x-kubernetes-list-type: map
+                            type: object
+                          responseHeaderModifier:
+                            description: ResponseHeaderModifier modifies response headers (Support Extended).
+                            properties:
+                              add:
+                                items:
+                                  properties:
+                                    name:
+                                      maxLength: 256
+                                      minLength: 1
+                                      pattern: ^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$
+                                      type: string
+                                    value:
+                                      maxLength: 4096
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - name
+                                  - value
+                                  type: object
+                                maxItems: 16
+                                type: array
+                                x-kubernetes-list-map-keys:
+                                - name
+                                x-kubernetes-list-type: map
+                              remove:
+                                items:
+                                  type: string
+                                maxItems: 16
+                                type: array
+                                x-kubernetes-list-type: set
+                              set:
+                                items:
+                                  properties:
+                                    name:
+                                      maxLength: 256
+                                      minLength: 1
+                                      pattern: ^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$
+                                      type: string
+                                    value:
+                                      maxLength: 4096
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - name
+                                  - value
+                                  type: object
+                                maxItems: 16
+                                type: array
+                                x-kubernetes-list-map-keys:
+                                - name
+                                x-kubernetes-list-type: map
+                            type: object
+                          requestRedirect:
+                            description: RequestRedirect responds with an HTTP redirect (Support Core).
+                            properties:
+                              hostname:
+                                maxLength: 253
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                type: string
+                              path:
+                                properties:
+                                  replaceFullPath:
+                                    maxLength: 1024
+                                    type: string
+                                  replacePrefixMatch:
+                                    maxLength: 1024
+                                    type: string
+                                  type:
+                                    enum:
+                                    - ReplaceFullPath
+                                    - ReplacePrefixMatch
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: replaceFullPath must be specified when type is set to 'ReplaceFullPath'
+                                  rule: 'self.type == ''ReplaceFullPath'' ? has(self.replaceFullPath) : true'
+                                - message: type must be 'ReplaceFullPath' when replaceFullPath is set
+                                  rule: 'has(self.replaceFullPath) ? self.type == ''ReplaceFullPath'' : true'
+                                - message: replacePrefixMatch must be specified when type is set to 'ReplacePrefixMatch'
+                                  rule: 'self.type == ''ReplacePrefixMatch'' ? has(self.replacePrefixMatch) : true'
+                                - message: type must be 'ReplacePrefixMatch' when replacePrefixMatch is set
+                                  rule: 'has(self.replacePrefixMatch) ? self.type == ''ReplacePrefixMatch'' : true'
+                              port:
+                                format: int32
+                                maximum: 65535
+                                minimum: 1
+                                type: integer
+                              scheme:
+                                enum:
+                                - http
+                                - https
+                                type: string
+                              statusCode:
+                                default: 302
+                                enum:
+                                - 301
+                                - 302
+                                - 303
+                                - 307
+                                - 308
+                                type: integer
+                            type: object
+                          urlRewrite:
+                            description: URLRewrite modifies a request during forwarding (Support Extended).
+                            properties:
+                              hostname:
+                                maxLength: 253
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                type: string
+                              path:
+                                properties:
+                                  replaceFullPath:
+                                    maxLength: 1024
+                                    type: string
+                                  replacePrefixMatch:
+                                    maxLength: 1024
+                                    type: string
+                                  type:
+                                    enum:
+                                    - ReplaceFullPath
+                                    - ReplacePrefixMatch
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: replaceFullPath must be specified when type is set to 'ReplaceFullPath'
+                                  rule: 'self.type == ''ReplaceFullPath'' ? has(self.replaceFullPath) : true'
+                                - message: type must be 'ReplaceFullPath' when replaceFullPath is set
+                                  rule: 'has(self.replaceFullPath) ? self.type == ''ReplaceFullPath'' : true'
+                                - message: replacePrefixMatch must be specified when type is set to 'ReplacePrefixMatch'
+                                  rule: 'self.type == ''ReplacePrefixMatch'' ? has(self.replacePrefixMatch) : true'
+                                - message: type must be 'ReplacePrefixMatch' when replacePrefixMatch is set
+                                  rule: 'has(self.replacePrefixMatch) ? self.type == ''ReplacePrefixMatch'' : true'
+                            type: object
+                          requestMirror:
+                            description: RequestMirror mirrors requests to another Service backend (Support Extended).
+                            properties:
+                              backendRef:
+                                properties:
+                                  group:
+                                    default: ""
+                                    maxLength: 253
+                                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                                    type: string
+                                  kind:
+                                    default: Service
+                                    maxLength: 63
+                                    minLength: 1
+                                    pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                                    type: string
+                                  name:
+                                    maxLength: 253
+                                    minLength: 1
+                                    type: string
+                                  namespace:
+                                    maxLength: 63
+                                    minLength: 1
+                                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                    type: string
+                                  port:
+                                    format: int32
+                                    maximum: 65535
+                                    minimum: 1
+                                    type: integer
+                                required:
+                                - name
+                                type: object
+                                x-kubernetes-validations:
+                                - message: Must have port for Service reference
+                                  rule: '(size(self.group) == 0 && self.kind == ''Service'') ? has(self.port) : true'
+                              fraction:
+                                properties:
+                                  denominator:
+                                    default: 100
+                                    format: int32
+                                    minimum: 1
+                                    type: integer
+                                  numerator:
+                                    format: int32
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - numerator
+                                type: object
+                                x-kubernetes-validations:
+                                - message: numerator must be less than or equal to denominator
+                                  rule: self.numerator <= self.denominator
+                              percent:
+                                format: int32
+                                maximum: 100
+                                minimum: 0
+                                type: integer
+                            required:
+                            - backendRef
+                            type: object
+                            x-kubernetes-validations:
+                            - message: Only one of percent or fraction may be specified in HTTPRequestMirrorFilter
+                              rule: '!(has(self.percent) && has(self.fraction))'
+                        required:
+                        - type
+                        type: object
+                        x-kubernetes-validations:
+                        - message: filter.requestHeaderModifier must be nil if the filter.type is not RequestHeaderModifier
+                          rule: '!(has(self.requestHeaderModifier) && self.type != ''RequestHeaderModifier'')'
+                        - message: filter.requestHeaderModifier must be specified for RequestHeaderModifier filter.type
+                          rule: '!(!has(self.requestHeaderModifier) && self.type == ''RequestHeaderModifier'')'
+                        - message: filter.responseHeaderModifier must be nil if the filter.type is not ResponseHeaderModifier
+                          rule: '!(has(self.responseHeaderModifier) && self.type != ''ResponseHeaderModifier'')'
+                        - message: filter.responseHeaderModifier must be specified for ResponseHeaderModifier filter.type
+                          rule: '!(!has(self.responseHeaderModifier) && self.type == ''ResponseHeaderModifier'')'
+                        - message: filter.requestMirror must be nil if the filter.type is not RequestMirror
+                          rule: '!(has(self.requestMirror) && self.type != ''RequestMirror'')'
+                        - message: filter.requestMirror must be specified for RequestMirror filter.type
+                          rule: '!(!has(self.requestMirror) && self.type == ''RequestMirror'')'
+                        - message: filter.requestRedirect must be nil if the filter.type is not RequestRedirect
+                          rule: '!(has(self.requestRedirect) && self.type != ''RequestRedirect'')'
+                        - message: filter.requestRedirect must be specified for RequestRedirect filter.type
+                          rule: '!(!has(self.requestRedirect) && self.type == ''RequestRedirect'')'
+                        - message: filter.urlRewrite must be nil if the filter.type is not URLRewrite
+                          rule: '!(has(self.urlRewrite) && self.type != ''URLRewrite'')'
+                        - message: filter.urlRewrite must be specified for URLRewrite filter.type
+                          rule: '!(!has(self.urlRewrite) && self.type == ''URLRewrite'')'
+                        - message: filter.extensionRef must be nil if the filter.type is not ExtensionRef
+                          rule: '!(has(self.extensionRef) && self.type != ''ExtensionRef'')'
+                        - message: filter.extensionRef must be specified for ExtensionRef filter.type
+                          rule: '!(!has(self.extensionRef) && self.type == ''ExtensionRef'')'
+                      maxItems: 16
+                      type: array
+                      x-kubernetes-list-type: atomic
+                      x-kubernetes-validations:
+                      - message: May specify either RequestRedirect or URLRewrite, but not both
+                        rule: '!(self.exists(f, f.type == ''RequestRedirect'') && self.exists(f, f.type == ''URLRewrite''))'
+                      - message: RequestHeaderModifier filter cannot be repeated
+                        rule: self.filter(f, f.type == 'RequestHeaderModifier').size() <= 1
+                      - message: ResponseHeaderModifier filter cannot be repeated
+                        rule: self.filter(f, f.type == 'ResponseHeaderModifier').size() <= 1
+                      - message: RequestRedirect filter cannot be repeated
+                        rule: self.filter(f, f.type == 'RequestRedirect').size() <= 1
+                      - message: URLRewrite filter cannot be repeated
+                        rule: self.filter(f, f.type == 'URLRewrite').size() <= 1
+                  type: object
+                maxItems: 128
+                type: array
+            required:
+            - rules
+            type: object
+          status:
+            description: Status defines the current state of the MCPRoute.
+            properties:
+              parents:
+                description: |-
+                  Parents is a list of parent Gateways associated with the route, and the status of
+                  the route with respect to each parent.
+                items:
+                  properties:
+                    conditions:
+                      description: |-
+                        Conditions describes the status of the route with respect to the Gateway.
+                        Known condition types are: "Accepted", "Programmed", "ResolvedRefs".
+                      items:
+                        properties:
+                          lastTransitionTime:
+                            format: date-time
+                            type: string
+                          message:
+                            maxLength: 32768
+                            type: string
+                          observedGeneration:
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          reason:
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                            type: string
+                          status:
+                            enum:
+                            - "True"
+                            - "False"
+                            - Unknown
+                            type: string
+                          type:
+                            maxLength: 316
+                            pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                            type: string
+                        required:
+                        - lastTransitionTime
+                        - message
+                        - reason
+                        - status
+                        - type
+                        type: object
+                      maxItems: 8
+                      minItems: 1
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
+                    controllerName:
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\/[A-Za-z0-9\/\-._~%!$&'()*+,;=:]+$
+                      type: string
+                    parentRef:
+                      properties:
+                        group:
+                          default: gateway.networking.k8s.io
+                          maxLength: 253
+                          pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                          type: string
+                        kind:
+                          default: Gateway
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
+                          type: string
+                        name:
+                          maxLength: 253
+                          minLength: 1
+                          type: string
+                        namespace:
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        port:
+                          format: int32
+                          maximum: 65535
+                          minimum: 1
+                          type: integer
+                        sectionName:
+                          maxLength: 253
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                          type: string
+                      required:
+                      - name
+                      type: object
+                  required:
+                  - conditions
+                  - controllerName
+                  - parentRef
+                  type: object
+                maxItems: 32
+                type: array
+                x-kubernetes-list-type: atomic
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
